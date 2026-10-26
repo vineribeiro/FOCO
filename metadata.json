@@ -1,0 +1,6 @@
+{
+  "name": "FOCO",
+  "description": "Aplicativo de musculação de alta performance com IA, cadastro de usuários, banco persistente, upload e leitura de fichas e atualização periódica de treinos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
