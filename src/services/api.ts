@@ -688,6 +688,28 @@ export const api = {
     });
   },
 
+  async analyzeBioimpedanceReport(payload: { base64: string; mime_type: string; context?: string }) {
+    if (!payload.mime_type || !['application/pdf', 'image/jpeg', 'image/png', 'image/webp'].includes(payload.mime_type)) {
+      throw new Error('Formato não suportado. Envie PDF, JPG, PNG ou WebP.');
+    }
+    if (!payload.base64 || payload.base64.length > 15_000_000) {
+      throw new Error('Arquivo vazio ou muito grande. O limite é 10 MB.');
+    }
+    return await request<{
+      summary: string;
+      metrics: { name: string; value: string; interpretation: string }[];
+      strengths: string[];
+      attention_points: string[];
+      training_recommendations: string[];
+      nutrition_discussion: string[];
+      questions_for_professional: string[];
+      limitations: string;
+    }>('/api/ai/analyze-bioimpedance', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
   async reviewProgression(payload: { review_interval_days: number; user_feedback?: string }) {
     return await request<{
       recommendation_id: string;
