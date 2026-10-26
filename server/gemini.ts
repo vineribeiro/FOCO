@@ -63,8 +63,10 @@ Crie uma ficha de treino completa, equilibrada e altamente eficaz para o seguint
 
 Instruções técnicas obrigatórias:
 1. Monte um plano de exercícios biomecanicamente otimizado para a frequência semanal informada.
-2. Cada exercício DEVE conter: nome exato em português, grupamento muscular ('Peito', 'Costas', 'Quadríceps', 'Posterior de Coxa', 'Ombros', 'Tríceps', 'Bíceps', 'Abdômen', etc.), número de séries, repetições mínimas e máximas, tempo de descanso em segundos (ex: 60, 90, 120) e carga inicial sugerida em kg compatível com o nível.
-3. Responda ESTRITAMENTE em formato JSON compatível com a estrutura requerida.`;
+2. Os grupos selecionados como prioritários devem receber mais volume semanal direto que os grupos secundários, sem negligenciar o corpo inteiro e respeitando a recuperação. Se glúteos, quadríceps, posteriores ou panturrilhas estiverem selecionados, distribua estímulos adequados para inferiores ao longo da semana, evitando concentrar todo o volume em um único dia.
+3. Não presuma sexo, gênero ou preferência estética; siga os grupos escolhidos, o objetivo, a experiência e as restrições informadas. O FOCO atende pessoas de qualquer gênero.
+4. Cada exercício DEVE conter: nome exato em português, grupamento muscular ('Peito', 'Costas', 'Quadríceps', 'Posterior de Coxa', 'Ombros', 'Tríceps', 'Bíceps', 'Abdômen', etc.), número de séries, repetições mínimas e máximas, tempo de descanso em segundos (ex: 60, 90, 120) e carga inicial sugerida em kg compatível com o nível.
+5. Responda ESTRITAMENTE em formato JSON compatível com a estrutura requerida.`;
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash',
