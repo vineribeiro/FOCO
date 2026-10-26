@@ -31,7 +31,7 @@ async function generateContentResilient(
     // Two attempts on the configured model, then try the fallback model.
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        return await generateContentResilient(ai, { ...request, model });
+        return await ai.models.generateContent({ ...request, model });
       } catch (error) {
         lastError = error;
         if (!isTransientGeminiError(error)) throw error;
