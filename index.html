@@ -13,9 +13,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      html, body { margin: 0; min-height: 100%; background: #0A0A0A; color: #fff; }
+      .boot-screen { min-height: 100vh; display: grid; place-content: center; justify-items: center; gap: 12px; font-family: Arial, sans-serif; }
+      .boot-logo { font-size: 30px; font-weight: 900; letter-spacing: .28em; }
+      .boot-text { color: #a3a3a3; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+      .boot-spinner { width: 22px; height: 22px; border: 2px solid #333; border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
   </head>
   <body class="bg-black text-white antialiased selection:bg-white selection:text-black">
-    <div id="root"></div>
+    <div id="root">
+      <main class="boot-screen" role="status" aria-live="polite">
+        <div class="boot-logo">FOCO</div>
+        <div class="boot-spinner" aria-hidden="true"></div>
+        <p class="boot-text">Carregando sua experiência</p>
+      </main>
+    </div>
+    <noscript><p style="padding:24px;font-family:Arial,sans-serif">O FOCO precisa de JavaScript ativado para funcionar.</p></noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
