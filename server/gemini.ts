@@ -1,5 +1,8 @@
 import { GoogleGenAI } from '@google/genai';
 
+// Configurable model alias; keep the model configurable in the server environment.
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
+
 function getAiClient(): GoogleGenAI {
   const apiKey = process.env.GEMINI_API_KEY || '';
   return new GoogleGenAI({ apiKey });
@@ -69,7 +72,7 @@ Instruções técnicas obrigatórias:
 5. Responda ESTRITAMENTE em formato JSON compatível com a estrutura requerida.`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: GEMINI_MODEL,
     contents: prompt,
     config: {
       responseMimeType: 'application/json',
@@ -138,7 +141,7 @@ Observações do usuário sobre a ficha: ${userNotes || 'Nenhuma'}.
 Responda ESTRITAMENTE em formato JSON.`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: GEMINI_MODEL,
     contents: [
       {
         role: 'user',
@@ -220,7 +223,7 @@ Sua missão:
 Responda ESTRITAMENTE em formato JSON.`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: GEMINI_MODEL,
     contents: prompt,
     config: {
       responseMimeType: 'application/json',
@@ -303,7 +306,7 @@ Regras obrigatórias:
 - Sugira perguntas úteis para nutricionista/médico, e recomendações gerais de treino compatíveis com objetivos informados.
 Responda estritamente no JSON conforme o schema.`;
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: GEMINI_MODEL,
     contents: [{ role: 'user', parts: [
       { inlineData: { data: cleanBase64, mimeType: mimeType || 'application/pdf' } },
       { text: prompt },
