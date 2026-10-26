@@ -105,13 +105,13 @@ export const BrandIdentityPage: React.FC<BrandIdentityPageProps> = ({ setActiveT
         {/* Board Image Container */}
         <div className={`overflow-hidden rounded-xl border border-white/10 bg-[#0F0F0F] transition-all ${zoomBoard ? 'scale-100' : ''}`}>
           <img
-            src="/assets/brand/foco_brand_board.png"
+            src={`${import.meta.env.BASE_URL}assets/brand/foco_brand_board.png`}
             alt="Prancha de Identidade Visual FOCO Fitness Premium"
             className="w-full h-auto object-cover rounded-xl"
             onError={(e) => {
               // Fallback to media storage path if needed
               const target = e.target as HTMLImageElement;
-              target.src = '/public/assets/brand/media_1793034395682_bc136f36.png';
+              target.src = `${import.meta.env.BASE_URL}assets/brand/media_1793034395682_bc136f36.png`; 
             }}
           />
         </div>
