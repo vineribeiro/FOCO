@@ -126,7 +126,7 @@ function MainApp() {
     <div className="min-h-screen bg-[#000000] text-[#FFFFFF] antialiased flex justify-center">
       
       {/* Mobile Ergonomic Container Shell (Zero-Overlap Guarantee) */}
-      <div className="w-full max-w-md min-h-screen bg-[#0A0A0A] border-x border-white/10 flex flex-col relative shadow-2xl overflow-x-hidden">
+      <div className="w-full max-w-6xl min-h-screen bg-[#0A0A0A] border-x border-white/10 flex flex-col relative shadow-2xl overflow-x-hidden">
         
         {/* Top Header with Official FOCO Brand Monogram */}
         <header className="px-4 py-3 flex items-center justify-between border-b border-white/10 bg-[#0A0A0A]/95 backdrop-blur-md sticky top-0 z-30">
@@ -171,7 +171,7 @@ function MainApp() {
         </header>
 
         {/* Viewport Content Area with Protected Bottom Space (pb-32) */}
-        <main className="flex-1 p-4 pb-32 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-32 overflow-y-auto">
           {renderActiveView()}
         </main>
 
