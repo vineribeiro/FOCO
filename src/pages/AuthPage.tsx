@@ -145,7 +145,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="atleta@foco.app"
+                placeholder="voce@email.com"
                 className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/10 text-white placeholder-neutral-600 text-xs focus:outline-none focus:border-white transition-colors"
               />
             </div>
@@ -156,15 +156,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                   <label className="text-xs font-bold text-neutral-300">
                     Senha
                   </label>
-                  {mode === 'login' && (
-                    <button
-                      type="button"
-                      onClick={() => { setMode('forgot'); setErrorMsg(null); }}
-                      className="text-[11px] text-neutral-400 hover:text-white hover:underline cursor-pointer"
-                    >
-                      Esqueceu?
-                    </button>
-                  )}
+
                 </div>
                 <input
                   type="password"
