@@ -165,7 +165,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-32 text-white">
+    <div className="space-y-6 w-full max-w-5xl mx-auto pb-32 text-white">
       
       {/* Top Header */}
       <div>
@@ -277,10 +277,32 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
           className="w-full py-3.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all disabled:opacity-50"
         >
           <Sparkles className="w-4 h-4" />
-          <span>{isProcessing ? 'Lendo e Extraindo Exercícios...' : 'Extrair Exercícios com Gemini 2.5 Flash'}</span>
+          <span>{isProcessing ? 'Analisando arquivo...' : uploadMode === 'body' ? 'Gerar relatório do perfil corporal' : 'Extrair exercícios com IA'}</span>
         </button>
       </div>
 
+      {bodyReport && uploadMode === 'body' && (
+        <div className="space-y-4 animate-in fade-in">
+          <section className="rounded-2xl border border-white/15 bg-[#141414] p-5 sm:p-6">
+            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-neutral-400">Relatório FOCO · leitura assistida por IA</p>
+            <h3 className="mt-2 text-lg font-black uppercase">Resumo do perfil corporal</h3>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-300">{bodyReport.summary}</p>
+          </section>
+          <section className="rounded-2xl border border-white/10 bg-[#141414] p-5">
+            <h4 className="text-xs font-black uppercase tracking-wider">Métricas identificadas</h4>
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {bodyReport.metrics.map((metric, index) => <article key={metric.name + index} className="rounded-xl bg-[#0A0A0A] border border-white/10 p-3">
+                <div className="flex items-start justify-between gap-3"><span className="text-xs font-bold text-neutral-300">{metric.name}</span><span className="text-sm font-black text-white text-right">{metric.value}</span></div>
+                <p className="mt-2 text-xs leading-relaxed text-neutral-400">{metric.interpretation}</p>
+              </article>)}
+            </div>
+          </section>
+          {([['Pontos positivos', bodyReport.strengths], ['Pontos de atenção', bodyReport.attention_points], ['Orientações para o treino', bodyReport.training_recommendations], ['Temas para discutir com nutricionista', bodyReport.nutrition_discussion], ['Perguntas para o profissional', bodyReport.questions_for_professional]] as [string, string[]][]).map(([title, items]) => <section key={title} className="rounded-2xl border border-white/10 bg-[#141414] p-5">
+            <h4 className="text-xs font-black uppercase tracking-wider">{title}</h4><ul className="mt-3 space-y-2">{items.map((item, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-neutral-500">•</span><span>{item}</span></li>)}</ul>
+          </section>)}
+          <p className="rounded-xl border border-white/10 p-4 text-[11px] leading-relaxed text-neutral-400">Limitações: {bodyReport.limitations} A bioimpedância é uma estimativa, não um diagnóstico; confirme interpretações com profissional de saúde.</p>
+        </div>
+      )}
       {/* Extracted Data Confirmation Box */}
       {extractedResult && (
         <div className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/30 space-y-5 animate-in fade-in">
