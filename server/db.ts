@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import bcrypt from 'bcryptjs';
 
 export interface User {
   id: string;
