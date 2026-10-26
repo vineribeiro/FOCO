@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { FocoSymbol, FocoLettering } from '../components/FocoBrand';
 import { ShieldCheck, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
 import { api } from '../services/api';
+import { InstallAppButton } from '../components/InstallAppButton';
 
 interface AuthPageProps { onRegistered: () => void; }
 
@@ -69,6 +70,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
           <p className="text-[10px] font-mono tracking-[0.3em] text-neutral-400 uppercase mt-1">
             FOCO EM EVOLUIR.
           </p>
+        </div>
+
+        <div className="flex justify-center">
+          <InstallAppButton />
         </div>
 
         {/* Auth Card */}
