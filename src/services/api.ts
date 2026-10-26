@@ -8,6 +8,7 @@ import {
   BodyMeasurement,
   UploadedFile,
   AIRecommendation,
+  Anamnesis,
 } from '../types';
 
 const TOKEN_KEY = 'foco_auth_token';
@@ -50,6 +51,7 @@ interface LocalDatabase {
   sessions: WorkoutSession[];
   goals: Goal[];
   measurements: BodyMeasurement[];
+  anamnesis: Anamnesis | null;
 }
 
 function getInitialLocalDatabase(): LocalDatabase {
@@ -236,6 +238,7 @@ function getInitialLocalDatabase(): LocalDatabase {
         measured_at: new Date().toISOString(),
       },
     ],
+    anamnesis: null,
   };
 }
 
@@ -247,7 +250,8 @@ function getLocalDb(): LocalDatabase {
       localStorage.setItem(LOCAL_DB_KEY, JSON.stringify(initial));
       return initial;
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return { ...getInitialLocalDatabase(), ...parsed, anamnesis: parsed.anamnesis ?? null };
   } catch {
     return getInitialLocalDatabase();
   }
@@ -393,6 +397,32 @@ export const api = {
       db.profile = { ...db.profile, ...updates };
       saveLocalDb(db);
       return db.profile;
+    }
+  },
+
+  // Athlete anamnesis (server-persisted; demo mode stores only in this browser).
+  async getAnamnesis(): Promise<Anamnesis | null> {
+    try {
+      return await request<Anamnesis | null>('/api/anamnesis');
+    } catch (error) {
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
+      return getLocalDb().anamnesis ?? null;
+    }
+  },
+
+  async saveAnamnesis(payload: Omit<Anamnesis, 'updated_at'>): Promise<Anamnesis> {
+    try {
+      return await request<Anamnesis>('/api/anamnesis', {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+    } catch (error) {
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
+      const saved: Anamnesis = { ...payload, updated_at: new Date().toISOString() };
+      const db = getLocalDb();
+      db.anamnesis = saved;
+      saveLocalDb(db);
+      return saved;
     }
   },
 
