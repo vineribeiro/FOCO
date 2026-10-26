@@ -19,7 +19,6 @@ interface AuthContextType {
   logout: () => void;
   refreshProfile: () => Promise<void>;
   deleteAccount: () => Promise<void>;
-  loginDemo: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -62,10 +61,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const loginDemo = async () => {
-    await login('atleta@foco.app', 'foco1234');
   };
 
   const register = async (payload: {
@@ -119,7 +114,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logout,
         refreshProfile,
         deleteAccount,
-        loginDemo,
       }}
     >
       {children}
