@@ -214,6 +214,61 @@ app.put('/api/profile', requireAuth, (req: AuthenticatedRequest, res: Response) 
   return res.json(updated);
 });
 
+app.get('/api/anamnesis', requireAuth, (req: AuthenticatedRequest, res: Response) => {
+  return res.json(db.getAnamnesis(req.user!.id) || null);
+});
+
+app.put('/api/anamnesis', requireAuth, (req: AuthenticatedRequest, res: Response) => {
+  const body: any = req.body || {};
+  const asText = (value: unknown, max = 500): string =>
+    typeof value === 'string' ? value.trim().slice(0, max) : '';
+  const asList = (value: unknown, max = 10): string[] =>
+    Array.isArray(value)
+      ? value.filter((item: unknown): item is string => typeof item === 'string')
+          .slice(0, max).map((item: string) => item.trim().slice(0, 80)).filter(Boolean)
+      : [];
+
+  const primary_goal = asText(body.primary_goal, 120);
+  const weekly_frequency = Number(body.weekly_frequency);
+  const session_minutes = Number(body.session_minutes);
+  const pain_or_injuries = asText(body.pain_or_injuries, 1200);
+  const health_notes = asText(body.health_notes, 1200);
+  const consent_health_data = body.consent_health_data === true;
+
+  if (!primary_goal) {
+    return res.status(400).json({ error: 'Selecione o objetivo principal.' });
+  }
+  if (!Number.isInteger(weekly_frequency) || weekly_frequency < 2 || weekly_frequency > 7) {
+    return res.status(400).json({ error: 'A frequência deve ser de 2 a 7 dias por semana.' });
+  }
+  if (!Number.isInteger(session_minutes) || session_minutes < 20 || session_minutes > 180) {
+    return res.status(400).json({ error: 'O tempo por sessão deve ficar entre 20 e 180 minutos.' });
+  }
+  if ((pain_or_injuries || health_notes) && !consent_health_data) {
+    return res.status(400).json({ error: 'Para salvar informações de saúde, autorize explicitamente seu uso para personalizar o treino.' });
+  }
+
+  const saved = db.saveAnamnesis(req.user!.id, {
+    primary_goal,
+    goal_details: asText(body.goal_details, 1200),
+    training_age: asText(body.training_age, 80),
+    activity_level: asText(body.activity_level, 80),
+    weekly_frequency,
+    session_minutes,
+    preferred_days: asList(body.preferred_days, 7),
+    priority_muscles: asList(body.priority_muscles, 10),
+    equipment_available: asList(body.equipment_available, 12),
+    current_routine: asText(body.current_routine, 1200),
+    exercise_preferences: asText(body.exercise_preferences, 1200),
+    pain_or_injuries,
+    health_notes,
+    sleep_quality: asText(body.sleep_quality, 80),
+    cardio_habits: asText(body.cardio_habits, 500),
+    consent_health_data,
+  });
+  return res.json(saved);
+});
+
 app.get('/api/goals', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const goals = db.getGoals(req.user!.id);
   return res.json(goals);
@@ -404,17 +459,42 @@ app.delete('/api/files/:id', requireAuth, (req: AuthenticatedRequest, res: Respo
 
 app.post('/api/ai/generate-workout', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const profile = db.getProfile(req.user!.id);
-    const { goal, experience_level, weekly_frequency, focus_muscles, equipment_available, restrictions } = req.body;
+    const userId = req.user!.id;
+    const profile = db.getProfile(userId);
+    const anamnesis = db.getAnamnesis(userId);
+    const { goal, experience_level, weekly_frequency, focus_muscles, equipment_available, restrictions } = req.body || {};
+    const healthContext = anamnesis?.consent_health_data
+      ? [anamnesis.pain_or_injuries, anamnesis.health_notes].filter(Boolean).join('; ')
+      : '';
+    const trainingAgeExperience = anamnesis?.training_age === 'Nunca treinei' || anamnesis?.training_age === 'Menos de 6 meses'
+      ? 'iniciante'
+      : anamnesis?.training_age === '3 anos ou mais'
+        ? 'avancado'
+        : 'intermediario';
 
     const plan = await generateAiWorkout({
-      goal: goal || 'Hipertrofia Máxima',
-      experience_level: experience_level || profile?.experience_level || 'intermediario',
-      weekly_frequency: Number(weekly_frequency) || 4,
-      focus_muscles,
-      equipment_available,
-      restrictions,
+      goal: goal || anamnesis?.primary_goal || 'Hipertrofia Máxima',
+      experience_level: experience_level || profile?.experience_level || trainingAgeExperience,
+      weekly_frequency: Number(weekly_frequency) || anamnesis?.weekly_frequency || 4,
+      focus_muscles: focus_muscles || anamnesis?.priority_muscles?.join(', ') || 'Corpo inteiro com distribuição equilibrada',
+      equipment_available: equipment_available || anamnesis?.equipment_available?.join(', ') || 'Academia completa',
+      restrictions: [restrictions, healthContext].filter(Boolean).join('; ') || undefined,
       current_weight_kg: profile?.current_weight_kg,
+      anamnesis: anamnesis ? {
+        goal_details: anamnesis.goal_details,
+        training_age: anamnesis.training_age,
+        activity_level: anamnesis.activity_level,
+        preferred_days: anamnesis.preferred_days,
+        session_minutes: anamnesis.session_minutes,
+        priority_muscles: anamnesis.priority_muscles,
+        equipment_available: anamnesis.equipment_available,
+        current_routine: anamnesis.current_routine,
+        exercise_preferences: anamnesis.exercise_preferences,
+        pain_or_injuries: anamnesis.consent_health_data ? anamnesis.pain_or_injuries : '',
+        health_notes: anamnesis.consent_health_data ? anamnesis.health_notes : '',
+        sleep_quality: anamnesis.sleep_quality,
+        cardio_habits: anamnesis.cardio_habits,
+      } : undefined,
     });
 
     return res.json(plan);
