@@ -15,9 +15,9 @@ if (!JWT_SECRET || JWT_SECRET.length < 32) {
   throw new Error('JWT_SECRET ausente ou fraco. Configure um segredo aleatório de pelo menos 32 caracteres no ambiente do servidor.');
 }
 
-// Allow payload sizes up to 50MB for uploading workout sheet images / PDF base64
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+// Bound request bodies: sheet processing accepts files up to 10 MB before base64 encoding.
+app.use(express.json({ limit: '16mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Extend Express Request with user
 export interface AuthenticatedRequest extends Request {
@@ -365,22 +365,12 @@ app.get('/api/files', requireAuth, (req: AuthenticatedRequest, res: Response) =>
   return res.json(files);
 });
 
-app.post('/api/files', requireAuth, (req: AuthenticatedRequest, res: Response) => {
-  const { filename, storage_path, mime_type, processing_status, extracted_data } = req.body;
-  if (!filename) {
-    return res.status(400).json({ error: 'Nome do arquivo é obrigatório' });
-  }
-
-  const newFile = db.addUploadedFile({
-    user_id: req.user!.id,
-    filename,
-    storage_path: storage_path || 'uploads/' + filename,
-    mime_type: mime_type || 'application/octet-stream',
-    processing_status: processing_status || 'processed',
-    extracted_data,
+app.post('/api/files', requireAuth, (_req: AuthenticatedRequest, res: Response) => {
+  // This endpoint previously saved metadata only, not the uploaded file bytes.
+  // Do not claim a file is stored until private object storage is configured.
+  return res.status(501).json({
+    error: 'Armazenamento de arquivos não está configurado. Use a análise de ficha, que processa o arquivo sem prometer armazenamento do original.',
   });
-
-  return res.status(201).json(newFile);
 });
 
 app.delete('/api/files/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
@@ -420,17 +410,24 @@ app.post('/api/ai/generate-workout', requireAuth, async (req: AuthenticatedReque
 app.post('/api/ai/extract-sheet', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { base64, mime_type, filename, notes } = req.body;
-    if (!base64) {
-      return res.status(400).json({ error: 'Arquivo base64 não fornecido' });
+    const allowedMimeTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+    if (typeof base64 !== 'string' || base64.length === 0 || base64.length > 15_000_000) {
+      return res.status(413).json({ error: 'Arquivo ausente ou acima do limite de 10 MB.' });
+    }
+    if (!allowedMimeTypes.includes(mime_type)) {
+      return res.status(415).json({ error: 'Formato não suportado. Envie PDF, JPG, PNG ou WebP.' });
+    }
+    if (!/^data:(application\/pdf|image\/(jpeg|png|webp));base64,/.test(base64)) {
+      return res.status(400).json({ error: 'Conteúdo do arquivo inválido.' });
     }
 
-    const extracted = await extractWorkoutFromSheet(base64, mime_type || 'image/jpeg', notes);
+    const extracted = await extractWorkoutFromSheet(base64, mime_type, notes);
 
     // Save record to uploaded_files
     db.addUploadedFile({
       user_id: req.user!.id,
       filename: filename || 'ficha_treino.jpg',
-      storage_path: 'uploads/' + (filename || 'ficha_treino.jpg'),
+      storage_path: 'processed-data-only/' + path.basename(String(filename || 'ficha_treino.jpg')),
       mime_type: mime_type || 'image/jpeg',
       processing_status: 'processed',
       extracted_data: extracted,
