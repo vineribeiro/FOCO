@@ -17,6 +17,7 @@ import { ActiveSessionPage } from './pages/ActiveSessionPage';
 import { AiLabPage } from './pages/AiLabPage';
 import { WorkoutsPage } from './pages/WorkoutsPage';
 import { NewWorkoutPage } from './pages/NewWorkoutPage';
+import { AnamnesisPage } from './pages/AnamnesisPage';
 import { ProgressionReviewPage } from './pages/ProgressionReviewPage';
 import { SheetUploadPage } from './pages/SheetUploadPage';
 import { ProgressPage } from './pages/ProgressPage';
@@ -106,6 +107,8 @@ function MainApp() {
         return <WorkoutsPage setActiveTab={setActiveTab} />;
       case 'novo-treino':
         return <NewWorkoutPage setActiveTab={setActiveTab} />;
+      case 'anamnese':
+        return <AnamnesisPage setActiveTab={setActiveTab} />;
       case 'revisao':
         return <ProgressionReviewPage setActiveTab={setActiveTab} />;
       case 'arquivos':
