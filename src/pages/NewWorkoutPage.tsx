@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { WorkoutExercise } from '../types';
@@ -10,6 +10,7 @@ import {
   Trash2,
   AlertCircle,
   Sliders,
+  ClipboardList,
 } from 'lucide-react';
 
 interface NewWorkoutProps {
@@ -77,6 +78,29 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  useEffect(() => {
+    let active = true;
+    api.getAnamnesis().then((anamnesis) => {
+      if (!active || !anamnesis) return;
+      setAiGoal(anamnesis.primary_goal || 'Hipertrofia Máxima');
+      setAiFrequency(anamnesis.weekly_frequency || 4);
+      setAiFocus(anamnesis.priority_muscles || []);
+      setAiEquipment(anamnesis.equipment_available?.join(', ') || 'Academia Completa com Polias e Barras');
+      const experience = anamnesis.training_age === 'Nunca treinei' || anamnesis.training_age === 'Menos de 6 meses'
+        ? 'iniciante'
+        : anamnesis.training_age === '3 anos ou mais'
+          ? 'avancado'
+          : 'intermediario';
+      setAiExperience(experience);
+      setAiRestrictions(anamnesis.consent_health_data
+        ? [anamnesis.pain_or_injuries, anamnesis.health_notes].filter(Boolean).join('; ')
+        : '');
+    }).catch(() => {
+      // Keep defaults if a saved server profile is not available.
+    });
+    return () => { active = false; };
+  }, []);
+
   const handleGenerateAi = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsGenerating(true);
@@ -87,7 +111,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         goal: aiGoal,
         experience_level: aiExperience,
         weekly_frequency: Number(aiFrequency),
-        focus_muscles: aiFocus.length ? aiFocus.join(', ') : 'Corpo inteiro com distribuição equilibrada',
+        focus_muscles: aiFocus.length ? aiFocus.join(', ') : undefined,
         equipment_available: aiEquipment,
         restrictions: aiRestrictions,
       });
@@ -182,11 +206,17 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
     <div className="space-y-6 w-full max-w-5xl mx-auto pb-32 text-white">
       
       {/* Top Header */}
-      <div>
-        <h2 className="text-xl font-black uppercase tracking-tight text-white">Criador de Fichas de Treino</h2>
-        <p className="text-xs text-neutral-400 mt-0.5">
-          Gere um plano biomecanicamente otimizado com Gemini 2.5 Flash ou monte sua divisão manualmente.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="text-xl font-black uppercase tracking-tight text-white">Criador de Fichas de Treino</h2>
+          <p className="text-xs text-neutral-400 mt-1">
+            Gere uma ficha individualizada com base na sua anamnese ou monte sua divisão manualmente.
+          </p>
+        </div>
+        <button type="button" onClick={() => setActiveTab('anamnese')} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-xs font-black transition hover:bg-white/10">
+          <ClipboardList className="h-4 w-4" />
+          <span>Preencher / editar anamnese</span>
+        </button>
       </div>
 
       {/* Selector Tabs */}
@@ -242,6 +272,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                   <option value="Força Pura & Cargas">Força Bruta & Cargas Elevadas (Powerbuilding)</option>
                   <option value="Definição & Emagrecimento">Emagrecimento com Preservação de Massa</option>
                   <option value="Condicionamento & Resistência">Condicionamento Metabólico & Saúde</option>
+                  <option value="Recomposição corporal">Recomposição corporal</option>
+                  <option value="Saúde e qualidade de vida">Saúde e qualidade de vida</option>
                 </select>
               </div>
 
