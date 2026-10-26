@@ -21,6 +21,27 @@ export interface Profile {
   updated_at: string;
 }
 
+export interface Anamnesis {
+  user_id: string;
+  primary_goal: string;
+  goal_details: string;
+  training_age: string;
+  activity_level: string;
+  weekly_frequency: number;
+  session_minutes: number;
+  preferred_days: string[];
+  priority_muscles: string[];
+  equipment_available: string[];
+  current_routine: string;
+  exercise_preferences: string;
+  pain_or_injuries: string;
+  health_notes: string;
+  sleep_quality: string;
+  cardio_habits: string;
+  consent_health_data: boolean;
+  updated_at: string;
+}
+
 export interface Goal {
   id: string;
   user_id: string;
@@ -124,6 +145,7 @@ interface DatabaseSchema {
   body_measurements: BodyMeasurement[];
   uploaded_files: UploadedFile[];
   ai_recommendations: AIRecommendation[];
+  anamneses: Anamnesis[];
 }
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
@@ -140,6 +162,7 @@ const INITIAL_DB: DatabaseSchema = {
   body_measurements: [],
   uploaded_files: [],
   ai_recommendations: [],
+  anamneses: [],
 };
 
 class FocoDatabase {
@@ -156,8 +179,13 @@ class FocoDatabase {
       }
       if (fs.existsSync(DB_FILE)) {
         const raw = fs.readFileSync(DB_FILE, 'utf-8');
-        const parsed = JSON.parse(raw) as DatabaseSchema;
-        return parsed;
+        const parsed = JSON.parse(raw) as Partial<DatabaseSchema>;
+        // Backward-compatible store migration for installations created before anamnesis.
+        return {
+          ...INITIAL_DB,
+          ...parsed,
+          anamneses: Array.isArray(parsed.anamneses) ? parsed.anamneses : [],
+        };
       }
     } catch (err) {
       console.error('Error loading persistent db, creating fresh store:', err);
@@ -245,10 +273,28 @@ class FocoDatabase {
     return profile;
   }
 
+  getAnamnesis(userId: string): Anamnesis | undefined {
+    return this.data.anamneses.find((item) => item.user_id === userId);
+  }
+
+  saveAnamnesis(userId: string, values: Omit<Anamnesis, 'user_id' | 'updated_at'>): Anamnesis {
+    const saved: Anamnesis = {
+      ...values,
+      user_id: userId,
+      updated_at: new Date().toISOString(),
+    };
+    const existingIndex = this.data.anamneses.findIndex((item) => item.user_id === userId);
+    if (existingIndex >= 0) this.data.anamneses[existingIndex] = saved;
+    else this.data.anamneses.push(saved);
+    this.persist();
+    return saved;
+  }
+
   deleteUser(userId: string): boolean {
     this.data.users = this.data.users.filter(u => u.id !== userId);
     this.data.profiles = this.data.profiles.filter(p => p.id !== userId);
     this.data.goals = this.data.goals.filter(g => g.user_id !== userId);
+    this.data.anamneses = this.data.anamneses.filter(a => a.user_id !== userId);
     
     // clean plans & exercises
     const userPlans = this.data.workout_plans.filter(p => p.user_id === userId);
