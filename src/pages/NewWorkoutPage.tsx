@@ -24,7 +24,16 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   const [aiGoal, setAiGoal] = useState('Hipertrofia Máxima');
   const [aiFrequency, setAiFrequency] = useState(4);
   const [aiExperience, setAiExperience] = useState(profile?.experience_level || 'intermediario');
-  const [aiFocus, setAiFocus] = useState('Peitoral e Costas');
+  const [aiFocus, setAiFocus] = useState<string[]>(['Glúteos', 'Quadríceps']);
+  const muscleOptions = [
+    { name: 'Glúteos', detail: 'Glúteo máximo e médio' }, { name: 'Quadríceps', detail: 'Parte anterior das coxas' },
+    { name: 'Posterior de coxa', detail: 'Isquiotibiais' }, { name: 'Panturrilhas', detail: 'Tríceps sural' },
+    { name: 'Costas', detail: 'Dorsais e região média' }, { name: 'Peitoral', detail: 'Peito' },
+    { name: 'Ombros', detail: 'Deltoides' }, { name: 'Bíceps', detail: 'Flexores do cotovelo' },
+    { name: 'Tríceps', detail: 'Extensores do cotovelo' }, { name: 'Abdômen e core', detail: 'Estabilidade do tronco' },
+  ];
+  const toggleMuscleFocus = (muscle: string) => setAiFocus((current) =>
+    current.includes(muscle) ? current.filter((item) => item !== muscle) : [...current, muscle]);
   const [aiEquipment, setAiEquipment] = useState('Academia Completa com Polias e Barras');
   const [aiRestrictions, setAiRestrictions] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -78,7 +87,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         goal: aiGoal,
         experience_level: aiExperience,
         weekly_frequency: Number(aiFrequency),
-        focus_muscles: aiFocus,
+        focus_muscles: aiFocus.length ? aiFocus.join(', ') : 'Corpo inteiro com distribuição equilibrada',
         equipment_available: aiEquipment,
         restrictions: aiRestrictions,
       });
@@ -170,7 +179,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-32 text-white">
+    <div className="space-y-6 w-full max-w-5xl mx-auto pb-32 text-white">
       
       {/* Top Header */}
       <div>
@@ -267,17 +276,20 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
-                  Grupamentos de Maior Foco
-                </label>
-                <input
-                  type="text"
-                  value={aiFocus}
-                  onChange={(e) => setAiFocus(e.target.value)}
-                  placeholder="Ex: Ombros e Dorsais, Braços, Quadríceps"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-white"
-                />
+              <div className="sm:col-span-2">
+                <div className="flex items-end justify-between gap-3 mb-3">
+                  <div><label className="block text-xs font-black text-white uppercase tracking-wide">Priorize grupos musculares</label><p className="text-[11px] text-neutral-400 mt-1">Toque para selecionar um ou mais grupos.</p></div>
+                  <span className="text-[10px] font-mono text-neutral-400 shrink-0">{aiFocus.length} selecionados</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {muscleOptions.map((muscle) => { const selected = aiFocus.includes(muscle.name); return (
+                    <button key={muscle.name} type="button" aria-pressed={selected} onClick={() => toggleMuscleFocus(muscle.name)}
+                      className={`min-h-[70px] rounded-xl border p-3 text-left transition-all ${selected ? 'bg-white text-black border-white' : 'bg-[#0A0A0A] text-white border-white/10 hover:border-white/40'}`}>
+                      <span className="flex items-center justify-between gap-2"><span className="text-xs font-black">{muscle.name}</span>{selected && <CheckCircle2 className="w-4 h-4 shrink-0" />}</span>
+                      <span className={`block text-[10px] mt-1 ${selected ? 'text-neutral-700' : 'text-neutral-500'}`}>{muscle.detail}</span>
+                    </button>); })}
+                </div>
+                <p className="text-[10px] text-neutral-500 mt-2">Glúteos e quadríceps vêm selecionados como exemplo; personalize para qualquer objetivo e perfil.</p>
               </div>
 
               <div>
