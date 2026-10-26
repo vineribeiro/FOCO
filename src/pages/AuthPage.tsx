@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { FocoSymbol, FocoLettering } from '../components/FocoBrand';
-import { ShieldCheck, ArrowRight, Zap, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ShieldCheck, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
 import { api } from '../services/api';
 
-export const AuthPage: React.FC = () => {
-  const { login, register, loginDemo, isLoading } = useAuth();
+interface AuthPageProps { onRegistered: () => void; }
+
+export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
+  const { login, register, isLoading } = useAuth();
   const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login');
   
   const [email, setEmail] = useState('');
@@ -40,24 +42,13 @@ export const AuthPage: React.FC = () => {
           current_weight_kg: Number(weightKg) || 75,
           height_cm: Number(heightCm) || 175,
         });
+        onRegistered();
       } else if (mode === 'forgot') {
         const res = await api.forgotPassword(email);
         setSuccessMsg(res.message || 'Instruções de recuperação enviadas com sucesso.');
       }
     } catch (err: any) {
       setErrorMsg(err.message || 'Erro durante a operação. Verifique seus dados.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleDemoClick = async () => {
-    setErrorMsg(null);
-    setIsSubmitting(true);
-    try {
-      await loginDemo();
-    } catch (err: any) {
-      setErrorMsg('Falha ao autenticar com a conta demo: ' + err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -249,21 +240,6 @@ export const AuthPage: React.FC = () => {
             </button>
           </form>
 
-          {/* Quick Demo Option */}
-          <div className="mt-5 pt-4 border-t border-white/10">
-            <button
-              type="button"
-              onClick={handleDemoClick}
-              disabled={isSubmitting || isLoading}
-              className="w-full py-2.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-white text-xs font-black flex items-center justify-center gap-2 transition-colors cursor-pointer"
-            >
-              <Zap className="w-3.5 h-3.5 text-white fill-white" />
-              <span>Entrar como Atleta Demo (1 Clique)</span>
-            </button>
-            <p className="text-[10px] text-center text-neutral-500 mt-2 font-mono">
-              Conta de demonstração pré-populada com treinos e histórico.
-            </p>
-          </div>
 
           {mode === 'forgot' && (
             <div className="mt-3 text-center">
@@ -280,7 +256,7 @@ export const AuthPage: React.FC = () => {
 
         <div className="flex items-center justify-center gap-2 text-neutral-500 text-xs font-mono">
           <ShieldCheck className="w-3.5 h-3.5 text-neutral-400" />
-          <span>PostgreSQL Relacional · Sessão JWT Segura</span>
+          <span>Seu espaço de treino personalizado</span>
         </div>
       </div>
     </div>
