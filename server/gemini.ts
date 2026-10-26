@@ -271,3 +271,60 @@ Responda ESTRITAMENTE em formato JSON.`;
   const text = response.text?.trim() || '{}';
   return JSON.parse(text) as ProgressionReviewResult;
 }
+
+
+// 4. Análise orientativa de relatório de bioimpedância/metabolismo
+export async function analyzeBioimpedanceReport(
+  base64Data: string,
+  mimeType: string,
+  userContext?: string
+): Promise<{
+  summary: string;
+  metrics: { name: string; value: string; interpretation: string }[];
+  strengths: string[];
+  attention_points: string[];
+  training_recommendations: string[];
+  nutrition_discussion: string[];
+  questions_for_professional: string[];
+  limitations: string;
+}> {
+  const ai = getAiClient();
+  const cleanBase64 = base64Data.replace(/^data:[^;]+;base64,/, '');
+  const prompt = `Você é um assistente de educação em composição corporal do app FOCO. Leia o relatório de bioimpedância anexado e produza uma leitura cuidadosa em português do Brasil.
+Contexto opcional informado pela pessoa: ${userContext || 'Não informado'}.
+Regras obrigatórias:
+- Extraia apenas números e métricas legíveis no documento; não invente valores. Se algo não estiver claro, omita a métrica ou diga que está ilegível.
+- Explique em linguagem simples o que cada métrica significa e interprete com cautela, considerando que equações e faixas variam por aparelho, idade e sexo.
+- Não diagnostique doenças nem prescreva dieta, calorias, suplementos ou tratamento.
+- Separe achados observados de recomendações gerais. Não classifique uma pessoa como saudável/doente com base apenas no exame.
+- Inclua limitações da bioimpedância (hidratação, refeição, exercício recente, horário e condições da medição afetam resultados).
+- Sugira perguntas úteis para nutricionista/médico, e recomendações gerais de treino compatíveis com objetivos informados.
+Responda estritamente no JSON conforme o schema.`;
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: [{ role: 'user', parts: [
+      { inlineData: { data: cleanBase64, mimeType: mimeType || 'application/pdf' } },
+      { text: prompt },
+    ] }],
+    config: {
+      responseMimeType: 'application/json',
+      responseSchema: {
+        type: 'OBJECT',
+        properties: {
+          summary: { type: 'STRING' },
+          metrics: { type: 'ARRAY', items: { type: 'OBJECT', properties: {
+            name: { type: 'STRING' }, value: { type: 'STRING' }, interpretation: { type: 'STRING' },
+          }, required: ['name', 'value', 'interpretation'] } },
+          strengths: { type: 'ARRAY', items: { type: 'STRING' } },
+          attention_points: { type: 'ARRAY', items: { type: 'STRING' } },
+          training_recommendations: { type: 'ARRAY', items: { type: 'STRING' } },
+          nutrition_discussion: { type: 'ARRAY', items: { type: 'STRING' } },
+          questions_for_professional: { type: 'ARRAY', items: { type: 'STRING' } },
+          limitations: { type: 'STRING' },
+        },
+        required: ['summary', 'metrics', 'strengths', 'attention_points', 'training_recommendations', 'nutrition_discussion', 'questions_for_professional', 'limitations'],
+      },
+    },
+  });
+  return JSON.parse(response.text?.trim() || '{}');
+}
