@@ -9,12 +9,29 @@ import { generateAiWorkout, extractWorkoutFromSheet, reviewProgressionCycle, ana
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
   throw new Error('JWT_SECRET ausente ou fraco. Configure um segredo aleatório de pelo menos 32 caracteres no ambiente do servidor.');
 }
 
+// Restrict browser API access to the FOCO frontend and allow JSON/auth headers.
+const allowedOrigins = new Set([
+  'https://vineribeiro.github.io',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+]);
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 // Bound request bodies: sheet processing accepts files up to 10 MB before base64 encoding.
 app.use(express.json({ limit: '16mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
