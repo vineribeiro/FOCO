@@ -111,7 +111,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         goal: aiGoal,
         experience_level: aiExperience,
         weekly_frequency: Number(aiFrequency),
-        focus_muscles: aiFocus.length ? aiFocus.join(', ') : undefined,
+        focus_muscles: aiFocus.length ? aiFocus.join(', ') : 'Corpo inteiro com distribuição equilibrada',
         equipment_available: aiEquipment,
         restrictions: aiRestrictions,
       });
