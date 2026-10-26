@@ -30,7 +30,7 @@ import { api } from './services/api';
 import { InstallAppButton } from './components/InstallAppButton';
 
 function MainApp() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading, authLoadError } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('dashboard');
 
   useEffect(() => {
@@ -67,6 +67,27 @@ function MainApp() {
         <p className="text-[10px] text-neutral-400 mt-2 font-mono uppercase tracking-widest">
           FOCO EM EVOLUIR.
         </p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated && authLoadError) {
+    return (
+      <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center p-6">
+        <section className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111111] p-6 text-center">
+          <FocoSymbol className="mx-auto mb-4 h-12 w-12 text-white" />
+          <h1 className="text-xl font-black tracking-wide">O servidor está demorando</h1>
+          <p className="mt-3 text-sm leading-6 text-neutral-400">
+            O FOCO não conseguiu validar sua sessão a tempo. Isso não significa que sua conta foi perdida.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 w-full rounded-xl bg-white px-4 py-3 font-bold text-black"
+          >
+            Tentar novamente
+          </button>
+          <p className="mt-3 text-xs text-neutral-500">{authLoadError}</p>
+        </section>
       </div>
     );
   }
