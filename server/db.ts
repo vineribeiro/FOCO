@@ -341,6 +341,7 @@ class FocoDatabase {
       fs.renameSync(tmpPath, DB_FILE);
     } catch (err) {
       console.error('Error persisting database:', err);
+      throw new Error('Não foi possível persistir os dados. A operação não pode ser confirmada.', { cause: err });
     }
   }
 
