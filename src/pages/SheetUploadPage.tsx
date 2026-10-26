@@ -17,6 +17,9 @@ interface SheetUploadProps {
 
 export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) => {
   const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [uploadMode, setUploadMode] = useState<'workout' | 'body'>('workout');
+  const [bodyContext, setBodyContext] = useState('');
+  const [bodyReport, setBodyReport] = useState<{ summary: string; metrics: { name: string; value: string; interpretation: string }[]; strengths: string[]; attention_points: string[]; training_recommendations: string[]; nutrition_discussion: string[]; questions_for_professional: string[]; limitations: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -76,7 +79,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
 
   const handleProcessSheet = async () => {
     if (!selectedFile) {
-      setErrorMsg('Selecione uma foto de ficha ou documento PDF primeiro.');
+      setErrorMsg('Selecione um arquivo PDF ou imagem primeiro.');
       return;
     }
 
@@ -112,6 +115,21 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
     }
   };
 
+  const handleAnalyzeBodyReport = async () => {
+    if (!selectedFile) { setErrorMsg('Selecione o relatório da balança primeiro.'); return; }
+    setIsProcessing(true); setErrorMsg(null); setSuccessMsg(null); setBodyReport(null);
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result) : reject(new Error('Não foi possível ler o arquivo.'));
+        reader.onerror = () => reject(new Error('Falha ao ler o arquivo.'));
+        reader.readAsDataURL(selectedFile);
+      });
+      const result = await api.analyzeBioimpedanceReport({ base64, mime_type: selectedFile.type || 'application/pdf', context: bodyContext });
+      setBodyReport(result); setSuccessMsg('Relatório analisado. Confira os dados extraídos e as interpretações abaixo.');
+    } catch (err: any) { setErrorMsg('Não foi possível analisar o relatório: ' + err.message); }
+    finally { setIsProcessing(false); }
+  };
   const handleConfirmAndSavePlan = async () => {
     if (!extractedResult) return;
     setIsProcessing(true);
@@ -151,12 +169,20 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       
       {/* Top Header */}
       <div>
-        <h2 className="text-xl font-black uppercase tracking-tight text-white">Digitalização de Fichas com IA</h2>
+        <h2 className="text-xl font-black uppercase tracking-tight text-white">{uploadMode === 'body' ? 'Análise do Perfil Corporal' : 'Digitalização de Fichas com IA'}</h2>
         <p className="text-xs text-neutral-400 mt-0.5">
-          Envie foto da ficha da sua academia ou PDF. O Gemini 2.5 Flash extrai os exercícios e sugere a periodização automaticamente.
+          {uploadMode === 'body' ? 'Envie o PDF ou uma imagem do relatório da balança para extrair e explicar as métricas de composição corporal.' : 'Envie uma foto ou PDF da ficha para extrair exercícios e revisar antes de salvar.'}
         </p>
       </div>
 
+      <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-[#141414] border border-white/10">
+        <button type="button" onClick={() => { setUploadMode('workout'); setBodyReport(null); setErrorMsg(null); }} className={`rounded-xl px-3 py-3 text-left transition-colors ${uploadMode === 'workout' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}>
+          <span className="block text-xs font-black uppercase">Ficha de treino</span><span className="block text-[10px] mt-1 opacity-75">Importar exercícios</span>
+        </button>
+        <button type="button" onClick={() => { setUploadMode('body'); setExtractedResult(null); setErrorMsg(null); }} className={`rounded-xl px-3 py-3 text-left transition-colors ${uploadMode === 'body' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}>
+          <span className="block text-xs font-black uppercase">Perfil corporal</span><span className="block text-[10px] mt-1 opacity-75">Bioimpedância e metabolismo</span>
+        </button>
+      </div>
       {/* Alerts */}
       {errorMsg && (
         <div className="p-3.5 rounded-xl bg-white/5 border border-white/20 text-neutral-200 text-xs flex items-center gap-2.5">
@@ -182,7 +208,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
             type="file"
             ref={fileInputRef}
             onChange={handleFileChange}
-            accept="image/*,application/pdf"
+            accept="image/jpeg,image/png,image/webp,application/pdf"
             className="hidden"
           />
 
@@ -191,10 +217,10 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
           </div>
 
           <h4 className="text-sm font-bold text-white">
-            {selectedFile ? selectedFile.name : 'Clique para selecionar foto da ficha ou documento PDF'}
+            {selectedFile ? selectedFile.name : 'Clique para selecionar PDF ou imagem'}
           </h4>
           <p className="text-xs text-neutral-400 mt-1">
-            Formatos: Fotos (JPG, PNG, WebP) ou PDF de academias (SmartFit, Bluefit, etc.)
+            Formatos aceitos: PDF, JPG, PNG ou WebP
           </p>
 
           {selectedFile && (
@@ -237,8 +263,16 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
         </div>
 
         {/* Process Button */}
+        {uploadMode === 'body' && (
+          <div className="mt-4 space-y-2">
+            <label className="block text-xs font-bold uppercase tracking-wide text-neutral-300">Contexto opcional</label>
+            <textarea value={bodyContext} onChange={(e) => setBodyContext(e.target.value)} rows={3}
+              placeholder="Ex.: objetivo de ganhar massa, frequência de treino, restrições ou dúvidas..."
+              className="w-full rounded-xl bg-[#0A0A0A] border border-white/15 px-3 py-2.5 text-xs text-white placeholder-neutral-500 focus:border-white focus:outline-none" />
+          </div>
+        )}
         <button
-          onClick={handleProcessSheet}
+          onClick={uploadMode === 'body' ? handleAnalyzeBodyReport : handleProcessSheet}
           disabled={!selectedFile || isProcessing}
           className="w-full py-3.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all disabled:opacity-50"
         >
