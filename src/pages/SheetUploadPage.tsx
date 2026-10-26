@@ -11,6 +11,46 @@ import {
   AlertCircle,
 } from 'lucide-react';
 
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
+const MIME_BY_EXTENSION: Record<string, string> = {
+  pdf: 'application/pdf',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+};
+
+function getSupportedMimeType(file: File): string | null {
+  const reportedType = (file.type || '').toLowerCase().split(';')[0].trim();
+  const allowed = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+  if (allowed.includes(reportedType)) return reportedType;
+  const extension = file.name.toLowerCase().split('.').pop() || '';
+  return MIME_BY_EXTENSION[extension] || null;
+}
+
+function readAsNormalizedDataUrl(file: File, mimeType: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result !== 'string') {
+        reject(new Error('O navegador não conseguiu ler o conteúdo do arquivo.'));
+        return;
+      }
+      const separator = reader.result.indexOf(',');
+      if (separator < 0) {
+        reject(new Error('O arquivo foi lido em um formato inválido.'));
+        return;
+      }
+      // Android/iOS file pickers sometimes report application/octet-stream.
+      // Normalize the data URL header to match the verified extension/MIME.
+      resolve(`data:${mimeType};base64,${reader.result.slice(separator + 1)}`);
+    };
+    reader.onerror = () => reject(new Error('Falha ao ler o arquivo no celular. Tente selecionar o arquivo novamente.'));
+    reader.onabort = () => reject(new Error('A leitura do arquivo foi cancelada.'));
+    reader.readAsDataURL(file);
+  });
+}
+
 interface SheetUploadProps {
   setActiveTab: (tab: string) => void;
 }
@@ -58,23 +98,47 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const f = e.target.files[0];
-      setSelectedFile(f);
-      setErrorMsg(null);
-      setExtractedResult(null);
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-      // If image, create preview
-      if (f.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          setFilePreviewUrl(ev.target?.result as string);
-        };
-        reader.readAsDataURL(f);
-      } else {
-        setFilePreviewUrl(null);
-      }
+    const mimeType = getSupportedMimeType(file);
+    if (!mimeType) {
+      setSelectedFile(null);
+      setFilePreviewUrl(null);
+      setErrorMsg('Formato não reconhecido. Escolha um PDF, JPG, PNG ou WebP.');
+      e.target.value = '';
+      return;
     }
+    if (file.size > MAX_FILE_BYTES) {
+      setSelectedFile(null);
+      setFilePreviewUrl(null);
+      setErrorMsg('O arquivo ultrapassa 10 MB. Exporte em PDF mais leve ou envie uma imagem comprimida.');
+      e.target.value = '';
+      return;
+    }
+
+    setSelectedFile(file);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    setExtractedResult(null);
+    setBodyReport(null);
+
+    if (mimeType.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (event) => setFilePreviewUrl(typeof event.target?.result === 'string' ? event.target.result : null);
+      reader.onerror = () => setFilePreviewUrl(null);
+      reader.readAsDataURL(file);
+    } else {
+      setFilePreviewUrl(null);
+    }
+  };
+
+  const readSelectedFile = async (file: File): Promise<{ base64: string; mimeType: string }> => {
+    if (file.size > MAX_FILE_BYTES) throw new Error('O limite para leitura é 10 MB.');
+    const mimeType = getSupportedMimeType(file);
+    if (!mimeType) throw new Error('Formato não suportado. Envie PDF, JPG, PNG ou WebP.');
+    const base64 = await readAsNormalizedDataUrl(file, mimeType);
+    return { base64, mimeType };
   };
 
   const handleProcessSheet = async () => {
@@ -86,49 +150,51 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
     setIsProcessing(true);
     setErrorMsg(null);
     setSuccessMsg(null);
+    setExtractedResult(null);
 
     try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64 = reader.result as string;
-        try {
-          const res = await api.extractWorkoutFromSheet({
-            base64,
-            mime_type: selectedFile.type || 'image/jpeg',
-            filename: selectedFile.name,
-            notes,
-          });
-
-          setExtractedResult(res);
-          setSuccessMsg('Ficha analisada com sucesso pela visão do Gemini 2.5 Flash! Confira os exercícios abaixo antes de salvar.');
-          loadFiles();
-        } catch (err: any) {
-          setErrorMsg('Falha ao processar arquivo com IA: ' + err.message);
-        } finally {
-          setIsProcessing(false);
-        }
-      };
-      reader.readAsDataURL(selectedFile);
+      const { base64, mimeType } = await readSelectedFile(selectedFile);
+      const result = await api.extractWorkoutFromSheet({
+        base64,
+        mime_type: mimeType,
+        filename: selectedFile.name,
+        notes,
+      });
+      if (!Array.isArray(result.extracted_exercises) || result.extracted_exercises.length === 0) {
+        throw new Error('A IA não encontrou exercícios legíveis. Envie uma foto mais nítida ou o PDF original, mostrando a ficha inteira.');
+      }
+      setExtractedResult(result);
+      setSuccessMsg(`Encontramos ${result.extracted_exercises.length} exercícios. Revise os dados antes de salvar sua ficha.`);
+      void loadFiles();
     } catch (err: any) {
-      setErrorMsg('Erro ao ler arquivo: ' + err.message);
+      const message = String(err?.message || 'Erro desconhecido');
+      setErrorMsg(message.includes('Sessão') || message.includes('token')
+        ? 'Sua sessão expirou. Entre novamente no FOCO e tente enviar a ficha mais uma vez.'
+        : 'Não foi possível ler essa ficha: ' + message);
+    } finally {
       setIsProcessing(false);
     }
   };
 
   const handleAnalyzeBodyReport = async () => {
     if (!selectedFile) { setErrorMsg('Selecione o relatório da balança primeiro.'); return; }
-    setIsProcessing(true); setErrorMsg(null); setSuccessMsg(null); setBodyReport(null);
+    setIsProcessing(true);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    setBodyReport(null);
     try {
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result) : reject(new Error('Não foi possível ler o arquivo.'));
-        reader.onerror = () => reject(new Error('Falha ao ler o arquivo.'));
-        reader.readAsDataURL(selectedFile);
-      });
-      const result = await api.analyzeBioimpedanceReport({ base64, mime_type: selectedFile.type || 'application/pdf', context: bodyContext });
-      setBodyReport(result); setSuccessMsg('Relatório analisado. Confira os dados extraídos e as interpretações abaixo.');
-    } catch (err: any) { setErrorMsg('Não foi possível analisar o relatório: ' + err.message); }
-    finally { setIsProcessing(false); }
+      const { base64, mimeType } = await readSelectedFile(selectedFile);
+      const result = await api.analyzeBioimpedanceReport({ base64, mime_type: mimeType, context: bodyContext });
+      setBodyReport(result);
+      setSuccessMsg('Relatório analisado. Confira os dados extraídos e as interpretações abaixo.');
+    } catch (err: any) {
+      const message = String(err?.message || 'Erro desconhecido');
+      setErrorMsg(message.includes('Sessão') || message.includes('token')
+        ? 'Sua sessão expirou. Entre novamente no FOCO e tente enviar o relatório mais uma vez.'
+        : 'Não foi possível analisar o relatório: ' + message);
+    } finally {
+      setIsProcessing(false);
+    }
   };
   const handleConfirmAndSavePlan = async () => {
     if (!extractedResult) return;
@@ -217,10 +283,10 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
           </div>
 
           <h4 className="text-sm font-bold text-white">
-            {selectedFile ? selectedFile.name : 'Clique para selecionar PDF ou imagem'}
+            {selectedFile ? selectedFile.name : 'Toque para selecionar PDF ou imagem'}
           </h4>
           <p className="text-xs text-neutral-400 mt-1">
-            Formatos aceitos: PDF, JPG, PNG ou WebP
+            PDF, JPG, PNG ou WebP · até 10 MB
           </p>
 
           {selectedFile && (
@@ -242,7 +308,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
             <div className="text-xs">
               <p className="font-bold text-white uppercase">Prévia do Arquivo</p>
               <p className="text-neutral-400 text-[11px]">
-                A visão multimodal do Gemini irá ler a caligrafia e a estrutura das colunas.
+                A IA vai extrair os exercícios para você revisar antes de salvar.
               </p>
             </div>
           </div>
