@@ -358,7 +358,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 className="w-full py-3.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all disabled:opacity-50"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>{isGenerating ? 'Criando Estrutura Biomecânica...' : 'Gerar Ficha com Gemini 2.5 Flash'}</span>
+                <span>{isGenerating ? 'Montando sua ficha...' : 'Gerar ficha personalizada'}</span>
               </button>
             </div>
           </form>
