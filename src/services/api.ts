@@ -306,10 +306,10 @@ export const api = {
       });
       setStoredToken(res.token);
       return res;
-    } catch {
-      // Fallback local instantâneo
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
-      db.user = { id: 'usr_' + Date.now(), email: payload.email, full_name: payload.full_name };
+      db.user = { id: 'usr_' + Date.now(), email: payload.email.trim().toLowerCase(), full_name: payload.full_name };
       db.profile = {
         id: db.user.id,
         full_name: payload.full_name,
@@ -318,7 +318,7 @@ export const api = {
         height_cm: payload.height_cm || 178,
       };
       saveLocalDb(db);
-      const token = 'token_local_' + Date.now();
+      const token = 'token_local_demo_' + Date.now();
       setStoredToken(token);
       return { token, user: db.user, profile: db.profile };
     }
@@ -328,18 +328,18 @@ export const api = {
     try {
       const res = await request<{ token: string; user: User; profile: Profile }>('/api/auth/login', {
         method: 'POST',
-        body: JSON.stringify(credentials),
+        body: JSON.stringify({ ...credentials, email: credentials.email.trim().toLowerCase() }),
       });
       setStoredToken(res.token);
       return res;
-    } catch {
-      // Fallback local instantâneo
-      const db = getLocalDb();
-      if (credentials.email && credentials.email !== 'atleta@foco.app') {
-        db.user.email = credentials.email;
+    } catch (error) {
+      if (!isStaticHost) throw error;
+      if (credentials.email.trim().toLowerCase() !== 'atleta@foco.app' || credentials.password !== 'foco1234') {
+        throw new Error('O login real exige o servidor FOCO. No GitHub Pages, use a conta de demonstração disponível no botão de acesso demo.');
       }
+      const db = getLocalDb();
       saveLocalDb(db);
-      const token = 'token_local_' + Date.now();
+      const token = 'token_local_demo_' + Date.now();
       setStoredToken(token);
       return { token, user: db.user, profile: db.profile };
     }
@@ -348,45 +348,32 @@ export const api = {
   async getMe() {
     try {
       return await request<{ user: User; profile: Profile }>('/api/auth/me');
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       return { user: db.user, profile: db.profile };
     }
   },
 
-  async forgotPassword(email: string) {
-    try {
-      return await request<{ message: string; reset_token?: string; demo_instructions?: string }>('/api/auth/forgot-password', {
-        method: 'POST',
-        body: JSON.stringify({ email }),
-      });
-    } catch {
-      return { message: 'Link de redefinição simulado com sucesso (Modo Local FOCO).' };
-    }
+  async forgotPassword(_email: string) {
+    throw new Error('A recuperação de senha por e-mail ainda não está configurada. Nenhuma senha foi alterada.');
   },
 
-  async resetPassword(payload: { token: string; new_password: string }) {
-    try {
-      return await request<{ message: string }>('/api/auth/reset-password', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
-    } catch {
-      return { message: 'Senha atualizada com sucesso.' };
-    }
+  async resetPassword(_payload: { token: string; new_password: string }) {
+    throw new Error('A redefinição de senha só estará disponível após configurar a entrega segura de links por e-mail.');
   },
 
   async deleteAccount() {
-    try {
+    if (!isStaticHost) {
       await request<{ message: string }>('/api/auth/account', { method: 'DELETE' });
-    } catch {
-      localStorage.removeItem(LOCAL_DB_KEY);
+      removeStoredToken();
+      return { message: 'Conta removida com sucesso.' };
     }
+    localStorage.removeItem(LOCAL_DB_KEY);
     removeStoredToken();
-    return { message: 'Conta removida com sucesso.' };
+    return { message: 'Dados locais de demonstração removidos. Nenhuma conta de servidor foi excluída.' };
   },
 
-  // Profile
   async getProfile() {
     try {
       return await request<Profile>('/api/profile');
@@ -648,33 +635,16 @@ export const api = {
     equipment_available?: string;
     restrictions?: string;
   }) {
-    try {
-      return await request<{
-        name: string;
-        goal: string;
-        weekly_frequency: number;
-        explanation: string;
-        exercises: WorkoutExercise[];
-      }>('/api/ai/generate-workout', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
-    } catch {
-      // Fallback gerador estruturado para ambiente estático offline
-      return {
-        name: `Treino FOCO Personalizado: ${payload.goal}`,
-        goal: payload.goal,
-        weekly_frequency: payload.weekly_frequency,
-        explanation: 'Ficha gerada com base nos princípios de sobrecarga progressiva e biomecânica avançada FOCO.',
-        exercises: [
-          { exercise_name: 'Supino Reto com Barra', muscle_group: 'Peitoral', sets: 4, reps_min: 8, reps_max: 10, rest_seconds: 90, suggested_load_kg: 80 },
-          { exercise_name: 'Desenvolvimento com Halteres', muscle_group: 'Ombros', sets: 3, reps_min: 10, reps_max: 12, rest_seconds: 60, suggested_load_kg: 24 },
-          { exercise_name: 'Puxada Frontal Alta', muscle_group: 'Costas', sets: 4, reps_min: 10, reps_max: 12, rest_seconds: 60, suggested_load_kg: 65 },
-          { exercise_name: 'Agachamento Livre', muscle_group: 'Pernas', sets: 4, reps_min: 8, reps_max: 10, rest_seconds: 120, suggested_load_kg: 90 },
-          { exercise_name: 'Tríceps Polia Alta', muscle_group: 'Braços', sets: 3, reps_min: 12, reps_max: 15, rest_seconds: 45, suggested_load_kg: 25 },
-        ],
-      };
-    }
+    return await request<{
+      name: string;
+      goal: string;
+      weekly_frequency: number;
+      explanation: string;
+      exercises: WorkoutExercise[];
+    }>('/api/ai/generate-workout', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
   },
 
   async extractWorkoutFromSheet(payload: {
@@ -683,77 +653,46 @@ export const api = {
     filename?: string;
     notes?: string;
   }) {
-    try {
-      return await request<{
-        plan_name: string;
-        goal: string;
-        weekly_frequency: number;
-        confidence_notes: string;
-        extracted_exercises: WorkoutExercise[];
-      }>('/api/ai/extract-sheet', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
-    } catch {
-      return {
-        plan_name: 'Ficha Extraída via Imagem FOCO',
-        goal: 'Hipertrofia & Força',
-        weekly_frequency: 4,
-        confidence_notes: 'Ficha lida com sucesso e mapeada nos grupos musculares anatômicos.',
-        extracted_exercises: [
-          { exercise_name: 'Supino Reto Barra', muscle_group: 'Peitoral', sets: 4, reps_min: 8, reps_max: 12, rest_seconds: 90, suggested_load_kg: 70 },
-          { exercise_name: 'Crucifixo Inclinado', muscle_group: 'Peitoral', sets: 3, reps_min: 10, reps_max: 12, rest_seconds: 60, suggested_load_kg: 18 },
-          { exercise_name: 'Elevação Lateral', muscle_group: 'Ombros', sets: 4, reps_min: 12, reps_max: 15, rest_seconds: 45, suggested_load_kg: 12 },
-        ],
-      };
+    if (!payload.mime_type || !['application/pdf', 'image/jpeg', 'image/png', 'image/webp'].includes(payload.mime_type)) {
+      throw new Error('Formato não suportado. Envie PDF, JPG, PNG ou WebP.');
     }
+    if (!payload.base64 || payload.base64.length > 15_000_000) {
+      throw new Error('Arquivo vazio ou muito grande. O limite de processamento é 10 MB.');
+    }
+    return await request<{
+      plan_name: string;
+      goal: string;
+      weekly_frequency: number;
+      confidence_notes: string;
+      extracted_exercises: WorkoutExercise[];
+    }>('/api/ai/extract-sheet', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
   },
 
   async reviewProgression(payload: { review_interval_days: number; user_feedback?: string }) {
-    try {
-      return await request<{
-        recommendation_id: string;
-        review_interval_days: number;
-        explanation: string;
-        progression_summary: {
-          strength_delta: string;
-          volume_analysis: string;
-          focus_adjustments: string;
-        };
-        proposed_plan: {
-          name: string;
-          goal: string;
-          weekly_frequency: number;
-          exercises: WorkoutExercise[];
-        };
-      }>('/api/ai/review-progression', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
-    } catch {
-      return {
-        recommendation_id: 'rec_' + Date.now(),
-        review_interval_days: payload.review_interval_days,
-        explanation: 'Progressão calculada com base no volume acumulado das últimas sessões.',
-        progression_summary: {
-          strength_delta: '+4.2% em relação ao ciclo anterior',
-          volume_analysis: 'Volume ótimo alcançado nos grupamentos principais',
-          focus_adjustments: 'Incremento de 2.5kg sugerido nas séries principais',
-        },
-        proposed_plan: {
-          name: 'FOCO Hipertrofia Fase 2 (Ajustado)',
-          goal: 'Sobrecarga Progressiva',
-          weekly_frequency: 4,
-          exercises: [
-            { exercise_name: 'Supino Reto com Barra', muscle_group: 'Peitoral', sets: 4, reps_min: 8, reps_max: 10, rest_seconds: 90, suggested_load_kg: 87.5 },
-            { exercise_name: 'Desenvolvimento Halteres', muscle_group: 'Ombros', sets: 4, reps_min: 8, reps_max: 10, rest_seconds: 75, suggested_load_kg: 26 },
-          ],
-        },
+    return await request<{
+      recommendation_id: string;
+      review_interval_days: number;
+      explanation: string;
+      progression_summary: {
+        strength_delta: string;
+        volume_analysis: string;
+        focus_adjustments: string;
       };
-    }
+      proposed_plan: {
+        name: string;
+        goal: string;
+        weekly_frequency: number;
+        exercises: WorkoutExercise[];
+      };
+    }>('/api/ai/review-progression', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
   },
 
-  // AI Recommendations
   async getRecommendations() {
     try {
       return await request<AIRecommendation[]>('/api/recommendations');
@@ -775,24 +714,25 @@ export const api = {
 
   // System
   async getSystemStatus() {
-    try {
-      return await request<{
-        app: string;
-        version: string;
-        ai_status: string;
-        database: string;
-        supabase_sync_available: boolean;
-        timestamp: string;
-      }>('/api/system/status');
-    } catch {
+    if (isStaticHost) {
       return {
         app: 'FOCO Fitness Premium',
-        version: '1.0.0',
-        ai_status: 'Online / Local Fallback',
-        database: 'LocalStorage / PostgreSQL Supabase Ready',
-        supabase_sync_available: true,
+        version: '1.0.0-demo',
+        ai_status: 'Indisponível: backend não conectado',
+        database: 'Armazenamento local deste navegador (demonstração)',
+        supabase_sync_available: false,
         timestamp: new Date().toISOString(),
       };
     }
+    return await request<{
+      app: string;
+      version: string;
+      ai_status: string;
+      database: string;
+      supabase_sync_available: boolean;
+      timestamp: string;
+    }>('/api/system/status');
   },
+
+
 };
