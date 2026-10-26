@@ -299,62 +299,27 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 }
 
 export const api = {
-  // Auth
+  // Autenticação sempre validada pelo servidor; não criar contas locais falsas em produção.
   async register(payload: { email: string; password: string; full_name: string; experience_level?: string; current_weight_kg?: number; height_cm?: number }) {
-    try {
-      const res = await request<{ token: string; user: User; profile: Profile }>('/api/auth/register', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      });
-      setStoredToken(res.token);
-      return res;
-    } catch (error) {
-      if (!isStaticHost) throw error;
-      const db = getLocalDb();
-      db.user = { id: 'usr_' + Date.now(), email: payload.email.trim().toLowerCase(), full_name: payload.full_name };
-      db.profile = {
-        id: db.user.id,
-        full_name: payload.full_name,
-        experience_level: (payload.experience_level as any) || 'intermediario',
-        current_weight_kg: payload.current_weight_kg || 80,
-        height_cm: payload.height_cm || 178,
-      };
-      saveLocalDb(db);
-      const token = 'token_local_demo_' + Date.now();
-      setStoredToken(token);
-      return { token, user: db.user, profile: db.profile };
-    }
+    const res = await request<{ token: string; user: User; profile: Profile }>('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    setStoredToken(res.token);
+    return res;
   },
 
   async login(credentials: { email: string; password: string }) {
-    try {
-      const res = await request<{ token: string; user: User; profile: Profile }>('/api/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ ...credentials, email: credentials.email.trim().toLowerCase() }),
-      });
-      setStoredToken(res.token);
-      return res;
-    } catch (error) {
-      if (!isStaticHost) throw error;
-      if (credentials.email.trim().toLowerCase() !== 'atleta@foco.app' || credentials.password !== 'foco1234') {
-        throw new Error('O login real exige o servidor FOCO. No GitHub Pages, use a conta de demonstração disponível no botão de acesso demo.');
-      }
-      const db = getLocalDb();
-      saveLocalDb(db);
-      const token = 'token_local_demo_' + Date.now();
-      setStoredToken(token);
-      return { token, user: db.user, profile: db.profile };
-    }
+    const res = await request<{ token: string; user: User; profile: Profile }>('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ ...credentials, email: credentials.email.trim().toLowerCase() }),
+    });
+    setStoredToken(res.token);
+    return res;
   },
 
   async getMe() {
-    try {
-      return await request<{ user: User; profile: Profile }>('/api/auth/me');
-    } catch (error) {
-      if (!isStaticHost) throw error;
-      const db = getLocalDb();
-      return { user: db.user, profile: db.profile };
-    }
+    return await request<{ user: User; profile: Profile }>('/api/auth/me');
   },
 
   async forgotPassword(_email: string) {
@@ -366,21 +331,16 @@ export const api = {
   },
 
   async deleteAccount() {
-    if (!isStaticHost) {
-      await request<{ message: string }>('/api/auth/account', { method: 'DELETE' });
-      removeStoredToken();
-      return { message: 'Conta removida com sucesso.' };
-    }
-    localStorage.removeItem(LOCAL_DB_KEY);
+    const result = await request<{ message: string }>('/api/auth/account', { method: 'DELETE' });
     removeStoredToken();
-    return { message: 'Dados locais de demonstração removidos. Nenhuma conta de servidor foi excluída.' };
+    return result;
   },
 
   async getProfile() {
     try {
       return await request<Profile>('/api/profile');
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return getLocalDb().profile;
     }
   },
@@ -392,7 +352,7 @@ export const api = {
         body: JSON.stringify(updates),
       });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       db.profile = { ...db.profile, ...updates };
       saveLocalDb(db);
@@ -431,7 +391,7 @@ export const api = {
     try {
       return await request<Goal[]>('/api/goals');
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return getLocalDb().goals;
     }
   },
@@ -443,7 +403,7 @@ export const api = {
         body: JSON.stringify(goal),
       });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       const newGoal: Goal = {
         id: 'goal_' + Date.now(),
@@ -464,7 +424,7 @@ export const api = {
     try {
       return await request<{ message: string }>(`/api/goals/${id}`, { method: 'DELETE' });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       db.goals = db.goals.filter((g) => g.id !== id);
       saveLocalDb(db);
@@ -477,7 +437,7 @@ export const api = {
     try {
       return await request<WorkoutPlan[]>('/api/workouts');
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return getLocalDb().workouts;
     }
   },
@@ -486,7 +446,7 @@ export const api = {
     try {
       return await request<WorkoutPlan | null>('/api/workouts/active');
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       return db.workouts.find((w) => w.status === 'ativo') || db.workouts[0] || null;
     }
@@ -506,7 +466,7 @@ export const api = {
         body: JSON.stringify(plan),
       });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       const newPlan: WorkoutPlan = {
         id: 'plan_' + Date.now(),
@@ -532,7 +492,7 @@ export const api = {
     try {
       return await request<{ message: string }>(`/api/workouts/${id}/activate`, { method: 'PUT' });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       db.workouts.forEach((w) => {
         w.status = w.id === id ? 'ativo' : 'inativo';
@@ -546,7 +506,7 @@ export const api = {
     try {
       return await request<{ message: string }>(`/api/workouts/${id}`, { method: 'DELETE' });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       db.workouts = db.workouts.filter((w) => w.id !== id);
       saveLocalDb(db);
@@ -559,7 +519,7 @@ export const api = {
     try {
       return await request<WorkoutSession[]>('/api/sessions');
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return getLocalDb().sessions;
     }
   },
@@ -580,7 +540,7 @@ export const api = {
         body: JSON.stringify(session),
       });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       const newSession: WorkoutSession = {
         id: 'sess_' + Date.now(),
@@ -612,7 +572,7 @@ export const api = {
     try {
       return await request<BodyMeasurement[]>('/api/measurements');
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return getLocalDb().measurements;
     }
   },
@@ -624,7 +584,7 @@ export const api = {
         body: JSON.stringify(measurement),
       });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       const newM: BodyMeasurement = {
         id: 'meas_' + Date.now(),
@@ -644,7 +604,7 @@ export const api = {
     try {
       return await request<{ message: string }>(`/api/measurements/${id}`, { method: 'DELETE' });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       const db = getLocalDb();
       db.measurements = db.measurements.filter((m) => m.id !== id);
       saveLocalDb(db);
@@ -657,7 +617,7 @@ export const api = {
     try {
       return await request<UploadedFile[]>('/api/files');
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return [];
     }
   },
@@ -666,7 +626,7 @@ export const api = {
     try {
       return await request<{ message: string }>(`/api/files/${id}`, { method: 'DELETE' });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return { message: 'Arquivo removido' };
     }
   },
@@ -764,7 +724,7 @@ export const api = {
     try {
       return await request<AIRecommendation[]>('/api/recommendations');
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return [];
     }
   },
@@ -776,7 +736,7 @@ export const api = {
         body: JSON.stringify({ status }),
       });
     } catch (error) {
-      if (!isStaticHost) throw error;
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return { message: 'Status atualizado com sucesso' };
     }
   },
