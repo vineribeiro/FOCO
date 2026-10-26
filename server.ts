@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { db } from './server/db.js';
-import { generateAiWorkout, extractWorkoutFromSheet, reviewProgressionCycle } from './server/gemini.js';
+import { generateAiWorkout, extractWorkoutFromSheet, reviewProgressionCycle, analyzeBioimpedanceReport } from './server/gemini.js';
 
 dotenv.config();
 
@@ -437,6 +437,24 @@ app.post('/api/ai/extract-sheet', requireAuth, async (req: AuthenticatedRequest,
   } catch (error: any) {
     console.error('Error in AI sheet extraction:', error);
     return res.status(500).json({ error: error.message || 'Falha ao processar a ficha de treino enviada' });
+  }
+});
+
+app.post('/api/ai/analyze-bioimpedance', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { base64, mime_type, context } = req.body;
+    const allowedMimeTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+    if (typeof base64 !== 'string' || base64.length === 0 || base64.length > 15_000_000) {
+      return res.status(413).json({ error: 'Arquivo ausente ou acima do limite de 10 MB.' });
+    }
+    if (!allowedMimeTypes.includes(mime_type) || !new RegExp('^data:(application/pdf|image/(jpeg|png|webp));base64,').test(base64)) {
+      return res.status(415).json({ error: 'Formato inválido. Envie PDF, JPG, PNG ou WebP.' });
+    }
+    const report = await analyzeBioimpedanceReport(base64, mime_type, context);
+    return res.json(report);
+  } catch (error: any) {
+    console.error('Error analyzing bioimpedance report:', error);
+    return res.status(500).json({ error: error.message || 'Falha ao analisar relatório metabólico.' });
   }
 });
 
