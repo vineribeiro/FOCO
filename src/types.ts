@@ -15,6 +15,26 @@ export interface Profile {
   updated_at?: string;
 }
 
+export interface Anamnesis {
+  primary_goal: string;
+  goal_details: string;
+  training_age: string;
+  activity_level: string;
+  weekly_frequency: number;
+  session_minutes: number;
+  preferred_days: string[];
+  priority_muscles: string[];
+  equipment_available: string[];
+  current_routine: string;
+  exercise_preferences: string;
+  pain_or_injuries: string;
+  health_notes: string;
+  sleep_quality: string;
+  cardio_habits: string;
+  consent_health_data: boolean;
+  updated_at?: string;
+}
+
 export interface Goal {
   id: string;
   user_id: string;
