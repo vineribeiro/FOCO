@@ -10,7 +10,10 @@ dotenv.config();
 
 const app = express();
 const PORT = 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'foco_super_secret_jwt_key_musculacao_2026';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  throw new Error('JWT_SECRET ausente ou fraco. Configure um segredo aleatório de pelo menos 32 caracteres no ambiente do servidor.');
+}
 
 // Allow payload sizes up to 50MB for uploading workout sheet images / PDF base64
 app.use(express.json({ limit: '50mb' }));
@@ -51,7 +54,8 @@ function requireAuth(req: AuthenticatedRequest, res: Response, next: NextFunctio
 
 app.post('/api/auth/register', async (req: Request, res: Response) => {
   try {
-    const { email, password, full_name, experience_level, current_weight_kg, height_cm } = req.body;
+    const { password, full_name, experience_level, current_weight_kg, height_cm } = req.body;
+    const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
 
     if (!email || !password || !full_name) {
       return res.status(400).json({ error: 'Nome completo, e-mail e senha são obrigatórios' });
@@ -97,7 +101,8 @@ app.post('/api/auth/register', async (req: Request, res: Response) => {
 
 app.post('/api/auth/login', async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
 
     if (!email || !password) {
       return res.status(400).json({ error: 'E-mail e senha são obrigatórios' });
@@ -139,22 +144,11 @@ app.get('/api/auth/me', requireAuth, (req: AuthenticatedRequest, res: Response) 
   });
 });
 
-app.post('/api/auth/forgot-password', (req: Request, res: Response) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ error: 'E-mail é obrigatório' });
-  }
-  const user = db.findUserByEmail(email);
-  if (!user) {
-    // Return friendly generic message for security
-    return res.json({ message: 'Se o e-mail estiver cadastrado, as instruções de redefinição foram emitidas.' });
-  }
-  // Simulated token for password recovery
-  const resetToken = jwt.sign({ id: user.id, type: 'reset' }, JWT_SECRET, { expiresIn: '1h' });
-  return res.json({
-    message: 'Código de recuperação gerado com sucesso.',
-    reset_token: resetToken,
-    demo_instructions: 'Utilize este código para redefinir sua senha com segurança.',
+app.post('/api/auth/forgot-password', (_req: Request, res: Response) => {
+  // No token is ever returned to the browser. Until a verified email delivery
+  // provider is configured, recovery is intentionally unavailable.
+  return res.status(501).json({
+    error: 'A recuperação por e-mail ainda não está configurada. Nenhuma senha foi alterada.',
   });
 });
 
@@ -164,7 +158,10 @@ app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
     if (!token || !new_password || new_password.length < 6) {
       return res.status(400).json({ error: 'Token válido e senha de no mínimo 6 dígitos são necessários' });
     }
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; type?: string };
+    if (decoded.type !== 'reset' || !decoded.id) {
+      return res.status(400).json({ error: 'Token de recuperação inválido' });
+    }
     const user = db.findUserById(decoded.id);
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
