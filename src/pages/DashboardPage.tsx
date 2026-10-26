@@ -6,16 +6,15 @@ import {
   Play,
   Dumbbell,
   Sparkles,
-  RotateCcw,
   TrendingUp,
-  Clock,
+  Clock3,
   ArrowRight,
-  MoreVertical,
   Activity,
-  Flame,
   CheckCircle2,
-  ChevronRight,
   Rotate3d,
+  ClipboardList,
+  FileUp,
+  Target,
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -32,222 +31,218 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab, onOpenEx
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let active = true;
     async function loadData() {
       try {
         const [plan, userSessions, userGoals, userRecs] = await Promise.all([
-          api.getActiveWorkout().catch(() => null),
-          api.getSessions().catch(() => []),
-          api.getGoals().catch(() => []),
-          api.getRecommendations().catch(() => []),
+          api.getActiveWorkout(),
+          api.getSessions(),
+          api.getGoals(),
+          api.getRecommendations(),
         ]);
+        if (!active) return;
         setActivePlan(plan);
         setSessions(userSessions);
         setGoals(userGoals);
         setRecommendations(userRecs);
-      } catch (e) {
-        console.error('Error loading dashboard data:', e);
+      } catch (error) {
+        console.error('Não foi possível carregar o painel FOCO:', error);
       } finally {
-        setIsLoading(false);
+        if (active) setIsLoading(false);
       }
     }
     loadData();
+    return () => { active = false; };
   }, []);
 
-  const completedSessions = sessions.filter((s) => s.status === 'completed');
-  const pendingRec = recommendations.find((r) => r.status === 'pending');
+  const completedSessions = sessions.filter((session) => session.status === 'completed');
+  const pendingRec = recommendations.find((recommendation) => recommendation.status === 'pending');
+  const exercises = activePlan?.exercises || [];
+  const muscleChips = Array.from(new Set(exercises.map((exercise) => exercise.muscle_group)))
+    .slice(0, 5)
+    .map((name) => ({
+      name,
+      count: exercises.filter((exercise) => exercise.muscle_group === name).length,
+    }));
+  const firstName = user?.full_name?.trim().split(/\s+/)[0] || 'atleta';
 
-  const muscleChips = [
-    { name: 'Peito', pct: '100%' },
-    { name: 'Ombros', pct: '85%' },
-    { name: 'Tríceps', pct: '70%' },
-    { name: 'Core', pct: '60%' },
-  ];
+  if (isLoading) {
+    return (
+      <div className="mx-auto w-full max-w-5xl space-y-5 pb-32">
+        <div className="h-28 animate-pulse rounded-2xl border border-white/10 bg-[#141414]" />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="h-24 animate-pulse rounded-2xl border border-white/10 bg-[#141414]" />
+          <div className="h-24 animate-pulse rounded-2xl border border-white/10 bg-[#141414]" />
+          <div className="hidden h-24 animate-pulse rounded-2xl border border-white/10 bg-[#141414] sm:block" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-5 pb-32 max-w-md mx-auto">
-      
-      {/* Fitbod Top Breadcrumb (Monochrome) */}
-      <div className="flex items-center justify-between pt-1">
-        <button
-          onClick={() => setActiveTab('perfil')}
-          className="flex items-center gap-2 group cursor-pointer"
-        >
-          <div className="w-7 h-7 rounded-full bg-white text-black font-black text-xs flex items-center justify-center">
-            {user?.full_name?.charAt(0) || 'A'}
-          </div>
-          <span className="text-xs font-black text-white group-hover:text-neutral-300 transition-colors flex items-center gap-1">
-            Meu Plano <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('musculos')}
-          className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-white bg-white/10 hover:bg-white hover:text-black px-3 py-1 rounded-full border border-white/20 cursor-pointer transition-all"
-        >
-          <Rotate3d className="w-3.5 h-3.5" />
-          <span>Ver 3D</span>
-        </button>
-      </div>
-
-      {/* Routine Title Header (Monochrome Fitbod) */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-black text-white tracking-tight leading-none">
-            {activePlan ? activePlan.name.split('-')[0].trim() : 'Push Day'}
+    <div className="mx-auto w-full max-w-5xl space-y-6 pb-32 text-white">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-neutral-500">Seu espaço de evolução</p>
+          <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
+            {activePlan ? activePlan.name : 'Olá, ' + firstName}
           </h1>
-
-          <button
-            onClick={() => setActiveTab('treinos')}
-            className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-all"
-          >
-            <RotateCcw className="w-3 h-3" />
-            <span>Trocar</span>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-400">
+            {activePlan
+              ? 'Seu plano atual, pronto para acompanhar cada sessão e cada evolução.'
+              : 'Vamos configurar seu perfil para criar uma ficha de treino feita para sua rotina e seus objetivos.'}
+          </p>
+        </div>
+        {activePlan && (
+          <button type="button" onClick={() => setActiveTab('treinos')} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-xs font-black transition hover:bg-white/10">
+            <Dumbbell className="h-4 w-4" /> Minhas fichas
           </button>
-        </div>
+        )}
+      </header>
 
-        <div className="flex items-center gap-2 text-xs font-bold text-neutral-400">
-          <span>{activePlan?.exercises?.length || 7} Exercícios</span>
-          <span>·</span>
-          <span>{activePlan?.weekly_frequency || 4}x por semana</span>
-        </div>
-
-        {/* Tags Row */}
-        <div className="flex items-center gap-2 pt-1 font-mono text-[11px]">
-          <span className="px-2.5 py-1 rounded-lg bg-[#0E1015] border border-white/10 text-neutral-300 font-bold">
-            ~50 min
-          </span>
-          <span className="px-2.5 py-1 rounded-lg bg-[#0E1015] border border-white/10 text-white font-bold">
-            Sobrecarga Ativa
-          </span>
-        </div>
-      </div>
-
-      {/* Target Muscles Carousel Mini (Grayscale) */}
-      <div className="space-y-2 pt-2">
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-black uppercase tracking-wider text-neutral-400">
-            Músculos Alvo de Hoje
-          </span>
-          <button
-            onClick={() => setActiveTab('musculos')}
-            className="text-[11px] font-bold text-white hover:underline"
-          >
-            Anatomia 3D
-          </button>
-        </div>
-
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {muscleChips.map((m) => (
-            <div
-              key={m.name}
-              onClick={() => setActiveTab('musculos')}
-              className="p-2.5 rounded-xl bg-[#0E1015] border border-white/10 flex items-center gap-2.5 shrink-0 cursor-pointer hover:border-white/30 transition-all"
-            >
-              <div className="w-6 h-6 rounded-lg bg-white/10 text-white flex items-center justify-center text-xs font-black">
-                <Activity className="w-3.5 h-3.5" />
-              </div>
-              <div>
-                <p className="text-[11px] font-black text-white">{m.name}</p>
-                <p className="text-[9px] font-mono font-bold text-neutral-400">
-                  {m.pct}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Cycle Review Alert if Pending (Monochrome) */}
       {pendingRec && (
-        <div className="p-3.5 rounded-2xl bg-[#14171D] border border-white/20 flex items-center justify-between gap-3 shadow-lg">
-          <div className="flex items-center gap-2.5">
-            <Sparkles className="w-5 h-5 text-white shrink-0" />
+        <section className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-[#141414] p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <div className="rounded-xl bg-white p-2 text-black"><Sparkles className="h-5 w-5" /></div>
             <div>
-              <p className="text-xs font-black text-white">Ciclo de Sobrecarga Pronto!</p>
-              <p className="text-[10px] text-neutral-400 line-clamp-1">{pendingRec.explanation}</p>
+              <h2 className="text-sm font-black">Sua revisão de treino está pronta</h2>
+              <p className="mt-1 text-xs leading-relaxed text-neutral-400">{pendingRec.explanation}</p>
             </div>
           </div>
-          <button
-            onClick={() => setActiveTab('revisao')}
-            className="px-3 py-1.5 rounded-xl bg-white text-black font-black text-[10px] uppercase tracking-wider shrink-0 cursor-pointer hover:bg-neutral-200 transition-colors"
-          >
-            Revisar
+          <button type="button" onClick={() => setActiveTab('revisao')} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-black text-black hover:bg-neutral-200">
+            Revisar proposta <ArrowRight className="h-4 w-4" />
           </button>
-        </div>
+        </section>
       )}
 
-      {/* Exercises Connected Vertical Track */}
-      <div className="space-y-3 pt-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-black uppercase tracking-wider text-white">
-            Grade de Execução
-          </span>
-          <span className="text-[11px] text-neutral-400 font-mono">
-            Toque em "3D" para ver postura
-          </span>
-        </div>
-
-        <div className="relative pl-3 space-y-3">
-          {/* Vertical Track Line */}
-          <div className="absolute left-[26px] top-4 bottom-6 w-[2px] bg-white/10" />
-
-          {(activePlan?.exercises || []).map((ex, idx) => {
-            const isFirst = idx === 0;
-
-            return (
-              <div key={idx} className="relative flex items-start gap-3.5 group">
-                <div className="z-10 w-7 h-7 rounded-full bg-[#000000] border-2 border-white/20 group-hover:border-white flex items-center justify-center text-[10px] font-mono font-bold text-white shrink-0 mt-3 transition-colors">
-                  {idx + 1}
-                </div>
-
-                <div className="flex-1 p-3.5 rounded-2xl bg-[#0E1015] border border-white/10 hover:border-white/30 transition-all shadow-md">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      {isFirst && (
-                        <span className="text-[9px] font-extrabold uppercase tracking-widest text-neutral-400 block mb-0.5">
-                          Exercício de Foco
-                        </span>
-                      )}
-                      <h4 className="text-sm font-black text-white tracking-tight leading-tight truncate">
-                        {ex.exercise_name}
-                      </h4>
-                      <p className="text-xs font-mono text-neutral-400 mt-1">
-                        <span className="text-white font-bold">{ex.sets} Séries</span>
-                        <span> · </span>
-                        <span>{ex.reps_min}-{ex.reps_max} Reps</span>
-                        <span> · </span>
-                        <span className="text-white font-bold">
-                          {ex.suggested_load_kg ? `${ex.suggested_load_kg} kg` : 'Livre'}
-                        </span>
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => onOpenExercise3D(ex.exercise_name, ex.muscle_group)}
-                      className="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white text-white hover:text-black font-black text-[10px] uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer shrink-0 border border-white/10"
-                      title="Ver Boneco 3D"
-                    >
-                      <Rotate3d className="w-3.5 h-3.5" />
-                      <span>3D</span>
-                    </button>
-                  </div>
-                </div>
+      {!activePlan ? (
+        <section className="overflow-hidden rounded-3xl border border-white/10 bg-[#111]">
+          <div className="grid gap-0 md:grid-cols-[1.2fr_0.8fr]">
+            <div className="p-6 sm:p-9">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-black">
+                <Target className="h-6 w-6" />
               </div>
-            );
-          })}
-        </div>
-      </div>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">Primeiro passo</p>
+              <h2 className="mt-2 max-w-xl text-2xl font-black tracking-tight sm:text-3xl">Seu treino começa com você.</h2>
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-neutral-400">
+                Conte ao FOCO seus objetivos, sua experiência, os grupos musculares que quer priorizar e quanto tempo tem disponível. A IA usa essas respostas como contexto para sugerir a primeira ficha.
+              </p>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <button type="button" onClick={() => setActiveTab('anamnese')} className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-xs font-black uppercase tracking-wide text-black transition hover:bg-neutral-200">
+                  <ClipboardList className="h-4 w-4" /> Preencher anamnese
+                </button>
+                <button type="button" onClick={() => setActiveTab('arquivos')} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3.5 text-xs font-bold text-white transition hover:bg-white/10">
+                  <FileUp className="h-4 w-4" /> Importar ficha existente
+                </button>
+              </div>
+            </div>
+            <div className="flex flex-col justify-center gap-4 border-t border-white/10 bg-white/[0.025] p-6 sm:p-8 md:border-l md:border-t-0">
+              <div className="flex items-start gap-3">
+                <div className="rounded-lg border border-white/10 bg-black p-2"><Target className="h-4 w-4" /></div>
+                <div><h3 className="text-sm font-bold">Objetivos reais</h3><p className="mt-1 text-xs leading-relaxed text-neutral-500">Defina o que quer alcançar e o que importa mais para você.</p></div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="rounded-lg border border-white/10 bg-black p-2"><Activity className="h-4 w-4" /></div>
+                <div><h3 className="text-sm font-bold">Treino que cabe na sua rotina</h3><p className="mt-1 text-xs leading-relaxed text-neutral-500">Use seus dias, tempo disponível e equipamentos.</p></div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="rounded-lg border border-white/10 bg-black p-2"><Sparkles className="h-4 w-4" /></div>
+                <div><h3 className="text-sm font-bold">Sugestão personalizada</h3><p className="mt-1 text-xs leading-relaxed text-neutral-500">Revise a ficha antes de ativá-la e comece a registrar seus treinos.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="rounded-2xl border border-white/10 bg-[#141414] p-4">
+              <Dumbbell className="mb-3 h-4 w-4 text-neutral-400" />
+              <p className="text-2xl font-black tabular-nums">{exercises.length}</p>
+              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-neutral-500">Exercícios na ficha</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-[#141414] p-4">
+              <Activity className="mb-3 h-4 w-4 text-neutral-400" />
+              <p className="text-2xl font-black tabular-nums">{activePlan.weekly_frequency}x</p>
+              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-neutral-500">Por semana</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-[#141414] p-4">
+              <CheckCircle2 className="mb-3 h-4 w-4 text-neutral-400" />
+              <p className="text-2xl font-black tabular-nums">{completedSessions.length}</p>
+              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-neutral-500">Sessões concluídas</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-[#141414] p-4">
+              <Clock3 className="mb-3 h-4 w-4 text-neutral-400" />
+              <p className="text-2xl font-black tabular-nums">{goals.length}</p>
+              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-neutral-500">Metas ativas</p>
+            </div>
+          </div>
 
-      {/* Start Workout Button (Integrated into natural flow, no fixed overlap) */}
-      <div className="pt-2">
-        <button
-          onClick={() => setActiveTab('sessao')}
-          className="w-full py-4 rounded-2xl bg-white hover:bg-neutral-200 text-black font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-2xl active:scale-[0.98] transition-all cursor-pointer"
-        >
-          <Play className="w-4 h-4 fill-current text-black" />
-          <span>INICIAR TREINO DE HOJE</span>
+          {muscleChips.length > 0 && (
+            <section className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-xs font-black uppercase tracking-wider text-neutral-400">Grupos musculares da ficha</h2>
+                <button type="button" onClick={() => setActiveTab('musculos')} className="text-[11px] font-bold text-white hover:underline">Anatomia 3D</button>
+              </div>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+                {muscleChips.map((muscle) => (
+                  <button key={muscle.name} type="button" onClick={() => setActiveTab('musculos')} className="flex items-center gap-3 rounded-xl border border-white/10 bg-[#141414] p-3 text-left transition hover:border-white/30">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10"><Activity className="h-4 w-4" /></div>
+                    <div className="min-w-0"><p className="truncate text-xs font-bold">{muscle.name}</p><p className="mt-1 text-[10px] text-neutral-500">{muscle.count} {muscle.count === 1 ? 'exercício' : 'exercícios'}</p></div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <section className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-xs font-black uppercase tracking-wider text-neutral-300">Sua ficha</h2>
+              <button type="button" onClick={() => setActiveTab('treinos')} className="text-[11px] font-bold text-white hover:underline">Ver todas as fichas</button>
+            </div>
+            {exercises.length === 0 ? (
+              <div className="rounded-2xl border border-white/10 bg-[#141414] p-5 text-sm text-neutral-400">
+                Esta ficha ainda não tem exercícios cadastrados.
+                <button type="button" onClick={() => setActiveTab('novo-treino')} className="mt-3 block font-bold text-white hover:underline">Editar ou gerar ficha</button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                {exercises.map((exercise, index) => (
+                  <article key={exercise.id || exercise.exercise_name + index} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-[#141414] p-4 transition hover:border-white/25">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black text-[11px] font-bold text-neutral-300">{index + 1}</div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-black">{exercise.exercise_name}</h3>
+                      <p className="mt-1 text-[11px] text-neutral-500">{exercise.muscle_group}</p>
+                      <p className="mt-2 text-xs text-neutral-300">
+                        <strong>{exercise.sets} séries</strong> · {exercise.reps_min}–{exercise.reps_max} repetições · {exercise.rest_seconds}s descanso
+                      </p>
+                      {exercise.notes && <p className="mt-2 text-xs leading-relaxed text-neutral-500">{exercise.notes}</p>}
+                    </div>
+                    <button type="button" onClick={() => onOpenExercise3D(exercise.exercise_name, exercise.muscle_group)} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-2 text-[10px] font-black transition hover:bg-white hover:text-black" title="Visualizar exercício em 3D">
+                      <Rotate3d className="h-3.5 w-3.5" /> 3D
+                    </button>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <button type="button" onClick={() => setActiveTab('sessao')} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white py-4 text-sm font-black uppercase tracking-wide text-black shadow-lg transition hover:bg-neutral-200 active:scale-[0.99]">
+            <Play className="h-4 w-4 fill-current" /> Iniciar treino de hoje
+          </button>
+        </>
+      )}
+
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <button type="button" onClick={() => setActiveTab('anamnese')} className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#141414] p-4 text-left transition hover:border-white/30">
+          <span><span className="block text-sm font-bold">Anamnese</span><span className="mt-1 block text-xs text-neutral-500">Atualize prioridades e rotina</span></span><ClipboardList className="h-5 w-5 shrink-0 text-neutral-400" />
         </button>
-      </div>
+        <button type="button" onClick={() => setActiveTab('arquivos')} className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#141414] p-4 text-left transition hover:border-white/30">
+          <span><span className="block text-sm font-bold">Arquivos e avaliações</span><span className="mt-1 block text-xs text-neutral-500">Importe uma ficha ou avaliação corporal</span></span><FileUp className="h-5 w-5 shrink-0 text-neutral-400" />
+        </button>
+        <button type="button" onClick={() => setActiveTab('progresso')} className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#141414] p-4 text-left transition hover:border-white/30">
+          <span><span className="block text-sm font-bold">Minha evolução</span><span className="mt-1 block text-xs text-neutral-500">Acompanhe seus registros</span></span><TrendingUp className="h-5 w-5 shrink-0 text-neutral-400" />
+        </button>
+      </section>
     </div>
   );
 };
