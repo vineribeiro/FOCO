@@ -3,14 +3,14 @@
 @layer base {
   :root {
     --bg-main: #000000;
-    --bg-surface: #0E1015;
-    --bg-surface-elevated: #161920;
+    --bg-surface: #161616;
+    --bg-surface-elevated: #292929;
     --color-primary: #FFFFFF;
     --color-primary-text: #000000;
-    --color-accent-gray: #E2E8F0;
+    --color-accent-gray: #E5E5E5;
     --text-main: #FFFFFF;
-    --text-muted: #8E96A4;
-    --border-subtle: rgba(255, 255, 255, 0.1);
+    --text-muted: #858585;
+    --border-subtle: rgba(255, 255, 255, 0.12);
   }
 
   body {
@@ -52,4 +52,43 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #3B4150;
+}
+
+
+/* FOCO brand system: high-contrast monochrome, angular and performance-led */
+@layer base {
+  ::selection {
+    background: #E5E5E5;
+    color: #0A0A0A;
+  }
+
+  :focus-visible {
+    outline: 2px solid #E5E5E5;
+    outline-offset: 3px;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Shared FOCO surface language */
+.foco-surface {
+  background: #161616;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+}
+
+.foco-eyebrow {
+  color: #858585;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
 }
