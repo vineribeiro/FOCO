@@ -262,10 +262,8 @@ function saveLocalDb(db: LocalDatabase): void {
 }
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  // Se for ambiente estático sem backend (como GitHub Pages), evitar requisições de rede fadadas a erro 404
-  if (isStaticHost) {
-    throw new Error('STATIC_HOST');
-  }
+  const apiBaseUrl = isStaticHost ? 'https://foco-api-xuj2.onrender.com' : '';
+  const requestUrl = endpoint.startsWith('http') ? endpoint : apiBaseUrl + endpoint;
 
   const token = getStoredToken();
   const headers: Record<string, string> = {
@@ -278,7 +276,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   }
 
   try {
-    const response = await fetch(endpoint, {
+    const response = await fetch(requestUrl, {
       ...options,
       headers,
     });
