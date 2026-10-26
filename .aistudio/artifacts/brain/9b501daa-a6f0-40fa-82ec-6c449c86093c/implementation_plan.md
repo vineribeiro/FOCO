@@ -1,74 +1,71 @@
-# FOCO Mobile - Interface Maximalista Monocromática (Preto, Cinza & Branco)
+# Plano de Implementação: Cronômetro Automático de Descanso com Alertas Sonoros e Modo de Execução FOCO
 
-O **FOCO** receberá uma reformulação estética completa para uma paleta **estritamente monocromática** (preto absoluto OLED, todas as gradações de cinza grafite, chumbo, prata e branco puro de altíssimo contraste), eliminando todas as cores residuais (vermelho, carmesim, verde volt, azul). O boneco 3D interativo em Three.js terá iluminação anatômica em **platina e branco emissivo brilhante**, e a arquitetura móvel receberá uma revisão rigorosa de cálculo de viewport e paddings de segurança (`pb-32`, hitboxes de 44px e contenção de z-index) para garantir que **absolutamente nenhum elemento se sobreponha** ou fique inacessível atrás da barra de navegação inferior.
+## 1. Visão Geral
 
----
+Com base nas suas escolhas:
+1. **Prioridade:** Experiência de execução prática do treino com cronômetro sonoro de descanso.
+2. **Impacto:** Disparo automático do tempo de recuperação ao concluir cada série com alerta sonoro e vibração tátil.
+3. **Identidade Visual:** Manter rigorosamente o design atual monocromático de alta fidelidade (preto profundo, grafite e platina emissiva), sem dispersões.
 
-### User Review & Critical Decisions
-
-> [!IMPORTANT]
-> Diretrizes confirmadas para a versão monocromática e mobile:
-
-- **Paleta Monocromática Pura**: 
-  - Fundo principal: `#000000` (Preto absoluto OLED).
-  - Superfícies e Cards: `#0D0F12` e `#14171D` com contornos sutis `#262B35` e `#333945`.
-  - Destaques, Ícones Ativos e Botões Primários: `#FFFFFF` com texto em preto `#000000` ou bordas prateadas `#E2E8F0`.
-  - Textos secundários e metadados: Gradações de cinza `#64748B`, `#94A3B8` e `#CBD5E1`.
-- **Boneco 3D em Platina & Grafite**:
-  - Manequim modelado em cinza grafite fosco (`#181B22`).
-  - Músculos agonistas e equipamentos iluminados em **branco puro fluorescente (`#FFFFFF`) e platina emissiva**, com reflexos metálicos prateados de alta definição.
-  - Grid de chão e iluminação de estúdio Three.js em tons neutros de luz fria branca e sombras suaves.
-- **Engenharia Anti-Sobreposição Mobile**:
-  - Eliminação de conflitos entre a barra inferior fixa (*Fixed Bottom Tab Bar*) e o final das listas e botões de ação: todos os containers de página terão padding inferior explícito `pb-32` (`8rem`), garantindo que o último card ou botão termine bem acima da barra.
-  - Botão de "INICIAR TREINO" integrado de forma natural ao fluxo de rolagem sem sobrepor cards de exercícios.
-  - Modais (incluindo o visualizador 3D) isolados em stacking context superior (`z-50`) com backdrop escuro opaco e rolagem interna contida.
+Transformaremos a experiência de treino em uma ferramenta de precisão cirúrgica para a academia, garantindo que o atleta controle intervalos entre séries sem precisar sair do app ou olhar constantemente para a tela.
 
 ---
 
-### 1. Overview & Core Concept
+## 2. Componentes e Funcionalidades a Serem Desenvolvidos
 
-- **Aparência & Identidade**: Um aplicativo esportivo sofisticado, brutalista e maximalista, que remete aos melhores designs editoriais e de equipamentos de precisão de musculação.
-- **Usabilidade no Celular**: Operação com uma mão sem atrito, contraste perfeito sob luz forte de academias e sem qualquer sobreposição de textos, abas ou botões.
+### A. Motor de Áudio Sintetizado e Feedback Tátil (`src/utils/soundEngine.ts`)
+- **Web Audio API Nativa:** Sons de alta definição sintetizados diretamente no navegador (`AudioContext`, `OscillatorNode`, filtros de envelope harmônico suave) sem depender de download de arquivos MP3 que podem falhar ou ser bloqueados por conexões lentas na academia.
+- **Assinatura Sonora FOCO:**
+  - *Beep de contagem regressiva (3, 2, 1):* tom curto suave de 440Hz / 600Hz.
+  - *Alerta de término de descanso (GO / Série Iniciada):* acorde duplo límpido de alta definição (880Hz + 1174Hz) que se destaca no fone de ouvido ou no alto-falante.
+  - *Click mecânico sutil:* feedback ao marcar série como concluída.
+- **Vibração Mobile:** Suporte à API nativa `navigator.vibrate` com padrão tátil pulsado `[120, 80, 250]ms` para treinos com o celular no bolso ou no suporte do aparelho.
+- **Gerenciamento de Áudio no iOS/Android:** Inicialização automática do contexto de áudio no primeiro clique para evitar bloqueios de autoplay do Safari/Chrome mobile.
+- **Interruptor de Silencioso:** Botão rápido no timer para alternar entre som ativado / mudo instantaneamente.
+
+### B. Módulo de Cronômetro de Descanso Inteligente (`src/components/RestTimerHUD.tsx`)
+- **Disparo Automático:** Ao marcar o checkbox de qualquer série como realizada, o cronômetro inicia imediatamente com a duração recomendada para aquele exercício (ex: 60s para isolados, 90s a 120s para compostos).
+- **Interface Não-Intrusiva (Zero Sobreposição Mobile):**
+  - Barra de descanso persistente flutuante ou acoplada no rodapé da visualização de treino, com padding de segurança (`safe-area-inset-bottom`) para não cobrir botões de salvar ou inputs de carga.
+  - Indicador circular ou linear minimalista de progresso em branco puro e grafite.
+  - Ajustes rápidos em 1 toque: `+15s`, `-15s`, `Pausar / Retomar` e `Pular Descanso`.
+  - Configuração rápida da duração padrão (30s, 45s, 60s, 90s, 120s, 180s ou personalizado).
+
+### C. Aprimoramentos na Interface de Execução do Treino (`src/components/ActiveWorkoutView.tsx`)
+- **Ergonomia para Dedos na Academia:**
+  - Áreas de toque ampliadas (mínimo 44x44px) nos botões de conclusão de série.
+  - Inputs numéricos de carga (kg) e repetições otimizados com auto-seleção de texto para edição rápida com uma mão.
+- **Cálculo Instantâneo de 1RM Estimado (One Rep Max):**
+  - Cálculo automático da carga máxima estimada (fórmula Brzycki/Epley) ao preencher peso e repetições, exibindo a intensidade relativa.
+- **Histórico Comparativo da Série Anterior:**
+  - Exibição discreta em cinza médio do peso e repetições registrados na sessão anterior para facilitar a progressão de carga (sobrecarga progressiva).
+
+---
+
+## 3. Plano de Arquitetura e Arquivos
+
+| Arquivo | Ação | Responsabilidade |
+| :--- | :--- | :--- |
+| `src/utils/soundEngine.ts` | **Criar** | Gerador de beeps com Web Audio API, controle de volume, mute e vibração tátil nativa. |
+| `src/components/RestTimerHUD.tsx` | **Criar** | HUD do cronômetro de descanso com controles de tempo (+15s/-15s), progresso visual e alertas sonoros sincronizados. |
+| `src/types/workout.ts` | **Ajustar** | Tipagem para tempo de descanso por exercício, preferências de som e histórico de execução. |
+| `src/components/ActiveWorkoutView.tsx` | **Aprimorar** | Integração do disparo automático na conclusão da série, botões de toque rápido e estimativa de 1RM. |
+| `src/App.tsx` | **Ajustar** | Gerenciamento global do estado do timer para que continue contando mesmo navegando entre abas do app. |
 
 ---
 
-### 2. User Experience & Visual Design (Monochrome Fitbod)
+## 4. Verificação e Validação
 
-- **Hierarquia Visual**:
-  - Tipografia Maximalista: `font-black text-white` (peso 900) para nomes de exercícios e números principais, contrastando com `font-medium text-neutral-400` para repetições e séries.
-  - Badges e Controles: Pílulas e botões em preto fosco com bordas brancas ou brancos sólidos com ícones em preto puro.
-  - Gráficos no Banco de Dados: Curvas e barras em branco e gradientes de cinza prateado de alta legibilidade.
-  - Carrossel de Músculos Alvo: Ícones anatômicos monocromáticos com porcentagens em branco puro (`100%`, `80%`, `60%`).
-
----
-
-### 3. Technical Architecture & Component Structure
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│               FOCO MOBILE - ARQUITETURA MONOCROMÁTICA                  │
-│                                                                        │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │ Header Mobile Fixo: Preto OLED (#000) · Borda Sutil (#262B35)    │  │
-│  └──────────────────────────────────┬───────────────────────────────┘  │
-│                                     │                                  │
-│  ┌──────────────────────────────────▼───────────────────────────────┐  │
-│  │ Scroll Viewport Central (Padding de Segurança Inferior: pb-32)    │  │
-│  │                                                                  │  │
-│  │  • Músculos Alvo (Carrossel Monocromático)                       │  │
-│  │  • Linha Guia Vertical Conectando Exercícios                     │  │
-│  │  • Cards de Treino com Badges em Branco e Cinza                  │  │
-│  │  • Botão Primário "INICIAR TREINO" (Branco Sólido #FFF / #000)   │  │
-│  └──────────────────────────────────┬───────────────────────────────┘  │
-│                                     │                                  │
-│  ┌──────────────────────────────────▼───────────────────────────────┐  │
-│  │ Three.js 3D Viewport: Manequim Grafite + Músculos Platina/Branco │  │
-│  └──────────────────────────────────┬───────────────────────────────┘  │
-│                                     │                                  │
-│  ┌──────────────────────────────────▼───────────────────────────────┐  │
-│  │ Fixed Bottom Navigation Bar (Fundo Preto #000 · Ícones Brancos)  │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────────────────────┘
-```
+1. **Testes de Áudio e Vibração:**
+   - Garantir que o `AudioContext` seja destravado com interação do usuário sem gerar avisos no console.
+   - Validar bips nos segundos 3, 2, 1 e sinal longo ao zerar.
+   - Testar o botão de Mudo.
+2. **Testes de Usabilidade Mobile:**
+   - Conferir que o timer não bloqueia a rolagem de tela nem sobrepõe campos de peso/repetição em telas de 375px a 430px.
+   - Testar acréscimo e redução rápida de tempo (+15s / -15s).
+3. **Build e TypeScript:**
+   - Executar `compile_applet` e `lint_applet` para assegurar 0 erros de tipagem e integridade completa.
 
 ---
+
+Aguardando sua confirmação para iniciar a implementação no código.

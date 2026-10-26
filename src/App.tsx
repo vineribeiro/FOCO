@@ -5,7 +5,9 @@
 
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { RestTimerProvider } from './context/RestTimerContext';
 import { BottomNavBar } from './components/BottomNavBar';
+import { RestTimerHUD } from './components/RestTimerHUD';
 import { Anatomy3DViewer } from './components/Anatomy3DViewer';
 import { FocoSymbol, FocoLogoHorizontal } from './components/FocoBrand';
 import { AuthPage } from './pages/AuthPage';
@@ -194,6 +196,9 @@ function MainApp() {
           {renderActiveView()}
         </main>
 
+        {/* Global Floating Rest Timer HUD */}
+        <RestTimerHUD />
+
         {/* Fixed Native Bottom Tab Bar */}
         <BottomNavBar
           activeTab={activeTab}
@@ -218,7 +223,9 @@ function MainApp() {
 export default function App() {
   return (
     <AuthProvider>
-      <MainApp />
+      <RestTimerProvider>
+        <MainApp />
+      </RestTimerProvider>
     </AuthProvider>
   );
 }

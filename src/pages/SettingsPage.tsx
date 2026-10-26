@@ -97,6 +97,49 @@ CREATE POLICY "Users access own plans" ON public.workout_plans
       {/* System Status Indicators */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         
+        {/* Audio & Rest Timer Settings */}
+        <div className="p-5 rounded-2xl bg-[#141414] border border-white/10 space-y-3 md:col-span-3">
+          <div className="flex items-center justify-between pb-2 border-b border-white/5">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+              <h3 className="text-xs font-black uppercase tracking-wider text-white">
+                Cronômetro Sonoro & Feedback Tátil de Treino
+              </h3>
+            </div>
+            <span className="text-[10px] font-mono text-neutral-400 uppercase">Web Audio API Nativa</span>
+          </div>
+          <p className="text-xs text-neutral-400">
+            Sons sintetizados em alta precisão para contagem regressiva (3, 2, 1) e acorde de liberação da próxima série com vibração no celular.
+          </p>
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <button
+              onClick={() => {
+                import('../utils/soundEngine').then(({ soundEngine }) => {
+                  soundEngine.initContext();
+                  soundEngine.playCountdownBeep(3);
+                  setTimeout(() => soundEngine.playCountdownBeep(2), 500);
+                  setTimeout(() => soundEngine.playCountdownBeep(1), 1000);
+                  setTimeout(() => soundEngine.playRestFinishedChime(), 1500);
+                });
+              }}
+              className="px-3 py-1.5 rounded-lg bg-white text-black font-black text-xs uppercase tracking-wider hover:bg-neutral-200 transition-colors cursor-pointer shadow-md"
+            >
+              Testar Sequência Completa de Som
+            </button>
+            <button
+              onClick={() => {
+                import('../utils/soundEngine').then(({ soundEngine }) => {
+                  soundEngine.initContext();
+                  soundEngine.playWorkoutCompletedChime();
+                });
+              }}
+              className="px-3 py-1.5 rounded-lg bg-[#0A0A0A] border border-white/20 text-white font-mono text-xs font-bold hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              Testar Fanfarra de Treino Concluído
+            </button>
+          </div>
+        </div>
+
         {/* Database Status */}
         <div className="p-5 rounded-2xl bg-[#141414] border border-white/10 space-y-2">
           <div className="flex items-center justify-between">

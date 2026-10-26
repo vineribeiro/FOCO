@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { WorkoutPlan, WorkoutExercise } from '../types';
+import { useRestTimer } from '../context/RestTimerContext';
+import { soundEngine } from '../utils/soundEngine';
 import {
   Play,
   Pause,
@@ -13,7 +15,12 @@ import {
   Award,
   AlertCircle,
   Volume2,
+  VolumeX,
   Rotate3d,
+  Flame,
+  Zap,
+  Timer,
+  ChevronRight,
 } from 'lucide-react';
 
 interface ActiveSessionProps {
@@ -26,6 +33,7 @@ interface SetLog {
   repetitions: number;
   load_kg: number;
   completed: boolean;
+  rpe?: number;
 }
 
 interface ExerciseLog {
@@ -42,9 +50,23 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
-  // Rest Timer State
-  const [restSecondsRemaining, setRestSecondsRemaining] = useState<number | null>(null);
-  const [restTimerActive, setRestTimerActive] = useState(false);
+  // Global Rest Timer Context
+  const {
+    isActive: restTimerActive,
+    timeRemaining: restSecondsRemaining,
+    totalDuration: restTotalDuration,
+    isPaused: restIsPaused,
+    isMuted,
+    autoRestEnabled,
+    setAutoRestEnabled,
+    startTimer,
+    pauseTimer,
+    resumeTimer,
+    skipTimer,
+    addSeconds,
+    toggleMute,
+    testSound,
+  } = useRestTimer();
 
   // Exercise state for the session
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLog[]>([]);
@@ -53,7 +75,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
   const [isSaving, setIsSaving] = useState(false);
   const [errorAlert, setErrorAlert] = useState<string | null>(null);
 
-  // Stopwatch interval
+  // Stopwatch interval for entire workout
   useEffect(() => {
     let interval: any = null;
     if (sessionStarted) {
@@ -63,23 +85,6 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
     }
     return () => clearInterval(interval);
   }, [sessionStarted]);
-
-  // Rest Timer interval
-  useEffect(() => {
-    let interval: any = null;
-    if (restTimerActive && restSecondsRemaining !== null && restSecondsRemaining > 0) {
-      interval = setInterval(() => {
-        setRestSecondsRemaining((prev) => {
-          if (prev === null || prev <= 1) {
-            setRestTimerActive(false);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [restTimerActive, restSecondsRemaining]);
 
   // Load active plan on mount
   useEffect(() => {
@@ -109,18 +114,34 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
         repetitions: ex.reps_min || 10,
         load_kg: ex.suggested_load_kg || 0,
         completed: false,
+        rpe: 8,
       })),
     }));
     setExerciseLogs(logs);
   };
 
   const handleStartWorkout = () => {
+    soundEngine.initContext();
+    soundEngine.playCheckmarkClick();
     setSessionStarted(true);
     setSessionStartTime(new Date());
     setElapsedSeconds(0);
   };
 
+  /**
+   * Cálculo estimado de 1RM (One Rep Max) baseado na fórmula de Brzycki
+   */
+  const calculateEstimated1RM = (load: number, reps: number): number => {
+    if (load <= 0 || reps <= 0) return 0;
+    if (reps === 1) return load;
+    // Fórmula de Brzycki: Carga / (1.0278 - 0.0278 * reps)
+    const factor = 1.0278 - 0.0278 * Math.min(reps, 20);
+    return factor > 0 ? Math.round(load / factor) : Math.round(load * (1 + reps / 30));
+  };
+
   const handleToggleSetComplete = (exIdx: number, setIdx: number) => {
+    soundEngine.initContext();
+
     if (!sessionStarted) {
       handleStartWorkout();
     }
@@ -132,16 +153,23 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
       targetSet.completed = nextCompleted;
 
       if (nextCompleted) {
-        const restDuration = copy[exIdx].rest_seconds || 60;
-        setRestSecondsRemaining(restDuration);
-        setRestTimerActive(true);
+        soundEngine.playCheckmarkClick();
+        if (autoRestEnabled) {
+          const restDuration = copy[exIdx].rest_seconds || 60;
+          startTimer(restDuration, copy[exIdx].exercise_name, targetSet.set_number);
+        }
       }
 
       return copy;
     });
   };
 
-  const handleUpdateSet = (exIdx: number, setIdx: number, field: 'load_kg' | 'repetitions', value: number) => {
+  const handleUpdateSet = (
+    exIdx: number,
+    setIdx: number,
+    field: 'load_kg' | 'repetitions' | 'rpe',
+    value: number
+  ) => {
     setExerciseLogs((prev) => {
       const copy = [...prev];
       copy[exIdx].sets[setIdx][field] = value;
@@ -149,7 +177,30 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
     });
   };
 
+  const handleQuickAddLoad = (exIdx: number, setIdx: number, delta: number) => {
+    soundEngine.initContext();
+    soundEngine.playCheckmarkClick();
+    setExerciseLogs((prev) => {
+      const copy = [...prev];
+      const current = Number(copy[exIdx].sets[setIdx].load_kg) || 0;
+      copy[exIdx].sets[setIdx].load_kg = Math.max(0, current + delta);
+      return copy;
+    });
+  };
+
+  const handleChangeExerciseRest = (exIdx: number, seconds: number) => {
+    soundEngine.initContext();
+    soundEngine.playCheckmarkClick();
+    setExerciseLogs((prev) => {
+      const copy = [...prev];
+      copy[exIdx].rest_seconds = seconds;
+      return copy;
+    });
+  };
+
   const handleAddSet = (exIdx: number) => {
+    soundEngine.initContext();
+    soundEngine.playCheckmarkClick();
     setExerciseLogs((prev) => {
       const copy = [...prev];
       const currentSets = copy[exIdx].sets;
@@ -159,6 +210,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
         repetitions: lastSet ? lastSet.repetitions : 10,
         load_kg: lastSet ? lastSet.load_kg : 20,
         completed: false,
+        rpe: 8,
       });
       return copy;
     });
@@ -217,7 +269,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
       });
 
       setSessionStarted(false);
-      setRestTimerActive(false);
+      skipTimer();
+
+      // Som e vibração festiva de conclusão
+      soundEngine.playWorkoutCompletedChime();
 
       setSessionCompletedModal({
         duration: elapsedSeconds,
@@ -238,6 +293,17 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
+  // Resumo de tonelagem e séries concluídas em tempo real
+  const currentTotalTonnage = exerciseLogs.reduce((acc, ex) => {
+    return acc + ex.sets.reduce((setAcc, s) => (s.completed ? setAcc + (s.load_kg * s.repetitions) : setAcc), 0);
+  }, 0);
+
+  const currentTotalSetsDone = exerciseLogs.reduce((acc, ex) => {
+    return acc + ex.sets.filter((s) => s.completed).length;
+  }, 0);
+
+  const currentTotalSets = exerciseLogs.reduce((acc, ex) => acc + ex.sets.length, 0);
+
   if (isLoading) {
     return (
       <div className="py-20 text-center text-neutral-400">
@@ -248,10 +314,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
   }
 
   return (
-    <div className="space-y-5 pb-32 max-w-md mx-auto">
+    <div className="space-y-4 pb-36 max-w-md mx-auto">
       
-      {/* Top Controller Header (Monochrome) */}
-      <div className="sticky top-12 z-20 p-4 rounded-2xl bg-[#0E1015]/95 backdrop-blur-md border border-white/10 shadow-2xl space-y-3">
+      {/* Top Controller Header (Monochrome Luxury) */}
+      <div className="sticky top-12 z-20 p-4 rounded-2xl bg-[#0A0A0A]/95 backdrop-blur-md border border-white/10 shadow-2xl space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
@@ -260,74 +326,94 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
                 {sessionStarted ? 'Treino em Andamento' : 'Sessão Pronta'}
               </span>
             </div>
-            <h2 className="text-base font-black text-white truncate max-w-[220px]">
+            <h2 className="text-base font-black text-white truncate max-w-[200px] sm:max-w-[240px]">
               {activePlan?.name || 'Treino Livre'}
             </h2>
           </div>
 
-          {!sessionStarted ? (
-            <button
-              onClick={handleStartWorkout}
-              className="px-4 py-2 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-md"
-            >
-              <Play className="w-3.5 h-3.5 fill-current text-black" />
-              <span>Iniciar</span>
-            </button>
-          ) : (
-            <button
-              onClick={handleFinishWorkout}
-              disabled={isSaving}
-              className="px-4 py-2 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-md disabled:opacity-50"
-            >
-              <CheckCircle2 className="w-3.5 h-3.5 text-black" />
-              <span>{isSaving ? 'Gravando...' : 'Concluir'}</span>
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {!sessionStarted ? (
+              <button
+                onClick={handleStartWorkout}
+                className="px-4 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-lg active:scale-95 transition-all"
+              >
+                <Play className="w-3.5 h-3.5 fill-current text-black" />
+                <span>Iniciar</span>
+              </button>
+            ) : (
+              <button
+                onClick={handleFinishWorkout}
+                disabled={isSaving}
+                className="px-4 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-lg disabled:opacity-50 active:scale-95 transition-all"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-black" />
+                <span>{isSaving ? 'Gravando...' : 'Concluir'}</span>
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Stopwatch & Rest Timer Controls */}
-        <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/5">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#000000] border border-white/10">
-            <Clock className="w-4 h-4 text-neutral-400" />
-            <div className="font-mono tabular-nums leading-tight">
+        {/* Real-time stats bar (Duração, Séries Feitas, Carga Total) */}
+        <div className="grid grid-cols-3 gap-2 pt-1 border-t border-white/5">
+          <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-[#141414] border border-white/10">
+            <Clock className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+            <div className="font-mono tabular-nums leading-tight min-w-0">
               <span className="text-[9px] text-neutral-500 block uppercase font-bold">Tempo</span>
               <span className="text-xs font-black text-white">{formatTime(elapsedSeconds)}</span>
             </div>
           </div>
 
-          <div className={`flex items-center justify-between px-3 py-2 rounded-xl border transition-all ${
-            restTimerActive && restSecondsRemaining !== null && restSecondsRemaining > 0
-              ? 'bg-white text-black border-white'
-              : 'bg-[#000000] border-white/10 text-neutral-400'
-          }`}>
-            <div className="flex items-center gap-1.5">
-              <Volume2 className="w-3.5 h-3.5 shrink-0" />
-              <div className="font-mono tabular-nums leading-tight">
-                <span className={`text-[9px] block uppercase font-bold ${restTimerActive ? 'text-neutral-700' : 'text-neutral-500'}`}>
-                  Descanso
-                </span>
-                <span className={`text-xs font-black ${restTimerActive ? 'text-black' : 'text-white'}`}>
-                  {restSecondsRemaining !== null ? `${restSecondsRemaining}s` : '--'}
-                </span>
-              </div>
+          <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-[#141414] border border-white/10">
+            <Flame className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+            <div className="font-mono tabular-nums leading-tight min-w-0">
+              <span className="text-[9px] text-neutral-500 block uppercase font-bold">Volume</span>
+              <span className="text-xs font-black text-white truncate">{Math.round(currentTotalTonnage)} kg</span>
             </div>
+          </div>
 
-            {restTimerActive && (
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setRestSecondsRemaining((prev) => Math.max(0, (prev || 0) + 15))}
-                  className="px-1.5 py-0.5 rounded bg-black/10 text-[10px] font-bold text-black"
-                >
-                  +15s
-                </button>
-                <button
-                  onClick={() => { setRestTimerActive(false); setRestSecondsRemaining(0); }}
-                  className="px-1.5 py-0.5 rounded bg-black text-white text-[10px] font-bold"
-                >
-                  Pular
-                </button>
-              </div>
-            )}
+          <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-[#141414] border border-white/10">
+            <Zap className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+            <div className="font-mono tabular-nums leading-tight min-w-0">
+              <span className="text-[9px] text-neutral-500 block uppercase font-bold">Séries</span>
+              <span className="text-xs font-black text-white">{currentTotalSetsDone}/{currentTotalSets}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Sound & Auto-Rest Settings bar */}
+        <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[11px] font-mono">
+          <button
+            onClick={() => setAutoRestEnabled(!autoRestEnabled)}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+              autoRestEnabled
+                ? 'bg-white/10 text-white border-white/20'
+                : 'bg-black text-neutral-500 border-white/5'
+            }`}
+            title="Ativar ou desativar o início automático do cronômetro ao concluir séries"
+          >
+            <Timer className="w-3 h-3" />
+            <span>Descanso Automático: <strong className="text-white">{autoRestEnabled ? 'ON' : 'OFF'}</strong></span>
+          </button>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={toggleMute}
+              className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
+                isMuted
+                  ? 'bg-black text-neutral-500 border-white/5'
+                  : 'bg-white/10 text-white border-white/20'
+              }`}
+              title={isMuted ? 'Áudio Mudo (Clique para ligar)' : 'Áudio Ativo (Bips 3-2-1 e final)'}
+            >
+              {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+            </button>
+            <button
+              onClick={testSound}
+              className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white border border-white/10 text-[10px] font-bold cursor-pointer transition-colors"
+              title="Testar som do cronômetro no fone/alto-falante"
+            >
+              Testar Beep
+            </button>
           </div>
         </div>
 
@@ -339,7 +425,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
         )}
       </div>
 
-      {/* Exercises Log Grid */}
+      {/* Exercises Log Cards */}
       <div className="space-y-4">
         {exerciseLogs.map((exercise, exIdx) => {
           const completedCount = exercise.sets.filter((s) => s.completed).length;
@@ -350,17 +436,17 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
               key={exIdx}
               className={`p-4 rounded-2xl border transition-all ${
                 isAllDone
-                  ? 'bg-[#0E1015]/70 border-white/30'
-                  : 'bg-[#0E1015] border-white/10'
+                  ? 'bg-[#121212]/90 border-white/30'
+                  : 'bg-[#141414] border-white/10'
               }`}
             >
               {/* Exercise Header */}
-              <div className="flex items-start justify-between pb-3 border-b border-white/5 gap-2">
+              <div className="flex items-start justify-between pb-3 border-b border-white/10 gap-2">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 text-[10px] text-neutral-400 font-bold uppercase tracking-wider">
                     <span>{exercise.muscle_group}</span>
                     <span>·</span>
-                    <span className="font-mono">{exercise.rest_seconds}s descanso</span>
+                    <span className="font-mono">{completedCount}/{exercise.sets.length} séries feitas</span>
                   </div>
                   <h3 className="text-sm font-black text-white mt-0.5 truncate">
                     {exercise.exercise_name}
@@ -371,7 +457,8 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
                   {onOpenExercise3D && (
                     <button
                       onClick={() => onOpenExercise3D(exercise.exercise_name, exercise.muscle_group)}
-                      className="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white text-white hover:text-black font-black text-[10px] uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer border border-white/10"
+                      className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white text-white hover:text-black font-black text-[10px] uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer border border-white/10"
+                      title="Ver biomecânica anatômica 3D"
                     >
                       <Rotate3d className="w-3 h-3" />
                       <span>3D</span>
@@ -382,8 +469,30 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
                     className="p-1 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
                     title="Adicionar Série Extra"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-4 h-4" />
                   </button>
+                </div>
+              </div>
+
+              {/* Quick Rest Selector for this Exercise */}
+              <div className="flex items-center justify-between py-2 border-b border-white/5 text-[10px] font-mono">
+                <span className="text-neutral-500 uppercase font-bold flex items-center gap-1">
+                  <Timer className="w-3 h-3" /> Descanso Padrão:
+                </span>
+                <div className="flex items-center gap-1">
+                  {[45, 60, 90, 120].map((sec) => (
+                    <button
+                      key={sec}
+                      onClick={() => handleChangeExerciseRest(exIdx, sec)}
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
+                        exercise.rest_seconds === sec
+                          ? 'bg-white text-black border-white'
+                          : 'bg-black text-neutral-400 border-white/10 hover:border-white/30 hover:text-white'
+                      }`}
+                    >
+                      {sec}s
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -395,66 +504,108 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
                       <th className="py-2 px-1 w-12">SÉRIE</th>
                       <th className="py-2 px-1">CARGA</th>
                       <th className="py-2 px-1">REPS</th>
+                      <th className="py-2 px-1">1RM EST.</th>
                       <th className="py-2 px-1 text-right">FEITO</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {exercise.sets.map((set, setIdx) => (
-                      <tr
-                        key={setIdx}
-                        className={`transition-colors ${set.completed ? 'bg-white/5' : ''}`}
-                      >
-                        <td className="py-2 px-1 font-mono font-bold text-neutral-400">
-                          #{set.set_number}
-                        </td>
-                        <td className="py-2 px-1">
-                          <div className="flex items-center gap-1">
+                    {exercise.sets.map((set, setIdx) => {
+                      const estimated1RM = calculateEstimated1RM(set.load_kg, set.repetitions);
+
+                      return (
+                        <tr
+                          key={setIdx}
+                          className={`transition-colors ${set.completed ? 'bg-white/5' : ''}`}
+                        >
+                          {/* Set number */}
+                          <td className="py-2.5 px-1 font-mono font-bold text-neutral-400">
+                            #{set.set_number}
+                          </td>
+
+                          {/* Load with quick +/- buttons */}
+                          <td className="py-2.5 px-1">
+                            <div className="flex items-center gap-1">
+                              <input
+                                type="number"
+                                step="0.5"
+                                value={set.load_kg === 0 ? '' : set.load_kg}
+                                placeholder="0"
+                                onChange={(e) =>
+                                  handleUpdateSet(exIdx, setIdx, 'load_kg', parseFloat(e.target.value) || 0)
+                                }
+                                className="w-14 px-2 py-1.5 rounded-lg bg-[#0A0A0A] border border-white/10 text-white font-mono tabular-nums text-xs focus:outline-none focus:border-white text-center"
+                              />
+                              <div className="flex flex-col gap-0.5">
+                                <button
+                                  type="button"
+                                  onClick={() => handleQuickAddLoad(exIdx, setIdx, 2.5)}
+                                  className="px-1 py-0.2 rounded bg-white/5 hover:bg-white/15 text-[8px] font-mono text-neutral-400 hover:text-white border border-white/5"
+                                  title="+2.5kg"
+                                >
+                                  +2.5
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleQuickAddLoad(exIdx, setIdx, -2.5)}
+                                  className="px-1 py-0.2 rounded bg-white/5 hover:bg-white/15 text-[8px] font-mono text-neutral-400 hover:text-white border border-white/5"
+                                  title="-2.5kg"
+                                >
+                                  -2.5
+                                </button>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Repetitions */}
+                          <td className="py-2.5 px-1">
                             <input
                               type="number"
-                              step="0.5"
-                              value={set.load_kg}
+                              value={set.repetitions === 0 ? '' : set.repetitions}
+                              placeholder="0"
                               onChange={(e) =>
-                                handleUpdateSet(exIdx, setIdx, 'load_kg', parseFloat(e.target.value) || 0)
+                                handleUpdateSet(exIdx, setIdx, 'repetitions', parseInt(e.target.value) || 0)
                               }
-                              className="w-16 px-2 py-1 rounded-lg bg-[#000000] border border-white/10 text-white font-mono tabular-nums text-xs focus:outline-none focus:border-white"
+                              className="w-12 px-2 py-1.5 rounded-lg bg-[#0A0A0A] border border-white/10 text-white font-mono tabular-nums text-xs focus:outline-none focus:border-white text-center"
                             />
-                            <span className="text-neutral-500 text-[10px]">kg</span>
-                          </div>
-                        </td>
-                        <td className="py-2 px-1">
-                          <input
-                            type="number"
-                            value={set.repetitions}
-                            onChange={(e) =>
-                              handleUpdateSet(exIdx, setIdx, 'repetitions', parseInt(e.target.value) || 0)
-                            }
-                            className="w-14 px-2 py-1 rounded-lg bg-[#000000] border border-white/10 text-white font-mono tabular-nums text-xs focus:outline-none focus:border-white"
-                          />
-                        </td>
-                        <td className="py-2 px-1 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
-                            <button
-                              onClick={() => handleToggleSetComplete(exIdx, setIdx)}
-                              className={`p-2 rounded-xl transition-all cursor-pointer ${
-                                set.completed
-                                  ? 'bg-white text-black font-bold shadow-sm'
-                                  : 'bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white border border-white/10'
-                              }`}
-                            >
-                              <CheckCircle2 className="w-4 h-4" />
-                            </button>
-                            {exercise.sets.length > 1 && (
-                              <button
-                                onClick={() => handleRemoveSet(exIdx, setIdx)}
-                                className="p-1 text-neutral-600 hover:text-white rounded transition-colors"
-                              >
-                                <Trash2 className="w-3 h-3" />
-                              </button>
+                          </td>
+
+                          {/* Estimated 1RM */}
+                          <td className="py-2.5 px-1 font-mono text-[11px] tabular-nums text-neutral-400">
+                            {estimated1RM > 0 ? (
+                              <span className="text-white font-bold">~{estimated1RM}kg</span>
+                            ) : (
+                              <span className="text-neutral-600">--</span>
                             )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+
+                          {/* Completion Checkmark (Ergonomic 44x44px Touch Target) */}
+                          <td className="py-2.5 px-1 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button
+                                onClick={() => handleToggleSetComplete(exIdx, setIdx)}
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer active:scale-90 ${
+                                  set.completed
+                                    ? 'bg-white text-black font-black shadow-lg ring-2 ring-white/50'
+                                    : 'bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white border border-white/15'
+                                }`}
+                                title={set.completed ? 'Série concluída! (Clique para desmarcar)' : 'Marcar série e disparar descanso'}
+                              >
+                                <CheckCircle2 className={`w-5 h-5 ${set.completed ? 'text-black' : ''}`} />
+                              </button>
+                              {exercise.sets.length > 1 && (
+                                <button
+                                  onClick={() => handleRemoveSet(exIdx, setIdx)}
+                                  className="p-1.5 text-neutral-600 hover:text-white rounded transition-colors"
+                                  title="Remover série"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -464,7 +615,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
       </div>
 
       {/* Session Notes */}
-      <div className="p-4 rounded-2xl bg-[#0E1015] border border-white/10 space-y-2">
+      <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 space-y-2">
         <label className="block text-xs font-black text-white uppercase tracking-wider">
           Anotações do Treino de Hoje
         </label>
@@ -473,7 +624,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
           value={sessionNotes}
           onChange={(e) => setSessionNotes(e.target.value)}
           placeholder="Ex: Carga do supino excelente; boa contração nas escápulas."
-          className="w-full px-3 py-2 rounded-xl bg-[#000000] border border-white/10 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-white"
+          className="w-full px-3 py-2 rounded-xl bg-[#0A0A0A] border border-white/10 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-white"
         />
       </div>
 
@@ -483,7 +634,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
           <button
             onClick={handleFinishWorkout}
             disabled={isSaving}
-            className="w-full py-4 rounded-2xl bg-white hover:bg-neutral-200 text-black font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-2xl transition-all"
+            className="w-full py-4 rounded-2xl bg-white hover:bg-neutral-200 text-black font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-2xl active:scale-95 transition-all"
           >
             <CheckCircle2 className="w-5 h-5 text-black" />
             <span>{isSaving ? 'Gravando no Banco...' : 'Concluir e Salvar Treino'}</span>
@@ -491,10 +642,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
         </div>
       )}
 
-      {/* Workout Completed Modal (Monochrome) */}
+      {/* Workout Completed Modal (Monochrome Luxury) */}
       {sessionCompletedModal && (
         <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#0E1015] border border-white/20 rounded-3xl p-6 max-w-sm w-full text-center space-y-5 shadow-2xl">
+          <div className="bg-[#141414] border border-white/20 rounded-3xl p-6 max-w-sm w-full text-center space-y-5 shadow-2xl">
             <div className="w-16 h-16 rounded-2xl bg-white text-black flex items-center justify-center mx-auto shadow-xl">
               <Award className="w-9 h-9" />
             </div>
@@ -505,11 +656,11 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
               </span>
               <h3 className="text-2xl font-black text-white mt-1">Sessão Registrada!</h3>
               <p className="text-xs text-neutral-400 mt-1">
-                Suas séries e cargas foram salvas no banco de dados e adicionadas ao ciclo de sobrecarga.
+                Suas séries e cargas foram salvas no banco de dados e adicionadas ao ciclo de sobrecarga progressiva.
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 p-3.5 rounded-xl bg-[#000000] border border-white/10 font-mono">
+            <div className="grid grid-cols-3 gap-2 p-3.5 rounded-xl bg-[#0A0A0A] border border-white/10 font-mono">
               <div>
                 <p className="text-[9px] text-neutral-500 uppercase font-bold">DURAÇÃO</p>
                 <p className="text-xs font-black text-white mt-0.5">
@@ -523,7 +674,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
                 </p>
               </div>
               <div>
-                <p className="text-[9px] text-neutral-500 uppercase font-bold">TONELAGEM</p>
+                <p className="text-[9px] text-neutral-500 uppercase font-bold">VOLUME</p>
                 <p className="text-xs font-black text-white mt-0.5 tabular-nums">
                   {Math.round(sessionCompletedModal.tonnage)} kg
                 </p>
@@ -536,9 +687,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
                   setSessionCompletedModal(null);
                   setActiveTab('dashboard');
                 }}
-                className="w-full py-3 rounded-xl bg-white text-black font-black text-xs uppercase tracking-wider cursor-pointer hover:bg-neutral-200 transition-colors"
+                className="w-full py-3.5 rounded-xl bg-white text-black font-black text-xs uppercase tracking-wider cursor-pointer hover:bg-neutral-200 transition-colors shadow-lg active:scale-95"
               >
-                Voltar ao Treino
+                Voltar ao Painel Principal
               </button>
             </div>
           </div>

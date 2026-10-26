@@ -1,6 +1,6 @@
 {
-  "summary":  "Plano de reformulação para escala de cinza, preto e branco total (monocromático de alto impacto), otimização estrita de espaçamento mobile sem nenhuma sobreposição de elementos e iluminação do boneco 3D em platina e branco brilhante.",
-  "updatedAt":  "2026-10-26T17:17:40.604228Z",
+  "summary":  "Plano de implementação detalhado para o Modo de Execução de Treino com Cronômetro Automático de Descanso, alertas sonoros sintetizados via Web Audio API, feedback tátil e ergonomia mobile de alta performance no padrão visual FOCO.",
+  "updatedAt":  "2026-10-26T17:41:42.678943566Z",
   "requestFeedback":  true,
   "userFacing":  true
 }
