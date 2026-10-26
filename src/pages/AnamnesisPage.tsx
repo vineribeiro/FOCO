@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Activity,
   ArrowLeft,
   ArrowRight,
   Check,
@@ -129,8 +128,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
 
     setIsSaving(true);
     try {
-      const { updated_at: _updatedAt, ...payload } = form;
-      const saved = await api.saveAnamnesis(payload);
+      const saved = await api.saveAnamnesis(form);
       setForm({ ...initialAnamnesis, ...saved });
       setSuccessMsg('Anamnese salva. A geração de treino vai usar essas respostas como contexto.');
     } catch (error: any) {
