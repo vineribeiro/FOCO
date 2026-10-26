@@ -377,7 +377,8 @@ export const api = {
   async getProfile() {
     try {
       return await request<Profile>('/api/profile');
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       return getLocalDb().profile;
     }
   },
@@ -388,7 +389,8 @@ export const api = {
         method: 'PUT',
         body: JSON.stringify(updates),
       });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       db.profile = { ...db.profile, ...updates };
       saveLocalDb(db);
@@ -400,7 +402,8 @@ export const api = {
   async getGoals() {
     try {
       return await request<Goal[]>('/api/goals');
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       return getLocalDb().goals;
     }
   },
@@ -411,7 +414,8 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(goal),
       });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       const newGoal: Goal = {
         id: 'goal_' + Date.now(),
@@ -431,7 +435,8 @@ export const api = {
   async deleteGoal(id: string) {
     try {
       return await request<{ message: string }>(`/api/goals/${id}`, { method: 'DELETE' });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       db.goals = db.goals.filter((g) => g.id !== id);
       saveLocalDb(db);
@@ -443,7 +448,8 @@ export const api = {
   async getWorkouts() {
     try {
       return await request<WorkoutPlan[]>('/api/workouts');
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       return getLocalDb().workouts;
     }
   },
@@ -451,7 +457,8 @@ export const api = {
   async getActiveWorkout() {
     try {
       return await request<WorkoutPlan | null>('/api/workouts/active');
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       return db.workouts.find((w) => w.status === 'ativo') || db.workouts[0] || null;
     }
@@ -470,7 +477,8 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(plan),
       });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       const newPlan: WorkoutPlan = {
         id: 'plan_' + Date.now(),
@@ -495,7 +503,8 @@ export const api = {
   async activateWorkout(id: string) {
     try {
       return await request<{ message: string }>(`/api/workouts/${id}/activate`, { method: 'PUT' });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       db.workouts.forEach((w) => {
         w.status = w.id === id ? 'ativo' : 'inativo';
@@ -508,7 +517,8 @@ export const api = {
   async deleteWorkout(id: string) {
     try {
       return await request<{ message: string }>(`/api/workouts/${id}`, { method: 'DELETE' });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       db.workouts = db.workouts.filter((w) => w.id !== id);
       saveLocalDb(db);
@@ -520,7 +530,8 @@ export const api = {
   async getSessions() {
     try {
       return await request<WorkoutSession[]>('/api/sessions');
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       return getLocalDb().sessions;
     }
   },
@@ -540,7 +551,8 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(session),
       });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       const newSession: WorkoutSession = {
         id: 'sess_' + Date.now(),
@@ -571,7 +583,8 @@ export const api = {
   async getMeasurements() {
     try {
       return await request<BodyMeasurement[]>('/api/measurements');
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       return getLocalDb().measurements;
     }
   },
@@ -582,7 +595,8 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(measurement),
       });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       const newM: BodyMeasurement = {
         id: 'meas_' + Date.now(),
@@ -601,7 +615,8 @@ export const api = {
   async deleteMeasurement(id: string) {
     try {
       return await request<{ message: string }>(`/api/measurements/${id}`, { method: 'DELETE' });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       const db = getLocalDb();
       db.measurements = db.measurements.filter((m) => m.id !== id);
       saveLocalDb(db);
@@ -613,7 +628,8 @@ export const api = {
   async getFiles() {
     try {
       return await request<UploadedFile[]>('/api/files');
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       return [];
     }
   },
@@ -621,7 +637,8 @@ export const api = {
   async deleteFile(id: string) {
     try {
       return await request<{ message: string }>(`/api/files/${id}`, { method: 'DELETE' });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       return { message: 'Arquivo removido' };
     }
   },
@@ -696,7 +713,8 @@ export const api = {
   async getRecommendations() {
     try {
       return await request<AIRecommendation[]>('/api/recommendations');
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       return [];
     }
   },
@@ -707,7 +725,8 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ status }),
       });
-    } catch {
+    } catch (error) {
+      if (!isStaticHost) throw error;
       return { message: 'Status atualizado com sucesso' };
     }
   },
