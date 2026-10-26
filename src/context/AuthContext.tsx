@@ -7,6 +7,7 @@ interface AuthContextType {
   profile: Profile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  authLoadError: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (payload: {
     email: string;
@@ -27,6 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [authLoadError, setAuthLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadUser() {
@@ -40,10 +42,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(data.user);
         setProfile(data.profile);
       } catch (err) {
-        console.warn('Invalid token session, resetting auth:', err);
-        removeStoredToken();
+        const message = err instanceof Error ? err.message : 'Não foi possível validar a sessão.';
+        console.warn('Could not restore FOCO session:', err);
         setUser(null);
         setProfile(null);
+        if (message.includes('demorou para responder') || message.includes('conectar ao servidor')) {
+          // Keep the token when this is a network/server timeout; this is not proof
+          // that the user's session is invalid.
+          setAuthLoadError(message);
+        } else {
+          removeStoredToken();
+          setAuthLoadError(null);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -85,6 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     removeStoredToken();
     setUser(null);
     setProfile(null);
+    setAuthLoadError(null);
   };
 
   const refreshProfile = async () => {
@@ -109,6 +120,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         profile,
         isAuthenticated: !!user,
         isLoading,
+        authLoadError,
         login,
         register,
         logout,
