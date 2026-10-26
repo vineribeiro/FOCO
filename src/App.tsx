@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { RestTimerProvider } from './context/RestTimerContext';
 import { BottomNavBar } from './components/BottomNavBar';
@@ -26,10 +26,23 @@ import { GoalsPage } from './pages/GoalsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
 import { Settings, User } from 'lucide-react';
+import { api } from './services/api';
+import { InstallAppButton } from './components/InstallAppButton';
 
 function MainApp() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+
+  useEffect(() => {
+    if (!isAuthenticated || !user?.id) return;
+    let active = true;
+    api.getAnamnesis().then((saved) => {
+      if (active && !saved) setActiveTab('anamnese');
+    }).catch(() => {
+      // Do not block access if the connection is temporarily unavailable.
+    });
+    return () => { active = false; };
+  }, [isAuthenticated, user?.id]);
   
   // 3D Exercise Anatomy Modal State
   const [exercise3dModal, setExercise3dModal] = useState<{
@@ -59,7 +72,7 @@ function MainApp() {
   }
 
   if (!isAuthenticated) {
-    return <AuthPage />;
+    return <AuthPage onRegistered={() => setActiveTab('anamnese')} />;
   }
 
   const handleOpenExercise3D = (name: string, group: string) => {
@@ -100,7 +113,7 @@ function MainApp() {
       case 'perfil':
         return <ProfilePage />;
       case 'configuracoes':
-        return <SettingsPage />;
+        return <SettingsPage setActiveTab={setActiveTab} />;
       case 'historico':
         return <HistoryPage setActiveTab={setActiveTab} />;
       case 'treinos':
@@ -147,6 +160,7 @@ function MainApp() {
 
           {/* Atalhos funcionais do aplicativo */}
           <div className="flex items-center gap-1.5">
+            <InstallAppButton />
             <button
               onClick={() => setActiveTab('configuracoes')}
               className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
@@ -154,7 +168,7 @@ function MainApp() {
                   ? 'bg-white text-black border-white'
                   : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
               }`}
-              title="Configurações e Banco"
+              title="Preferências"
             >
               <Settings className="w-3.5 h-3.5" />
             </button>
