@@ -24,7 +24,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   const [aiGoal, setAiGoal] = useState('Hipertrofia Máxima');
   const [aiFrequency, setAiFrequency] = useState(4);
   const [aiExperience, setAiExperience] = useState(profile?.experience_level || 'intermediario');
-  const [aiFocus, setAiFocus] = useState<string[]>(['Glúteos', 'Quadríceps']);
+  const [aiFocus, setAiFocus] = useState<string[]>([]);
   const muscleOptions = [
     { name: 'Glúteos', detail: 'Glúteo máximo e médio' }, { name: 'Quadríceps', detail: 'Parte anterior das coxas' },
     { name: 'Posterior de coxa', detail: 'Isquiotibiais' }, { name: 'Panturrilhas', detail: 'Tríceps sural' },
@@ -289,7 +289,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       <span className={`block text-[10px] mt-1 ${selected ? 'text-neutral-700' : 'text-neutral-500'}`}>{muscle.detail}</span>
                     </button>); })}
                 </div>
-                <p className="text-[10px] text-neutral-500 mt-2">Glúteos e quadríceps vêm selecionados como exemplo; personalize para qualquer objetivo e perfil.</p>
+                <p className="text-[10px] text-neutral-500 mt-2">Glúteos, quadríceps, posteriores e panturrilhas são opções de foco para quem quer priorizar inferiores. Sem seleção, a IA distribui o treino de forma equilibrada.</p>
               </div>
 
               <div>
