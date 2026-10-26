@@ -5,7 +5,8 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: './',
+    // GitHub Pages publishes this project under /FOCO/, not the domain root.
+    base: '/FOCO/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
