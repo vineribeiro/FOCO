@@ -279,9 +279,17 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     headers['Authorization'] = `Bearer ${token}`;
   }
 
+  // A validação de sessão não pode deixar o aplicativo preso no splash se o Render
+  // estiver iniciando ou sem responder. Limite apenas esta chamada; operações de IA
+  // podem legitimamente demorar mais.
+  const isSessionCheck = endpoint === '/api/auth/me';
+  const controller = isSessionCheck ? new AbortController() : null;
+  const timeoutId = controller ? window.setTimeout(() => controller.abort(), 12_000) : null;
+
   try {
     const response = await fetch(requestUrl, {
       ...options,
+      ...(controller ? { signal: controller.signal } : {}),
       headers,
     });
 
@@ -293,10 +301,15 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
     return data as T;
   } catch (err: any) {
+    if (err?.name === 'AbortError' && isSessionCheck) {
+      throw new Error('O servidor do FOCO demorou para responder. Tente novamente; sua sessão foi preservada.');
+    }
     if (err instanceof TypeError) {
       throw new Error('Não foi possível conectar ao servidor do FOCO. Verifique a internet ou tente novamente em instantes.');
     }
     throw err;
+  } finally {
+    if (timeoutId !== null) window.clearTimeout(timeoutId);
   }
 }
 
