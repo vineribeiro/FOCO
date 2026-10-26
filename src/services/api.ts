@@ -293,7 +293,9 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
     return data as T;
   } catch (err: any) {
-    // Se a requisição falhar (como em um host estático), propaga para fallback
+    if (err instanceof TypeError) {
+      throw new Error('Não foi possível conectar ao servidor do FOCO. Verifique a internet ou tente novamente em instantes.');
+    }
     throw err;
   }
 }
