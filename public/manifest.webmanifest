@@ -1,0 +1,25 @@
+{
+  "name": "FOCO — Treino personalizado",
+  "short_name": "FOCO",
+  "description": "Seu treino, seus objetivos, sua evolução.",
+  "start_url": "/FOCO/",
+  "scope": "/FOCO/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0A0A0A",
+  "theme_color": "#0A0A0A",
+  "icons": [
+    {
+      "src": "/FOCO/icons/foco-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/FOCO/icons/foco-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

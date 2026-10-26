@@ -31,6 +31,16 @@ class AppErrorBoundary extends React.Component<React.PropsWithChildren, { hasErr
   }
 }
 
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  const registerFocoWorker = () => {
+    navigator.serviceWorker.register(import.meta.env.BASE_URL + 'sw.js').catch(() => {
+      // Installation can still work through the browser menu if offline caching is unavailable.
+    });
+  };
+  if (document.readyState === 'complete') registerFocoWorker();
+  else window.addEventListener('load', registerFocoWorker, { once: true });
+}
+
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   document.body.innerHTML = '<main style="background:#0A0A0A;color:white;min-height:100vh;padding:32px;font-family:Arial,sans-serif"><h1>FOCO</h1><p>Não foi encontrado o elemento principal do aplicativo. Atualize a página e tente novamente.</p></main>';
