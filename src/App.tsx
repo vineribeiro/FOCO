@@ -24,8 +24,7 @@ import { HistoryPage } from './pages/HistoryPage';
 import { GoalsPage } from './pages/GoalsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
-import { BrandIdentityPage } from './pages/BrandIdentityPage';
-import { Dumbbell, Settings, User, Sparkles, Layers } from 'lucide-react';
+import { Settings, User } from 'lucide-react';
 
 function MainApp() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -97,8 +96,6 @@ function MainApp() {
         return <AiLabPage setActiveTab={setActiveTab} />;
       case 'progresso':
         return <ProgressPage />;
-      case 'identidade':
-        return <BrandIdentityPage setActiveTab={setActiveTab} />;
       case 'perfil':
         return <ProfilePage />;
       case 'configuracoes':
@@ -135,36 +132,18 @@ function MainApp() {
         <header className="px-4 py-3 flex items-center justify-between border-b border-white/10 bg-[#0A0A0A]/95 backdrop-blur-md sticky top-0 z-30">
           <button
             onClick={() => setActiveTab('dashboard')}
-            className="flex items-center gap-2.5 text-left cursor-pointer group"
+            className="flex items-center text-left cursor-pointer group"
+            aria-label="FOCO — voltar ao início"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#141414] border border-white/20 flex items-center justify-center p-1 group-hover:border-white transition-colors">
-              <FocoSymbol className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <span className="font-black text-sm tracking-[0.2em] text-white uppercase block leading-none font-sans">
-                FOCO
-              </span>
-              <span className="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mt-0.5 block">
-                FITNESS PREMIUM
-              </span>
-            </div>
+            <FocoLogoHorizontal
+              symbolSize="w-8 h-8"
+              showSlogan={true}
+              className="gap-2.5"
+            />
           </button>
 
-          {/* Quick Header Navigation Shortcuts */}
+          {/* Atalhos funcionais do aplicativo */}
           <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => setActiveTab('identidade')}
-              className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1 border transition-colors cursor-pointer ${
-                activeTab === 'identidade'
-                  ? 'bg-white text-black border-white'
-                  : 'bg-white/5 text-neutral-300 border-white/10 hover:border-white/30 hover:text-white'
-              }`}
-              title="Manual de Identidade Visual Oficial"
-            >
-              <Layers className="w-3 h-3" />
-              <span className="hidden sm:inline">Identidade</span>
-            </button>
-
             <button
               onClick={() => setActiveTab('configuracoes')}
               className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
