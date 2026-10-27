@@ -117,7 +117,15 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       });
       setGeneratedPlan(result);
     } catch (err: any) {
-      setErrorMsg('Falha ao gerar treino com Gemini: ' + err.message);
+      const message = err instanceof Error ? err.message : String(err || 'Erro desconhecido');
+      if (/usuário não encontrado no armazenamento|usuário não encontrado|sessão não autorizada|token de autenticação/i.test(message)) {
+        setErrorMsg(
+          'Falha de sessão do FOCO: o servidor não encontrou a conta associada a esta sessão. ' +
+          'Isso não é um erro do Gemini. Não crie outra conta ainda; é necessário confirmar a persistência dos dados do servidor.'
+        );
+      } else {
+        setErrorMsg('Falha ao gerar treino: ' + message);
+      }
     } finally {
       setIsGenerating(false);
     }
