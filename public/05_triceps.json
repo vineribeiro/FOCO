@@ -1,0 +1,1227 @@
+{
+  "arquivo": "05_triceps.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "triceps",
+  "descricao": "Biblioteca de exercícios para o tríceps braquial, incluindo movimentos compostos, extensões de cotovelo, exercícios com cabos, halteres, barras e máquinas.",
+  "observacao_imagens": "Imagens de execução do catálogo atual do FOCO, somente quando correspondem ao movimento. Movimentos sem referência específica ficam sem imagem em vez de reaproveitar uma figura incorreta.",
+  "exercicios": [
+    {
+      "id": "triceps_pulley_barra_reta",
+      "nome": "Tríceps pulley com barra reta",
+      "aliases": [
+        "Tríceps na polia",
+        "Straight bar pushdown"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo",
+        "antebraços"
+      ],
+      "equipamentos": [
+        "polia alta",
+        "barra reta"
+      ],
+      "padrao_movimento": "Extensão de cotovelo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma barra reta à polia alta e ajuste uma carga adequada.",
+        "Fique de frente para a máquina, com os pés estáveis e o tronco ereto.",
+        "Segure a barra com as palmas voltadas para baixo e mantenha os cotovelos próximos ao corpo.",
+        "Estenda os cotovelos para empurrar a barra em direção às coxas.",
+        "Contraia o tríceps no final do movimento sem projetar os ombros para a frente.",
+        "Retorne lentamente até uma flexão confortável dos cotovelos, mantendo o controle do cabo."
+      ],
+      "respiracao": {
+        "descida_da_barra": "Expire ao estender os cotovelos.",
+        "retorno": "Inspire durante a flexão controlada dos cotovelos."
+      },
+      "erros_comuns": [
+        "Balançar o tronco para movimentar a carga.",
+        "Abrir excessivamente os cotovelos.",
+        "Transformar o exercício em uma extensão dos ombros.",
+        "Deixar a carga retornar abruptamente."
+      ],
+      "cuidados": [
+        "Mantenha os punhos alinhados com os antebraços.",
+        "Não force a extensão dos cotovelos além da posição confortável.",
+        "Reduza a carga se não conseguir manter os braços estáveis."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "triceps_pulley_corda",
+        "triceps_pulley_barra_v"
+      ],
+      "imagens_execucao": [
+        "Triceps_Pushdown/0.jpg",
+        "Triceps_Pushdown/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_pulley_corda",
+      "nome": "Tríceps pulley com corda",
+      "aliases": [
+        "Triceps rope pushdown",
+        "Tríceps corda"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo",
+        "antebraços"
+      ],
+      "equipamentos": [
+        "polia alta",
+        "corda"
+      ],
+      "padrao_movimento": "Extensão de cotovelo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma corda à polia alta.",
+        "Segure as extremidades da corda com as palmas voltadas uma para a outra.",
+        "Mantenha os cotovelos junto ao tronco e os ombros relaxados.",
+        "Estenda os cotovelos até aproximar as mãos das laterais das coxas.",
+        "No final, afaste ligeiramente as extremidades da corda se isso for confortável, sem movimentar os ombros.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao empurrar a corda para baixo.",
+        "retorno": "Inspire durante a volta controlada."
+      },
+      "erros_comuns": [
+        "Separar a corda usando os ombros em vez dos antebraços.",
+        "Inclinar o tronco excessivamente.",
+        "Mover os cotovelos para a frente e para trás.",
+        "Usar carga que comprometa o controle."
+      ],
+      "cuidados": [
+        "Confira a fixação da corda.",
+        "Evite movimentos bruscos no final da extensão.",
+        "Mantenha uma amplitude que não provoque dor no cotovelo."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "triceps_pulley_barra_reta",
+        "triceps_pulley_barra_v"
+      ],
+      "imagens_execucao": [
+        "Triceps_Pushdown_-_Rope_Attachment/0.jpg",
+        "Triceps_Pushdown_-_Rope_Attachment/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_pulley_barra_v",
+      "nome": "Tríceps pulley com barra V",
+      "aliases": [
+        "V-bar pushdown"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo",
+        "antebraços"
+      ],
+      "equipamentos": [
+        "polia alta",
+        "barra V"
+      ],
+      "padrao_movimento": "Extensão de cotovelo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda a barra V à polia alta.",
+        "Segure as manoplas com uma pegada confortável e mantenha os cotovelos próximos ao tronco.",
+        "Estabilize o abdômen e mantenha os ombros relaxados.",
+        "Estenda os cotovelos, empurrando a barra em direção às coxas.",
+        "Faça uma breve contração do tríceps sem forçar a articulação.",
+        "Retorne lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao empurrar a barra para baixo.",
+        "retorno": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar impulso do tronco.",
+        "Elevar os ombros.",
+        "Deixar os cotovelos se afastarem excessivamente."
+      ],
+      "cuidados": [
+        "Use uma pegada que não cause desconforto nos punhos.",
+        "Não trave os cotovelos com força no final do movimento."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "triceps_pulley_corda",
+        "triceps_pulley_barra_reta"
+      ],
+      "imagens_execucao": [
+        "Triceps_Pushdown_-_V-Bar_Attachment/0.jpg",
+        "Triceps_Pushdown_-_V-Bar_Attachment/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_testa_barra_ez",
+      "nome": "Tríceps testa com barra EZ",
+      "aliases": [
+        "Skull crusher",
+        "French press deitado"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "banco reto",
+        "barra EZ",
+        "anilhas"
+      ],
+      "padrao_movimento": "Extensão de cotovelo deitado",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se em um banco reto com os pés firmes no chão.",
+        "Segure a barra EZ acima do peito, com os braços estendidos e os punhos alinhados.",
+        "Mantenha os braços relativamente estáveis e flexione os cotovelos para baixar a barra em direção à testa ou ligeiramente atrás da cabeça.",
+        "Desça apenas até a amplitude confortável para os cotovelos e ombros.",
+        "Estenda os cotovelos para retornar à posição inicial sem abrir excessivamente os braços.",
+        "Mantenha a carga sob controle durante toda a repetição."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao flexionar os cotovelos.",
+        "subida": "Expire ao estender os cotovelos."
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Abrir os cotovelos durante a descida.",
+        "Movimentar os ombros para compensar.",
+        "Deixar a barra cair rapidamente."
+      ],
+      "cuidados": [
+        "Utilize travas nas anilhas quando aplicável.",
+        "Considere um observador ao usar cargas elevadas.",
+        "Interrompa se houver dor aguda no cotovelo ou no ombro."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "triceps_testa_halteres",
+        "triceps_testa_cabo"
+      ],
+      "imagens_execucao": [
+        "Lying_Triceps_Press/0.jpg",
+        "Lying_Triceps_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_testa_halteres",
+      "nome": "Tríceps testa com halteres",
+      "aliases": [
+        "Dumbbell skull crusher"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "banco reto",
+        "halteres"
+      ],
+      "padrao_movimento": "Extensão de cotovelo deitado",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se em um banco com um halter em cada mão.",
+        "Posicione os halteres acima dos ombros, com as palmas voltadas uma para a outra ou em pegada confortável.",
+        "Mantenha os braços estáveis e flexione os cotovelos para baixar os halteres ao lado da cabeça.",
+        "Controle a descida sem abrir excessivamente os cotovelos.",
+        "Estenda os cotovelos para retornar à posição inicial.",
+        "Mantenha os punhos alinhados e os ombros estáveis."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao baixar os halteres.",
+        "subida": "Expire ao estender os cotovelos."
+      },
+      "erros_comuns": [
+        "Afastar os cotovelos excessivamente.",
+        "Bater os halteres entre si.",
+        "Usar impulso dos ombros.",
+        "Perder o controle na descida."
+      ],
+      "cuidados": [
+        "Escolha uma carga que permita controlar os dois halteres individualmente.",
+        "Não force a amplitude se houver desconforto articular."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "triceps_testa_barra_ez",
+        "triceps_testa_cabo"
+      ],
+      "imagens_execucao": [
+        "Decline_Dumbbell_Triceps_Extension/0.jpg",
+        "Decline_Dumbbell_Triceps_Extension/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_frances_halter",
+      "nome": "Tríceps francês unilateral com halter",
+      "aliases": [
+        "Single-arm overhead triceps extension"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "halter"
+      ],
+      "padrao_movimento": "Extensão de cotovelo acima da cabeça",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se ou fique em pé com o tronco estável.",
+        "Segure um halter e eleve o braço acima da cabeça, mantendo o ombro em uma posição confortável.",
+        "Flexione o cotovelo para baixar o halter atrás da cabeça.",
+        "Mantenha o braço superior relativamente estável, sem forçar a posição do ombro.",
+        "Estenda o cotovelo para elevar o halter até a posição inicial.",
+        "Complete as repetições e troque de braço."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao flexionar o cotovelo.",
+        "subida": "Expire ao estender o cotovelo."
+      },
+      "erros_comuns": [
+        "Arquear excessivamente a lombar.",
+        "Abrir o cotovelo sem controle.",
+        "Usar um halter pesado demais.",
+        "Mover o braço inteiro em vez de priorizar a extensão do cotovelo."
+      ],
+      "cuidados": [
+        "Avalie a mobilidade do ombro antes de usar a posição acima da cabeça.",
+        "Se houver dor no ombro, utilize uma variação com os braços em posição mais confortável."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "triceps_frances_dois_halteres",
+        "triceps_extensao_cabo_acima_cabeca"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_One-Arm_Triceps_Extension/0.jpg",
+        "Dumbbell_One-Arm_Triceps_Extension/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_frances_dois_halteres",
+      "nome": "Tríceps francês com dois halteres",
+      "aliases": [
+        "Two-arm overhead dumbbell extension"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "Extensão de cotovelo acima da cabeça",
+      "nivel": "intermediario",
+      "execucao": [
+        "Fique em pé ou sente-se com um halter em cada mão.",
+        "Eleve os braços acima da cabeça, mantendo os ombros estáveis.",
+        "Flexione os cotovelos e leve os halteres para trás da cabeça.",
+        "Mantenha o tronco firme e evite arquear excessivamente a lombar.",
+        "Estenda os cotovelos até retornar à posição inicial.",
+        "Controle a descida e mantenha uma amplitude confortável."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a flexão dos cotovelos.",
+        "subida": "Expire durante a extensão."
+      },
+      "erros_comuns": [
+        "Arquear a lombar.",
+        "Abrir os cotovelos excessivamente.",
+        "Deixar os halteres se afastarem sem controle."
+      ],
+      "cuidados": [
+        "Comece com carga leve para avaliar a mobilidade dos ombros.",
+        "Não force a posição se houver dor ou limitação articular."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "triceps_frances_halter",
+        "triceps_extensao_cabo_acima_cabeca"
+      ],
+      "imagens_execucao": [
+        "Seated_Triceps_Press/0.jpg",
+        "Seated_Triceps_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_coice_halter",
+      "nome": "Tríceps coice com halter",
+      "aliases": [
+        "Dumbbell triceps kickback"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "halter",
+        "banco opcional"
+      ],
+      "padrao_movimento": "Extensão de cotovelo com tronco inclinado",
+      "nivel": "iniciante",
+      "execucao": [
+        "Segure um halter e incline o tronco para a frente com a coluna em posição confortável.",
+        "Apoie a mão livre em um banco, se necessário, para estabilizar o corpo.",
+        "Eleve o braço de trabalho até deixar o cotovelo próximo ao tronco e o braço superior alinhado ao corpo.",
+        "Estenda o cotovelo para levar o halter para trás, sem movimentar excessivamente o braço superior.",
+        "Contraia o tríceps no final da extensão.",
+        "Flexione lentamente o cotovelo para retornar e complete as repetições antes de trocar de lado."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao estender o cotovelo.",
+        "retorno": "Inspire ao flexionar o cotovelo."
+      },
+      "erros_comuns": [
+        "Balançar o braço inteiro.",
+        "Girar o tronco.",
+        "Usar carga que impeça a extensão controlada.",
+        "Arredondar excessivamente as costas."
+      ],
+      "cuidados": [
+        "Use apoio quando isso melhorar a estabilidade.",
+        "Mantenha a coluna confortável e a carga leve o suficiente para controlar o movimento."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        15
+      ],
+      "variacoes": [
+        "triceps_coice_cabo",
+        "triceps_pulley_corda"
+      ],
+      "imagens_execucao": [
+        "Tricep_Dumbbell_Kickback/0.jpg",
+        "Tricep_Dumbbell_Kickback/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_extensao_cabo_acima_cabeca",
+      "nome": "Extensão de tríceps acima da cabeça na polia",
+      "aliases": [
+        "Overhead cable triceps extension"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "corda"
+      ],
+      "padrao_movimento": "Extensão de cotovelo acima da cabeça",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda uma corda à polia baixa.",
+        "Fique de costas para a máquina e segure as extremidades da corda.",
+        "Posicione os braços acima da cabeça ou ligeiramente à frente, conforme a mobilidade disponível.",
+        "Flexione os cotovelos para permitir que as mãos se desloquem atrás da cabeça.",
+        "Estenda os cotovelos sem arquear excessivamente a lombar.",
+        "Retorne lentamente à posição inicial, mantendo os ombros estáveis."
+      ],
+      "respiracao": {
+        "extensao": "Expire durante a extensão dos cotovelos.",
+        "retorno": "Inspire durante a flexão controlada."
+      },
+      "erros_comuns": [
+        "Arquear excessivamente a lombar.",
+        "Movimentar os ombros para gerar impulso.",
+        "Abrir os cotovelos sem controle.",
+        "Utilizar carga incompatível com a mobilidade."
+      ],
+      "cuidados": [
+        "Use uma posição que permita manter os ombros confortáveis.",
+        "Confira o acessório e a fixação do cabo antes de iniciar."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "triceps_frances_halter",
+        "triceps_extensao_cabo_unilateral_acima_cabeca"
+      ],
+      "imagens_execucao": [
+        "Triceps_Overhead_Extension_with_Rope/0.jpg",
+        "Triceps_Overhead_Extension_with_Rope/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_extensao_cabo_unilateral_acima_cabeca",
+      "nome": "Extensão unilateral de tríceps acima da cabeça na polia",
+      "aliases": [
+        "Single-arm overhead cable extension"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador individual"
+      ],
+      "padrao_movimento": "Extensão de cotovelo acima da cabeça unilateral",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda um pegador individual à polia baixa.",
+        "Fique de costas para a máquina e segure o pegador com uma mão.",
+        "Eleve o braço para uma posição acima da cabeça que seja confortável.",
+        "Flexione o cotovelo, permitindo que a mão se aproxime da parte posterior da cabeça.",
+        "Estenda o cotovelo mantendo o braço superior relativamente estável.",
+        "Retorne lentamente e repita do outro lado."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao estender o cotovelo.",
+        "retorno": "Inspire ao flexionar o cotovelo."
+      },
+      "erros_comuns": [
+        "Girar o tronco para completar a repetição.",
+        "Arquear a lombar.",
+        "Movimentar o ombro excessivamente."
+      ],
+      "cuidados": [
+        "Comece com carga leve.",
+        "Não force a amplitude acima da cabeça se houver desconforto no ombro."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "triceps_extensao_cabo_acima_cabeca",
+        "triceps_frances_halter"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "triceps_testa_cabo",
+      "nome": "Tríceps testa na polia",
+      "aliases": [
+        "Cable skull crusher"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "polia baixa ou média",
+        "barra reta ou corda",
+        "banco"
+      ],
+      "padrao_movimento": "Extensão de cotovelo deitado com cabo",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione um banco diante da polia e ajuste o acessório para que o cabo permita uma trajetória confortável.",
+        "Deite-se no banco e segure a barra ou a corda com os braços elevados.",
+        "Flexione os cotovelos para aproximar o acessório da testa ou ligeiramente atrás da cabeça.",
+        "Mantenha os braços superiores relativamente estáveis.",
+        "Estenda os cotovelos contra a resistência do cabo.",
+        "Retorne lentamente sem deixar a carga puxar os braços de forma abrupta."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao flexionar os cotovelos.",
+        "subida": "Expire ao estender os cotovelos."
+      },
+      "erros_comuns": [
+        "Deixar os cotovelos abrirem excessivamente.",
+        "Movimentar os ombros para ajudar.",
+        "Usar carga que tire o corpo da posição estável."
+      ],
+      "cuidados": [
+        "Confira a trajetória do cabo antes de iniciar.",
+        "Mantenha o banco estável e evite posicionar o rosto na linha de acessórios soltos."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "triceps_testa_barra_ez",
+        "triceps_testa_halteres"
+      ],
+      "imagens_execucao": [
+        "Cable_Lying_Triceps_Extension/0.jpg",
+        "Cable_Lying_Triceps_Extension/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_mergulho_banco",
+      "nome": "Mergulho no banco para tríceps",
+      "aliases": [
+        "Bench dip"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "deltoide anterior",
+        "peitoral maior"
+      ],
+      "equipamentos": [
+        "banco firme"
+      ],
+      "padrao_movimento": "Extensão de cotovelo com peso corporal",
+      "nivel": "intermediario",
+      "execucao": [
+        "Sente-se na borda de um banco firme e apoie as mãos ao lado dos quadris.",
+        "Desloque o quadril ligeiramente à frente do banco, mantendo os pés apoiados no chão.",
+        "Flexione os cotovelos para baixar o corpo em uma amplitude confortável.",
+        "Mantenha os ombros longe das orelhas e evite descer além da mobilidade confortável.",
+        "Empurre o banco para estender os cotovelos e retornar à posição inicial.",
+        "Mantenha o movimento controlado durante toda a série."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao baixar o corpo.",
+        "subida": "Expire ao empurrar o banco."
+      },
+      "erros_comuns": [
+        "Descer excessivamente e levar os ombros muito para trás.",
+        "Afastar as mãos de uma posição estável.",
+        "Realizar repetições com impulso.",
+        "Usar um banco instável."
+      ],
+      "cuidados": [
+        "Este exercício pode exigir bastante da articulação do ombro; escolha outra variação se provocar dor.",
+        "Mantenha os pés e o banco firmes.",
+        "Não adicione carga externa antes de dominar a execução."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "triceps_pulley_corda",
+        "paralelas_assistidas"
+      ],
+      "imagens_execucao": [
+        "Bench_Dips/0.jpg",
+        "Bench_Dips/1.jpg"
+      ]
+    },
+    {
+      "id": "paralelas_assistidas",
+      "nome": "Mergulho nas paralelas assistido",
+      "aliases": [
+        "Assisted dip"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "peitoral maior",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "máquina de paralelas assistidas ou elástico adequado"
+      ],
+      "padrao_movimento": "Empurrar vertical com peso corporal",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste a máquina de assistência ou o elástico conforme o equipamento disponível.",
+        "Segure as barras paralelas e estabilize o corpo.",
+        "Mantenha o tronco relativamente vertical para enfatizar a extensão dos cotovelos, sem forçar os ombros.",
+        "Flexione os cotovelos e desça apenas até uma amplitude confortável.",
+        "Empurre as barras para retornar à posição inicial.",
+        "Mantenha o corpo estável e evite balançar as pernas."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao descer.",
+        "subida": "Expire ao empurrar o corpo para cima."
+      },
+      "erros_comuns": [
+        "Descer além da amplitude tolerada pelo ombro.",
+        "Balançar as pernas para gerar impulso.",
+        "Elevar os ombros em direção às orelhas.",
+        "Reduzir a assistência antes de dominar a técnica."
+      ],
+      "cuidados": [
+        "Ajuste a assistência para executar repetições controladas.",
+        "Interrompa se sentir dor no ombro, esterno ou cotovelo.",
+        "Não force a extensão completa dos cotovelos."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        12
+      ],
+      "variacoes": [
+        "paralelas_livres",
+        "triceps_pulley_barra_reta"
+      ],
+      "imagens_execucao": [
+        "Dip_Machine/0.jpg",
+        "Dip_Machine/1.jpg"
+      ]
+    },
+    {
+      "id": "paralelas_livres",
+      "nome": "Mergulho nas paralelas com peso corporal",
+      "aliases": [
+        "Parallel bar dip",
+        "Dips"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "peitoral maior",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "barras paralelas"
+      ],
+      "padrao_movimento": "Empurrar vertical com peso corporal",
+      "nivel": "avancado",
+      "execucao": [
+        "Segure as barras paralelas e eleve o corpo até apoiar-se com os cotovelos estendidos de forma confortável.",
+        "Estabilize o tronco e mantenha as pernas controladas.",
+        "Flexione os cotovelos para descer lentamente, mantendo os ombros em uma posição confortável.",
+        "Desça apenas até a amplitude que consegue controlar sem dor ou perda de estabilidade.",
+        "Empurre as barras para estender os cotovelos e retornar ao topo.",
+        "Finalize a repetição sem balançar o corpo."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida.",
+        "subida": "Expire durante a subida."
+      },
+      "erros_comuns": [
+        "Descer excessivamente.",
+        "Usar balanço para iniciar a subida.",
+        "Perder a estabilidade dos ombros.",
+        "Adicionar peso antes de dominar o movimento."
+      ],
+      "cuidados": [
+        "Exige força e controle dos ombros; prefira a versão assistida se necessário.",
+        "Não continue se houver dor articular.",
+        "Adicione carga somente após dominar a técnica com peso corporal."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        5,
+        10
+      ],
+      "variacoes": [
+        "paralelas_assistidas",
+        "supino_fechado"
+      ],
+      "imagens_execucao": [
+        "Dips_-_Triceps_Version/0.jpg",
+        "Dips_-_Triceps_Version/1.jpg"
+      ]
+    },
+    {
+      "id": "supino_fechado",
+      "nome": "Supino com pegada fechada",
+      "aliases": [
+        "Close-grip bench press"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "peitoral maior",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "banco reto",
+        "barra",
+        "anilhas",
+        "suporte para barra"
+      ],
+      "padrao_movimento": "Empurrar horizontal com pegada fechada",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se no banco e posicione os pés firmemente no chão.",
+        "Segure a barra com as mãos um pouco mais próximas do que na pegada habitual do supino, sem aproximá-las excessivamente.",
+        "Retire a barra do suporte com controle e posicione-a sobre o peito.",
+        "Desça a barra em direção à região média ou inferior do peito, mantendo os punhos alinhados e os cotovelos em trajetória confortável.",
+        "Empurre a barra para cima até estender os cotovelos sem travá-los agressivamente.",
+        "Mantenha as escápulas estáveis e não retire os pés do chão."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida da barra.",
+        "subida": "Expire ao empurrar a barra para cima."
+      },
+      "erros_comuns": [
+        "Aproximar excessivamente as mãos.",
+        "Deixar os punhos dobrarem para trás.",
+        "Abrir os cotovelos de forma descontrolada.",
+        "Descer a barra rapidamente."
+      ],
+      "cuidados": [
+        "Use um observador ou travas de segurança adequadas.",
+        "Escolha uma largura de pegada que não cause desconforto nos punhos.",
+        "Não tente cargas máximas sem equipamento de segurança e experiência."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        10
+      ],
+      "variacoes": [
+        "supino_fechado_halteres",
+        "paralelas_assistidas"
+      ],
+      "imagens_execucao": [
+        "Close-Grip_Barbell_Bench_Press/0.jpg",
+        "Close-Grip_Barbell_Bench_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "supino_fechado_halteres",
+      "nome": "Supino fechado com halteres",
+      "aliases": [
+        "Close-grip dumbbell press",
+        "Dumbbell squeeze press"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "peitoral maior",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "banco reto",
+        "halteres"
+      ],
+      "padrao_movimento": "Empurrar horizontal com pegada neutra",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se no banco com um halter em cada mão.",
+        "Posicione os halteres sobre o peito, com as palmas voltadas uma para a outra.",
+        "Mantenha os cotovelos próximos ao tronco, sem forçar uma posição estreita.",
+        "Desça os halteres de forma controlada até a amplitude confortável.",
+        "Empurre os halteres para cima, estendendo os cotovelos.",
+        "Mantenha os pesos estáveis e evite bater os halteres entre si."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao baixar os halteres.",
+        "subida": "Expire ao empurrá-los para cima."
+      },
+      "erros_comuns": [
+        "Deixar os halteres se afastarem sem controle.",
+        "Dobrar excessivamente os punhos.",
+        "Descer além da amplitude confortável do ombro."
+      ],
+      "cuidados": [
+        "Use uma carga que permita estabilizar os halteres individualmente.",
+        "Tenha cuidado ao posicionar e retirar os pesos do banco."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "supino_fechado",
+        "triceps_pulley_barra_reta"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "triceps_coice_cabo",
+      "nome": "Tríceps coice na polia",
+      "aliases": [
+        "Cable triceps kickback"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador individual"
+      ],
+      "padrao_movimento": "Extensão de cotovelo com tronco inclinado",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda um pegador individual à polia baixa.",
+        "Fique de frente para a máquina e incline ligeiramente o tronco, mantendo a coluna confortável.",
+        "Segure o pegador e posicione o braço superior junto ao tronco.",
+        "Estenda o cotovelo para levar a mão para trás, mantendo o braço superior estável.",
+        "Contraia o tríceps no final da extensão.",
+        "Flexione lentamente o cotovelo para retornar e repita com o outro braço."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao estender o cotovelo.",
+        "retorno": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Girar o tronco.",
+        "Mover o braço superior em excesso.",
+        "Utilizar carga que cause balanço.",
+        "Arredondar as costas."
+      ],
+      "cuidados": [
+        "Mantenha uma base estável.",
+        "Use carga leve o suficiente para controlar a extensão."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        15
+      ],
+      "variacoes": [
+        "triceps_coice_halter",
+        "triceps_pulley_corda"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "triceps_extensao_unilateral_polia",
+      "nome": "Extensão unilateral de tríceps na polia",
+      "aliases": [
+        "Single-arm triceps pushdown"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "polia alta",
+        "pegador individual"
+      ],
+      "padrao_movimento": "Extensão de cotovelo unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda um pegador individual à polia alta.",
+        "Fique de frente para a máquina e segure o pegador com uma mão.",
+        "Mantenha o cotovelo junto ao tronco e o ombro relaxado.",
+        "Estenda o cotovelo para levar a mão em direção à coxa.",
+        "Retorne lentamente, permitindo a flexão controlada do cotovelo.",
+        "Complete as repetições e troque de lado."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao estender o cotovelo.",
+        "retorno": "Inspire durante a flexão controlada."
+      },
+      "erros_comuns": [
+        "Inclinar o corpo para ajudar.",
+        "Elevar o ombro.",
+        "Girar o tronco.",
+        "Usar cargas diferentes sem considerar a capacidade de cada lado."
+      ],
+      "cuidados": [
+        "Ajuste a carga para controlar o movimento unilateral.",
+        "Mantenha o punho alinhado com o antebraço."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "triceps_pulley_barra_reta",
+        "triceps_pulley_corda"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "triceps_extensao_maquina",
+      "nome": "Extensão de tríceps na máquina",
+      "aliases": [
+        "Triceps extension machine"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "máquina de extensão de tríceps"
+      ],
+      "padrao_movimento": "Extensão de cotovelo guiada",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o assento e os apoios de acordo com as instruções da máquina.",
+        "Segure as manoplas e posicione os cotovelos no alinhamento indicado pelo equipamento.",
+        "Mantenha o tronco estável e os ombros relaxados.",
+        "Estenda os cotovelos para mover as manoplas contra a resistência.",
+        "Retorne lentamente à posição inicial, sem deixar a carga bater.",
+        "Mantenha a execução controlada em todas as repetições."
+      ],
+      "respiracao": {
+        "extensao": "Expire durante a extensão dos cotovelos.",
+        "retorno": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Ajustar mal o assento.",
+        "Usar impulso do tronco.",
+        "Deixar a carga retornar abruptamente."
+      ],
+      "cuidados": [
+        "Siga as instruções específicas da máquina.",
+        "Não force a amplitude além do movimento confortável."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "triceps_pulley_corda",
+        "triceps_pulley_barra_reta"
+      ],
+      "imagens_execucao": [
+        "Machine_Triceps_Extension/0.jpg",
+        "Machine_Triceps_Extension/1.jpg"
+      ]
+    },
+    {
+      "id": "flexao_bracos_pegada_fechada",
+      "nome": "Flexão de braços com pegada fechada",
+      "aliases": [
+        "Close-grip push-up",
+        "Flexão diamante adaptada"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "peitoral maior",
+        "deltoide anterior",
+        "core"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "colchonete opcional"
+      ],
+      "padrao_movimento": "Empurrar horizontal com peso corporal",
+      "nivel": "intermediario",
+      "execucao": [
+        "Apoie as mãos no chão um pouco mais próximas do que na flexão convencional, sem precisar encostar os dedos.",
+        "Estenda as pernas e mantenha o corpo alinhado da cabeça aos calcanhares.",
+        "Contraia o abdômen e mantenha os cotovelos em uma trajetória confortável junto ao tronco.",
+        "Flexione os cotovelos para baixar o peito em direção ao chão.",
+        "Empurre o chão para estender os cotovelos e retornar à posição inicial.",
+        "Se necessário, execute com os joelhos apoiados ou com as mãos em uma superfície elevada."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao baixar o corpo.",
+        "subida": "Expire ao empurrar o chão."
+      },
+      "erros_comuns": [
+        "Deixar o quadril cair.",
+        "Elevar excessivamente o quadril.",
+        "Abrir os cotovelos sem controle.",
+        "Aproximar demais as mãos e causar desconforto nos punhos."
+      ],
+      "cuidados": [
+        "Ajuste a largura das mãos à mobilidade dos punhos.",
+        "Utilize uma variação mais fácil se não conseguir manter o corpo alinhado."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        15
+      ],
+      "variacoes": [
+        "flexao_bracos_convencional",
+        "supino_fechado_halteres"
+      ],
+      "imagens_execucao": [
+        "Push-Ups_-_Close_Triceps_Position/0.jpg",
+        "Push-Ups_-_Close_Triceps_Position/1.jpg"
+      ]
+    },
+    {
+      "id": "triceps_extensao_elastico",
+      "nome": "Extensão de tríceps com elástico",
+      "aliases": [
+        "Resistance band triceps pushdown"
+      ],
+      "grupo_principal": "triceps",
+      "musculos_primarios": [
+        "tríceps braquial"
+      ],
+      "musculos_secundarios": [
+        "ancôneo"
+      ],
+      "equipamentos": [
+        "elástico de resistência",
+        "ponto de ancoragem seguro"
+      ],
+      "padrao_movimento": "Extensão de cotovelo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fixe o elástico em um ponto alto e seguro, verificando se a ancoragem suporta a tensão.",
+        "Segure o elástico com as duas mãos e posicione os cotovelos junto ao tronco.",
+        "Mantenha os ombros relaxados e o tronco estável.",
+        "Estenda os cotovelos para levar as mãos em direção às coxas.",
+        "Retorne lentamente, controlando a tensão do elástico.",
+        "Mantenha uma distância que permita executar o movimento sem perder o equilíbrio."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao estender os cotovelos.",
+        "retorno": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar uma ancoragem instável.",
+        "Deixar o elástico voltar rapidamente.",
+        "Balançar o tronco para gerar impulso."
+      ],
+      "cuidados": [
+        "Inspecione o elástico antes de cada uso.",
+        "Não posicione o rosto na trajetória provável do elástico caso ele se solte."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "triceps_pulley_corda",
+        "triceps_extensao_unilateral_polia"
+      ],
+      "imagens_execucao": []
+    }
+  ]
+}
