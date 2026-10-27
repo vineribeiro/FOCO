@@ -114,7 +114,10 @@
         "Desenvolvimento unilateral na máquina",
         "Desenvolvimento com barra"
       ],
-      "imagens_execucao": []
+      "imagens_execucao": [
+        "Leverage_Shoulder_Press/0.jpg",
+        "Leverage_Shoulder_Press/1.jpg"
+      ]
     },
     {
       "id": "ombros_desenvolvimento_barra",
@@ -171,7 +174,10 @@
         "Desenvolvimento com halteres",
         "Desenvolvimento na máquina"
       ],
-      "imagens_execucao": []
+      "imagens_execucao": [
+        "Barbell_Shoulder_Press/0.jpg",
+        "Barbell_Shoulder_Press/1.jpg"
+      ]
     },
     {
       "id": "ombros_elevacao_lateral_halteres",
@@ -225,8 +231,8 @@
         "Elevação lateral unilateral"
       ],
       "imagens_execucao": [
-        "Dumbbell_Lateral_Raise/0.jpg",
-        "Dumbbell_Lateral_Raise/1.jpg"
+        "Side_Lateral_Raise/0.jpg",
+        "Side_Lateral_Raise/1.jpg"
       ]
     },
     {
@@ -282,8 +288,8 @@
         "Elevação lateral inclinada no cabo"
       ],
       "imagens_execucao": [
-        "Cable_Lateral_Raise/0.jpg",
-        "Cable_Lateral_Raise/1.jpg"
+        "Cable_Seated_Lateral_Raise/0.jpg",
+        "Cable_Seated_Lateral_Raise/1.jpg"
       ]
     },
     {
@@ -552,8 +558,8 @@
         "Elevação posterior unilateral"
       ],
       "imagens_execucao": [
-        "Bent_Over_Two-Dumbbell_Row/0.jpg",
-        "Bent_Over_Two-Dumbbell_Row/1.jpg"
+        "Reverse_Flyes/0.jpg",
+        "Reverse_Flyes/1.jpg"
       ]
     },
     {
@@ -610,7 +616,10 @@
         "Crucifixo inverso com halteres",
         "Crucifixo inverso unilateral"
       ],
-      "imagens_execucao": []
+      "imagens_execucao": [
+        "Cable_Rear_Delt_Fly/0.jpg",
+        "Cable_Rear_Delt_Fly/1.jpg"
+      ]
     },
     {
       "id": "ombros_remada_alta_cabo",
@@ -664,7 +673,10 @@
         "Elevação lateral no cabo",
         "Encolhimento de ombros"
       ],
-      "imagens_execucao": []
+      "imagens_execucao": [
+        "Upright_Cable_Row/0.jpg",
+        "Upright_Cable_Row/1.jpg"
+      ]
     },
     {
       "id": "ombros_face_pull",
@@ -720,7 +732,10 @@
         "Crucifixo inverso no cabo",
         "Rotação externa no cabo"
       ],
-      "imagens_execucao": []
+      "imagens_execucao": [
+        "Face_Pull/0.jpg",
+        "Face_Pull/1.jpg"
+      ]
     },
     {
       "id": "ombros_rotacao_externa_cabo",
@@ -773,7 +788,10 @@
         "Rotação externa deitado de lado",
         "Rotação externa no cabo com o braço elevado, quando apropriado"
       ],
-      "imagens_execucao": []
+      "imagens_execucao": [
+        "External_Rotation_with_Cable/0.jpg",
+        "External_Rotation_with_Cable/1.jpg"
+      ]
     },
     {
       "id": "ombros_rotacao_externa_elastico",
@@ -825,7 +843,10 @@
         "Rotação externa deitado de lado",
         "Rotação externa com toalha entre o cotovelo e o tronco"
       ],
-      "imagens_execucao": []
+      "imagens_execucao": [
+        "External_Rotation_with_Band/0.jpg",
+        "External_Rotation_with_Band/1.jpg"
+      ]
     },
     {
       "id": "ombros_arnold_press",
@@ -1040,7 +1061,10 @@
         "Rotação externa no cabo",
         "Rotação externa com o cotovelo apoiado"
       ],
-      "imagens_execucao": []
+      "imagens_execucao": [
+        "External_Rotation/0.jpg",
+        "External_Rotation/1.jpg"
+      ]
     }
   ]
 }
