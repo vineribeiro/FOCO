@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, FileUp, House, Settings2, Sparkles, Target, UserRound } from 'lucide-react';
+import { BookOpen, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, FileUp, House, Layers3, Settings2, Sparkles, Target, UserRound } from 'lucide-react';
 import { FocoLogoVertical } from './FocoBrand';
 
 interface DesktopNavProps {
@@ -14,6 +14,7 @@ const primary = [
 ];
 const tools = [
   { id: 'treinos', label: 'Minhas fichas', icon: ClipboardList },
+  { id: 'atlas', label: 'Atlas anatômico', icon: Layers3 },
   { id: 'ia-lab', label: 'Criar com IA', icon: Sparkles },
   { id: 'arquivos', label: 'Importar avaliação', icon: FileUp },
   { id: 'objetivos', label: 'Meus objetivos', icon: Target },

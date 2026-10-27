@@ -13,7 +13,8 @@
     "lint": "tsc --noEmit",
     "audit:images": "node scripts/audit-exercise-images.mjs",
     "anatomy:generate": "node scripts/generate-anatomy.mjs",
-    "audit:anatomy": "node scripts/audit-anatomy-v3.mjs"
+    "audit:anatomy": "node scripts/audit-anatomy-v3.mjs",
+    "test:anatomy-review": "tsx scripts/test-anatomy-review.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

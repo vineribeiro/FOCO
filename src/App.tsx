@@ -28,10 +28,11 @@ import { Settings, User } from 'lucide-react';
 import { api } from './services/api';
 import { InstallAppButton } from './components/InstallAppButton';
 import { ExerciseLibraryPage } from './pages/ExerciseLibraryPage';
+import { AnatomyStudioPage } from './pages/AnatomyStudioPage';
 
 function MainApp() {
   const { user, isAuthenticated, isLoading, authLoadError } = useAuth();
-  const validViews = ['dashboard', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos'];
+  const validViews = ['dashboard', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas'];
   const [activeTab, setActiveTabState] = useState<string>(() => {
     const view = new URLSearchParams(window.location.search).get('view');
     return view && validViews.includes(view) ? view : 'dashboard';
@@ -116,6 +117,8 @@ function MainApp() {
       case 'musculos':
       case 'biblioteca':
         return <ExerciseLibraryPage setActiveTab={setActiveTab} />;
+      case 'atlas':
+        return <AnatomyStudioPage setActiveTab={setActiveTab} />;
       case 'sessao':
         return (
           <ActiveSessionPage

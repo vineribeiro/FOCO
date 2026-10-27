@@ -30,6 +30,8 @@ jobs:
         run: npm run audit:images
       - name: Anatomy atlas manifest integrity
         run: npm run audit:anatomy
+      - name: Safe ZIP review preview importer
+        run: npm run test:anatomy-review
       - name: Validate prompts for entire exercise catalog (non-billable)
         run: npm run anatomy:generate -- --max-images=254
       - name: Export the 254 exercise-specific anatomy prompts
