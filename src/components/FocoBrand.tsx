@@ -91,7 +91,7 @@ export const FocoLettering: React.FC<SymbolProps> = ({
 }) => {
   return (
     <svg
-      viewBox="0 0 380 72"
+      viewBox="0 0 404 76"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
