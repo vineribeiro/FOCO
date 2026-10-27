@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Activity,
   AlertCircle,
@@ -14,14 +14,14 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { FocoSymbol, FocoLettering } from '../components/FocoBrand';
-import { api } from '../services/api';
+import { api, removeStoredToken, setStoredToken } from '../services/api';
 import { InstallAppButton } from '../components/InstallAppButton';
 
 interface AuthPageProps {
   onRegistered: () => void;
 }
 
-type AuthMode = 'login' | 'register' | 'forgot';
+type AuthMode = 'login' | 'register' | 'forgot' | 'reset';
 
 export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
   const { login, register, isLoading } = useAuth();
@@ -38,6 +38,28 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : '';
+    const params = new URLSearchParams(hash);
+    const authError = params.get('error_description') || params.get('error') || params.get('error_code');
+    if (authError) {
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+      setErrorMsg(/expired|otp_expired/i.test(authError)
+        ? 'Este link de recuperação expirou ou já foi utilizado. Solicite um novo link.'
+        : 'Não foi possível validar o link. Solicite uma nova recuperação de senha.');
+      return;
+    }
+    const accessToken = params.get('access_token');
+    if (params.get('type') === 'recovery' && accessToken) {
+      const refreshToken = params.get('refresh_token') || undefined;
+      const expiresAt = Number(params.get('expires_at')) || Math.floor(Date.now() / 1000) + (Number(params.get('expires_in')) || 3600);
+      setStoredToken(accessToken, refreshToken, expiresAt);
+      setMode('reset');
+      setSuccessMsg('Link validado. Defina uma nova senha para recuperar o acesso.');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   const changeMode = (nextMode: AuthMode) => {
     setMode(nextMode);
@@ -59,6 +81,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
     if (/already registered|user already exists/i.test(message)) {
       return 'Este e-mail já possui uma conta. Entre ou use a recuperação de senha.';
     }
+    if (/weak_password|password.*(weak|compromised|leaked)|password strength/i.test(message)) {
+      return 'Escolha uma senha mais forte, com pelo menos 8 caracteres, que não tenha sido exposta em vazamentos.';
+    }
     return message;
   };
 
@@ -68,34 +93,32 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
     setSuccessMsg(null);
 
     const normalizedEmail = email.trim().toLowerCase();
-    if (!normalizedEmail) {
+    if (mode !== 'reset' && !normalizedEmail) {
       setErrorMsg('Informe seu e-mail para continuar.');
       return;
     }
-
     if (mode !== 'forgot' && !password) {
-      setErrorMsg('Informe sua senha para continuar.');
+      setErrorMsg(mode === 'reset' ? 'Informe sua nova senha.' : 'Informe sua senha para continuar.');
       return;
     }
-
-    if (mode === 'register') {
-      if (!fullName.trim()) {
+    if (mode === 'register' || mode === 'reset') {
+      if (mode === 'register' && !fullName.trim()) {
         setErrorMsg('Informe seu nome para criar o perfil.');
         return;
       }
-      if (password.length < 6) {
-        setErrorMsg('Use uma senha com pelo menos 6 caracteres.');
+      if (password.length < 8) {
+        setErrorMsg('Use uma senha com pelo menos 8 caracteres.');
         return;
       }
       if (password !== confirmPassword) {
         setErrorMsg('As senhas não coincidem. Confira os dois campos.');
         return;
       }
-      if (weightKg && (Number(weightKg) < 30 || Number(weightKg) > 350)) {
+      if (mode === 'register' && weightKg && (Number(weightKg) < 30 || Number(weightKg) > 350)) {
         setErrorMsg('Informe um peso entre 30 e 350 kg ou deixe o campo em branco.');
         return;
       }
-      if (heightCm && (Number(heightCm) < 100 || Number(heightCm) > 250)) {
+      if (mode === 'register' && heightCm && (Number(heightCm) < 100 || Number(heightCm) > 250)) {
         setErrorMsg('Informe uma altura entre 100 e 250 cm ou deixe o campo em branco.');
         return;
       }
@@ -115,9 +138,16 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
           ...(heightCm ? { height_cm: Number(heightCm) } : {}),
         });
         onRegistered();
-      } else {
+      } else if (mode === 'forgot') {
         const response = await api.forgotPassword(normalizedEmail);
         setSuccessMsg(response.message || 'Se o e-mail estiver cadastrado, enviaremos instruções para recuperar o acesso.');
+      } else {
+        const response = await api.resetPassword({ new_password: password });
+        removeStoredToken();
+        setPassword('');
+        setConfirmPassword('');
+        setMode('login');
+        setSuccessMsg(response.message || 'Senha atualizada. Entre com a nova senha para continuar.');
       }
     } catch (error: unknown) {
       const rawMessage = error instanceof Error ? error.message : '';
