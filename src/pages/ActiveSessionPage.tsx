@@ -3,6 +3,7 @@ import { api } from '../services/api';
 import { WorkoutPlan, WorkoutExercise } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
 import { soundEngine } from '../utils/soundEngine';
+import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import {
   Play,
   Pause,
@@ -16,7 +17,6 @@ import {
   AlertCircle,
   Volume2,
   VolumeX,
-  Rotate3d,
   Flame,
   Zap,
   Timer,
@@ -25,7 +25,6 @@ import {
 
 interface ActiveSessionProps {
   setActiveTab: (tab: string) => void;
-  onOpenExercise3D?: (exName: string, group: string) => void;
 }
 
 interface SetLog {
@@ -43,7 +42,7 @@ interface ExerciseLog {
   sets: SetLog[];
 }
 
-export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, onOpenExercise3D }) => {
+export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }) => {
   const [activePlan, setActivePlan] = useState<WorkoutPlan | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sessionStarted, setSessionStarted] = useState(false);
@@ -454,16 +453,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab, 
                 </div>
 
                 <div className="flex items-center gap-1.5 shrink-0">
-                  {onOpenExercise3D && (
-                    <button
-                      onClick={() => onOpenExercise3D(exercise.exercise_name, exercise.muscle_group)}
-                      className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white text-white hover:text-black font-black text-[10px] uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer border border-white/10"
-                      title="Ver biomecânica anatômica 3D"
-                    >
-                      <Rotate3d className="w-3 h-3" />
-                      <span>3D</span>
-                    </button>
-                  )}
+<ExerciseIllustration exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} className="h-14 w-14 shrink-0" />
                   <button
                     onClick={() => handleAddSet(exIdx)}
                     className="p-1 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
