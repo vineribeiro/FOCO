@@ -151,9 +151,23 @@ interface DatabaseSchema {
 const DEFAULT_DATA_DIR = path.resolve(process.cwd(), 'data');
 const RENDER_PERSISTENT_ROOT = path.resolve('/var/data');
 const configuredDataDir = process.env.FOCO_DATA_DIR?.trim();
+
+function isRenderPersistentDiskMounted(): boolean {
+  try {
+    // Checking the mount table avoids treating an ordinary ephemeral /var/data
+    // directory as durable storage.
+    return fs.readFileSync('/proc/mounts', 'utf-8').split('\n').some((line) => {
+      const mountPoint = line.split(' ')[1]?.replace(/\\040/g, ' ');
+      return mountPoint === RENDER_PERSISTENT_ROOT;
+    });
+  } catch {
+    return false;
+  }
+}
+
 const useRenderPersistentDisk =
   process.env.NODE_ENV === 'production' &&
-  fs.existsSync(RENDER_PERSISTENT_ROOT);
+  isRenderPersistentDiskMounted();
 const DATA_DIR = path.resolve(
   configuredDataDir ||
   (useRenderPersistentDisk ? path.join(RENDER_PERSISTENT_ROOT, 'foco') : DEFAULT_DATA_DIR),
@@ -169,7 +183,7 @@ export function getDatabaseStorageStatus() {
     engine: 'json-file',
     directory: DATA_DIR,
     fileExists: fs.existsSync(DB_FILE),
-    persistentDiskConfigured: isOnRenderDisk,
+    persistentDiskConfigured: isOnRenderDisk && isRenderPersistentDiskMounted(),
   };
 }
 
