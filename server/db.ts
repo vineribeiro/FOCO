@@ -148,8 +148,30 @@ interface DatabaseSchema {
   anamneses: Anamnesis[];
 }
 
-const DATA_DIR = path.resolve(process.cwd(), 'data');
+const DEFAULT_DATA_DIR = path.resolve(process.cwd(), 'data');
+const RENDER_PERSISTENT_ROOT = path.resolve('/var/data');
+const configuredDataDir = process.env.FOCO_DATA_DIR?.trim();
+const useRenderPersistentDisk =
+  process.env.NODE_ENV === 'production' &&
+  fs.existsSync(RENDER_PERSISTENT_ROOT);
+const DATA_DIR = path.resolve(
+  configuredDataDir ||
+  (useRenderPersistentDisk ? path.join(RENDER_PERSISTENT_ROOT, 'foco') : DEFAULT_DATA_DIR),
+);
 const DB_FILE = path.join(DATA_DIR, 'foco_persistent_store.json');
+const LEGACY_DB_FILE = path.join(DEFAULT_DATA_DIR, 'foco_persistent_store.json');
+
+export function getDatabaseStorageStatus() {
+  const isOnRenderDisk =
+    DATA_DIR === RENDER_PERSISTENT_ROOT ||
+    DATA_DIR.startsWith(RENDER_PERSISTENT_ROOT + path.sep);
+  return {
+    engine: 'json-file',
+    directory: DATA_DIR,
+    fileExists: fs.existsSync(DB_FILE),
+    persistentDiskConfigured: isOnRenderDisk,
+  };
+}
 
 const INITIAL_DB: DatabaseSchema = {
   users: [],
@@ -173,26 +195,55 @@ class FocoDatabase {
   }
 
   private load(): DatabaseSchema {
-    try {
-      if (!fs.existsSync(DATA_DIR)) {
-        fs.mkdirSync(DATA_DIR, { recursive: true });
-      }
-      if (fs.existsSync(DB_FILE)) {
-        const raw = fs.readFileSync(DB_FILE, 'utf-8');
-        const parsed = JSON.parse(raw) as Partial<DatabaseSchema>;
-        // Backward-compatible store migration for installations created before anamnesis.
-        return {
-          ...INITIAL_DB,
-          ...parsed,
-          anamneses: Array.isArray(parsed.anamneses) ? parsed.anamneses : [],
-        };
-      }
-    } catch (err) {
-      console.error('Error loading persistent db, creating fresh store:', err);
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+
+    // On first start with a newly mounted Render disk, copy the legacy file if it
+    // still exists. Never overwrite an existing file on the persistent disk.
+    if (
+      path.resolve(DB_FILE) !== path.resolve(LEGACY_DB_FILE) &&
+      !fs.existsSync(DB_FILE) &&
+      fs.existsSync(LEGACY_DB_FILE)
+    ) {
+      fs.copyFileSync(LEGACY_DB_FILE, DB_FILE);
+      console.warn('[FOCO DB] Migrated legacy JSON store to configured data directory.');
     }
-    this.persist(INITIAL_DB);
-    const db = JSON.parse(JSON.stringify(INITIAL_DB));
-    return db;
+
+    if (!fs.existsSync(DB_FILE)) {
+      const emptyDb = JSON.parse(JSON.stringify(INITIAL_DB)) as DatabaseSchema;
+      this.persist(emptyDb);
+      if (process.env.NODE_ENV === 'production') {
+        console.warn(
+          '[FOCO DB] No existing store was found. A new empty store was initialized. ' +
+          'Check FOCO_DATA_DIR / the Render persistent disk before registering existing users again.',
+        );
+      }
+      return emptyDb;
+    }
+
+    try {
+      const raw = fs.readFileSync(DB_FILE, 'utf-8');
+      const parsed = JSON.parse(raw) as Partial<DatabaseSchema>;
+      // Backward-compatible store migration for installations created before anamnesis.
+      return {
+        ...INITIAL_DB,
+        ...parsed,
+        anamneses: Array.isArray(parsed.anamneses) ? parsed.anamneses : [],
+      };
+    } catch (err) {
+      // Preserve the original file and fail closed. Do not replace possibly
+      // recoverable user data with an empty database.
+      const backupFile = `${DB_FILE}.corrupt.${new Date().toISOString().replace(/[:.]/g, '-')}`;
+      try {
+        fs.copyFileSync(DB_FILE, backupFile);
+      } catch (backupError) {
+        console.error('[FOCO DB] Could not back up unreadable data file:', backupError);
+      }
+      console.error('[FOCO DB] Failed to load the existing store. Startup aborted to protect data.', err);
+      throw new Error(
+        `FOCO data store could not be read. The original file was preserved; inspect ${backupFile} before recovery.`,
+        { cause: err },
+      );
+    }
   }
 
   private persist(dataToSave?: DatabaseSchema) {
@@ -217,6 +268,14 @@ class FocoDatabase {
 
   findUserById(id: string): User | undefined {
     return this.data.users.find(u => u.id === id);
+  }
+
+  updateUserPassword(userId: string, passwordHash: string): boolean {
+    const user = this.findUserById(userId);
+    if (!user) return false;
+    user.password_hash = passwordHash;
+    this.persist();
+    return true;
   }
 
   createUser(user: Omit<User, 'id' | 'created_at'>): User {
