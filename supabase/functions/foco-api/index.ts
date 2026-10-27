@@ -339,6 +339,30 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     return response({ ...exercise.data, suggested_load_kg: Number(exercise.data.suggested_load_kg || 0) }, 201, origin);
   }
 
+  m = path.match(/^\/api\/workouts\/([^/]+)\/exercises\/([^/]+)$/);
+  if (method === "PATCH" && m) {
+    const planId = m[1];
+    const exerciseId = m[2];
+    const b = await body(req);
+    const validDays = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
+    const trainingDay = b.training_day == null || b.training_day === "" ? null : text(b.training_day, 20);
+    if (trainingDay && !validDays.includes(trainingDay)) throw new ApiError(400, "Dia da semana inválido.");
+
+    const plan = await db.from("workout_plans").select("id").eq("id", planId).eq("user_id", user.id).maybeSingle();
+    fail(plan.error, "Não foi possível verificar a ficha.");
+    if (!plan.data) throw new ApiError(404, "Ficha não encontrada.");
+
+    const updated = await db.from("workout_exercises")
+      .update({ training_day: trainingDay })
+      .eq("id", exerciseId)
+      .eq("plan_id", planId)
+      .select("*")
+      .maybeSingle();
+    fail(updated.error, "Não foi possível atualizar o dia do exercício.");
+    if (!updated.data) throw new ApiError(404, "Exercício não encontrado nesta ficha.");
+    return response({ ...updated.data, suggested_load_kg: Number(updated.data.suggested_load_kg || 0) }, 200, origin);
+  }
+
   m = path.match(/^\/api\/workouts\/([^/]+)\/activate$/);
   if (method === "PUT" && m) {
     fail((await db.from("workout_plans").update({ status: "inativo" }).eq("user_id", user.id)).error, "Falha ao atualizar fichas.");
