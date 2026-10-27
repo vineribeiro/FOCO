@@ -2,7 +2,16 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient, type SupabaseClient, type User } from "npm:@supabase/supabase-js@2";
 
 const URL = Deno.env.get("SUPABASE_URL") || "https://buoefcnkpdrhevzbakze.supabase.co";
-const KEY = Deno.env.get("SUPABASE_PUBLISHABLE_KEY") || Deno.env.get("SUPABASE_ANON_KEY") || "sb_publishable_0oYKLSj8WxQMV2A9TtNGew_zduFYPVI";
+function publicApiKey(): string {
+  const singular = Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
+  if (singular) return singular;
+  try {
+    const named = JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") || "{}");
+    if (typeof named.default === "string") return named.default;
+  } catch { /* use legacy key below */ }
+  return Deno.env.get("SUPABASE_ANON_KEY") || "sb_publishable_0oYKLSj8WxQMV2A9TtNGew_zduFYPVI";
+}
+const KEY = publicApiKey();
 const GEMINI_KEY = Deno.env.get("GEMINI_API_KEY") || "";
 const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
 const ORIGINS = ["https://vineribeiro.github.io", "http://localhost:5173", "http://127.0.0.1:5173"];
@@ -147,8 +156,8 @@ async function aiJson(prompt: string, schema: any, media?: { data: string; mime:
   let detail = "O Gemini não retornou uma resposta.";
   for (const model of models) {
     for (let attempt = 0; attempt < 2; attempt++) {
-      const result = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent?key=" + encodeURIComponent(GEMINI_KEY), {
-        method: "POST", headers: { "Content-Type": "application/json" },
+      const result = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent", {
+        method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": GEMINI_KEY },
         body: JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema, temperature: 0.35 } }),
       });
       const raw = await result.text();
