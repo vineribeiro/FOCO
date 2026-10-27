@@ -16,7 +16,7 @@ export interface ExerciseCatalogItem {
   respiration?: Record<string, string>;
   commonErrors?: string[];
   safetyNotes?: string[];
-  suggestedSets?: number;
+  suggestedSets?: number | string;
   suggestedReps?: string;
   variations?: string[];
   sourceGroup?: string;
@@ -35,8 +35,8 @@ interface DedicatedExerciseSource {
   respiracao: Record<string, string>;
   erros_comuns: string[];
   cuidados: string[];
-  series_sugeridas: number;
-  repeticoes_sugeridas: string;
+  series_sugeridas: number | number[];
+  repeticoes_sugeridas: string | number[];
   variacoes: string[];
   imagens_execucao: string[];
 }
@@ -283,8 +283,8 @@ export function getExerciseImageUrl(imagePath: string): string {
 
 function mapDedicatedExercise(
   exercise: DedicatedExerciseSource,
-  sourceGroup: 'Peito' | 'Costas' | 'Ombros',
-  primaryGroup: 'chest' | 'back' | 'shoulders',
+  sourceGroup: 'Peito' | 'Costas' | 'Ombros' | 'Bíceps',
+  primaryGroup: 'chest' | 'back' | 'shoulders' | 'biceps',
 ): ExerciseCatalogItem {
   const equipmentText = exercise.equipamentos.join(', ').toLocaleLowerCase('pt-BR');
   const equipment = !exercise.equipamentos.length ? 'body only'
@@ -319,12 +319,15 @@ function mapDedicatedExercise(
   ])).filter((muscle) => {
     if (primaryGroup === 'chest') return muscle !== 'chest';
     if (primaryGroup === 'back') return muscle !== 'lats' && muscle !== 'middle back';
+    if (primaryGroup === 'shoulders') return muscle !== 'shoulders';
+    if (primaryGroup === 'biceps') return muscle !== 'biceps';
     return muscle !== 'shoulders';
   });
 
   const primaryMuscles = primaryGroup === 'chest' ? ['chest']
     : primaryGroup === 'back' ? ['lats', 'middle back']
-      : ['shoulders'];
+      : primaryGroup === 'shoulders' ? ['shoulders']
+        : ['biceps'];
 
   return {
     id: exercise.id,
@@ -344,8 +347,16 @@ function mapDedicatedExercise(
     respiration: exercise.respiracao,
     commonErrors: exercise.erros_comuns,
     safetyNotes: exercise.cuidados,
-    suggestedSets: exercise.series_sugeridas,
-    suggestedReps: exercise.repeticoes_sugeridas,
+    suggestedSets: Array.isArray(exercise.series_sugeridas)
+      ? (exercise.series_sugeridas[0] === exercise.series_sugeridas[1]
+        ? exercise.series_sugeridas[0]
+        : `${exercise.series_sugeridas[0]}–${exercise.series_sugeridas[1]}`)
+      : exercise.series_sugeridas,
+    suggestedReps: Array.isArray(exercise.repeticoes_sugeridas)
+      ? (exercise.repeticoes_sugeridas[0] === exercise.repeticoes_sugeridas[1]
+        ? String(exercise.repeticoes_sugeridas[0])
+        : `${exercise.repeticoes_sugeridas[0]}–${exercise.repeticoes_sugeridas[1]}`)
+      : exercise.repeticoes_sugeridas,
     variations: exercise.variacoes,
     sourceGroup,
   };
@@ -355,38 +366,43 @@ export async function loadExerciseCatalog(): Promise<ExerciseCatalogItem[]> {
   if (!catalogPromise) {
     catalogPromise = (async () => {
       const baseUrl = import.meta.env.BASE_URL;
-      const [catalogResponse, chestResponse, backResponse, shoulderResponse] = await Promise.all([
+      const [catalogResponse, chestResponse, backResponse, shoulderResponse, bicepsResponse] = await Promise.all([
         fetch(`${baseUrl}exercise-catalog.json`),
         fetch(`${baseUrl}01_peito.json`),
         fetch(`${baseUrl}02_costas.json`),
         fetch(`${baseUrl}03_ombros.json`),
+        fetch(`${baseUrl}04_biceps.json`),
       ]);
       if (!catalogResponse.ok) throw new Error('Não foi possível carregar a biblioteca de exercícios.');
-      if (!chestResponse.ok || !backResponse.ok || !shoulderResponse.ok) {
+      if (!chestResponse.ok || !backResponse.ok || !shoulderResponse.ok || !bicepsResponse.ok) {
         throw new Error('Não foi possível carregar uma das bibliotecas musculares do FOCO.');
       }
       const raw = await catalogResponse.json();
-      const [chestData, backData, shoulderData] = await Promise.all([
+      const [chestData, backData, shoulderData, bicepsData] = await Promise.all([
         chestResponse.json() as Promise<DedicatedExerciseFile>,
         backResponse.json() as Promise<DedicatedExerciseFile>,
         shoulderResponse.json() as Promise<DedicatedExerciseFile>,
+        bicepsResponse.json() as Promise<DedicatedExerciseFile>,
       ]);
       if (!Array.isArray(raw)) throw new Error('O catálogo de exercícios está em um formato inválido.');
-      for (const [name, dataset] of [['peito', chestData], ['costas', backData], ['ombros', shoulderData]] as const) {
+      for (const [name, dataset] of [
+        ['peito', chestData], ['costas', backData], ['ombros', shoulderData], ['bíceps', bicepsData],
+      ] as const) {
         if (!Array.isArray(dataset.exercicios)) throw new Error(`O catálogo de ${name} está em um formato inválido.`);
       }
 
-      const dedicated = [
+      const allDedicated = [
         ...chestData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Peito', 'chest')),
         ...backData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Costas', 'back')),
         ...shoulderData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Ombros', 'shoulders')),
+        ...bicepsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Bíceps', 'biceps')),
       ];
       const dedicatedImageIds = new Set(
-        [...chestData.exercicios, ...backData.exercicios, ...shoulderData.exercicios]
+        [...chestData.exercicios, ...backData.exercicios, ...shoulderData.exercicios, ...bicepsData.exercicios]
           .flatMap((exercise) => exercise.imagens_execucao.map((image) => image.split('/')[0]))
       );
       const dedicatedNames = new Set(
-        [...chestData.exercicios, ...backData.exercicios, ...shoulderData.exercicios]
+        [...chestData.exercicios, ...backData.exercicios, ...shoulderData.exercicios, ...bicepsData.exercicios]
           .flatMap((exercise) => [exercise.nome, ...exercise.aliases].map(normalizeExerciseText))
       );
       const existingExercises = (raw as ExerciseCatalogItem[]).filter((exercise) => {
@@ -396,7 +412,7 @@ export async function loadExerciseCatalog(): Promise<ExerciseCatalogItem[]> {
         return !nameKeys.some((name) => dedicatedNames.has(name));
       });
 
-      return [...dedicated, ...existingExercises];
+      return [...allDedicated, ...existingExercises];
     })().catch((error) => {
       catalogPromise = null;
       throw error;
