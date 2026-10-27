@@ -4,6 +4,7 @@ import { WorkoutPlan, WorkoutExercise } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
 import { soundEngine } from '../utils/soundEngine';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
+import { getCurrentTrainingDay, getTrainingDayLabel, TRAINING_DAYS } from '../data/exerciseLibrary';
 import {
   Play,
   Pause,
@@ -69,6 +70,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
   // Exercise state for the session
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLog[]>([]);
+  const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => getCurrentTrainingDay());
   const [sessionNotes, setSessionNotes] = useState('');
   const [sessionCompletedModal, setSessionCompletedModal] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -91,9 +93,6 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       try {
         const plan = await api.getActiveWorkout();
         setActivePlan(plan);
-        if (plan && plan.exercises && plan.exercises.length > 0) {
-          initExerciseLogs(plan.exercises);
-        }
       } catch (e) {
         console.error('Error fetching active plan for session:', e);
       } finally {
@@ -118,6 +117,16 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     }));
     setExerciseLogs(logs);
   };
+
+  // Refresh the planned exercises when the athlete chooses another weekday.
+  // Exercises without a weekday are legacy/general items and remain available every day.
+  useEffect(() => {
+    if (!activePlan || sessionStarted) return;
+    const todaysExercises = (activePlan.exercises || []).filter(
+      (exercise) => !exercise.training_day || exercise.training_day === selectedTrainingDay
+    );
+    initExerciseLogs(todaysExercises);
+  }, [activePlan, selectedTrainingDay]);
 
   const handleStartWorkout = () => {
     soundEngine.initContext();
@@ -352,6 +361,22 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           </div>
         </div>
 
+        <div className="flex flex-col gap-2 border-t border-white/5 pt-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <label htmlFor="foco-training-day" className="block text-[10px] font-black uppercase tracking-widest text-neutral-400">Dia do treino</label>
+            <p className="mt-1 text-[10px] text-neutral-600">{sessionStarted ? 'Dia bloqueado durante a sessão' : 'A sessão mostra os exercícios atribuídos a este dia.'}</p>
+          </div>
+          <select
+            id="foco-training-day"
+            value={selectedTrainingDay}
+            disabled={sessionStarted}
+            onChange={(event) => setSelectedTrainingDay(event.target.value)}
+            className="w-full rounded-xl border border-white/10 bg-[#141414] px-3 py-2.5 text-xs font-bold text-white outline-none focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+          >
+            {TRAINING_DAYS.map((day) => <option key={day.value} value={day.value}>{day.label}</option>)}
+          </select>
+        </div>
+
         {/* Real-time stats bar (Duração, Séries Feitas, Carga Total) */}
         <div className="grid grid-cols-3 gap-2 pt-1 border-t border-white/5">
           <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-[#141414] border border-white/10">
@@ -425,6 +450,16 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       </div>
 
       {/* Exercises Log Cards */}
+      {exerciseLogs.length === 0 && activePlan && (
+        <div className="rounded-2xl border border-dashed border-white/15 bg-[#141414] p-6 text-center">
+          <Dumbbell className="mx-auto h-8 w-8 text-neutral-500" />
+          <h3 className="mt-3 text-sm font-black">Nenhum exercício para {getTrainingDayLabel(selectedTrainingDay).toLowerCase()}</h3>
+          <p className="mt-1 text-xs leading-relaxed text-neutral-500">Abra a biblioteca e adicione exercícios a este dia para montar a sessão.</p>
+          <button type="button" onClick={() => setActiveTab('biblioteca')} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-black uppercase tracking-wide text-black">
+            <Plus className="h-4 w-4" /> Adicionar exercícios
+          </button>
+        </div>
+      )}
       <div className="space-y-4">
         {exerciseLogs.map((exercise, exIdx) => {
           const completedCount = exercise.sets.filter((s) => s.completed).length;
