@@ -656,12 +656,12 @@ app.get('/api/system/status', (_req: Request, res: Response) => {
     version: '1.2.0',
     ai_status: process.env.GEMINI_API_KEY ? 'configured' : 'missing_key',
     database: storage.engine,
-    storage_persistent: storage.remoteStorageReady || storage.persistentDiskConfigured,
+    storage_persistent: (storage.remoteStorageReady && !storage.remoteStorageError) || storage.persistentDiskConfigured,
     storage_file_exists: storage.fileExists,
     remote_storage_configured: storage.remoteStorageConfigured,
-    remote_storage_ready: storage.remoteStorageReady,
+    remote_storage_ready: storage.remoteStorageReady && !storage.remoteStorageError,
     remote_storage_error: Boolean(storage.remoteStorageError),
-    supabase_sync_available: storage.remoteStorageReady,
+    supabase_sync_available: storage.remoteStorageReady && !storage.remoteStorageError,
     timestamp: new Date().toISOString(),
   });
 });
