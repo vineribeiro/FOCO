@@ -202,7 +202,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
                 <div className="flex items-center justify-between gap-3 border-t border-white/10 px-3 py-3">
                   <p className="truncate text-[10px] text-neutral-500">{exercise.secondaryMuscles.length ? `Também trabalha ${exercise.secondaryMuscles.slice(0,2).map(getMuscleLabel).join(', ')}` : 'Exercício principal'}</p>
                   <button type="button" onClick={() => { setSelectedExercise(exercise); setActionMessage(null); }} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-[10px] font-black uppercase tracking-wide text-black transition hover:bg-neutral-200">
-                    <Plus className="h-3.5 w-3.5" /> Adicionar
+                    <Plus className="h-3.5 w-3.5" /> Adicionar ao meu plano
                   </button>
                 </div>
               </article>
