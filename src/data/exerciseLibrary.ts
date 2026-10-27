@@ -160,6 +160,25 @@ export function getCurrentTrainingDay(): TrainingDay {
   return (['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'] as const)[day];
 }
 
+export function getPreferredTrainingDay(): TrainingDay {
+  try {
+    const saved = localStorage.getItem('foco_selected_training_day');
+    if (TRAINING_DAYS.some((day) => day.value === saved)) return saved as TrainingDay;
+  } catch {
+    // Local storage may be unavailable; use the actual current weekday.
+  }
+  return getCurrentTrainingDay();
+}
+
+export function savePreferredTrainingDay(value: string): void {
+  if (!TRAINING_DAYS.some((day) => day.value === value)) return;
+  try {
+    localStorage.setItem('foco_selected_training_day', value);
+  } catch {
+    // The current screen state remains usable without local persistence.
+  }
+}
+
 export function getTrainingDayLabel(value?: string | null): string {
   return TRAINING_DAYS.find((day) => day.value === value)?.label || 'Qualquer dia';
 }
