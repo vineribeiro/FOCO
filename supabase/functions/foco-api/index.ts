@@ -93,6 +93,20 @@ async function saveProfile(db: SupabaseClient, user: User, input: any): Promise<
   };
   const r = await db.from("profiles").upsert(row).select("*").single();
   fail(r.error, "Não foi possível salvar o perfil.");
+  if (
+    Object.prototype.hasOwnProperty.call(input, "current_weight_kg") &&
+    r.data.current_weight_kg != null &&
+    Number(r.data.current_weight_kg) !== Number(current.current_weight_kg)
+  ) {
+    const measurement = await db.from("body_measurements").insert({
+      user_id: user.id,
+      measurement_type: "peso",
+      value: Number(r.data.current_weight_kg),
+      unit: "kg",
+      measured_at: new Date().toISOString(),
+    });
+    if (measurement.error) console.error("[FOCO] Perfil salvo; não foi possível registrar a medição de peso:", measurement.error.message);
+  }
   return r.data;
 }
 async function plans(db: SupabaseClient, uid: string): Promise<any[]> {
