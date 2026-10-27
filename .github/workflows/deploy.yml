@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -40,6 +41,38 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      # Some repositories have both the built-in branch/Jekyll publisher and this Vite
+      # workflow enabled. Wait for that run on the same commit before publishing dist,
+      # otherwise it can overwrite the compiled app with unbundled TSX.
+      - name: Wait for automatic Pages build to finish
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const startedAt = Date.now();
+            const timeoutMs = 240_000;
+            let observed = false;
+            while (Date.now() - startedAt < timeoutMs) {
+              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 30,
+              });
+              const branchBuild = data.workflow_runs.find((run) =>
+                run.name === "pages build and deployment" && run.head_sha === context.sha
+              );
+              if (branchBuild) {
+                observed = true;
+                if (branchBuild.status === "completed") {
+                  core.info(`Automatic Pages build completed (conclusion: ${branchBuild.conclusion}).`);
+                  return;
+                }
+              } else if (!observed && Date.now() - startedAt > 20_000) {
+                core.info("No automatic branch Pages build found for this commit; publishing Vite artifact.");
+                return;
+              }
+              await new Promise((resolve) => setTimeout(resolve, 5000));
+            }
+            core.setFailed("Timed out waiting for the automatic Pages build; refusing to publish into a race.");
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
