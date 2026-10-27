@@ -92,3 +92,23 @@
   line-height: 1.4;
   text-transform: uppercase;
 }
+
+/* Alternating start/end exercise-reference poses */
+@keyframes exercisePoseA {
+  0%, 44% { opacity: 1; }
+  50%, 94% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes exercisePoseB {
+  0%, 44% { opacity: 0; }
+  50%, 94% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .exercise-pose {
+    animation: none !important;
+  }
+  .exercise-pose-b {
+    display: none;
+  }
+}

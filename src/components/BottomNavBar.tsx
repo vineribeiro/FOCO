@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Dumbbell,
-  Activity,
+  BookOpen,
   Play,
   Sparkles,
   TrendingUp,
@@ -20,7 +20,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
 }) => {
   const tabs = [
     { id: 'dashboard', label: 'Treino', icon: Dumbbell },
-    { id: 'musculos', label: 'Músculos 3D', icon: Activity },
+    { id: 'biblioteca', label: 'Exercícios', icon: BookOpen },
     { id: 'sessao', label: 'Iniciar', icon: Play, isCenterAction: true },
     { id: 'ia-lab', label: 'IA & Fichas', icon: Sparkles },
     { id: 'progresso', label: 'Evolução', icon: TrendingUp },

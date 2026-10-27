@@ -8,11 +8,9 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { RestTimerProvider } from './context/RestTimerContext';
 import { BottomNavBar } from './components/BottomNavBar';
 import { RestTimerHUD } from './components/RestTimerHUD';
-import { Anatomy3DViewer } from './components/Anatomy3DViewer';
 import { FocoSymbol, FocoLogoHorizontal } from './components/FocoBrand';
 import { AuthPage } from './pages/AuthPage';
 import { DashboardPage } from './pages/DashboardPage';
-import { MusclesPage } from './pages/MusclesPage';
 import { ActiveSessionPage } from './pages/ActiveSessionPage';
 import { AiLabPage } from './pages/AiLabPage';
 import { WorkoutsPage } from './pages/WorkoutsPage';
@@ -28,6 +26,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { Settings, User } from 'lucide-react';
 import { api } from './services/api';
 import { InstallAppButton } from './components/InstallAppButton';
+import { ExerciseLibraryPage } from './pages/ExerciseLibraryPage';
 
 function MainApp() {
   const { user, isAuthenticated, isLoading, authLoadError } = useAuth();
@@ -44,17 +43,6 @@ function MainApp() {
     return () => { active = false; };
   }, [isAuthenticated, user?.id]);
   
-  // 3D Exercise Anatomy Modal State
-  const [exercise3dModal, setExercise3dModal] = useState<{
-    isOpen: boolean;
-    name: string;
-    group: string;
-  }>({
-    isOpen: false,
-    name: '',
-    group: '',
-  });
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center p-4">
@@ -96,35 +84,21 @@ function MainApp() {
     return <AuthPage onRegistered={() => setActiveTab('anamnese')} />;
   }
 
-  const handleOpenExercise3D = (name: string, group: string) => {
-    setExercise3dModal({
-      isOpen: true,
-      name,
-      group,
-    });
-  };
-
   const renderActiveView = () => {
     switch (activeTab) {
       case 'dashboard':
         return (
           <DashboardPage
             setActiveTab={setActiveTab}
-            onOpenExercise3D={handleOpenExercise3D}
           />
         );
       case 'musculos':
-        return (
-          <MusclesPage
-            setActiveTab={setActiveTab}
-            onOpenExercise3D={handleOpenExercise3D}
-          />
-        );
+      case 'biblioteca':
+        return <ExerciseLibraryPage setActiveTab={setActiveTab} />;
       case 'sessao':
         return (
           <ActiveSessionPage
             setActiveTab={setActiveTab}
-            onOpenExercise3D={handleOpenExercise3D}
           />
         );
       case 'ia-lab':
@@ -153,7 +127,6 @@ function MainApp() {
         return (
           <DashboardPage
             setActiveTab={setActiveTab}
-            onOpenExercise3D={handleOpenExercise3D}
           />
         );
     }
@@ -223,15 +196,6 @@ function MainApp() {
           onStartSession={() => setActiveTab('sessao')}
         />
 
-        {/* Global Interactive 3D Anatomy & Execution Modal */}
-        {exercise3dModal.isOpen && (
-          <Anatomy3DViewer
-            exerciseName={exercise3dModal.name}
-            muscleGroup={exercise3dModal.group}
-            onClose={() => setExercise3dModal({ isOpen: false, name: '', group: '' })}
-            isModal={true}
-          />
-        )}
       </div>
     </div>
   );

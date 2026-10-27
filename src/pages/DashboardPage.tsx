@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
+import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { WorkoutPlan, WorkoutSession, Goal, AIRecommendation } from '../types';
 import {
   Play,
@@ -11,7 +12,6 @@ import {
   ArrowRight,
   Activity,
   CheckCircle2,
-  Rotate3d,
   ClipboardList,
   FileUp,
   Target,
@@ -19,10 +19,9 @@ import {
 
 interface DashboardProps {
   setActiveTab: (tab: string) => void;
-  onOpenExercise3D: (exName: string, group: string) => void;
 }
 
-export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab, onOpenExercise3D }) => {
+export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
   const { user, profile } = useAuth();
   const [activePlan, setActivePlan] = useState<WorkoutPlan | null>(null);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
@@ -181,11 +180,11 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab, onOpenEx
             <section className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-xs font-black uppercase tracking-wider text-neutral-400">Grupos musculares da ficha</h2>
-                <button type="button" onClick={() => setActiveTab('musculos')} className="text-[11px] font-bold text-white hover:underline">Anatomia 3D</button>
+                <button type="button" onClick={() => setActiveTab('biblioteca')} className="text-[11px] font-bold text-white hover:underline">Biblioteca de exercícios</button>
               </div>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
                 {muscleChips.map((muscle) => (
-                  <button key={muscle.name} type="button" onClick={() => setActiveTab('musculos')} className="flex items-center gap-3 rounded-xl border border-white/10 bg-[#141414] p-3 text-left transition hover:border-white/30">
+                  <button key={muscle.name} type="button" onClick={() => setActiveTab('biblioteca')} className="flex items-center gap-3 rounded-xl border border-white/10 bg-[#141414] p-3 text-left transition hover:border-white/30">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10"><Activity className="h-4 w-4" /></div>
                     <div className="min-w-0"><p className="truncate text-xs font-bold">{muscle.name}</p><p className="mt-1 text-[10px] text-neutral-500">{muscle.count} {muscle.count === 1 ? 'exercício' : 'exercícios'}</p></div>
                   </button>
@@ -217,9 +216,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab, onOpenEx
                       </p>
                       {exercise.notes && <p className="mt-2 text-xs leading-relaxed text-neutral-500">{exercise.notes}</p>}
                     </div>
-                    <button type="button" onClick={() => onOpenExercise3D(exercise.exercise_name, exercise.muscle_group)} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-2 text-[10px] font-black transition hover:bg-white hover:text-black" title="Visualizar exercício em 3D">
-                      <Rotate3d className="h-3.5 w-3.5" /> 3D
-                    </button>
+                    <ExerciseIllustration exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} className="h-16 w-16 shrink-0" />
                   </article>
                 ))}
               </div>

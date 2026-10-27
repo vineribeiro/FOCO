@@ -295,6 +295,39 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
   if (path === "/api/workouts" && method === "GET") return response(await plans(db, user.id), 200, origin);
   if (path === "/api/workouts/active" && method === "GET") return response((await plans(db, user.id)).find((p: any) => p.status === "ativo") || null, 200, origin);
   if (path === "/api/workouts" && method === "POST") return response(await createPlan(db, user.id, await body(req)), 201, origin);
+  m = path.match(/^\/api\/workouts\/([^/]+)\/exercises$/);
+  if (method === "POST" && m) {
+    const planId = m[1];
+    const b = await body(req);
+    const input = b.exercise || b;
+    const plan = await db.from("workout_plans").select("id").eq("id", planId).eq("user_id", user.id).maybeSingle();
+    fail(plan.error, "Não foi possível verificar a ficha.");
+    if (!plan.data) throw new ApiError(404, "Ficha não encontrada.");
+
+    const exerciseName = text(input.exercise_name, 160);
+    if (!exerciseName) throw new ApiError(400, "O nome do exercício é obrigatório.");
+    const duplicate = await db.from("workout_exercises").select("id").eq("plan_id", planId).ilike("exercise_name", exerciseName).limit(1).maybeSingle();
+    fail(duplicate.error, "Não foi possível verificar os exercícios existentes.");
+    if (duplicate.data) throw new ApiError(409, "Esse exercício já está na ficha selecionada.");
+
+    const last = await db.from("workout_exercises").select("position").eq("plan_id", planId).order("position", { ascending: false }).limit(1).maybeSingle();
+    fail(last.error, "Não foi possível ordenar os exercícios.");
+    const exercise = await db.from("workout_exercises").insert({
+      plan_id: planId,
+      exercise_name: exerciseName,
+      muscle_group: text(input.muscle_group, 80) || "Geral",
+      sets: Math.min(10, Math.max(1, Number(input.sets) || 3)),
+      reps_min: Math.min(100, Math.max(1, Number(input.reps_min) || 8)),
+      reps_max: Math.min(100, Math.max(1, Number(input.reps_max) || 12)),
+      rest_seconds: Math.min(600, Math.max(5, Number(input.rest_seconds) || 60)),
+      suggested_load_kg: Math.max(0, Number(input.suggested_load_kg) || 0),
+      notes: text(input.notes, 500),
+      position: Number(last.data?.position ?? -1) + 1,
+    }).select("*").single();
+    fail(exercise.error, "Não foi possível adicionar o exercício à ficha.");
+    return response({ ...exercise.data, suggested_load_kg: Number(exercise.data.suggested_load_kg || 0) }, 201, origin);
+  }
+
   m = path.match(/^\/api\/workouts\/([^/]+)\/activate$/);
   if (method === "PUT" && m) {
     fail((await db.from("workout_plans").update({ status: "inativo" }).eq("user_id", user.id)).error, "Falha ao atualizar fichas.");
