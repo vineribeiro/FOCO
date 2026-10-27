@@ -235,14 +235,16 @@ class FocoDatabase {
   private remoteReady = false;
   private remoteWriteChain: Promise<void> = Promise.resolve();
   private remoteWriteError: string | null = null;
+  private localStoreLoadError: string | null = null;
 
   constructor() {
     try {
       this.data = this.load();
     } catch (error) {
       if (!REMOTE_STORAGE_CONFIGURED) throw error;
-      // If local ephemeral storage is unreadable but a remote source is configured,
-      // restore from the remote source during initializeRemote() instead.
+      // Keep a record that the local data could not be read. Remote recovery is
+      // allowed, but an empty snapshot must never overwrite an unreadable store.
+      this.localStoreLoadError = error instanceof Error ? error.message : String(error);
       this.data = validateDatabaseShape(INITIAL_DB);
       console.warn('[FOCO DB] Local store is unavailable; attempting recovery from Supabase.');
     }
@@ -332,8 +334,16 @@ class FocoDatabase {
       return;
     }
 
-    // First connection: seed Supabase with the local data if there is any;
-    // otherwise initialize the remote row with an empty, valid schema.
+    // Seed only when the local file was read successfully. If it was corrupt or
+    // missing due to a previous failure, never upload an empty database over it.
+    if (this.localStoreLoadError) {
+      throw new Error(
+        'Supabase has no FOCO snapshot and the local store could not be read. ' +
+        'Startup was stopped to prevent replacing recoverable user data. ' +
+        this.localStoreLoadError,
+      );
+    }
+
     this.remoteReady = true;
     await this.writeRemoteSnapshot(this.data);
     this.persistLocal();
