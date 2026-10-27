@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, ImageOff, Expand, X } from 'lucide-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight, Expand, ImageOff, X } from 'lucide-react';
+import { findApprovedAnatomyAtlas } from '../data/anatomyAssets';
 import { findMatchingExercise, getExerciseDisplayName, getExerciseImageUrl, getMuscleLabel, loadExerciseCatalog } from '../data/exerciseLibrary';
 
 interface ExerciseIllustrationProps {
   exerciseName: string;
+  exerciseId?: string;
   muscleGroup?: string;
   imagePaths?: string[];
   className?: string;
@@ -17,129 +19,120 @@ const muscleTargets: Record<string, string> = {
 };
 
 export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
-  exerciseName, muscleGroup, imagePaths = [], className = 'h-64 w-full', showCaption = false,
+  exerciseName, exerciseId, muscleGroup, imagePaths = [], className = 'h-64 w-full', showCaption = false,
 }) => {
-  const [pose, setPose] = useState(0);
+  const [phase, setPhase] = useState(0);
+  const [legacyPaths, setLegacyPaths] = useState<string[]>([]);
+  const [atlasUrl, setAtlasUrl] = useState<string | null>(null);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
-  const [fallbackImages, setFallbackImages] = useState<string[]>([]);
-  const [imageFailed, setImageFailed] = useState(false);
   const compact = /\bh-(14|16|20)\b/.test(className);
-  const suppliedImages = imagePaths.filter(Boolean).slice(0, 2);
-  const images = suppliedImages.length ? suppliedImages : fallbackImages;
-  const hasImage = images.length > 0 && !imageFailed;
-  const target = muscleGroup ? (muscleTargets[muscleGroup.toLowerCase()] || getMuscleLabel(muscleGroup)) : 'Músculos trabalhados';
+  const supplied = useMemo(() => imagePaths.filter(Boolean).slice(0, 2), [imagePaths.join('|')]);
 
-  // Fichas criadas manualmente ou por IA carregam o nome do exercício, mas não
-  // o caminho da imagem. Resolver pelo catálogo evita cartões vazios na sessão.
   useEffect(() => {
-    let mounted = true;
-    setPose(0);
-    setImageFailed(false);
-    setFallbackImages([]);
-    if (suppliedImages.length) return () => { mounted = false; };
-    loadExerciseCatalog().then((catalog) => {
-      if (!mounted) return;
-      const match = findMatchingExercise(catalog, exerciseName, muscleGroup);
-      const normalize = (v: string) => v.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').replace(/[^a-z0-9]/g, '');
-      const keys = match ? [match.name, getExerciseDisplayName(match.name), ...(match.aliases || [])] : [];
-      // Não usar imagens de um exercício parecido quando o nome não coincide.
-      const exactMatch = keys.some((name) => normalize(name) === normalize(exerciseName));
-      setFallbackImages(exactMatch ? match?.images?.filter(Boolean).slice(0, 2) || [] : []);
-    }).catch(() => {
-      if (mounted) setFallbackImages([]);
-    });
-    return () => { mounted = false; };
-  }, [exerciseName, muscleGroup, imagePaths.join('|')]);
+    let active = true;
+    setPhase(0);
+    setFailedUrl(null);
+    setAtlasUrl(null);
+    setLegacyPaths(supplied);
+    findApprovedAnatomyAtlas(exerciseId, exerciseName)
+      .then(url => { if (active) setAtlasUrl(url); })
+      .catch(() => { if (active) setAtlasUrl(null); });
+    if (!supplied.length) {
+      loadExerciseCatalog().then(catalog => {
+        if (!active) return;
+        const match = findMatchingExercise(catalog, exerciseName, muscleGroup);
+        const key = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const aliases = match ? [match.name, getExerciseDisplayName(match.name), ...(match.aliases || [])] : [];
+        const exact = aliases.some(name => key(name) === key(exerciseName));
+        setLegacyPaths(exact ? (match?.images || []).filter(Boolean).slice(0, 2) : []);
+      }).catch(() => { if (active) setLegacyPaths([]); });
+    }
+    return () => { active = false; };
+  }, [exerciseId, exerciseName, muscleGroup, supplied.join('|')]);
 
-  const selectPose = (next: number) => {
-    setImageFailed(false);
-    setPose(next);
+  const isAtlas = Boolean(atlasUrl && failedUrl !== atlasUrl);
+  const sources = isAtlas ? [atlasUrl!] : legacyPaths.map(getExerciseImageUrl);
+  const visible = sources[phase] && failedUrl !== sources[phase];
+  const target = muscleGroup ? (muscleTargets[muscleGroup.toLowerCase()] || getMuscleLabel(muscleGroup)) : 'Músculos trabalhados';
+  const changePhase = (index: number) => {
+    setFailedUrl(null);
+    setPhase(index);
   };
-
   const toggleZoom = () => {
     if (dialogRef.current?.open) dialogRef.current.close();
     else dialogRef.current?.showModal();
   };
-
   return (
-    <div className={'relative isolate overflow-hidden rounded-2xl border border-black/10 bg-[#F4F4F4] ' + className}>
-      {!compact && (
-        <div className="absolute left-3 top-3 z-10 rounded-full border border-black/10 bg-white/95 px-3 py-1.5 text-[11px] font-semibold text-neutral-800">
-          Execução ilustrada
-        </div>
-      )}
-      {hasImage ? (
-        <div className={'absolute inset-0 flex items-center justify-center ' + (compact ? 'p-1' : 'px-3 pb-12 pt-12 sm:px-5')}>
+    <div className={'relative isolate overflow-hidden rounded-2xl border border-black/10 bg-[#F5F5F5] ' + className}>
+      {!compact && <div className="absolute left-3 top-3 z-10 rounded-full border border-black/10 bg-white/95 px-3 py-2 text-[11px] font-bold text-neutral-900 shadow-sm">
+        {isAtlas ? 'FOCO · Atlas anatômico' : 'Foto de referência'}
+      </div>}
+      {visible ? (
+        <div className={'absolute inset-0 flex items-center justify-center ' + (compact ? 'p-1' : 'px-2 pb-12 pt-12 sm:px-4')}>
           {compact ? (
-            <img key={images[pose]} src={getExerciseImageUrl(images[pose])}
-              alt={exerciseName + ' — imagem ilustrativa'}
-              loading="lazy" className="foco-anatomy-image h-full w-full object-contain"
-              onError={() => setImageFailed(true)} />
+            <img src={sources[phase]} loading="lazy" alt={exerciseName + (isAtlas ? ' — atlas anatômico' : ' — referência fotográfica')}
+              className="h-full w-full object-contain" style={isAtlas ? undefined : {filter:'grayscale(1)'}}
+              onError={() => setFailedUrl(sources[phase])} />
           ) : (
             <button type="button" onClick={toggleZoom}
-              className="group flex h-full w-full items-center justify-center outline-offset-2"
-              aria-label={'Ampliar imagem de ' + exerciseName + (pose === 0 ? ' na posição inicial' : ' na posição final')}>
-              <img key={images[pose]} src={getExerciseImageUrl(images[pose])}
-                alt={exerciseName + ' — ' + (pose === 0 ? 'posição inicial' : 'posição final')}
-                loading="lazy" className="foco-anatomy-image h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.025]"
-                onError={() => setImageFailed(true)} />
-              <span className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-black shadow-sm"
-                aria-hidden="true"><Expand className="h-5 w-5" /></span>
+              aria-label={'Ampliar ' + (isAtlas ? 'atlas' : 'foto') + ' de ' + exerciseName}
+              className="group relative flex h-full w-full items-center justify-center outline-offset-2">
+              <img src={sources[phase]} loading="lazy" alt={exerciseName + (isAtlas ? ' — duas fases e mapas musculares' : ' — posição ' + (phase+1))}
+                className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+                style={isAtlas ? undefined : {filter:'grayscale(1)'}}
+                onError={() => setFailedUrl(sources[phase])} />
+              <span className="absolute right-0 top-0 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-neutral-900 shadow-sm" aria-hidden="true">
+                <Expand className="h-5 w-5" />
+              </span>
             </button>
           )}
         </div>
       ) : (
-        <div className={'absolute inset-0 flex flex-col items-center justify-center gap-2 text-center text-neutral-600 ' + (compact ? 'p-2' : 'px-6 pb-12 pt-14')}>
+        <div className={'absolute inset-0 flex flex-col items-center justify-center gap-2 text-center text-neutral-500 ' + (compact ? 'p-1' : 'px-6 pb-14 pt-12')}>
           <ImageOff className={compact ? 'h-5 w-5' : 'h-8 w-8'} aria-hidden="true" />
-          {!compact && <p className="text-sm font-semibold">Imagem não disponível</p>}
-          {!compact && <p className="text-xs leading-relaxed">Consulte as instruções de execução do exercício.</p>}
+          {!compact && <p className="text-sm font-semibold text-neutral-800">Ilustração em preparação</p>}
+          {!compact && <p className="text-xs leading-relaxed">Confira o passo a passo do exercício enquanto o atlas é revisado.</p>}
         </div>
       )}
-      {!compact && images.length > 1 && (
-        <div className="absolute bottom-[54px] inset-x-3 z-10 flex items-center justify-between gap-2">
-          <button type="button" onClick={() => selectPose((pose + images.length - 1) % images.length)}
-            aria-label="Ver posição anterior" className="foco-touch rounded-full border border-black/10 bg-white/95 text-neutral-900 shadow-sm hover:bg-white">
-            <ChevronLeft className="h-5 w-5" />
-          </button>
+      {!compact && !isAtlas && sources.length > 1 && (
+        <div className="absolute inset-x-3 bottom-[52px] z-10 flex items-center justify-between gap-2">
+          <button type="button" onClick={() => changePhase((phase + sources.length - 1) % sources.length)}
+            aria-label="Mostrar imagem anterior" className="foco-touch rounded-full bg-white/95 text-black shadow-sm"><ChevronLeft className="h-5 w-5" /></button>
           <span className="rounded-full bg-white/95 px-3 py-2 text-xs font-bold text-neutral-900">
-            {pose === 0 ? 'Início' : 'Final'} · {pose + 1}/{images.length}
+            {phase === 0 ? 'Posição 1' : 'Posição 2'} · {phase + 1}/{sources.length}
           </span>
-          <button type="button" onClick={() => selectPose((pose + 1) % images.length)}
-            aria-label="Ver próxima posição" className="foco-touch rounded-full border border-black/10 bg-white/95 text-neutral-900 shadow-sm hover:bg-white">
-            <ChevronRight className="h-5 w-5" />
-          </button>
+          <button type="button" onClick={() => changePhase((phase + 1) % sources.length)}
+            aria-label="Mostrar próxima imagem" className="foco-touch rounded-full bg-white/95 text-black shadow-sm"><ChevronRight className="h-5 w-5" /></button>
         </div>
       )}
       {!compact && (
-        <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 border-t border-black/10 bg-white/95 px-3 py-3 sm:px-4">
-          <span className="flex min-w-0 items-center gap-2 truncate text-xs font-bold text-neutral-900">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-neutral-900" aria-hidden="true" />
-            <span className="truncate">{target}</span>
-          </span>
-          {showCaption && <span className="shrink-0 text-[11px] font-medium text-neutral-600">FOCO</span>}
+        <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 border-t border-black/10 bg-white/95 px-3 py-3 text-xs text-neutral-900">
+          <strong className="truncate">{target}</strong>
+          {showCaption && <span className="shrink-0 text-neutral-500">{isAtlas ? '3D · Anatomia' : 'Arquivo legado'}</span>}
         </div>
       )}
       {!compact && (
         <dialog ref={dialogRef} aria-label={'Visualização ampliada de ' + exerciseName}
-          className="m-auto max-h-[95dvh] w-[min(96vw,900px)] max-w-none rounded-2xl border border-white/15 bg-[#101010] p-3 text-white shadow-2xl backdrop:bg-black/90 sm:p-5">
+          className="m-auto max-h-[95dvh] w-[min(96vw,1000px)] max-w-none rounded-2xl border border-white/15 bg-[#101010] p-3 text-white shadow-2xl backdrop:bg-black/90 sm:p-5">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-medium text-neutral-400">EXECUÇÃO · {pose === 0 ? 'INÍCIO' : 'FINAL'}</p>
-              <h2 className="text-lg font-bold">{exerciseName}</h2>
+            <div><p className="text-xs text-neutral-400">{isAtlas ? 'FOCO Anatomy v3' : 'Referência fotográfica'}</p><h2 className="text-lg font-bold">{exerciseName}</h2></div>
+            <button type="button" onClick={toggleZoom} aria-label="Fechar visualização" className="foco-touch rounded-xl bg-white/10 hover:bg-white/20">
+              <X className="h-5 w-5" /></button>
+          </div>
+          {visible && <img src={sources[phase]} alt={exerciseName + ' ampliado'}
+            style={isAtlas ? undefined : {filter:'grayscale(1)'}}
+            className="mx-auto max-h-[70dvh] w-full rounded-xl bg-[#F5F5F5] object-contain" />}
+          {!isAtlas && sources.length > 1 && (
+            <div className="mt-3 flex justify-end gap-2">
+              {sources.map((_, index) => <button key={index} type="button" onClick={() => changePhase(index)}
+                aria-pressed={phase === index}
+                className={'min-h-11 rounded-xl px-4 text-sm font-semibold ' + (phase === index ? 'bg-white text-black' : 'bg-white/10 text-white')}>
+                Posição {index + 1}
+              </button>)}
             </div>
-            <button type="button" onClick={toggleZoom} aria-label="Fechar imagem ampliada"
-              className="foco-touch rounded-xl bg-white/10 hover:bg-white/20"><X className="h-5 w-5" /></button>
-          </div>
-          {hasImage && <img src={getExerciseImageUrl(images[pose])} alt={exerciseName + ' ampliado'} className="foco-anatomy-image mx-auto max-h-[65dvh] w-full rounded-xl bg-[#F4F4F4] object-contain" />}
-          <div className="mt-3 flex items-center justify-between gap-2">
-            <span className="text-xs text-neutral-400">Imagem de referência do exercício</span>
-            {images.length > 1 && <div className="flex gap-2">
-              <button type="button" onClick={() => selectPose(0)} aria-pressed={pose === 0}
-                className={'min-h-11 rounded-xl px-4 text-sm font-semibold ' + (pose === 0 ? 'bg-white text-black' : 'bg-white/10 text-white')}>Início</button>
-              <button type="button" onClick={() => selectPose(1)} aria-pressed={pose === 1}
-                className={'min-h-11 rounded-xl px-4 text-sm font-semibold ' + (pose === 1 ? 'bg-white text-black' : 'bg-white/10 text-white')}>Final</button>
-            </div>}
-          </div>
+          )}
+          <p className="mt-3 text-xs text-neutral-400">{isAtlas ? 'Atlas de referência educativa, aprovado para a biblioteca FOCO.' : 'Foto antiga de referência: a substituição por atlas anatômico está pendente de revisão.'}</p>
         </dialog>
       )}
     </div>
