@@ -130,7 +130,8 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
           </div>
           <span className="shrink-0 rounded-xl border border-white/10 bg-[#141414] px-3 py-2 text-right">
             <strong className="block text-xl tabular-nums">{catalog.length || '—'}</strong>
-            <span className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">exercícios</span>
+            <span className="block text-xs font-semibold text-neutral-400">exercícios</span>
+            {!isLoading && <span className="mt-1 block text-xs text-neutral-500">{catalog.filter((item) => item.images.length > 0).length} ilustrados</span>}
           </span>
         </div>
 
@@ -364,7 +365,11 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               <section className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3">
                 <h3 className="text-xs font-black uppercase tracking-widest text-neutral-300">Variações relacionadas</h3>
                 <div className="mt-2 flex flex-wrap gap-1.5">
-                  {detailExercise.variations.map((variation) => <span key={variation} className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] text-neutral-300">{variation}</span>)}
+                  {detailExercise.variations.map((variation) => {
+                    const resolved = catalog.find((item) => item.id === variation);
+                    const label = resolved ? getExerciseDisplayName(resolved.name) : variation.replace(/_/g, ' ');
+                    return <span key={variation} className="rounded-full border border-white/10 px-3 py-2 text-xs text-neutral-300">{label}</span>;
+                  })}
                 </div>
               </section>
             ) : null}
