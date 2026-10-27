@@ -756,23 +756,16 @@ export const api = {
     }
   },
 
-  // System
+  // The static frontend still uses the Render backend for authenticated features,
+  // so health status must come from the real API rather than a simulated demo response.
   async getSystemStatus() {
-    if (isStaticHost) {
-      return {
-        app: 'FOCO Fitness Premium',
-        version: '1.0.0-demo',
-        ai_status: 'Indisponível: backend não conectado',
-        database: 'Armazenamento local deste navegador (demonstração)',
-        supabase_sync_available: false,
-        timestamp: new Date().toISOString(),
-      };
-    }
     return await request<{
       app: string;
       version: string;
       ai_status: string;
       database: string;
+      storage_persistent: boolean;
+      storage_file_exists: boolean;
       supabase_sync_available: boolean;
       timestamp: string;
     }>('/api/system/status');
