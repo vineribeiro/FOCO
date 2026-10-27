@@ -13,7 +13,8 @@ function publicApiKey(): string {
 }
 const KEY = publicApiKey();
 const GEMINI_KEY = Deno.env.get("GEMINI_API_KEY") || "";
-const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
+const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-3.8-flash";
+const GEMINI_FALLBACK_MODEL = Deno.env.get("GEMINI_FALLBACK_MODEL") || "gemini-3.5-flash-lite";
 const ORIGINS = ["https://vineribeiro.github.io", "http://localhost:5173", "http://127.0.0.1:5173"];
 const CORS = {
   "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
@@ -152,7 +153,7 @@ async function aiJson(prompt: string, schema: any, media?: { data: string; mime:
   const parts: any[] = [];
   if (media) parts.push({ inline_data: { mime_type: media.mime, data: media.data } });
   parts.push({ text: prompt });
-  const models = [...new Set([GEMINI_MODEL, "gemini-2.5-flash"])];
+  const models = [...new Set([GEMINI_MODEL, GEMINI_FALLBACK_MODEL])];
   let detail = "O Gemini não retornou uma resposta.";
   for (const model of models) {
     for (let attempt = 0; attempt < 2; attempt++) {
