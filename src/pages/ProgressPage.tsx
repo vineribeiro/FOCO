@@ -81,6 +81,7 @@ export const ProgressPage: React.FC = () => {
   };
 
   const handleDeleteMeasurement = async (id: string) => {
+    if (!window.confirm('Excluir esta medição corporal? Esta ação não pode ser desfeita.')) return;
     try {
       await api.deleteMeasurement(id);
       loadData();
@@ -91,6 +92,7 @@ export const ProgressPage: React.FC = () => {
 
   const weightData = measurements
     .filter((m) => m.measurement_type.toLowerCase() === 'peso')
+    .sort((a, b) => new Date(a.measured_at).getTime() - new Date(b.measured_at).getTime())
     .map((m) => ({
       date: new Date(m.measured_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
       peso: Number(m.value),
@@ -98,6 +100,7 @@ export const ProgressPage: React.FC = () => {
 
   const volumeData = sessions
     .filter((s) => s.status === 'completed' && s.sets && s.sets.length > 0)
+    .sort((a, b) => new Date(a.started_at).getTime() - new Date(b.started_at).getTime())
     .slice(-10)
     .map((s) => {
       const totalTonnage = s.sets!.reduce((acc, cur) => acc + (cur.completed ? cur.load_kg * cur.repetitions : 0), 0);
@@ -109,7 +112,7 @@ export const ProgressPage: React.FC = () => {
     });
 
   return (
-    <div className="space-y-6 pb-32 max-w-md mx-auto">
+    <div className="mx-auto max-w-5xl space-y-6 pb-32">
       
       {/* Header */}
       <div>
@@ -133,7 +136,7 @@ export const ProgressPage: React.FC = () => {
       )}
 
       {/* Weight Evolution Chart (Monochrome Area) */}
-      <div className="p-5 rounded-2xl bg-[#0E1015] border border-white/10 space-y-3">
+      <div className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Weight className="w-4 h-4 text-white" />
@@ -158,10 +161,10 @@ export const ProgressPage: React.FC = () => {
                     <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#262B35" />
-                <XAxis dataKey="date" stroke="#64748B" fontSize={10} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#303030" />
+                <XAxis dataKey="date" stroke="#A3A3A3" fontSize={10} />
                 <YAxis
-                  stroke="#64748B"
+                  stroke="#A3A3A3"
                   fontSize={10}
                   domain={['dataMin - 1', 'dataMax + 1']}
                   tickFormatter={(v) => `${v}`}
@@ -195,7 +198,7 @@ export const ProgressPage: React.FC = () => {
       </div>
 
       {/* Training Tonnage per Session (Monochrome Bar) */}
-      <div className="p-5 rounded-2xl bg-[#0E1015] border border-white/10 space-y-3">
+      <div className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-white" />
@@ -212,9 +215,9 @@ export const ProgressPage: React.FC = () => {
           {volumeData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={volumeData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#262B35" />
-                <XAxis dataKey="date" stroke="#64748B" fontSize={10} />
-                <YAxis stroke="#64748B" fontSize={10} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#303030" />
+                <XAxis dataKey="date" stroke="#A3A3A3" fontSize={10} />
+                <YAxis stroke="#A3A3A3" fontSize={10} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#0E1015',
@@ -243,7 +246,7 @@ export const ProgressPage: React.FC = () => {
       {/* Record Measurement Form & List */}
       <form
         onSubmit={handleAddMeasurement}
-        className="p-5 rounded-2xl bg-[#0E1015] border border-white/10 space-y-3"
+        className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3"
       >
         <div className="flex items-center gap-2 text-xs font-black text-white uppercase tracking-wider">
           <Plus className="w-4 h-4 text-white" />
@@ -300,7 +303,7 @@ export const ProgressPage: React.FC = () => {
       </form>
 
       {/* History Table */}
-      <div className="p-5 rounded-2xl bg-[#0E1015] border border-white/10 space-y-3">
+      <div className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3">
         <h3 className="text-xs font-black text-white uppercase tracking-wider">
           Histórico de Medições ({measurements.length})
         </h3>
