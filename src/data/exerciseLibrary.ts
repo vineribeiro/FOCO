@@ -8,6 +8,41 @@ export interface ExerciseCatalogItem {
   instructions: string[];
   images: string[];
   category: string;
+  aliases?: string[];
+  movementPattern?: string;
+  primaryMuscleDisplay?: string[];
+  secondaryMuscleDisplay?: string[];
+  equipmentDisplay?: string;
+  respiration?: Record<string, string>;
+  commonErrors?: string[];
+  safetyNotes?: string[];
+  suggestedSets?: number;
+  suggestedReps?: string;
+  variations?: string[];
+  sourceGroup?: string;
+}
+
+interface ChestExerciseSource {
+  id: string;
+  nome: string;
+  aliases: string[];
+  musculos_primarios: string[];
+  musculos_secundarios: string[];
+  equipamentos: string[];
+  padrao_movimento: string;
+  nivel: string;
+  execucao: string[];
+  respiracao: Record<string, string>;
+  erros_comuns: string[];
+  cuidados: string[];
+  series_sugeridas: number;
+  repeticoes_sugeridas: string;
+  variacoes: string[];
+  imagens_execucao: string[];
+}
+
+interface ChestExerciseFile {
+  exercicios: ChestExerciseSource[];
 }
 
 const IMAGE_BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
@@ -246,14 +281,82 @@ export function getExerciseImageUrl(imagePath: string): string {
   return IMAGE_BASE + imagePath.split('/').map((part) => encodeURIComponent(part)).join('/');
 }
 
+function mapChestExercise(exercise: ChestExerciseSource): ExerciseCatalogItem {
+  const equipmentText = exercise.equipamentos.join(', ');
+  const equipment = !exercise.equipamentos.length ? 'body only'
+    : /polia|cabo/i.test(equipmentText) ? 'cable'
+      : /halter/i.test(equipmentText) ? 'dumbbell'
+        : /smith/i.test(equipmentText) ? 'smith machine'
+          : /barra|anilha/i.test(equipmentText) ? 'barbell'
+            : /máquina|peck deck/i.test(equipmentText) ? 'machine'
+              : /paralela/i.test(equipmentText) ? 'other'
+                : 'body only';
+
+  const secondaryText = exercise.musculos_secundarios.join(' ').toLowerCase();
+  const secondaryMuscles = [
+    ...( /tríceps/.test(secondaryText) ? ['triceps'] : []),
+    ...( /deltoide/.test(secondaryText) ? ['shoulders'] : []),
+    ...( /abdominal/.test(secondaryText) ? ['abdominals'] : []),
+    ...( /antebraço/.test(secondaryText) ? ['forearms'] : []),
+  ];
+
+  return {
+    id: exercise.id,
+    name: exercise.nome,
+    primaryMuscles: ['chest'],
+    secondaryMuscles,
+    equipment,
+    level: exercise.nivel === 'intermediario' ? 'intermediate' : exercise.nivel === 'avancado' ? 'expert' : 'beginner',
+    instructions: exercise.execucao,
+    images: exercise.imagens_execucao,
+    category: 'strength',
+    aliases: exercise.aliases,
+    movementPattern: exercise.padrao_movimento,
+    primaryMuscleDisplay: exercise.musculos_primarios,
+    secondaryMuscleDisplay: exercise.musculos_secundarios,
+    equipmentDisplay: exercise.equipamentos.length ? exercise.equipamentos.join(' · ') : 'Peso corporal',
+    respiration: exercise.respiracao,
+    commonErrors: exercise.erros_comuns,
+    safetyNotes: exercise.cuidados,
+    suggestedSets: exercise.series_sugeridas,
+    suggestedReps: exercise.repeticoes_sugeridas,
+    variations: exercise.variacoes,
+    sourceGroup: 'Peito',
+  };
+}
+
 export async function loadExerciseCatalog(): Promise<ExerciseCatalogItem[]> {
   if (!catalogPromise) {
     catalogPromise = (async () => {
-      const response = await fetch(`${import.meta.env.BASE_URL}exercise-catalog.json`);
+      const baseUrl = import.meta.env.BASE_URL;
+      const [response, chestResponse] = await Promise.all([
+        fetch(`${baseUrl}exercise-catalog.json`),
+        fetch(`${baseUrl}01_peito.json`),
+      ]);
       if (!response.ok) throw new Error('Não foi possível carregar a biblioteca de exercícios.');
+      if (!chestResponse.ok) throw new Error('Não foi possível carregar a biblioteca de exercícios de peito.');
       const raw = await response.json();
+      const chestData = await chestResponse.json() as ChestExerciseFile;
       if (!Array.isArray(raw)) throw new Error('O catálogo de exercícios está em um formato inválido.');
-      return (raw as ExerciseCatalogItem[]).filter((exercise) => HIPERTROFIA_ALLOWED_EXERCISES.has(exercise.name));
+      if (!Array.isArray(chestData.exercicios)) throw new Error('O catálogo de peito está em um formato inválido.');
+
+      const chestExercises = chestData.exercicios.map(mapChestExercise);
+      const chestSourceIds = new Set(chestData.exercicios.flatMap((exercise) =>
+        exercise.imagens_execucao.map((image) => image.split('/')[0])
+      ));
+      const chestNames = new Set(chestData.exercicios.flatMap((exercise) =>
+        [exercise.nome, ...exercise.aliases].map(normalizeExerciseText)
+      ));
+      const existingExercises = (raw as ExerciseCatalogItem[]).filter((exercise) => {
+        if (!HIPERTROFIA_ALLOWED_EXERCISES.has(exercise.name)) return false;
+        if (chestSourceIds.has(exercise.id)) return false;
+        const nameKeys = [normalizeExerciseText(exercise.name), normalizeExerciseText(getExerciseDisplayName(exercise.name))];
+        return !nameKeys.some((name) => chestNames.has(name));
+      });
+
+      // Os 12 exercícios editoriais de peito substituem correspondências genéricas e mantêm
+      // instruções, alertas e referências visuais específicas por variação.
+      return [...chestExercises, ...existingExercises];
     })().catch((error) => {
       catalogPromise = null;
       throw error;
