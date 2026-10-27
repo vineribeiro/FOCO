@@ -576,6 +576,31 @@ export const api = {
     }
   },
 
+  async updateExerciseTrainingDay(
+    planId: string,
+    exerciseId: string,
+    trainingDay: WorkoutExercise['training_day']
+  ) {
+    try {
+      return await request<WorkoutExercise>(
+        `/api/workouts/${encodeURIComponent(planId)}/exercises/${encodeURIComponent(exerciseId)}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify({ training_day: trainingDay || null }),
+        }
+      );
+    } catch (error) {
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
+      const db = getLocalDb();
+      const plan = db.workouts.find((item) => item.id === planId);
+      const exercise = plan?.exercises?.find((item) => item.id === exerciseId);
+      if (!plan || !exercise) throw new Error('Exercício não encontrado na ficha.');
+      exercise.training_day = trainingDay || null;
+      saveLocalDb(db);
+      return exercise;
+    }
+  },
+
   async activateWorkout(id: string) {
     try {
       return await request<{ message: string }>(`/api/workouts/${id}/activate`, { method: 'PUT' });
