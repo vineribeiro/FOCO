@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  ArrowUpRight, CheckCircle2, ChevronDown, Dumbbell, Filter,
+  ArrowUpRight, CheckCircle2, ChevronDown, Dumbbell, Filter, Layers3,
   LoaderCircle, Plus, Search, X
 } from 'lucide-react';
 import { api } from '../services/api';
@@ -147,6 +147,16 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
           {search && <button type="button" onClick={() => setSearch('')} aria-label="Limpar busca" className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-neutral-400 hover:text-white"><X className="h-4 w-4" /></button>}
         </div>
       </header>
+
+      <button type="button" onClick={() => setActiveTab('atlas')}
+        className="flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl border border-white/15 bg-[#171717] px-4 py-3 text-left transition hover:border-white/40">
+        <span className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10"><Layers3 className="h-5 w-5" /></span>
+          <span><strong className="block text-sm font-bold">Atlas anatômico 3D</strong>
+          <span className="mt-1 block text-xs text-neutral-400">Acompanhe as pranchas e o processo de revisão</span></span>
+        </span>
+        <ArrowUpRight className="h-5 w-5 shrink-0 text-neutral-400" aria-hidden="true" />
+      </button>
 
       {actionMessage && (
         <div className={`flex items-start justify-between gap-3 rounded-xl border p-3 text-sm ${actionMessage.type === 'success' ? 'border-white/15 bg-white/10 text-white' : 'border-white/30 bg-white/5 text-neutral-100'}`} role="status">
