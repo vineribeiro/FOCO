@@ -45,8 +45,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
         });
         onRegistered();
       } else if (mode === 'forgot') {
-        const res = await api.forgotPassword(email);
-        setSuccessMsg(res.message || 'Instruções de recuperação enviadas com sucesso.');
+        await api.forgotPassword(email);
+        setSuccessMsg('Solicitação recebida. Verifique seu e-mail para continuar.');
       }
     } catch (err: any) {
       setErrorMsg(err.message || 'Erro durante a operação. Verifique seus dados.');
