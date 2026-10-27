@@ -65,6 +65,53 @@ function arr(v: unknown, max = 10): string[] {
   return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string").slice(0, max).map(x => x.trim().slice(0, 80)).filter(Boolean) : [];
 }
 function fail(error: any, fallback: string): void { if (error) throw new ApiError(400, error.message || fallback); }
+
+const PRIVATE_FILE_BUCKET = "foco-private-files";
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
+const ALLOWED_FILE_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+
+function decodeUploadedFile(encodedValue: unknown, mimeType: string): Uint8Array {
+  if (typeof encodedValue !== "string" || encodedValue.length > 15_000_000) throw new ApiError(413, "O arquivo excede o limite de 10 MB.");
+  const encoded = encodedValue.replace(/^data:[^,]+;base64,/i, "").replace(/\s/g, "");
+  let binary: string;
+  try { binary = atob(encoded); } catch { throw new ApiError(400, "O conteúdo do arquivo não está em base64 válido."); }
+  if (!binary.length || binary.length > MAX_FILE_BYTES) throw new ApiError(413, "Envie um arquivo com até 10 MB.");
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  let valid = false;
+  if (mimeType === "application/pdf") valid = new TextDecoder().decode(bytes.slice(0, 5)) === "%PDF-";
+  if (mimeType === "image/jpeg") valid = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (mimeType === "image/png") valid = bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47 && bytes[4] === 0x0d && bytes[5] === 0x0a && bytes[6] === 0x1a && bytes[7] === 0x0a;
+  if (mimeType === "image/webp") valid = new TextDecoder().decode(bytes.slice(0, 4)) === "RIFF" && new TextDecoder().decode(bytes.slice(8, 12)) === "WEBP";
+  if (!ALLOWED_FILE_TYPES.includes(mimeType) || !valid) throw new ApiError(415, "O conteúdo do arquivo não corresponde a um PDF, JPG, PNG ou WebP válido.");
+  return bytes;
+}
+
+function safeFilename(value: unknown, mimeType: string): string {
+  const defaultName = mimeType === "application/pdf" ? "documento.pdf" : mimeType === "image/jpeg" ? "imagem.jpg" : mimeType === "image/png" ? "imagem.png" : "imagem.webp";
+  const raw = text(value, 200).replace(/\\/g, "/").split("/").pop() || defaultName;
+  const clean = raw.replace(/[^a-zA-Z0-9._()-]/g, "_").replace(/^\.+/, "").slice(0, 120);
+  return clean || defaultName;
+}
+
+async function storeUploadedFile(db: SupabaseClient, user: User, input: any, mimeType: string, status = "pending"): Promise<any> {
+  const bytes = decodeUploadedFile(input.base64, mimeType);
+  const filename = safeFilename(input.filename, mimeType);
+  const storagePath = user.id + "/" + crypto.randomUUID() + "-" + filename;
+  const upload = await db.storage.from(PRIVATE_FILE_BUCKET).upload(storagePath, bytes, { contentType: mimeType, upsert: false });
+  if (upload.error) throw new ApiError(502, "Não foi possível salvar o arquivo original no armazenamento seguro: " + upload.error.message);
+  const record = await db.from("uploaded_files").insert({ user_id: user.id, filename, storage_path: storagePath, mime_type: mimeType, processing_status: status, extracted_data: null }).select("id,filename,storage_path,mime_type,processing_status,created_at").single();
+  if (record.error || !record.data) {
+    await db.storage.from(PRIVATE_FILE_BUCKET).remove([storagePath]);
+    throw new ApiError(500, record.error?.message || "Não foi possível registrar o arquivo enviado.");
+  }
+  return record.data;
+}
+
+async function updateUploadedFile(db: SupabaseClient, userId: string, fileId: string, status: "processed" | "failed", extractedData: unknown = null): Promise<void> {
+  const update = await db.from("uploaded_files").update({ processing_status: status, extracted_data: extractedData }).eq("id", fileId).eq("user_id", userId).select("id").maybeSingle();
+  if (update.error || !update.data) throw new ApiError(500, update.error?.message || "Não foi possível atualizar o estado do arquivo.");
+}
 async function profile(db: SupabaseClient, user: User): Promise<any> {
   const r = await db.from("profiles").select("*").eq("id", user.id).maybeSingle();
   fail(r.error, "Não foi possível carregar o perfil.");
@@ -208,8 +255,9 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
   if (method === "OPTIONS") return new Response(null, { status: 204, headers: { ...CORS, ...(ORIGINS.includes(origin) ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" } : {}) } });
   if (method === "GET" && path === "/api/system/status") return response({
-    app: "FOCO", version: "2.0.0", ai_status: GEMINI_KEY ? "configured" : "missing_key",
-    database: "supabase-postgres", storage_persistent: true, storage_file_exists: false,
+    app: "FOCO", version: "2.1.0", ai_status: GEMINI_KEY ? "configured" : "missing_key",
+    database: "supabase-postgres", storage_persistent: true, storage_file_exists: true,
+    storage_bucket: PRIVATE_FILE_BUCKET, file_uploads_supported: true,
     remote_storage_configured: true, remote_storage_ready: true, remote_storage_error: false,
     supabase_sync_available: true, timestamp: new Date().toISOString(),
   }, 200, origin);
@@ -218,7 +266,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     const b = await body(req);
     const email = text(b.email, 254).toLowerCase(), password = typeof b.password === "string" ? b.password : "";
     const name = text(b.full_name, 160);
-    if (!email.includes("@") || password.length < 6 || !name) throw new ApiError(400, "Informe nome, e-mail válido e senha de pelo menos 6 caracteres.");
+    if (!email.includes("@") || password.length < 8 || !name) throw new ApiError(400, "Informe nome, e-mail válido e senha de pelo menos 8 caracteres.");
     const a = client();
     const r = await a.auth.signUp({ email, password, options: { data: {
       full_name: name,
@@ -270,7 +318,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
   const { db, user } = await auth(req);
   if (method === "GET" && path === "/api/auth/me") { const p = await profile(db, user); return response({ user: { id: user.id, email: user.email, full_name: p.full_name }, profile: p }, 200, origin); }
   if (method === "POST" && path === "/api/auth/reset-password") {
-    const b = await body(req); if (typeof b.new_password !== "string" || b.new_password.length < 6) throw new ApiError(400, "Senha deve ter ao menos 6 caracteres.");
+    const b = await body(req); if (typeof b.new_password !== "string" || b.new_password.length < 8) throw new ApiError(400, "Senha deve ter ao menos 8 caracteres.");
     const r = await db.auth.updateUser({ password: b.new_password }); fail(r.error, "Não foi possível alterar a senha."); return response({ message: "Senha alterada." }, 200, origin);
   }
   if (method === "DELETE" && path === "/api/auth/account") {
@@ -425,10 +473,41 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
   m = path.match(/^\/api\/measurements\/([^/]+)$/);
   if (method === "DELETE" && m) { const r = await db.from("body_measurements").delete().eq("id", m[1]).eq("user_id", user.id).select("id"); fail(r.error, "Falha ao excluir medida."); if (!r.data?.length) throw new ApiError(404, "Medida não encontrada."); return response({ message: "Medida removida." }, 200, origin); }
 
-  if (path === "/api/files" && method === "GET") { const r = await db.from("uploaded_files").select("*").eq("user_id", user.id).order("created_at", { ascending: false }); fail(r.error, "Falha ao carregar arquivos."); return response(r.data || [], 200, origin); }
-  if (path === "/api/files" && method === "POST") throw new ApiError(501, "Armazenamento do arquivo original ainda não configurado; a análise não guarda o arquivo original.");
+  if (path === "/api/files" && method === "GET") {
+    const r = await db.from("uploaded_files").select("id,user_id,filename,storage_path,mime_type,processing_status,extracted_data,created_at").eq("user_id", user.id).order("created_at", { ascending: false });
+    fail(r.error, "Falha ao carregar arquivos.");
+    return response(r.data || [], 200, origin);
+  }
+  if (path === "/api/files" && method === "POST") {
+    const b = await body(req), mime = text(b.mime_type, 100);
+    if (!ALLOWED_FILE_TYPES.includes(mime)) throw new ApiError(415, "Envie PDF, JPG, PNG ou WebP.");
+    const saved = await storeUploadedFile(db, user, b, mime, "pending");
+    return response({ id: saved.id, filename: saved.filename, mime_type: saved.mime_type, processing_status: saved.processing_status, created_at: saved.created_at }, 201, origin);
+  }
+  m = path.match(/^\/api\/files\/([^/]+)\/download$/);
+  if (method === "GET" && m) {
+    const file = await db.from("uploaded_files").select("id,storage_path").eq("id", m[1]).eq("user_id", user.id).maybeSingle();
+    fail(file.error, "Falha ao consultar o arquivo.");
+    if (!file.data) throw new ApiError(404, "Arquivo não encontrado.");
+    if (!file.data.storage_path?.startsWith(user.id + "/")) throw new ApiError(404, "O original deste registro antigo não está armazenado.");
+    const signed = await db.storage.from(PRIVATE_FILE_BUCKET).createSignedUrl(file.data.storage_path, 300);
+    if (signed.error || !signed.data?.signedUrl) throw new ApiError(502, "Não foi possível gerar um link seguro para este arquivo.");
+    return response({ url: signed.data.signedUrl, expires_in: 300 }, 200, origin);
+  }
   m = path.match(/^\/api\/files\/([^/]+)$/);
-  if (method === "DELETE" && m) { const r = await db.from("uploaded_files").delete().eq("id", m[1]).eq("user_id", user.id).select("id"); fail(r.error, "Falha ao remover arquivo."); if (!r.data?.length) throw new ApiError(404, "Arquivo não encontrado."); return response({ message: "Arquivo removido." }, 200, origin); }
+  if (method === "DELETE" && m) {
+    const file = await db.from("uploaded_files").select("id,storage_path").eq("id", m[1]).eq("user_id", user.id).maybeSingle();
+    fail(file.error, "Falha ao consultar o arquivo.");
+    if (!file.data) throw new ApiError(404, "Arquivo não encontrado.");
+    if (file.data.storage_path?.startsWith(user.id + "/")) {
+      const removed = await db.storage.from(PRIVATE_FILE_BUCKET).remove([file.data.storage_path]);
+      if (removed.error) throw new ApiError(502, "Não foi possível apagar o arquivo do armazenamento seguro.");
+    }
+    const deleted = await db.from("uploaded_files").delete().eq("id", m[1]).eq("user_id", user.id).select("id");
+    fail(deleted.error, "Falha ao remover o registro do arquivo.");
+    if (!deleted.data?.length) throw new ApiError(404, "Arquivo não encontrado.");
+    return response({ message: "Arquivo e registro removidos." }, 200, origin);
+  }
 
   if (path === "/api/ai/generate-workout" && method === "POST") {
     const b = await body(req), p = await profile(db, user);
@@ -448,24 +527,39 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
   if (path === "/api/ai/extract-sheet" && method === "POST") {
     const b = await body(req), mime = String(b.mime_type || "");
-    if (!["application/pdf", "image/jpeg", "image/png", "image/webp"].includes(mime) || typeof b.base64 !== "string" || b.base64.length > 15_000_000) throw new ApiError(415, "Envie PDF, JPG, PNG ou WebP válido de até 10 MB.");
+    if (!ALLOWED_FILE_TYPES.includes(mime) || typeof b.base64 !== "string" || b.base64.length > 15_000_000) throw new ApiError(415, "Envie PDF, JPG, PNG ou WebP válido de até 10 MB.");
+    const savedFile = await storeUploadedFile(db, user, b, mime, "pending");
     const schema = { type: "OBJECT", properties: { plan_name: { type: "STRING" }, goal: { type: "STRING" }, weekly_frequency: { type: "INTEGER" }, confidence_notes: { type: "STRING" }, extracted_exercises: { type: "ARRAY", items: exerciseSchema } }, required: ["plan_name", "extracted_exercises", "confidence_notes"] };
     const prompt = "Você lê fichas de musculação. Extraia apenas o que estiver legível: nome, objetivo, frequência e exercícios com grupamento, séries, repetições, descanso em segundos, carga em kg (0 se ausente) e notas. Não invente dados ilegíveis; explicite incertezas. Notas do usuário: " + text(b.notes, 1000) + ". Retorne somente JSON.";
-    const r = await aiJson(prompt, schema, { data: mediaData(b.base64), mime }); 
-    await db.from("uploaded_files").insert({ user_id: user.id, filename: text(b.filename, 200) || "ficha-processada", storage_path: "processed-data-only", mime_type: mime, processing_status: "processed", extracted_data: r });
-    return response(r, 200, origin);
+    try {
+      const r = await aiJson(prompt, schema, { data: mediaData(b.base64), mime });
+      if (!Array.isArray(r.extracted_exercises) || !r.extracted_exercises.length) throw new ApiError(422, "A IA não encontrou exercícios legíveis. Envie uma foto mais nítida ou um PDF com a ficha inteira.");
+      await updateUploadedFile(db, user.id, savedFile.id, "processed", r);
+      return response({ ...r, file_id: savedFile.id }, 200, origin);
+    } catch (error) {
+      try { await updateUploadedFile(db, user.id, savedFile.id, "failed", null); } catch { /* preserve the original processing error */ }
+      throw error;
+    }
   }
 
   if (path === "/api/ai/analyze-bioimpedance" && method === "POST") {
     const b = await body(req), mime = String(b.mime_type || "");
-    if (!["application/pdf", "image/jpeg", "image/png", "image/webp"].includes(mime) || typeof b.base64 !== "string" || b.base64.length > 15_000_000) throw new ApiError(415, "Envie PDF, JPG, PNG ou WebP válido de até 10 MB.");
+    if (!ALLOWED_FILE_TYPES.includes(mime) || typeof b.base64 !== "string" || b.base64.length > 15_000_000) throw new ApiError(415, "Envie PDF, JPG, PNG ou WebP válido de até 10 MB.");
+    const savedFile = await storeUploadedFile(db, user, b, mime, "pending");
     const schema = { type: "OBJECT", properties: {
       summary: { type: "STRING" }, metrics: { type: "ARRAY", items: { type: "OBJECT", properties: { name: { type: "STRING" }, value: { type: "STRING" }, interpretation: { type: "STRING" } }, required: ["name", "value", "interpretation"] } },
       strengths: { type: "ARRAY", items: { type: "STRING" } }, attention_points: { type: "ARRAY", items: { type: "STRING" } }, training_recommendations: { type: "ARRAY", items: { type: "STRING" } },
       nutrition_discussion: { type: "ARRAY", items: { type: "STRING" } }, questions_for_professional: { type: "ARRAY", items: { type: "STRING" } }, limitations: { type: "STRING" },
     }, required: ["summary", "metrics", "strengths", "attention_points", "training_recommendations", "nutrition_discussion", "questions_for_professional", "limitations"] };
     const prompt = "Você é um assistente de educação em composição corporal. Leia o relatório e explique em português claro. Extraia somente métricas legíveis, não invente dados, não diagnostique nem prescreva tratamento ou dieta. Explique limitações da bioimpedância e sugira perguntas para um profissional. Contexto: " + text(b.context, 1200) + ". Retorne só JSON.";
-    return response(await aiJson(prompt, schema, { data: mediaData(b.base64), mime }), 200, origin);
+    try {
+      const result = await aiJson(prompt, schema, { data: mediaData(b.base64), mime });
+      await updateUploadedFile(db, user.id, savedFile.id, "processed", result);
+      return response({ ...result, file_id: savedFile.id }, 200, origin);
+    } catch (error) {
+      try { await updateUploadedFile(db, user.id, savedFile.id, "failed", null); } catch { /* preserve the original processing error */ }
+      throw error;
+    }
   }
 
   if (path === "/api/ai/review-progression" && method === "POST") {
