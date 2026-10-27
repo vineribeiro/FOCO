@@ -196,6 +196,16 @@ async function aiJson(prompt: string, schema: any, media?: { data: string; mime:
 
 async function dispatch(req: Request, path: string, origin: string): Promise<Response> {
   const method = req.method.toUpperCase();
+
+  // Normalize the route supplied by the Supabase gateway. Auth endpoints must
+  // remain public even when the runtime exposes an extra prefix or trailing slash.
+  path = path.replace(/\\+/g, "/").replace(/\\/+$/, "") || "/";
+  const apiPathIndex = path.lastIndexOf("/api/");
+  if (apiPathIndex > 0) path = path.slice(apiPathIndex);
+  if (path === "/api/auth/login" || path === "/api/auth/register" || path === "/api/auth/refresh" || path === "/api/auth/forgot-password") {
+    console.log("[FOCO ROUTE]", method, path);
+  }
+
   if (method === "OPTIONS") return new Response(null, { status: 204, headers: { ...CORS, ...(ORIGINS.includes(origin) ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" } : {}) } });
   if (method === "GET" && path === "/api/system/status") return response({
     app: "FOCO", version: "2.0.0", ai_status: GEMINI_KEY ? "configured" : "missing_key",
