@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { soundEngine } from '../utils/soundEngine';
 import { useAuth } from '../context/AuthContext';
 import {
   ClipboardList,
@@ -11,6 +12,7 @@ import {
   LogOut,
   ChevronRight,
   ShieldCheck,
+  Vibrate,
 } from 'lucide-react';
 
 interface SettingsPageProps {
@@ -19,6 +21,8 @@ interface SettingsPageProps {
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
   const { logout } = useAuth();
+  const [hapticsEnabled, setHapticsEnabled] = useState(() => soundEngine.getHapticsEnabled());
+  const setHaptics = (enabled: boolean) => { soundEngine.setHapticsEnabled(enabled); setHapticsEnabled(enabled); if (enabled) soundEngine.vibrate(40); };
 
   const settings = [
     { title: 'Anamnese de treino', description: 'Objetivos, rotina e grupos musculares prioritários.', icon: ClipboardList, tab: 'anamnese' },
@@ -49,6 +53,23 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
             </button>
           );
         })}
+      </section>
+
+      <section aria-labelledby="foco-haptics-label" className="rounded-2xl border border-white/10 bg-[#141414] p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <Vibrate className="mt-1 h-5 w-5 shrink-0 text-neutral-300" aria-hidden="true" />
+            <div>
+              <h2 id="foco-haptics-label" className="text-base font-bold">Resposta tátil</h2>
+              <p className="mt-1 text-sm text-neutral-400">Vibração opcional ao registrar séries e ao terminar o descanso, se o dispositivo permitir.</p>
+            </div>
+          </div>
+          <button type="button" role="switch" aria-checked={hapticsEnabled}
+            aria-label="Vibração do FOCO" onClick={() => setHaptics(!hapticsEnabled)}
+            className={'relative h-12 w-16 shrink-0 rounded-full border transition-colors ' + (hapticsEnabled ? 'border-white bg-white' : 'border-white/20 bg-[#303030]')}>
+            <span className={'absolute top-1.5 h-8 w-8 rounded-full transition-transform ' + (hapticsEnabled ? 'left-6 bg-black' : 'left-1.5 bg-neutral-400')} />
+          </button>
+        </div>
       </section>
 
       <section className="rounded-2xl border border-white/10 bg-[#141414] p-5 sm:p-6">
