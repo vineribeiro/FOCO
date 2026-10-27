@@ -34,6 +34,32 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(express.json({ limit: '16mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
+// When the remote durable store is enabled, do not acknowledge a mutating request
+// until its queued snapshot write has completed. Reads stay available for diagnosis.
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const originalJson = res.json.bind(res);
+  const originalStatus = res.status.bind(res);
+  res.json = ((body?: any) => {
+    if (!db.isRemoteStorageReady() || req.method === 'GET' || req.method === 'OPTIONS') {
+      return originalJson(body);
+    }
+    void db.flushRemote()
+      .then(() => originalJson(body))
+      .catch((error) => {
+        console.error('[FOCO DB] Could not confirm remote persistence before responding:', error);
+        if (res.headersSent) return;
+        originalStatus(503);
+        originalJson({
+          error: 'O banco persistente não confirmou a gravação. Nenhuma confirmação de salvamento foi emitida. ' +
+            'Tente novamente em instantes. Detalhe: ' +
+            (error instanceof Error ? error.message : String(error)),
+        });
+      });
+    return res;
+  }) as Response['json'];
+  next();
+});
+
 // Extend Express Request with user
 export interface AuthenticatedRequest extends Request {
   user?: {
@@ -627,12 +653,15 @@ app.get('/api/system/status', (_req: Request, res: Response) => {
   const storage = getDatabaseStorageStatus();
   return res.json({
     app: 'FOCO',
-    version: '1.1.0',
+    version: '1.2.0',
     ai_status: process.env.GEMINI_API_KEY ? 'configured' : 'missing_key',
     database: storage.engine,
-    storage_persistent: storage.persistentDiskConfigured,
+    storage_persistent: storage.remoteStorageReady || storage.persistentDiskConfigured,
     storage_file_exists: storage.fileExists,
-    supabase_sync_available: false,
+    remote_storage_configured: storage.remoteStorageConfigured,
+    remote_storage_ready: storage.remoteStorageReady,
+    remote_storage_error: storage.remoteStorageError,
+    supabase_sync_available: storage.remoteStorageReady,
     timestamp: new Date().toISOString(),
   });
 });
@@ -642,6 +671,7 @@ app.get('/api/system/status', (_req: Request, res: Response) => {
 // ==============================================================================
 
 async function startServer() {
+  await db.initializeRemote();
   const isDev = process.env.NODE_ENV !== 'production';
 
   if (isDev) {
