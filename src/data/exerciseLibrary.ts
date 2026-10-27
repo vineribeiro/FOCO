@@ -143,6 +143,27 @@ const NAME_ALIASES: Record<string, string[]> = {
   abdominobicicleta: ['Air Bike'],
 };
 
+export const TRAINING_DAYS = [
+  { value: 'segunda', label: 'Segunda-feira', shortLabel: 'Segunda' },
+  { value: 'terca', label: 'Terça-feira', shortLabel: 'Terça' },
+  { value: 'quarta', label: 'Quarta-feira', shortLabel: 'Quarta' },
+  { value: 'quinta', label: 'Quinta-feira', shortLabel: 'Quinta' },
+  { value: 'sexta', label: 'Sexta-feira', shortLabel: 'Sexta' },
+  { value: 'sabado', label: 'Sábado', shortLabel: 'Sábado' },
+  { value: 'domingo', label: 'Domingo', shortLabel: 'Domingo' },
+] as const;
+
+export type TrainingDay = (typeof TRAINING_DAYS)[number]['value'];
+
+export function getCurrentTrainingDay(): TrainingDay {
+  const day = new Date().getDay();
+  return (['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'] as const)[day];
+}
+
+export function getTrainingDayLabel(value?: string | null): string {
+  return TRAINING_DAYS.find((day) => day.value === value)?.label || 'Qualquer dia';
+}
+
 export const MUSCLE_FILTERS = [
   { label: 'Todos', value: 'all' },
   { label: 'Peito', value: 'chest' },
