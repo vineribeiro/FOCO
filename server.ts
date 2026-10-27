@@ -1,12 +1,10 @@
+import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-import { db } from './server/db.js';
+import { db, getDatabaseStorageStatus } from './server/db.js';
 import { generateAiWorkout, extractWorkoutFromSheet, reviewProgressionCycle, analyzeBioimpedanceReport } from './server/gemini.js';
-
-dotenv.config();
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -56,7 +54,9 @@ function requireAuth(req: AuthenticatedRequest, res: Response, next: NextFunctio
     const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string };
     const user = db.findUserById(decoded.id);
     if (!user) {
-      return res.status(401).json({ error: 'Usuário não encontrado' });
+      return res.status(401).json({
+        error: 'Usuário não encontrado no armazenamento do servidor. Verifique a persistência dos dados antes de criar outra conta.',
+      });
     }
     req.user = { id: user.id, email: user.email };
     next();
@@ -183,7 +183,10 @@ app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
     }
-    user.password_hash = await bcrypt.hash(new_password, 10);
+    const updated = db.updateUserPassword(user.id, await bcrypt.hash(new_password, 10));
+    if (!updated) {
+      return res.status(404).json({ error: 'Não foi possível salvar a nova senha para esta conta.' });
+    }
     return res.json({ message: 'Senha redefinida com sucesso! Você já pode entrar com a nova senha.' });
   } catch (err) {
     return res.status(400).json({ error: 'Link de redefinição expirado ou inválido' });
@@ -620,13 +623,16 @@ app.post('/api/recommendations/:id/status', requireAuth, (req: AuthenticatedRequ
 // SYSTEM & CONFIG STATUS
 // ==============================================================================
 
-app.get('/api/system/status', (req: Request, res: Response) => {
+app.get('/api/system/status', (_req: Request, res: Response) => {
+  const storage = getDatabaseStorageStatus();
   return res.json({
     app: 'FOCO',
-    version: '1.0.0',
-    ai_status: Boolean(process.env.GEMINI_API_KEY) ? 'configured' : 'missing_key',
-    database: 'persistent_relational_engine',
-    supabase_sync_available: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
+    version: '1.1.0',
+    ai_status: process.env.GEMINI_API_KEY ? 'configured' : 'missing_key',
+    database: storage.engine,
+    storage_persistent: storage.persistentDiskConfigured,
+    storage_file_exists: storage.fileExists,
+    supabase_sync_available: false,
     timestamp: new Date().toISOString(),
   });
 });
