@@ -314,7 +314,9 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     const validDays = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
     const trainingDay = input.training_day == null || input.training_day === "" ? null : text(input.training_day, 20);
     if (trainingDay && !validDays.includes(trainingDay)) throw new ApiError(400, "Dia da semana inválido.");
-    const duplicate = await db.from("workout_exercises").select("id").eq("plan_id", planId).ilike("exercise_name", exerciseName).limit(1).maybeSingle();
+    let duplicateQuery = db.from("workout_exercises").select("id").eq("plan_id", planId).ilike("exercise_name", exerciseName);
+    duplicateQuery = trainingDay ? duplicateQuery.eq("training_day", trainingDay) : duplicateQuery.is("training_day", null);
+    const duplicate = await duplicateQuery.limit(1).maybeSingle();
     fail(duplicate.error, "Não foi possível verificar os exercícios existentes.");
     if (duplicate.data) throw new ApiError(409, "Esse exercício já está na ficha selecionada.");
 
