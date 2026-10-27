@@ -551,6 +551,28 @@ export const api = {
     }
   },
 
+  async addExerciseToWorkout(planId: string, exercise: WorkoutExercise) {
+    try {
+      return await request<WorkoutExercise>(`/api/workouts/${encodeURIComponent(planId)}/exercises`, {
+        method: 'POST',
+        body: JSON.stringify({ exercise }),
+      });
+    } catch (error) {
+      if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
+      const db = getLocalDb();
+      const plan = db.workouts.find((item) => item.id === planId);
+      if (!plan) throw new Error('Ficha não encontrada.');
+      const existing = plan.exercises || [];
+      if (existing.some((item) => item.exercise_name.toLowerCase() === exercise.exercise_name.toLowerCase())) {
+        throw new Error('Esse exercício já está na ficha selecionada.');
+      }
+      const saved = { ...exercise, id: 'exercise_' + Date.now(), plan_id: planId, position: existing.length } as WorkoutExercise;
+      plan.exercises = [...existing, saved];
+      saveLocalDb(db);
+      return saved;
+    }
+  },
+
   async activateWorkout(id: string) {
     try {
       return await request<{ message: string }>(`/api/workouts/${id}/activate`, { method: 'PUT' });
