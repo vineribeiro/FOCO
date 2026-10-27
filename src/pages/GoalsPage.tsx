@@ -60,6 +60,7 @@ export const GoalsPage: React.FC = () => {
   };
 
   const handleDeleteGoal = async (id: string) => {
+    if (!window.confirm('Excluir esta meta? Esta ação não pode ser desfeita.')) return;
     try {
       await api.deleteGoal(id);
       loadGoals();

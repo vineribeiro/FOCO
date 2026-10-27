@@ -49,7 +49,7 @@ export const RestTimerHUD: React.FC = () => {
     <aside
       aria-label="Cronômetro de descanso"
       className={`fixed left-2 right-2 max-w-md mx-auto z-40 transition-all duration-300 ease-out ${
-        isExpanded ? 'bottom-20' : 'bottom-20'
+        isExpanded ? 'bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))] md:bottom-5' : 'bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))] md:bottom-5'
       }`}
     >
       <div
@@ -109,7 +109,7 @@ export const RestTimerHUD: React.FC = () => {
               {/* Quick +/- 15s */}
               <button
                 onClick={() => addSeconds(-15)}
-                className="px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white text-[11px] font-mono font-bold border border-white/10 transition-colors cursor-pointer"
+                className="min-h-11 px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white text-[11px] font-mono font-bold border border-white/10 transition-colors cursor-pointer"
                 title="Reduzir 15s"
               >
                 -15s
@@ -125,7 +125,7 @@ export const RestTimerHUD: React.FC = () => {
               {/* Pause/Play Toggle */}
               <button
                 onClick={isPaused ? resumeTimer : pauseTimer}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                className="foco-touch rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                 title={isPaused ? 'Retomar descanso' : 'Pausar descanso'}
               >
                 {isPaused ? <Play className="w-4 h-4 fill-current" /> : <Pause className="w-4 h-4" />}
@@ -134,7 +134,7 @@ export const RestTimerHUD: React.FC = () => {
               {/* Skip / Next Set Button */}
               <button
                 onClick={skipTimer}
-                className="px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all cursor-pointer"
+                className="min-h-11 px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all cursor-pointer"
                 title="Finalizar descanso e ir para a próxima série"
               >
                 <span>GO!</span>
@@ -144,7 +144,7 @@ export const RestTimerHUD: React.FC = () => {
               {/* Expand Toggle */}
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="p-1.5 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                className="foco-touch text-neutral-400 hover:text-white transition-colors cursor-pointer"
                 title={isExpanded ? 'Recolher detalhes' : 'Mais ajustes'}
               >
                 {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}

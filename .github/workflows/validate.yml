@@ -26,3 +26,5 @@ jobs:
         run: npm run lint
       - name: Production frontend build
         run: npm run build
+      - name: Exercise image catalog audit
+        run: npm run audit:images

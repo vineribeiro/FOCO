@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { loadWorkoutDraft, saveWorkoutDraft, clearWorkoutDraft } from '../utils/workoutDraft';
 import { api } from '../services/api';
 import { WorkoutPlan, WorkoutExercise } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
@@ -45,6 +47,7 @@ interface ExerciseLog {
 }
 
 export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }) => {
+  const { user } = useAuth();
   const [activePlan, setActivePlan] = useState<WorkoutPlan | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sessionStarted, setSessionStarted] = useState(false);
@@ -76,17 +79,46 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [sessionCompletedModal, setSessionCompletedModal] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errorAlert, setErrorAlert] = useState<string | null>(null);
+  const [draftHydrated, setDraftHydrated] = useState(false);
+  const [restoredDraft, setRestoredDraft] = useState(false);
+  const [draftError, setDraftError] = useState<string | null>(null);
 
-  // Stopwatch interval for entire workout
   useEffect(() => {
-    let interval: any = null;
-    if (sessionStarted) {
-      interval = setInterval(() => {
-        setElapsedSeconds((prev) => prev + 1);
-      }, 1000);
+    setDraftHydrated(false);
+    if (!user?.id) return;
+    const draft = loadWorkoutDraft(user.id);
+    if (draft) {
+      setSessionStarted(true);
+      setSessionStartTime(new Date(draft.sessionStartedAt));
+      setSelectedTrainingDay(draft.selectedTrainingDay);
+      setSessionNotes(draft.sessionNotes);
+      setExerciseLogs(draft.exerciseLogs);
+      setRestoredDraft(true);
     }
-    return () => clearInterval(interval);
-  }, [sessionStarted]);
+    setDraftHydrated(true);
+  }, [user?.id]);
+
+  // Rascunho local vinculado ao usuário; o registro final continua na API.
+  useEffect(() => {
+    if (!draftHydrated || !user?.id || !sessionStarted || !sessionStartTime || sessionCompletedModal) return;
+    const ok = saveWorkoutDraft(user.id, {
+      sessionStartedAt: sessionStartTime.toISOString(),
+      selectedTrainingDay,
+      planId: activePlan?.id || null,
+      sessionNotes,
+      exerciseLogs,
+    });
+    setDraftError(ok ? null : 'Não foi possível salvar o rascunho neste aparelho.');
+  }, [draftHydrated, user?.id, sessionStarted, sessionStartTime, selectedTrainingDay, activePlan?.id, sessionNotes, exerciseLogs, sessionCompletedModal]);
+
+  // Relógio real: o cronômetro continua correto depois de trocar de aba.
+  useEffect(() => {
+    if (!sessionStarted || !sessionStartTime) return;
+    const tick = () => setElapsedSeconds(Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)));
+    tick();
+    const interval = window.setInterval(tick, 1000);
+    return () => window.clearInterval(interval);
+  }, [sessionStarted, sessionStartTime]);
 
   // Load active plan on mount
   useEffect(() => {
@@ -130,6 +162,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   }, [activePlan, selectedTrainingDay]);
 
   const handleStartWorkout = () => {
+    if (exerciseLogs.length === 0) {
+      setErrorAlert('Adicione exercícios à sua ficha antes de iniciar a sessão.');
+      return;
+    }
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
     setSessionStarted(true);
@@ -149,93 +185,59 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   };
 
   const handleToggleSetComplete = (exIdx: number, setIdx: number) => {
+    const exercise = exerciseLogs[exIdx];
+    const current = exercise?.sets[setIdx];
+    if (!current) return;
     soundEngine.initContext();
-
-    if (!sessionStarted) {
-      handleStartWorkout();
+    if (!sessionStarted) handleStartWorkout();
+    if (!current.completed) {
+      soundEngine.playCheckmarkClick();
+      if (autoRestEnabled) startTimer(exercise.rest_seconds || 60, exercise.exercise_name, current.set_number);
     }
-
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      const targetSet = copy[exIdx].sets[setIdx];
-      const nextCompleted = !targetSet.completed;
-      targetSet.completed = nextCompleted;
-
-      if (nextCompleted) {
-        soundEngine.playCheckmarkClick();
-        if (autoRestEnabled) {
-          const restDuration = copy[exIdx].rest_seconds || 60;
-          startTimer(restDuration, copy[exIdx].exercise_name, targetSet.set_number);
-        }
-      }
-
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx ? ex : {
+      ...ex, sets: ex.sets.map((set, j) => j !== setIdx ? set : { ...set, completed: !set.completed }),
+    }));
   };
 
-  const handleUpdateSet = (
-    exIdx: number,
-    setIdx: number,
-    field: 'load_kg' | 'repetitions' | 'rpe',
-    value: number
-  ) => {
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      copy[exIdx].sets[setIdx][field] = value;
-      return copy;
-    });
+  const handleUpdateSet = (exIdx: number, setIdx: number, field: 'load_kg' | 'repetitions' | 'rpe', value: number) => {
+    setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx ? ex : {
+      ...ex, sets: ex.sets.map((set, j) => j !== setIdx ? set : { ...set, [field]: value }),
+    }));
   };
 
   const handleQuickAddLoad = (exIdx: number, setIdx: number, delta: number) => {
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      const current = Number(copy[exIdx].sets[setIdx].load_kg) || 0;
-      copy[exIdx].sets[setIdx].load_kg = Math.max(0, current + delta);
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx ? ex : {
+      ...ex, sets: ex.sets.map((set, j) => j !== setIdx ? set : {
+        ...set, load_kg: Math.max(0, (Number(set.load_kg) || 0) + delta),
+      }),
+    }));
   };
 
   const handleChangeExerciseRest = (exIdx: number, seconds: number) => {
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      copy[exIdx].rest_seconds = seconds;
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => i === exIdx ? { ...ex, rest_seconds: seconds } : ex));
   };
 
   const handleAddSet = (exIdx: number) => {
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      const currentSets = copy[exIdx].sets;
-      const lastSet = currentSets[currentSets.length - 1];
-      currentSets.push({
-        set_number: currentSets.length + 1,
-        repetitions: lastSet ? lastSet.repetitions : 10,
-        load_kg: lastSet ? lastSet.load_kg : 20,
-        completed: false,
-        rpe: 8,
-      });
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => {
+      if (i !== exIdx) return ex;
+      const last = ex.sets[ex.sets.length - 1];
+      return { ...ex, sets: [...ex.sets, {
+        set_number: ex.sets.length + 1, repetitions: last?.repetitions ?? 10,
+        load_kg: last?.load_kg ?? 0, completed: false, rpe: 8,
+      }] };
+    }));
   };
 
   const handleRemoveSet = (exIdx: number, setIdx: number) => {
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      if (copy[exIdx].sets.length > 1) {
-        copy[exIdx].sets.splice(setIdx, 1);
-        copy[exIdx].sets.forEach((s, i) => {
-          s.set_number = i + 1;
-        });
-      }
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx || ex.sets.length <= 1 ? ex : {
+      ...ex, sets: ex.sets.filter((_, j) => j !== setIdx).map((set, j) => ({ ...set, set_number: j + 1 })),
+    }));
   };
 
   const handleFinishWorkout = async () => {
@@ -244,6 +246,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       return;
     }
 
+    if (!exerciseLogs.some((ex) => ex.sets.some((set) => set.completed)) && !window.confirm('Nenhuma série foi concluída. Salvar a sessão mesmo assim?')) return;
     setIsSaving(true);
     try {
       const flatSets: { exercise_name: string; set_number: number; repetitions: number; load_kg: number; completed: boolean }[] = [];
@@ -271,13 +274,15 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         plan_name: activePlan?.name || 'Treino Livre',
         started_at: (sessionStartTime || new Date()).toISOString(),
         finished_at: new Date().toISOString(),
-        duration_seconds: elapsedSeconds,
+        duration_seconds: sessionStartTime ? Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)) : elapsedSeconds,
         notes: sessionNotes,
         status: 'completed',
         sets: flatSets,
       });
 
       setSessionStarted(false);
+      if (user?.id) clearWorkoutDraft(user.id);
+      setRestoredDraft(false);
       skipTimer();
 
       // Som e vibração festiva de conclusão
@@ -323,10 +328,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   }
 
   return (
-    <div className="space-y-4 pb-36 max-w-md mx-auto">
+    <div className="mx-auto max-w-2xl space-y-4 pb-36">
       
       {/* Top Controller Header (Monochrome Luxury) */}
-      <div className="sticky top-12 z-20 p-4 rounded-2xl bg-[#0A0A0A]/95 backdrop-blur-md border border-white/10 shadow-2xl space-y-3">
+      <div className="sticky top-16 z-20 p-4 rounded-2xl bg-[#0A0A0A]/95 backdrop-blur-md border border-white/10 shadow-2xl space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
@@ -450,6 +455,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         )}
       </div>
 
+      {sessionStarted && (
+        <p role="status" className="px-1 text-xs text-neutral-400">
+          {draftError || (restoredDraft ? 'Treino recuperado. Alterações salvas neste aparelho até a conclusão.' : 'Rascunho salvo automaticamente neste aparelho durante o treino.')}
+        </p>
+      )}
+
       {/* Exercises Log Cards */}
       {exerciseLogs.length === 0 && activePlan && (
         <div className="rounded-2xl border border-dashed border-white/15 bg-[#141414] p-6 text-center">
@@ -483,7 +494,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                     <span>·</span>
                     <span className="font-mono">{completedCount}/{exercise.sets.length} séries feitas</span>
                   </div>
-                  <h3 className="text-sm font-black text-white mt-0.5 truncate">
+                  <h3 className="mt-1 truncate text-lg font-bold text-white">
                     {exercise.exercise_name}
                   </h3>
                 </div>
@@ -492,33 +503,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 <ExerciseIllustration exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} className="h-14 w-14 shrink-0" />
                   <button
                     onClick={() => handleAddSet(exIdx)}
-                    className="p-1 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                    className="foco-touch rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                    aria-label={'Adicionar série ao exercício ' + exercise.exercise_name}
                     title="Adicionar Série Extra"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
-                </div>
-              </div>
-
-              {/* Quick Rest Selector for this Exercise */}
-              <div className="flex items-center justify-between py-2 border-b border-white/5 text-[10px] font-mono">
-                <span className="text-neutral-500 uppercase font-bold flex items-center gap-1">
-                  <Timer className="w-3 h-3" /> Descanso Padrão:
-                </span>
-                <div className="flex items-center gap-1">
-                  {[45, 60, 90, 120].map((sec) => (
-                    <button
-                      key={sec}
-                      onClick={() => handleChangeExerciseRest(exIdx, sec)}
-                      className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${
-                        exercise.rest_seconds === sec
-                          ? 'bg-white text-black border-white'
-                          : 'bg-black text-neutral-400 border-white/10 hover:border-white/30 hover:text-white'
-                      }`}
-                    >
-                      {sec}s
-                    </button>
-                  ))}
                 </div>
               </div>
 
@@ -530,14 +520,11 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                       <th className="py-2 px-1 w-12">SÉRIE</th>
                       <th className="py-2 px-1">CARGA</th>
                       <th className="py-2 px-1">REPS</th>
-                      <th className="py-2 px-1">1RM EST.</th>
                       <th className="py-2 px-1 text-right">FEITO</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {exercise.sets.map((set, setIdx) => {
-                      const estimated1RM = calculateEstimated1RM(set.load_kg, set.repetitions);
-
                       return (
                         <tr
                           key={setIdx}
@@ -548,60 +535,26 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                             #{set.set_number}
                           </td>
 
-                          {/* Load with quick +/- buttons */}
-                          <td className="py-2.5 px-1">
-                            <div className="flex items-center gap-1">
-                              <input
-                                type="number"
-                                step="0.5"
-                                value={set.load_kg === 0 ? '' : set.load_kg}
-                                placeholder="0"
-                                onChange={(e) =>
-                                  handleUpdateSet(exIdx, setIdx, 'load_kg', parseFloat(e.target.value) || 0)
-                                }
-                                className="w-14 px-2 py-1.5 rounded-lg bg-[#0A0A0A] border border-white/10 text-white font-mono tabular-nums text-xs focus:outline-none focus:border-white text-center"
-                              />
-                              <div className="flex flex-col gap-0.5">
-                                <button
-                                  type="button"
-                                  onClick={() => handleQuickAddLoad(exIdx, setIdx, 2.5)}
-                                  className="px-1 py-0.2 rounded bg-white/5 hover:bg-white/15 text-[8px] font-mono text-neutral-400 hover:text-white border border-white/5"
-                                  title="+2.5kg"
-                                >
-                                  +2.5
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => handleQuickAddLoad(exIdx, setIdx, -2.5)}
-                                  className="px-1 py-0.2 rounded bg-white/5 hover:bg-white/15 text-[8px] font-mono text-neutral-400 hover:text-white border border-white/5"
-                                  title="-2.5kg"
-                                >
-                                  -2.5
-                                </button>
-                              </div>
-                            </div>
+                          <td className="py-2 px-1">
+                            <input type="number" min="0" step="0.5" inputMode="decimal"
+                              aria-label={'Carga da série ' + set.set_number + ' em quilogramas'}
+                              value={set.load_kg === 0 ? '' : set.load_kg} placeholder="0"
+                              onChange={(e) => handleUpdateSet(exIdx, setIdx, 'load_kg', Math.max(0, parseFloat(e.target.value) || 0))}
+                              className="foco-field !w-[84px] !min-h-12 !px-2 text-center font-mono text-base tabular-nums" />
                           </td>
 
                           {/* Repetitions */}
                           <td className="py-2.5 px-1">
                             <input
-                              type="number"
+                              type="number" min="0" step="1" inputMode="numeric"
+                              aria-label={'Repetições da série ' + set.set_number}
                               value={set.repetitions === 0 ? '' : set.repetitions}
                               placeholder="0"
                               onChange={(e) =>
                                 handleUpdateSet(exIdx, setIdx, 'repetitions', parseInt(e.target.value) || 0)
                               }
-                              className="w-12 px-2 py-1.5 rounded-lg bg-[#0A0A0A] border border-white/10 text-white font-mono tabular-nums text-xs focus:outline-none focus:border-white text-center"
+                              className="foco-field !w-[70px] !min-h-12 !px-2 text-center font-mono text-base tabular-nums"
                             />
-                          </td>
-
-                          {/* Estimated 1RM */}
-                          <td className="py-2.5 px-1 font-mono text-[11px] tabular-nums text-neutral-400">
-                            {estimated1RM > 0 ? (
-                              <span className="text-white font-bold">~{estimated1RM}kg</span>
-                            ) : (
-                              <span className="text-neutral-600">--</span>
-                            )}
                           </td>
 
                           {/* Completion Checkmark (Ergonomic 44x44px Touch Target) */}
@@ -609,7 +562,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                             <div className="flex items-center justify-end gap-1.5">
                               <button
                                 onClick={() => handleToggleSetComplete(exIdx, setIdx)}
-                                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer active:scale-90 ${
+                                aria-label={set.completed ? 'Desmarcar série ' + set.set_number : 'Concluir série ' + set.set_number}
+                                aria-pressed={set.completed}
+                                className={`foco-touch rounded-xl flex items-center justify-center transition-all cursor-pointer active:scale-95 ${
                                   set.completed
                                     ? 'bg-white text-black font-black shadow-lg ring-2 ring-white/50'
                                     : 'bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white border border-white/15'
@@ -618,15 +573,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                               >
                                 <CheckCircle2 className={`w-5 h-5 ${set.completed ? 'text-black' : ''}`} />
                               </button>
-                              {exercise.sets.length > 1 && (
-                                <button
-                                  onClick={() => handleRemoveSet(exIdx, setIdx)}
-                                  className="p-1.5 text-neutral-600 hover:text-white rounded transition-colors"
-                                  title="Remover série"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                              )}
+
                             </div>
                           </td>
                         </tr>
@@ -635,6 +582,47 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                   </tbody>
                 </table>
               </div>
+              <details className="mt-3 rounded-xl border border-white/10 bg-black/20">
+                <summary className="flex min-h-12 cursor-pointer items-center px-4 text-sm font-semibold text-neutral-300">
+                  Mais ajustes · descanso, séries e métricas
+                </summary>
+                <div className="space-y-4 border-t border-white/10 p-3">
+                  <div>
+                    <p className="mb-2 text-xs font-semibold text-neutral-400">Descanso entre séries</p>
+                    <div className="flex flex-wrap gap-2">
+                      {[45, 60, 90, 120].map((sec) => (
+                        <button type="button" key={sec} onClick={() => handleChangeExerciseRest(exIdx, sec)}
+                          aria-pressed={exercise.rest_seconds === sec}
+                          className={'min-h-11 rounded-xl border px-4 text-sm font-semibold ' + (exercise.rest_seconds === sec
+                            ? 'border-white bg-white text-black' : 'border-white/15 bg-white/5 text-neutral-300')}>
+                          {sec}s
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-neutral-400">Ajustar carga, remover e visualizar estimativas</p>
+                    {exercise.sets.map((set, idx) => (
+                      <div key={idx} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/5 p-2">
+                        <span className="text-sm font-semibold">Série {set.set_number}</span>
+                        <span className="text-xs text-neutral-400">1RM estimado: {calculateEstimated1RM(set.load_kg, set.repetitions) || '—'} kg</span>
+                        <div className="flex items-center gap-1">
+                          <button type="button" onClick={() => handleQuickAddLoad(exIdx, idx, -2.5)}
+                            className="foco-touch rounded-lg border border-white/15 text-sm" aria-label={'Diminuir 2,5 kg da série ' + set.set_number}>−2,5</button>
+                          <button type="button" onClick={() => handleQuickAddLoad(exIdx, idx, 2.5)}
+                            className="foco-touch rounded-lg border border-white/15 text-sm" aria-label={'Aumentar 2,5 kg da série ' + set.set_number}>+2,5</button>
+                          {exercise.sets.length > 1 && (
+                            <button type="button" onClick={() => handleRemoveSet(exIdx, idx)}
+                              className="foco-touch rounded-lg border border-white/15" aria-label={'Remover série ' + set.set_number}><Trash2 className="h-4 w-4" /></button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    <p className="text-xs text-neutral-500">Estimativas de 1RM são aproximadas e não devem determinar cargas automaticamente.</p>
+                  </div>
+                </div>
+              </details>
+
             </div>
           );
         })}

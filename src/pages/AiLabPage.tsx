@@ -25,34 +25,34 @@ export const AiLabPage: React.FC<AiLabProps> = ({ setActiveTab }) => {
       </div>
 
       {/* Segmented Controls (Monochrome Mobile) */}
-      <div className="grid grid-cols-4 gap-1 p-1 bg-[#141414] rounded-2xl border border-white/10">
+      <div role="tablist" aria-label="Ferramentas de IA e fichas" className="grid grid-cols-2 gap-2 p-1 bg-[#141414] rounded-2xl border border-white/10 sm:grid-cols-4">
         <button
-          onClick={() => setSubTab('generate')}
-          className={`py-2 px-1 text-center rounded-xl text-[9px] font-black uppercase tracking-tight transition-all cursor-pointer ${
+          role="tab" aria-selected={subTab === 'generate'} onClick={() => setSubTab('generate')}
+          className={`py-2 px-1 text-center rounded-xl min-h-12 text-xs font-bold transition-all cursor-pointer ${
             subTab === 'generate' ? 'bg-white text-black shadow-md' : 'text-neutral-400 hover:text-white'
           }`}
         >
           Criar IA
         </button>
         <button
-          onClick={() => setSubTab('upload')}
-          className={`py-2 px-1 text-center rounded-xl text-[9px] font-black uppercase tracking-tight transition-all cursor-pointer ${
+          role="tab" aria-selected={subTab === 'upload'} onClick={() => setSubTab('upload')}
+          className={`py-2 px-1 text-center rounded-xl min-h-12 text-xs font-bold transition-all cursor-pointer ${
             subTab === 'upload' ? 'bg-white text-black shadow-md' : 'text-neutral-400 hover:text-white'
           }`}
         >
           Foto/PDF
         </button>
         <button
-          onClick={() => setSubTab('review')}
-          className={`py-2 px-1 text-center rounded-xl text-[9px] font-black uppercase tracking-tight transition-all cursor-pointer ${
+          role="tab" aria-selected={subTab === 'review'} onClick={() => setSubTab('review')}
+          className={`py-2 px-1 text-center rounded-xl min-h-12 text-xs font-bold transition-all cursor-pointer ${
             subTab === 'review' ? 'bg-white text-black shadow-md' : 'text-neutral-400 hover:text-white'
           }`}
         >
           Revisão
         </button>
         <button
-          onClick={() => setSubTab('plans')}
-          className={`py-2 px-1 text-center rounded-xl text-[9px] font-black uppercase tracking-tight transition-all cursor-pointer ${
+          role="tab" aria-selected={subTab === 'plans'} onClick={() => setSubTab('plans')}
+          className={`py-2 px-1 text-center rounded-xl min-h-12 text-xs font-bold transition-all cursor-pointer ${
             subTab === 'plans' ? 'bg-white text-black shadow-md' : 'text-neutral-400 hover:text-white'
           }`}
         >

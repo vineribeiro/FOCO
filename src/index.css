@@ -9,7 +9,7 @@
     --color-primary-text: #000000;
     --color-accent-gray: #E5E5E5;
     --text-main: #FFFFFF;
-    --text-muted: #858585;
+    --text-muted: #A3A3A3;
     --border-subtle: rgba(255, 255, 255, 0.12);
   }
 
@@ -47,11 +47,11 @@
   background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #232730;
+  background: #454545;
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3B4150;
+  background: #666666;
 }
 
 
@@ -86,7 +86,7 @@
 .foco-eyebrow {
   color: #858585;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   line-height: 1.4;
@@ -112,3 +112,99 @@
     display: none;
   }
 }
+
+/* FOCO 3.0 — design tokens and ergonomic interaction language */
+:root {
+  color-scheme: dark;
+  --foco-canvas: #080808;
+  --foco-surface: #171717;
+  --foco-elevated: #303030;
+  --foco-line: rgba(255,255,255,.14);
+  --foco-text: #F5F5F5;
+  --foco-muted: #A3A3A3;
+  --foco-radius: 16px;
+  --foco-space: 8px;
+}
+html { scroll-behavior: smooth; }
+body { font-size: 14px; line-height: 1.5; }
+button, select, input, textarea { font: inherit; }
+button:not(:disabled) { touch-action: manipulation; }
+button:disabled { cursor: not-allowed; }
+.foco-touch {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+.foco-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  border-radius: 12px;
+  padding: 0 14px;
+  color: #B3B3B3;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.foco-nav-item:hover { background: rgba(255,255,255,.06); color: white; }
+.foco-nav-item-active { background: #F5F5F5; color: #080808; }
+.foco-nav-item-active:hover { background: #E5E5E5; color: #080808; }
+.foco-action {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 14px;
+  background: #F5F5F5;
+  padding: 12px 20px;
+  color: #080808;
+  font-weight: 800;
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+.foco-action:hover { background: #E5E5E5; }
+.foco-action:active { transform: scale(.98); }
+.foco-panel { border: 1px solid var(--foco-line); border-radius: var(--foco-radius); background: var(--foco-surface); }
+.foco-field {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--foco-line);
+  background: #0A0A0A;
+  padding: 10px 12px;
+  color: #F5F5F5;
+  font-size: 16px;
+}
+.foco-field:focus-visible { outline: 2px solid #E5E5E5; outline-offset: 2px; }
+.foco-stat { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* Normalize third-party exercise illustrations to the FOCO monochrome family.
+   This is a visual treatment, not a replacement for biomechanical review. */
+.foco-anatomy-image {
+  filter: grayscale(1) contrast(1.07);
+  object-position: center;
+  image-rendering: auto;
+  -webkit-user-drag: none;
+}
+dialog::backdrop { background: rgba(0,0,0,.88); backdrop-filter: blur(8px); }
+@media (max-width: 767px) {
+  .foco-mobile-full { width: 100%; }
+}
+
+/* Natural-language typography and readable mobile form controls */
+.foco-page-title { font-size: clamp(1.75rem, 2.4vw, 2.5rem); font-weight: 800; line-height: 1.16; letter-spacing: -.025em; }
+.foco-section-title { font-size: 1.125rem; font-weight: 700; line-height: 1.35; }
+.foco-muted { color: var(--foco-muted); font-size: .875rem; line-height: 1.6; }

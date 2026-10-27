@@ -6,6 +6,7 @@ import {
 import { api } from '../services/api';
 import { WorkoutExercise, WorkoutPlan } from '../types';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
+import { AccessibleDialog } from '../components/AccessibleDialog';
 import {
   ExerciseCatalogItem, getEquipmentLabel, getExerciseDisplayName, getMuscleLabel,
   getPreferredTrainingDay, getTrainingDayLabel, loadExerciseCatalog, MUSCLE_FILTERS, savePreferredTrainingDay, TRAINING_DAYS
@@ -77,9 +78,17 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
   useEffect(() => { setVisibleCount(36); }, [search, muscleFilter, equipmentFilter]);
 
   const addExercise = async (plan: WorkoutPlan, exercise: ExerciseCatalogItem) => {
+    const displayName = getExerciseDisplayName(exercise.name);
+    const duplicate = (plan.exercises || []).some((item) =>
+      item.exercise_name.trim().toLocaleLowerCase('pt-BR') === displayName.trim().toLocaleLowerCase('pt-BR')
+      && (item.training_day || '') === (selectedTrainingDay || '')
+    );
+    if (duplicate) {
+      setActionMessage({ type: 'error', text: 'Este exercício já está neste dia da ficha. Ajuste a ficha existente em vez de duplicar.' });
+      return;
+    }
     setAddingPlanId(plan.id);
     setActionMessage(null);
-    const displayName = getExerciseDisplayName(exercise.name);
     const workoutExercise: WorkoutExercise = {
       exercise_name: displayName,
       muscle_group: getMuscleLabel(exercise.primaryMuscles[0] || 'general'),
@@ -121,7 +130,8 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
           </div>
           <span className="shrink-0 rounded-xl border border-white/10 bg-[#141414] px-3 py-2 text-right">
             <strong className="block text-xl tabular-nums">{catalog.length || '—'}</strong>
-            <span className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">exercícios</span>
+            <span className="block text-xs font-semibold text-neutral-400">exercícios</span>
+            {!isLoading && <span className="mt-1 block text-xs text-neutral-500">{catalog.filter((item) => item.images.length > 0).length} ilustrados</span>}
           </span>
         </div>
 
@@ -139,7 +149,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
       </header>
 
       {actionMessage && (
-        <div className={`flex items-start justify-between gap-3 rounded-xl border p-3 text-sm ${actionMessage.type === 'success' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-100' : 'border-rose-500/30 bg-rose-500/10 text-rose-100'}`} role="status">
+        <div className={`flex items-start justify-between gap-3 rounded-xl border p-3 text-sm ${actionMessage.type === 'success' ? 'border-white/15 bg-white/10 text-white' : 'border-white/30 bg-white/5 text-neutral-100'}`} role="status">
           <span>{actionMessage.text}</span>
           <button type="button" onClick={() => setActionMessage(null)} aria-label="Fechar aviso"><X className="h-4 w-4" /></button>
         </div>
@@ -168,7 +178,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
       </section>
 
       {loadError && (
-        <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-5">
+        <div className="rounded-2xl border border-white/30 bg-white/5 p-5">
           <p className="text-sm font-bold">Não foi possível carregar a biblioteca.</p>
           <p className="mt-1 text-xs text-neutral-300">{loadError}</p>
           <button type="button" onClick={() => window.location.reload()} className="mt-3 rounded-lg bg-white px-4 py-2 text-xs font-black text-black">Tentar novamente</button>
@@ -189,12 +199,12 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
         <>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {filteredExercises.slice(0, visibleCount).map((exercise) => (
-              <article key={exercise.id} className="overflow-hidden rounded-2xl border border-white/10 bg-[#141414] transition hover:border-orange-500/40">
-                <button type="button" onClick={() => setDetailExercise(exercise)} aria-label={`Abrir execução de ${getExerciseDisplayName(exercise.name)}`} className="block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
-                  <ExerciseIllustration exerciseName={exercise.name} muscleGroup={getMuscleLabel(exercise.primaryMuscles[0] || '')} imagePaths={exercise.images} className="h-64 w-full rounded-none border-0 sm:h-72" showCaption />
+              <article key={exercise.id} className="overflow-hidden rounded-2xl border border-white/10 bg-[#141414] transition hover:border-white/35">
+                <button type="button" onClick={() => setDetailExercise(exercise)} aria-label={`Abrir execução de ${getExerciseDisplayName(exercise.name)}`} className="block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                  <ExerciseIllustration exerciseName={exercise.name} muscleGroup={getMuscleLabel(exercise.primaryMuscles[0] || '')} imagePaths={exercise.images} className="h-44 w-full rounded-none border-0 sm:h-48" showCaption />
                   <div className="p-4">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-orange-500">{getMuscleLabel(exercise.primaryMuscles[0] || 'Geral')}</p>
-                    <h2 className="mt-1 text-base font-black leading-snug">{getExerciseDisplayName(exercise.name)}</h2>
+                    <p className="text-xs font-semibold text-neutral-300">{getMuscleLabel(exercise.primaryMuscles[0] || 'Geral')}</p>
+                    <h2 className="mt-1 text-base font-bold leading-snug">{getExerciseDisplayName(exercise.name)}</h2>
                     <p className="mt-2 text-xs text-neutral-500">{getEquipmentLabel(exercise.equipment)} · {exercise.level === 'beginner' ? 'Iniciante' : exercise.level === 'intermediate' ? 'Intermediário' : exercise.level === 'expert' ? 'Avançado' : exercise.level}</p>
                     <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-neutral-300 hover:text-white">
                       Toque para ver execução e passo a passo <ArrowUpRight className="h-3.5 w-3.5" />
@@ -203,7 +213,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
                 </button>
                 <div className="flex items-center justify-between gap-3 border-t border-white/10 px-3 py-3">
                   <p className="truncate text-[10px] text-neutral-500">{exercise.secondaryMuscles.length ? `Também trabalha ${exercise.secondaryMuscles.slice(0,2).map(getMuscleLabel).join(', ')}` : 'Exercício principal'}</p>
-                  <button type="button" onClick={() => { setSelectedExercise(exercise); setActionMessage(null); }} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-[10px] font-black uppercase tracking-wide text-black transition hover:bg-neutral-200">
+                  <button type="button" onClick={() => { setSelectedExercise(exercise); setActionMessage(null); }} className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-xs font-bold text-black transition hover:bg-neutral-200">
                     <Plus className="h-3.5 w-3.5" /> Adicionar ao meu plano
                   </button>
                 </div>
@@ -218,13 +228,13 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
         </>
       )}
 
-      <footer className="rounded-xl border border-white/5 bg-[#101010] p-3 text-[10px] leading-relaxed text-neutral-500">
-        As demonstrações são diagramas SVG vetoriais próprios, ampliáveis sem perder nitidez. Toque em qualquer exercício para abrir a execução detalhada e o passo a passo.
+      <footer className="rounded-xl border border-white/10 bg-[#101010] p-3 text-xs leading-relaxed text-neutral-400">
+        As imagens são referências ilustrativas em tons de cinza. Toque para ampliar e consultar as etapas de execução; não substituem orientação profissional.
       </footer>
 
       {selectedExercise && (
-        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/80 p-0 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label="Adicionar exercício à ficha">
-          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-2xl border border-white/10 bg-[#101010] p-5 shadow-2xl sm:rounded-2xl">
+        <AccessibleDialog title="Adicionar exercício à ficha" onClose={() => setSelectedExercise(null)}>
+          <div className="w-full bg-[#101010] p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Adicionar à minha ficha</p>
@@ -282,12 +292,12 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
             )}
             <button type="button" onClick={() => setSelectedExercise(null)} className="mt-4 w-full rounded-xl border border-white/10 px-4 py-3 text-xs font-bold text-neutral-400 hover:text-white">Cancelar</button>
           </div>
-        </div>
+        </AccessibleDialog>
       )}
 
       {detailExercise && (
-        <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/80 p-0 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label="Detalhes do exercício">
-          <div className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-t-2xl border border-white/10 bg-[#101010] p-5 shadow-2xl sm:rounded-2xl">
+        <AccessibleDialog size="lg" title="Detalhes do exercício" onClose={() => setDetailExercise(null)}>
+          <div className="w-full bg-[#101010] p-5">
             <div className="flex items-start justify-between gap-3">
               <div><p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Execução do exercício</p><h2 className="mt-1 text-lg font-black">{getExerciseDisplayName(detailExercise.name)}</h2></div>
               <button type="button" onClick={() => setDetailExercise(null)} className="rounded-lg p-2 text-neutral-400 hover:bg-white/10 hover:text-white" aria-label="Fechar"><X className="h-4 w-4" /></button>
@@ -307,12 +317,12 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
             </div>
             {(detailExercise.suggestedSets || detailExercise.suggestedReps) && (
               <div className="mt-3 grid grid-cols-2 gap-2">
-                <div className="rounded-xl border border-orange-500/20 bg-orange-500/[0.07] p-3">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-orange-300">Séries sugeridas</p>
+                <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-neutral-300">Séries sugeridas</p>
                   <p className="mt-1 text-xl font-black text-white">{detailExercise.suggestedSets ?? '—'}</p>
                 </div>
-                <div className="rounded-xl border border-orange-500/20 bg-orange-500/[0.07] p-3">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-orange-300">{detailExercise.suggestedRepsLabel || 'Repetições sugeridas'}</p>
+                <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-neutral-300">{detailExercise.suggestedRepsLabel || 'Repetições sugeridas'}</p>
                   <p className="mt-1 text-xl font-black text-white">{detailExercise.suggestedReps ?? '—'}</p>
                 </div>
               </div>
@@ -336,18 +346,18 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               </section>
             )}
             {detailExercise.commonErrors?.length ? (
-              <section className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.045] p-3">
-                <h3 className="text-xs font-black uppercase tracking-widest text-amber-200">Erros comuns</h3>
+              <section className="mt-4 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-100">Erros comuns</h3>
                 <ul className="mt-2 space-y-1.5">
-                  {detailExercise.commonErrors.map((error, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-amber-400">•</span><span>{error}</span></li>)}
+                  {detailExercise.commonErrors.map((error, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-neutral-400">•</span><span>{error}</span></li>)}
                 </ul>
               </section>
             ) : null}
             {detailExercise.safetyNotes?.length ? (
-              <section className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-3">
-                <h3 className="text-xs font-black uppercase tracking-widest text-emerald-200">Cuidados e segurança</h3>
+              <section className="mt-4 rounded-xl border border-white/15 bg-white/[0.04] p-3">
+                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-100">Cuidados e segurança</h3>
                 <ul className="mt-2 space-y-1.5">
-                  {detailExercise.safetyNotes.map((note, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-emerald-400">•</span><span>{note}</span></li>)}
+                  {detailExercise.safetyNotes.map((note, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-neutral-400">•</span><span>{note}</span></li>)}
                 </ul>
               </section>
             ) : null}
@@ -355,13 +365,17 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               <section className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3">
                 <h3 className="text-xs font-black uppercase tracking-widest text-neutral-300">Variações relacionadas</h3>
                 <div className="mt-2 flex flex-wrap gap-1.5">
-                  {detailExercise.variations.map((variation) => <span key={variation} className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] text-neutral-300">{variation}</span>)}
+                  {detailExercise.variations.map((variation) => {
+                    const resolved = catalog.find((item) => item.id === variation);
+                    const label = resolved ? getExerciseDisplayName(resolved.name) : variation.replace(/_/g, ' ');
+                    return <span key={variation} className="rounded-full border border-white/10 px-3 py-2 text-xs text-neutral-300">{label}</span>;
+                  })}
                 </div>
               </section>
             ) : null}
             <button type="button" onClick={() => { setDetailExercise(null); setSelectedExercise(detailExercise); }} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-black uppercase tracking-wide text-black"><Plus className="h-4 w-4" /> Adicionar ao meu plano</button>
           </div>
-        </div>
+        </AccessibleDialog>
       )}
     </div>
   );

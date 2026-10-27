@@ -29,57 +29,18 @@ interface SymbolProps {
 export const FocoSymbol: React.FC<SymbolProps> = ({
   className = 'w-8 h-8',
   color = 'currentColor',
-}) => {
-  return (
-    <svg
-      viewBox="0 0 160 120"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-label="FOCO Monogram F"
-    >
-      {/* Top Wing / Upper Arm of F */}
-      <path
-        d="M 52 38 L 84 6 L 154 6 L 128 32 L 80 32 L 52 38 Z"
-        fill={color}
-      />
-      {/* Dynamic Main Body: Lower Wing & Angled Stem */}
-      <path
-        d="M 6 84 L 54 36 L 138 36 L 112 62 L 72 62 L 40 94 L 6 94 Z"
-        fill={color}
-      />
-    </svg>
-  );
-};
+}) => (
+  <svg viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-label="FOCO — símbolo F">
+    <path d="M 32 30 L 52 10 L 98 10 L 80 28 L 52 28 Z" fill={color} />
+    <path d="M 4 58 L 32 30 L 76 30 L 60 46 L 38 46 L 24 60 L 4 60 Z" fill={color} />
+  </svg>
+);
 
-/**
- * Refined Monogram matching the reference image grid:
- * Upper chevron blade + Lower angled blade with parallel negative gap
- */
+/** Official alternative name for the same monogram asset. */
 export const FocoMonogram: React.FC<SymbolProps> = ({
   className = 'w-10 h-10',
   color = 'currentColor',
-}) => {
-  return (
-    <svg
-      viewBox="0 0 200 150"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      {/* Upper blade of the F */}
-      <path
-        d="M 58 56 L 94 20 L 194 20 L 162 52 L 102 52 L 76 78 L 58 56 Z"
-        fill={color}
-      />
-      {/* Lower blade / stem of the F */}
-      <path
-        d="M 12 102 L 68 46 L 96 46 L 46 96 L 76 96 L 152 96 L 128 120 L 68 120 L 12 120 Z"
-        fill={color}
-      />
-    </svg>
-  );
-};
+}) => <FocoSymbol className={className} color={color} />;
 
 /**
  * Geometric Vector FOCO Lettering
@@ -91,7 +52,7 @@ export const FocoLettering: React.FC<SymbolProps> = ({
 }) => {
   return (
     <svg
-      viewBox="0 0 380 72"
+      viewBox="0 0 404 76"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}

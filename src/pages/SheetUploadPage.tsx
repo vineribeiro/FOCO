@@ -236,6 +236,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
   };
 
   const handleDeleteFile = async (id: string) => {
+    if (!window.confirm('Excluir o arquivo enviado? Esta ação não pode ser desfeita.')) return;
     try {
       await api.deleteFile(id);
       await loadFiles();

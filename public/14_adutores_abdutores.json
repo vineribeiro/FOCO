@@ -478,7 +478,7 @@
       "imagens_execucao": []
     },
     {
-      "id": "agachamento_sumо",
+      "id": "agachamento_sumo",
       "nome": "Agachamento sumô",
       "aliases": [
         "Sumo squat"
@@ -532,12 +532,12 @@
       ],
       "variacoes": [
         "agachamento_goblet",
-        "agachamento_sumо_com_halter"
+        "agachamento_sumo_com_halter"
       ],
       "imagens_execucao": []
     },
     {
-      "id": "agachamento_sumо_com_halter",
+      "id": "agachamento_sumo_com_halter",
       "nome": "Agachamento sumô com halter",
       "aliases": [
         "Sumo goblet squat"
@@ -588,7 +588,7 @@
         12
       ],
       "variacoes": [
-        "agachamento_sumо",
+        "agachamento_sumo",
         "agachamento_goblet"
       ],
       "imagens_execucao": [
