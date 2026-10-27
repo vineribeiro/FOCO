@@ -341,8 +341,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                   </div>
                 )}
 
-                {!isForgot && (                </div>
-
                 {!isForgot && (
                   <div>
                     <div className="mb-2 flex items-center justify-between gap-3">
