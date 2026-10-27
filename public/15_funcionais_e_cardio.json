@@ -1,0 +1,1076 @@
+{
+  "arquivo": "15_funcionais_e_cardio.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "funcionais_e_cardio",
+  "descricao": "Exercícios de condicionamento cardiovascular, coordenação, potência, agilidade e movimentos funcionais de corpo inteiro.",
+  "exercicios": [
+    {
+      "id": "caminhada_esteira",
+      "nome": "Caminhada na esteira",
+      "aliases": [
+        "Esteira caminhando"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "esteira"
+      ],
+      "padrao_movimento": "locomocao",
+      "nivel": "iniciante",
+      "execucao": [
+        "Suba na esteira com a lona parada e segure nos apoios se precisar de equilíbrio.",
+        "Selecione uma velocidade confortável antes de começar a caminhar.",
+        "Mantenha postura ereta, olhar à frente e passos naturais.",
+        "Aumente gradualmente a velocidade ou a inclinação conforme a capacidade.",
+        "Reduza a velocidade para desacelerar antes de parar."
+      ],
+      "respiracao": {
+        "execucao": "Respire de forma regular, ajustando o ritmo à intensidade."
+      },
+      "erros_comuns": [
+        "Começar em velocidade alta.",
+        "Apoiar continuamente o peso do corpo nas barras.",
+        "Dar passos excessivamente longos.",
+        "Parar bruscamente após esforço intenso."
+      ],
+      "cuidados": [
+        "Prenda o clipe de segurança quando disponível.",
+        "Use calçado adequado.",
+        "Interrompa se sentir tontura, dor no peito ou falta de ar incomum."
+      ],
+      "series_sugeridas": [
+        1,
+        1
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        40
+      ],
+      "unidade_repeticoes": "minutos",
+      "variacoes": [
+        "caminhada_inclinada_esteira",
+        "corrida_esteira"
+      ],
+      "imagens_execucao": [
+        "Walking_Treadmill/0.jpg",
+        "Walking_Treadmill/1.jpg"
+      ]
+    },
+    {
+      "id": "caminhada_inclinada_esteira",
+      "nome": "Caminhada inclinada na esteira",
+      "aliases": [
+        "Incline treadmill walk"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "gluteo_maximo",
+        "quadriceps",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "esteira"
+      ],
+      "padrao_movimento": "locomocao_em_inclinacao",
+      "nivel": "iniciante",
+      "execucao": [
+        "Comece caminhando em velocidade confortável na esteira.",
+        "Aumente a inclinação gradualmente, sem elevar demais a intensidade de uma só vez.",
+        "Mantenha o tronco ereto e dê passos naturais.",
+        "Evite pendurar o peso do corpo nos apoios.",
+        "Reduza a inclinação e a velocidade antes de encerrar."
+      ],
+      "respiracao": {
+        "execucao": "Respire continuamente e ajuste o ritmo para manter o esforço sustentável."
+      },
+      "erros_comuns": [
+        "Usar inclinação excessiva para o condicionamento atual.",
+        "Segurar as barras e inclinar o corpo para trás.",
+        "Aumentar a velocidade antes de se adaptar.",
+        "Ignorar sinais de fadiga excessiva."
+      ],
+      "cuidados": [
+        "Comece com inclinação baixa.",
+        "Ajuste o esforço à sua condição física.",
+        "Reduza a intensidade se houver desconforto articular."
+      ],
+      "series_sugeridas": [
+        1,
+        1
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        30
+      ],
+      "unidade_repeticoes": "minutos",
+      "variacoes": [
+        "caminhada_esteira",
+        "corrida_esteira"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "corrida_esteira",
+      "nome": "Corrida na esteira",
+      "aliases": [
+        "Treadmill running"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "esteira"
+      ],
+      "padrao_movimento": "corrida",
+      "nivel": "intermediario",
+      "execucao": [
+        "Comece com alguns minutos de caminhada para aquecer.",
+        "Aumente gradualmente a velocidade até alcançar um ritmo de corrida controlável.",
+        "Mantenha o olhar à frente, os ombros relaxados e os braços movimentando-se naturalmente.",
+        "Use passadas confortáveis sem tentar alongá-las excessivamente.",
+        "Reduza a velocidade para caminhar antes de encerrar."
+      ],
+      "respiracao": {
+        "execucao": "Respire de forma ritmada e ajuste a velocidade para manter a intensidade desejada."
+      },
+      "erros_comuns": [
+        "Começar rápido demais.",
+        "Olhar constantemente para os pés.",
+        "Segurar nas barras durante a corrida.",
+        "Aumentar distância e velocidade ao mesmo tempo sem adaptação."
+      ],
+      "cuidados": [
+        "Aumente o volume gradualmente.",
+        "Utilize o clipe de segurança quando disponível.",
+        "Pare se sentir dor no peito, tontura ou falta de ar incomum."
+      ],
+      "series_sugeridas": [
+        1,
+        1
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        40
+      ],
+      "unidade_repeticoes": "minutos",
+      "variacoes": [
+        "caminhada_esteira",
+        "corrida_intervalada"
+      ],
+      "imagens_execucao": [
+        "Running_Treadmill/0.jpg",
+        "Running_Treadmill/1.jpg"
+      ]
+    },
+    {
+      "id": "bicicleta_ergometrica",
+      "nome": "Bicicleta ergométrica",
+      "aliases": [
+        "Bike indoor",
+        "Bicicleta estacionária"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril"
+      ],
+      "equipamentos": [
+        "bicicleta_ergometrica"
+      ],
+      "padrao_movimento": "ciclismo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o banco para que o joelho permaneça levemente flexionado quando o pedal estiver no ponto mais baixo.",
+        "Posicione os pés firmemente nos pedais.",
+        "Comece pedalando com baixa resistência.",
+        "Aumente gradualmente a resistência ou a cadência conforme o objetivo.",
+        "Reduza a resistência e a velocidade antes de parar."
+      ],
+      "respiracao": {
+        "execucao": "Respire continuamente e ajuste o ritmo ao esforço."
+      },
+      "erros_comuns": [
+        "Banco muito baixo ou muito alto.",
+        "Pedalar com resistência excessiva no início.",
+        "Balançar o tronco.",
+        "Prender a respiração."
+      ],
+      "cuidados": [
+        "Ajuste o equipamento antes de iniciar.",
+        "Mantenha os joelhos alinhados com os pés.",
+        "Interrompa se houver dor articular persistente."
+      ],
+      "series_sugeridas": [
+        1,
+        1
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        40
+      ],
+      "unidade_repeticoes": "minutos",
+      "variacoes": [
+        "bicicleta_intervalada",
+        "bicicleta_reclinada"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "bicicleta_intervalada",
+      "nome": "Bicicleta ergométrica intervalada",
+      "aliases": [
+        "Interval bike training"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril"
+      ],
+      "equipamentos": [
+        "bicicleta_ergometrica"
+      ],
+      "padrao_movimento": "ciclismo_intervalado",
+      "nivel": "intermediario",
+      "execucao": [
+        "Comece com alguns minutos de pedalada leve.",
+        "Aumente a cadência ou resistência por um intervalo curto, de acordo com o condicionamento.",
+        "Reduza o esforço durante a recuperação, mantendo a pedalada leve.",
+        "Alterne os períodos de esforço e recuperação conforme o plano.",
+        "Finalize com alguns minutos de pedalada leve."
+      ],
+      "respiracao": {
+        "execucao": "Mantenha a respiração contínua; não é necessário prender o ar durante os intervalos intensos."
+      },
+      "erros_comuns": [
+        "Começar os intervalos no esforço máximo sem preparação.",
+        "Não realizar aquecimento.",
+        "Usar resistência excessiva e perder a cadência.",
+        "Pular a recuperação."
+      ],
+      "cuidados": [
+        "Ajuste os intervalos à experiência e condição física.",
+        "Iniciantes devem começar com intervalos moderados.",
+        "Interrompa se houver sintomas incomuns."
+      ],
+      "series_sugeridas": [
+        4,
+        8
+      ],
+      "repeticoes_sugeridas": [
+        20,
+        60
+      ],
+      "unidade_repeticoes": "segundos_de_esforco",
+      "variacoes": [
+        "bicicleta_ergometrica"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "eliptico",
+      "nome": "Transport elíptico",
+      "aliases": [
+        "Elíptico",
+        "Cross trainer"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "musculos_secundarios": [
+        "deltoides",
+        "biceps",
+        "triceps"
+      ],
+      "equipamentos": [
+        "eliptico"
+      ],
+      "padrao_movimento": "locomocao_ciclica",
+      "nivel": "iniciante",
+      "execucao": [
+        "Suba no equipamento segurando os apoios.",
+        "Comece com baixa resistência e movimento lento.",
+        "Mantenha o tronco ereto e os pés apoiados nos pedais.",
+        "Use as alças móveis se quiser incluir os membros superiores.",
+        "Reduza a velocidade antes de descer do equipamento."
+      ],
+      "respiracao": {
+        "execucao": "Respire de forma regular durante todo o exercício."
+      },
+      "erros_comuns": [
+        "Curvar excessivamente o tronco.",
+        "Aumentar a resistência cedo demais.",
+        "Apoiar todo o peso nos braços.",
+        "Descer antes de o equipamento parar."
+      ],
+      "cuidados": [
+        "Segure os apoios ao subir e descer.",
+        "Use resistência adequada ao condicionamento.",
+        "Pare se houver tontura ou dor incomum."
+      ],
+      "series_sugeridas": [
+        1,
+        1
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        40
+      ],
+      "unidade_repeticoes": "minutos",
+      "variacoes": [
+        "caminhada_esteira",
+        "bicicleta_ergometrica"
+      ],
+      "imagens_execucao": [
+        "Elliptical_Trainer/0.jpg",
+        "Elliptical_Trainer/1.jpg"
+      ]
+    },
+    {
+      "id": "remador_ergometrico",
+      "nome": "Remo ergométrico",
+      "aliases": [
+        "Rowing machine"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "latissimo_do_dorso"
+      ],
+      "musculos_secundarios": [
+        "biceps",
+        "eretores_da_coluna",
+        "trapezio"
+      ],
+      "equipamentos": [
+        "remador_ergometrico"
+      ],
+      "padrao_movimento": "tracao_ciclica_de_corpo_inteiro",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste os apoios dos pés e segure a alça com os braços estendidos.",
+        "Comece com joelhos flexionados, tronco ligeiramente inclinado à frente e costas em posição neutra.",
+        "Empurre com as pernas primeiro, depois incline ligeiramente o tronco para trás e puxe a alça em direção à parte inferior do peito.",
+        "Retorne estendendo os braços, inclinando o tronco à frente e flexionando os joelhos nessa ordem.",
+        "Mantenha o movimento fluido, sem puxões bruscos."
+      ],
+      "respiracao": {
+        "tracao": "Expire durante a fase de esforço.",
+        "retorno": "Inspire durante a recuperação."
+      },
+      "erros_comuns": [
+        "Puxar com os braços antes de empurrar com as pernas.",
+        "Arredondar excessivamente a coluna.",
+        "Inclinar o tronco para trás demais.",
+        "Aumentar a cadência sem manter a técnica."
+      ],
+      "cuidados": [
+        "Aprenda a sequência técnica em ritmo lento.",
+        "Evite puxar com força excessiva.",
+        "Interrompa se houver dor lombar."
+      ],
+      "series_sugeridas": [
+        1,
+        1
+      ],
+      "repeticoes_sugeridas": [
+        5,
+        25
+      ],
+      "unidade_repeticoes": "minutos",
+      "variacoes": [
+        "bicicleta_ergometrica",
+        "eliptico"
+      ],
+      "imagens_execucao": [
+        "Rowing_Stationary/0.jpg",
+        "Rowing_Stationary/1.jpg"
+      ]
+    },
+    {
+      "id": "pular_corda",
+      "nome": "Pular corda",
+      "aliases": [
+        "Jump rope"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "panturrilhas",
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "musculos_secundarios": [
+        "antebracos",
+        "deltoides",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "corda_de_pular"
+      ],
+      "padrao_movimento": "saltos_repetitivos",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste o comprimento da corda à sua altura.",
+        "Segure as manoplas junto ao corpo com os cotovelos próximos às laterais.",
+        "Gire a corda principalmente com os punhos.",
+        "Realize saltos baixos, aterrissando suavemente na parte anterior dos pés.",
+        "Comece com intervalos curtos e aumente a duração gradualmente."
+      ],
+      "respiracao": {
+        "execucao": "Respire de forma contínua e ritmada."
+      },
+      "erros_comuns": [
+        "Saltar muito alto.",
+        "Girar a corda com movimentos amplos dos ombros.",
+        "Aterrissar com rigidez.",
+        "Começar com intervalos longos sem adaptação."
+      ],
+      "cuidados": [
+        "Use calçado adequado e superfície que permita aterrissagens seguras.",
+        "Iniciantes podem começar alternando períodos curtos de saltos e descanso.",
+        "Adapte ou evite o exercício se houver dor nos pés, tornozelos ou joelhos."
+      ],
+      "series_sugeridas": [
+        3,
+        8
+      ],
+      "repeticoes_sugeridas": [
+        20,
+        60
+      ],
+      "unidade_repeticoes": "segundos",
+      "variacoes": [
+        "polichinelo",
+        "corrida_parada"
+      ],
+      "imagens_execucao": [
+        "Rope_Jumping/0.jpg",
+        "Rope_Jumping/1.jpg"
+      ]
+    },
+    {
+      "id": "polichinelo",
+      "nome": "Polichinelo",
+      "aliases": [
+        "Jumping jack"
+      ],
+      "grupo_principal": "funcional",
+      "musculos_primarios": [
+        "deltoides",
+        "quadriceps",
+        "gluteo_medio",
+        "panturrilhas"
+      ],
+      "musculos_secundarios": [
+        "abdutores_do_quadril",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "peso_corporal"
+      ],
+      "padrao_movimento": "abducao_e_adução_de_membros_com_salto",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés juntos e os braços ao lado do corpo.",
+        "Salte afastando os pés enquanto eleva os braços lateralmente acima da cabeça.",
+        "Salte novamente aproximando os pés e baixando os braços.",
+        "Aterrisse suavemente com os joelhos alinhados com os pés.",
+        "Mantenha um ritmo que permita controlar os movimentos."
+      ],
+      "respiracao": {
+        "execucao": "Respire de forma contínua durante as repetições."
+      },
+      "erros_comuns": [
+        "Aterrissar com os joelhos rígidos.",
+        "Deixar os joelhos caírem para dentro.",
+        "Movimentar os braços sem controle.",
+        "Acelerar além da capacidade."
+      ],
+      "cuidados": [
+        "Use a versão sem salto se precisar reduzir o impacto.",
+        "Escolha uma superfície estável.",
+        "Interrompa se houver dor articular."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        15,
+        30
+      ],
+      "variacoes": [
+        "corrida_parada",
+        "pular_corda"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "corrida_parada",
+      "nome": "Corrida parada",
+      "aliases": [
+        "Jogging in place"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "peso_corporal"
+      ],
+      "padrao_movimento": "corrida_estacionaria",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés afastados aproximadamente na largura dos quadris.",
+        "Comece alternando os pés em ritmo leve, como uma corrida no lugar.",
+        "Movimente os braços naturalmente em oposição às pernas.",
+        "Mantenha o tronco ereto e aterrisse suavemente.",
+        "Aumente o ritmo somente se conseguir manter a técnica."
+      ],
+      "respiracao": {
+        "execucao": "Respire regularmente e ajuste a velocidade ao esforço."
+      },
+      "erros_comuns": [
+        "Aterrissar com excesso de impacto.",
+        "Inclinar o tronco para trás.",
+        "Elevar os joelhos além do necessário.",
+        "Começar em ritmo intenso."
+      ],
+      "cuidados": [
+        "Comece com intensidade baixa.",
+        "Use calçado adequado.",
+        "Substitua por marcha no lugar se precisar reduzir o impacto."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        30,
+        90
+      ],
+      "unidade_repeticoes": "segundos",
+      "variacoes": [
+        "polichinelo",
+        "corrida_esteira"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "agachamento_com_peso_corporal",
+      "nome": "Agachamento com peso corporal",
+      "aliases": [
+        "Air squat"
+      ],
+      "grupo_principal": "funcional",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "peso_corporal"
+      ],
+      "padrao_movimento": "agachamento",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés aproximadamente na largura dos ombros.",
+        "Mantenha o tronco firme e os pés apoiados no chão.",
+        "Flexione quadris e joelhos, levando o quadril para trás e para baixo.",
+        "Mantenha os joelhos alinhados com os pés e desça até a amplitude confortável.",
+        "Empurre o chão para retornar à posição em pé."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao descer.",
+        "subida": "Expire ao subir."
+      },
+      "erros_comuns": [
+        "Deixar os joelhos caírem para dentro.",
+        "Levantar os calcanhares.",
+        "Arredondar excessivamente a coluna.",
+        "Descer além da amplitude controlável."
+      ],
+      "cuidados": [
+        "Ajuste a profundidade à mobilidade individual.",
+        "Comece com apoio se necessário.",
+        "Interrompa se houver dor."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "agachamento_goblet",
+        "agachamento_sumо"
+      ],
+      "imagens_execucao": [
+        "Bodyweight_Squat/0.jpg",
+        "Bodyweight_Squat/1.jpg"
+      ]
+    },
+    {
+      "id": "avanco_alternado",
+      "nome": "Avanço alternado",
+      "aliases": [
+        "Alternating lunge"
+      ],
+      "grupo_principal": "funcional",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "gluteo_medio",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "halteres_opcionais"
+      ],
+      "padrao_movimento": "passada_unilateral",
+      "nivel": "intermediario",
+      "execucao": [
+        "Fique em pé com os pés afastados na largura dos quadris.",
+        "Dê um passo à frente e flexione os dois joelhos de forma controlada.",
+        "Mantenha o joelho da frente alinhado com a direção do pé.",
+        "Empurre o chão com o pé da frente para retornar à posição inicial.",
+        "Alterne as pernas, mantendo o tronco estável."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao descer.",
+        "subida": "Expire ao retornar."
+      },
+      "erros_comuns": [
+        "Dar um passo muito curto.",
+        "Deixar o joelho colapsar para dentro.",
+        "Perder o equilíbrio.",
+        "Inclinar excessivamente o tronco."
+      ],
+      "cuidados": [
+        "Comece sem carga.",
+        "Use apoio se necessário.",
+        "Ajuste o comprimento do passo para manter conforto e equilíbrio."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "agachamento_com_peso_corporal",
+        "avanco_reverso"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "avanco_reverso",
+      "nome": "Avanço reverso",
+      "aliases": [
+        "Reverse lunge"
+      ],
+      "grupo_principal": "funcional",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "gluteo_medio",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "halteres_opcionais"
+      ],
+      "padrao_movimento": "passada_unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés afastados na largura dos quadris.",
+        "Dê um passo para trás e flexione os joelhos, baixando o corpo de forma controlada.",
+        "Mantenha o pé da frente totalmente apoiado e o joelho alinhado com os dedos.",
+        "Empurre o chão com a perna da frente para voltar à posição inicial.",
+        "Alterne as pernas ou complete um lado antes de trocar."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao dar o passo para trás e descer.",
+        "subida": "Expire ao retornar."
+      },
+      "erros_comuns": [
+        "Perder o equilíbrio.",
+        "Dar um passo muito curto.",
+        "Deslocar o joelho da frente para dentro.",
+        "Usar impulso para retornar."
+      ],
+      "cuidados": [
+        "Comece com apoio se necessário.",
+        "Não force a profundidade.",
+        "Adicione carga somente após dominar o movimento."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "avanco_alternado",
+        "agachamento_com_peso_corporal"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "burpee",
+      "nome": "Burpee",
+      "aliases": [
+        "Burpee tradicional"
+      ],
+      "grupo_principal": "funcional",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo",
+        "peitoral",
+        "triceps"
+      ],
+      "musculos_secundarios": [
+        "deltoides",
+        "abdomen",
+        "panturrilhas"
+      ],
+      "equipamentos": [
+        "peso_corporal"
+      ],
+      "padrao_movimento": "transicao_agachamento_prancha_salto",
+      "nivel": "avancado",
+      "execucao": [
+        "Comece em pé com os pés afastados na largura dos quadris.",
+        "Agache e coloque as mãos no chão à frente dos pés.",
+        "Leve os pés para trás até uma posição de prancha, mantendo o tronco firme.",
+        "Retorne os pés para perto das mãos e levante-se.",
+        "Se tolerado, finalize com um salto vertical baixo; caso contrário, levante-se sem saltar."
+      ],
+      "respiracao": {
+        "execucao": "Respire continuamente, evitando prender o ar durante as transições."
+      },
+      "erros_comuns": [
+        "Deixar a lombar afundar na prancha.",
+        "Pousar com os joelhos desalinhados.",
+        "Fazer as transições sem controle.",
+        "Acelerar antes de dominar a técnica."
+      ],
+      "cuidados": [
+        "Use a versão sem salto para reduzir o impacto.",
+        "Comece com poucas repetições.",
+        "Evite o exercício se houver contraindicação para esforço intenso ou impacto."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        5,
+        12
+      ],
+      "variacoes": [
+        "agachamento_com_peso_corporal",
+        "mountain_climber"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "mountain_climber",
+      "nome": "Mountain climber",
+      "aliases": [
+        "Escalador"
+      ],
+      "grupo_principal": "funcional",
+      "musculos_primarios": [
+        "reto_abdominal",
+        "transverso_do_abdomen",
+        "flexores_do_quadril"
+      ],
+      "musculos_secundarios": [
+        "deltoides",
+        "quadriceps",
+        "obliquos"
+      ],
+      "equipamentos": [
+        "peso_corporal"
+      ],
+      "padrao_movimento": "prancha_com_flexao_alternada_de_quadril",
+      "nivel": "intermediario",
+      "execucao": [
+        "Comece em posição de prancha alta, com as mãos abaixo dos ombros.",
+        "Mantenha a coluna alinhada e contraia o abdômen.",
+        "Leve um joelho em direção ao peito.",
+        "Retorne o pé à posição inicial e alterne as pernas.",
+        "Mantenha um ritmo que permita controlar o tronco."
+      ],
+      "respiracao": {
+        "execucao": "Respire continuamente durante as alternâncias."
+      },
+      "erros_comuns": [
+        "Elevar excessivamente o quadril.",
+        "Deixar a lombar afundar.",
+        "Mover os pés sem controle.",
+        "Aumentar a velocidade e perder a postura."
+      ],
+      "cuidados": [
+        "Comece lentamente.",
+        "Adapte a posição se houver desconforto nos punhos.",
+        "Interrompa se houver dor."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        20,
+        40
+      ],
+      "unidade_repeticoes": "total",
+      "variacoes": [
+        "prancha_abdominal",
+        "burpee"
+      ],
+      "imagens_execucao": [
+        "Mountain_Climbers/0.jpg",
+        "Mountain_Climbers/1.jpg"
+      ]
+    },
+    {
+      "id": "kettlebell_swing",
+      "nome": "Kettlebell swing",
+      "aliases": [
+        "Balanço com kettlebell"
+      ],
+      "grupo_principal": "funcional",
+      "musculos_primarios": [
+        "gluteo_maximo",
+        "isquiotibiais"
+      ],
+      "musculos_secundarios": [
+        "eretores_da_coluna",
+        "abdomen",
+        "antebracos",
+        "trapezio"
+      ],
+      "equipamentos": [
+        "kettlebell"
+      ],
+      "padrao_movimento": "dobradica_de_quadril_explosiva",
+      "nivel": "avancado",
+      "execucao": [
+        "Posicione o kettlebell no chão à frente dos pés e adote uma base estável.",
+        "Leve o quadril para trás e segure o kettlebell com as duas mãos.",
+        "Passe o kettlebell entre as pernas com a coluna neutra.",
+        "Estenda o quadril de forma explosiva e deixe o kettlebell subir pela força gerada pelo quadril, sem puxar excessivamente com os braços.",
+        "Permita que o kettlebell retorne entre as pernas e mantenha o movimento ritmado."
+      ],
+      "respiracao": {
+        "impulso": "Expire durante a extensão do quadril.",
+        "retorno": "Inspire durante a passagem do kettlebell entre as pernas."
+      },
+      "erros_comuns": [
+        "Transformar o movimento em agachamento.",
+        "Levantar o peso principalmente com os braços.",
+        "Arredondar a coluna.",
+        "Usar kettlebell pesado demais."
+      ],
+      "cuidados": [
+        "Aprenda a dobradiça de quadril antes de executar o swing.",
+        "Pratique com supervisão se for iniciante.",
+        "Garanta espaço livre à frente e atrás do corpo."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "levantamento_terra_romeno",
+        "agachamento_com_peso_corporal"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "corrida_intervalada",
+      "nome": "Corrida intervalada",
+      "aliases": [
+        "Interval running"
+      ],
+      "grupo_principal": "cardio",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "esteira_opcional",
+        "pista_opcional"
+      ],
+      "padrao_movimento": "corrida_intervalada",
+      "nivel": "intermediario",
+      "execucao": [
+        "Faça um aquecimento com caminhada e corrida leve.",
+        "Corra por um intervalo em intensidade compatível com seu nível.",
+        "Reduza para caminhada ou corrida leve durante a recuperação.",
+        "Alterne esforço e recuperação conforme o plano de treino.",
+        "Finalize com alguns minutos de caminhada leve."
+      ],
+      "respiracao": {
+        "execucao": "Mantenha a respiração contínua e reduza o ritmo se não conseguir controlar o esforço."
+      },
+      "erros_comuns": [
+        "Começar em intensidade máxima.",
+        "Pular o aquecimento.",
+        "Aumentar velocidade e duração ao mesmo tempo.",
+        "Ignorar sinais de fadiga excessiva."
+      ],
+      "cuidados": [
+        "Adapte os intervalos ao condicionamento físico.",
+        "Iniciantes devem construir uma base de caminhada e corrida leve primeiro.",
+        "Interrompa se houver dor no peito, tontura ou falta de ar incomum."
+      ],
+      "series_sugeridas": [
+        4,
+        8
+      ],
+      "repeticoes_sugeridas": [
+        20,
+        120
+      ],
+      "unidade_repeticoes": "segundos_de_esforco",
+      "variacoes": [
+        "corrida_esteira",
+        "caminhada_esteira"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "step_up",
+      "nome": "Subida no banco",
+      "aliases": [
+        "Step-up"
+      ],
+      "grupo_principal": "funcional",
+      "musculos_primarios": [
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "gluteo_medio",
+        "panturrilhas"
+      ],
+      "equipamentos": [
+        "caixa_pliometrica_estavel",
+        "banco_baixo"
+      ],
+      "padrao_movimento": "subida_unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique diante de um banco ou caixa firme, com altura compatível com sua mobilidade.",
+        "Coloque um pé totalmente apoiado sobre a superfície.",
+        "Empurre a superfície com a perna elevada para subir, mantendo o joelho alinhado com o pé.",
+        "Suba até ficar em pé sobre a plataforma sem impulsionar excessivamente com a perna de trás.",
+        "Desça lentamente e repita com a outra perna."
+      ],
+      "respiracao": {
+        "subida": "Expire ao subir.",
+        "descida": "Inspire ao descer."
+      },
+      "erros_comuns": [
+        "Usar banco instável.",
+        "Impulsionar excessivamente com a perna que fica no chão.",
+        "Deixar o joelho colapsar para dentro.",
+        "Descer sem controle."
+      ],
+      "cuidados": [
+        "Comece com uma altura baixa.",
+        "Use apoio se necessário.",
+        "Não utilize caixas que possam deslizar ou tombar."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "avanco_reverso",
+        "agachamento_com_peso_corporal"
+      ],
+      "imagens_execucao": []
+    }
+  ],
+  "observacao_imagens": "As imagens associadas são referências do catálogo visual do FOCO para movimentos correspondentes. Exercícios sem correspondência visual específica permanecem sem imagem."
+}
