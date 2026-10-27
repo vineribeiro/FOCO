@@ -205,6 +205,23 @@ export const MUSCLE_FILTERS = [
   { label: 'Pescoço', value: 'neck' },
 ];
 
+// Catálogo editorial: manter somente movimentos listados nos guias do Hipertrofia.org.
+// As ilustrações vêm do banco de imagens de exercícios já usado pelo FOCO; não são copiadas do site.
+const HIPERTROFIA_ALLOWED_EXERCISES = new Set([
+  'Barbell Bench Press', 'Dumbbell Bench Press', 'Barbell Incline Bench Press', 'Incline Dumbbell Bench Press',
+  'Machine Bench Press', 'Dumbbell Flyes', 'Cable Crossover', 'Close-Grip Barbell Bench Press',
+  'Cable Rope Triceps Pushdown', 'Triceps Pushdown', 'Cable Rope Overhead Triceps Extension',
+  'Pushups', 'Barbell Curl', 'Cable Curl', 'Incline Dumbbell Curl', 'Hammer Curls',
+  'Barbell Shrug', 'Dumbbell Shrug', 'Barbell Deadlift', 'Face Pull', 'Bent Over Barbell Row',
+  'Barbell Row', 'Bent Over Two-Dumbbell Row', 'One-Arm Dumbbell Row', 'Seated Cable Rows',
+  'Lat Pulldown', 'Wide-Grip Lat Pulldown', 'Pullups', 'Barbell Full Squat', 'Dumbbell Squat',
+  'Smith Machine Squat', 'Leg Press', 'Leg Extension', 'Lying Leg Curls', 'Seated Leg Curl',
+  'Romanian Deadlift', 'Barbell Hip Thrust', 'Standing Calf Raises', 'Dumbbell Shoulder Press',
+  'Seated Dumbbell Press', 'Dumbbell Front Raise', 'Dumbbell Lateral Raise', 'Cable Lateral Raise',
+  'Crunches', 'Air Bike', '3/4 Sit-Up', 'Alternate Heel Touchers', 'Wrist Curls',
+  'Barbell Full Squat', 'Standing Leg Curl', 'Triceps Pushdown'
+]);
+
 let catalogPromise: Promise<ExerciseCatalogItem[]> | null = null;
 
 export function normalizeExerciseText(value: string): string {
@@ -236,7 +253,7 @@ export async function loadExerciseCatalog(): Promise<ExerciseCatalogItem[]> {
       if (!response.ok) throw new Error('Não foi possível carregar a biblioteca de exercícios.');
       const raw = await response.json();
       if (!Array.isArray(raw)) throw new Error('O catálogo de exercícios está em um formato inválido.');
-      return raw as ExerciseCatalogItem[];
+      return (raw as ExerciseCatalogItem[]).filter((exercise) => HIPERTROFIA_ALLOWED_EXERCISES.has(exercise.name));
     })().catch((error) => {
       catalogPromise = null;
       throw error;
