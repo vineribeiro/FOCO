@@ -18,6 +18,7 @@ export interface ExerciseCatalogItem {
   safetyNotes?: string[];
   suggestedSets?: number | string;
   suggestedReps?: string;
+  suggestedRepsLabel?: string;
   variations?: string[];
   sourceGroup?: string;
 }
@@ -357,6 +358,9 @@ function mapDedicatedExercise(
         ? exercise.series_sugeridas[0]
         : `${exercise.series_sugeridas[0]}–${exercise.series_sugeridas[1]}`)
       : exercise.series_sugeridas,
+    suggestedRepsLabel: exercise.unidade_repeticoes
+      ? (/metro/i.test(exercise.unidade_repeticoes) ? 'Distância sugerida' : 'Duração sugerida')
+      : 'Repetições sugeridas',
     suggestedReps: `${Array.isArray(exercise.repeticoes_sugeridas)
       ? (exercise.repeticoes_sugeridas[0] === exercise.repeticoes_sugeridas[1]
         ? String(exercise.repeticoes_sugeridas[0])
