@@ -133,7 +133,7 @@ if (!execute) {
     review_status: manifest.exercises[e.id].status,
   }));
   const pathOut = path.join(root, 'anatomy-generation-plan.json');
-  await fs.writeFile(pathOut, JSON.stringify({ model: 'gemini-3.1-flash-image', atlas_count: output.length, outputs: output }, null, 2));
+  await fs.writeFile(pathOut, JSON.stringify({ model: 'gemini-nano-banana-2.1', atlas_count: output.length, outputs: output }, null, 2));
   console.log('Dry-run: prompts exported to anatomy-generation-plan.json. No images requested and no charge.');
   process.exit(0);
 }
@@ -143,7 +143,7 @@ if (!Number.isInteger(maxImages) || maxImages < 1 || maxImages > 254) {
   throw new Error('Define --max-images=1..254 as an explicit safety cap.');
 }
 if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY não configurada. Não use chave privada no frontend.');
-const model = process.env.FOCO_IMAGE_MODEL || 'gemini-3.1-flash-image';
+const model = process.env.FOCO_IMAGE_MODEL || 'gemini-nano-banana-2.1';
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const reference = typeof flag('reference') === 'string' ? String(flag('reference')) : '';
 let refPart = null;
