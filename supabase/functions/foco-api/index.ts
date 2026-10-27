@@ -223,20 +223,33 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     }).select("*").single();
     fail(pr.error, "Conta criada, mas o perfil não pôde ser salvo. Entre novamente para concluir.");
     await db.from("body_measurements").insert({ user_id: r.data.user.id, measurement_type: "peso", value: Number(b.current_weight_kg) || 75, unit: "kg" });
-    return response({ token: r.data.session.access_token, user: { id: r.data.user.id, email: r.data.user.email, full_name: name }, profile: pr.data }, 201, origin);
+    return response({ token: r.data.session.access_token, refresh_token: r.data.session.refresh_token, expires_at: r.data.session.expires_at, user: { id: r.data.user.id, email: r.data.user.email, full_name: name }, profile: pr.data }, 201, origin);
   }
   if (method === "POST" && path === "/api/auth/login") {
     const b = await body(req), a = client();
     const r = await a.auth.signInWithPassword({ email: text(b.email, 254).toLowerCase(), password: String(b.password || "") });
     if (r.error || !r.data.session || !r.data.user) throw new ApiError(401, "Credenciais inválidas. Verifique seu e-mail e senha.");
     const db = client(r.data.session.access_token), p = await profile(db, r.data.user);
-    return response({ token: r.data.session.access_token, user: { id: r.data.user.id, email: r.data.user.email, full_name: p.full_name }, profile: p }, 200, origin);
+    return response({ token: r.data.session.access_token, refresh_token: r.data.session.refresh_token, expires_at: r.data.session.expires_at, user: { id: r.data.user.id, email: r.data.user.email, full_name: p.full_name }, profile: p }, 200, origin);
   }
   if (method === "POST" && path === "/api/auth/forgot-password") {
     const b = await body(req);
     const r = await client().auth.resetPasswordForEmail(text(b.email, 254).toLowerCase(), { redirectTo: "https://vineribeiro.github.io/FOCO/" });
     fail(r.error, "Não foi possível solicitar recuperação de senha.");
     return response({ message: "Se o e-mail estiver cadastrado, as instruções serão enviadas." }, 200, origin);
+  }
+  if (method === "POST" && path === "/api/auth/refresh") {
+    const b = await body(req);
+    const refreshToken = text(b.refresh_token, 1200);
+    if (!refreshToken) throw new ApiError(401, "A sessão expirou. Entre novamente no FOCO.");
+    const r = await client().auth.refreshSession({ refresh_token: refreshToken });
+    if (r.error || !r.data.session || !r.data.user) throw new ApiError(401, "A sessão expirou. Entre novamente no FOCO.");
+    return response({
+      token: r.data.session.access_token,
+      refresh_token: r.data.session.refresh_token,
+      expires_at: r.data.session.expires_at,
+      user: { id: r.data.user.id, email: r.data.user.email },
+    }, 200, origin);
   }
 
   const { db, user } = await auth(req);
