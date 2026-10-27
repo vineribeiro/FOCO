@@ -16,9 +16,9 @@ Não é necessário executar as migrações antigas para ativar esse armazenamen
 No dashboard Render, abra o Web Service que atende `foco-api-xuj2.onrender.com`, depois vá a **Environment** e adicione:
 
 - `SUPABASE_URL`: URL do projeto Supabase, em Project Settings → API (formato `https://<project-ref>.supabase.co`).
-- `SUPABASE_SERVICE_ROLE_KEY`: chave secreta de servidor do projeto Supabase (em Project Settings → API Keys; use a chave `service_role` legada se essa for a disponível no painel).
+- `SUPABASE_SERVICE_ROLE_KEY`: chave secreta de servidor do projeto Supabase (em Project Settings → API Keys). Prefira a chave Secret (`sb_secret_...`) se disponível. A chave `service_role` legada também é aceita pelo código.
 
-A chave `service_role` tem privilégios elevados: mantenha-a **somente no backend do Render**. Não a coloque em `NEXT_PUBLIC_*`, no frontend, em código versionado, screenshots ou mensagens de chat.
+A chave Secret (`sb_secret_...`) ou `service_role` tem privilégios elevados: mantenha-a **somente no backend do Render**. Não a coloque em `NEXT_PUBLIC_*`, no frontend, em código versionado, screenshots ou mensagens de chat. O código usa a chave Secret apenas no cabeçalho `apikey`; a chave `service_role` legada também é enviada como Bearer JWT.
 
 **Não altere nem remova o `JWT_SECRET` já configurado**: trocá-lo invalida os tokens de sessão atuais. Preserve também `GEMINI_API_KEY`.
 
