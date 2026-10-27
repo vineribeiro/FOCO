@@ -326,7 +326,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const timeoutId = controller ? window.setTimeout(() => controller.abort(), 12_000) : null;
 
   try {
-    const publicAuthEndpoint = ['/api/auth/register', '/api/auth/login', '/api/auth/forgot-password', '/api/auth/refresh'].includes(endpoint);
+    const publicAuthEndpoint = ['/api/auth/register', '/api/auth/login', '/api/auth/forgot-password', '/api/auth/refresh', '/api/system/status'].includes(endpoint);
     const token = publicAuthEndpoint ? null : await getValidAccessToken();
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -392,8 +392,11 @@ export const api = {
     });
   },
 
-  async resetPassword(_payload: { token: string; new_password: string }) {
-    throw new Error('A redefinição de senha só estará disponível após configurar a entrega segura de links por e-mail.');
+  async resetPassword(payload: { new_password: string }) {
+    return await request<{ message: string }>('/api/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
   },
 
   async deleteAccount() {
@@ -744,9 +747,13 @@ export const api = {
     }
   },
 
+  async getFileDownloadUrl(id: string) {
+    return await request<{ url: string; expires_in: number }>(`/api/files/${encodeURIComponent(id)}/download`);
+  },
+
   async deleteFile(id: string) {
     try {
-      return await request<{ message: string }>(`/api/files/${id}`, { method: 'DELETE' });
+      return await request<{ message: string }>(`/api/files/${encodeURIComponent(id)}`, { method: 'DELETE' });
     } catch (error) {
       if (!isStaticHost || !getStoredToken()?.startsWith('token_local_demo_')) throw error;
       return { message: 'Arquivo removido' };
@@ -798,7 +805,7 @@ export const api = {
     });
   },
 
-  async analyzeBioimpedanceReport(payload: { base64: string; mime_type: string; context?: string }) {
+  async analyzeBioimpedanceReport(payload: { base64: string; mime_type: string; filename?: string; context?: string }) {
     if (!payload.mime_type || !['application/pdf', 'image/jpeg', 'image/png', 'image/webp'].includes(payload.mime_type)) {
       throw new Error('Formato não suportado. Envie PDF, JPG, PNG ou WebP.');
     }
