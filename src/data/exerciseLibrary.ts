@@ -214,7 +214,7 @@ export function findMatchingExercise(
   );
   if (exact) return exact;
 
-  const aliasKeys = Object.keys(NAME_ALIASES);
+  const aliasKeys = Object.keys(NAME_ALIASES).sort((a, b) => b.length - a.length);
   const aliasKey = aliasKeys.find((key) => key === normalized || normalized.includes(key) || key.includes(normalized));
   if (aliasKey) {
     for (const alias of NAME_ALIASES[aliasKey]) {
