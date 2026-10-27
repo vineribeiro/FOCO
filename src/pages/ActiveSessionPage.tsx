@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { loadWorkoutDraft, saveWorkoutDraft, clearWorkoutDraft } from '../utils/workoutDraft';
 import { api } from '../services/api';
 import { WorkoutPlan, WorkoutExercise } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
@@ -45,6 +47,7 @@ interface ExerciseLog {
 }
 
 export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }) => {
+  const { user } = useAuth();
   const [activePlan, setActivePlan] = useState<WorkoutPlan | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sessionStarted, setSessionStarted] = useState(false);
@@ -76,17 +79,46 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [sessionCompletedModal, setSessionCompletedModal] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errorAlert, setErrorAlert] = useState<string | null>(null);
+  const [draftHydrated, setDraftHydrated] = useState(false);
+  const [restoredDraft, setRestoredDraft] = useState(false);
+  const [draftError, setDraftError] = useState<string | null>(null);
 
-  // Stopwatch interval for entire workout
   useEffect(() => {
-    let interval: any = null;
-    if (sessionStarted) {
-      interval = setInterval(() => {
-        setElapsedSeconds((prev) => prev + 1);
-      }, 1000);
+    setDraftHydrated(false);
+    if (!user?.id) return;
+    const draft = loadWorkoutDraft(user.id);
+    if (draft) {
+      setSessionStarted(true);
+      setSessionStartTime(new Date(draft.sessionStartedAt));
+      setSelectedTrainingDay(draft.selectedTrainingDay);
+      setSessionNotes(draft.sessionNotes);
+      setExerciseLogs(draft.exerciseLogs);
+      setRestoredDraft(true);
     }
-    return () => clearInterval(interval);
-  }, [sessionStarted]);
+    setDraftHydrated(true);
+  }, [user?.id]);
+
+  // Rascunho local vinculado ao usuário; o registro final continua na API.
+  useEffect(() => {
+    if (!draftHydrated || !user?.id || !sessionStarted || !sessionStartTime || sessionCompletedModal) return;
+    const ok = saveWorkoutDraft(user.id, {
+      sessionStartedAt: sessionStartTime.toISOString(),
+      selectedTrainingDay,
+      planId: activePlan?.id || null,
+      sessionNotes,
+      exerciseLogs,
+    });
+    setDraftError(ok ? null : 'Não foi possível salvar o rascunho neste aparelho.');
+  }, [draftHydrated, user?.id, sessionStarted, sessionStartTime, selectedTrainingDay, activePlan?.id, sessionNotes, exerciseLogs, sessionCompletedModal]);
+
+  // Relógio real: o cronômetro continua correto depois de trocar de aba.
+  useEffect(() => {
+    if (!sessionStarted || !sessionStartTime) return;
+    const tick = () => setElapsedSeconds(Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)));
+    tick();
+    const interval = window.setInterval(tick, 1000);
+    return () => window.clearInterval(interval);
+  }, [sessionStarted, sessionStartTime]);
 
   // Load active plan on mount
   useEffect(() => {
@@ -130,6 +162,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   }, [activePlan, selectedTrainingDay]);
 
   const handleStartWorkout = () => {
+    if (exerciseLogs.length === 0) {
+      setErrorAlert('Adicione exercícios à sua ficha antes de iniciar a sessão.');
+      return;
+    }
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
     setSessionStarted(true);
@@ -149,93 +185,59 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   };
 
   const handleToggleSetComplete = (exIdx: number, setIdx: number) => {
+    const exercise = exerciseLogs[exIdx];
+    const current = exercise?.sets[setIdx];
+    if (!current) return;
     soundEngine.initContext();
-
-    if (!sessionStarted) {
-      handleStartWorkout();
+    if (!sessionStarted) handleStartWorkout();
+    if (!current.completed) {
+      soundEngine.playCheckmarkClick();
+      if (autoRestEnabled) startTimer(exercise.rest_seconds || 60, exercise.exercise_name, current.set_number);
     }
-
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      const targetSet = copy[exIdx].sets[setIdx];
-      const nextCompleted = !targetSet.completed;
-      targetSet.completed = nextCompleted;
-
-      if (nextCompleted) {
-        soundEngine.playCheckmarkClick();
-        if (autoRestEnabled) {
-          const restDuration = copy[exIdx].rest_seconds || 60;
-          startTimer(restDuration, copy[exIdx].exercise_name, targetSet.set_number);
-        }
-      }
-
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx ? ex : {
+      ...ex, sets: ex.sets.map((set, j) => j !== setIdx ? set : { ...set, completed: !set.completed }),
+    }));
   };
 
-  const handleUpdateSet = (
-    exIdx: number,
-    setIdx: number,
-    field: 'load_kg' | 'repetitions' | 'rpe',
-    value: number
-  ) => {
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      copy[exIdx].sets[setIdx][field] = value;
-      return copy;
-    });
+  const handleUpdateSet = (exIdx: number, setIdx: number, field: 'load_kg' | 'repetitions' | 'rpe', value: number) => {
+    setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx ? ex : {
+      ...ex, sets: ex.sets.map((set, j) => j !== setIdx ? set : { ...set, [field]: value }),
+    }));
   };
 
   const handleQuickAddLoad = (exIdx: number, setIdx: number, delta: number) => {
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      const current = Number(copy[exIdx].sets[setIdx].load_kg) || 0;
-      copy[exIdx].sets[setIdx].load_kg = Math.max(0, current + delta);
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx ? ex : {
+      ...ex, sets: ex.sets.map((set, j) => j !== setIdx ? set : {
+        ...set, load_kg: Math.max(0, (Number(set.load_kg) || 0) + delta),
+      }),
+    }));
   };
 
   const handleChangeExerciseRest = (exIdx: number, seconds: number) => {
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      copy[exIdx].rest_seconds = seconds;
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => i === exIdx ? { ...ex, rest_seconds: seconds } : ex));
   };
 
   const handleAddSet = (exIdx: number) => {
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      const currentSets = copy[exIdx].sets;
-      const lastSet = currentSets[currentSets.length - 1];
-      currentSets.push({
-        set_number: currentSets.length + 1,
-        repetitions: lastSet ? lastSet.repetitions : 10,
-        load_kg: lastSet ? lastSet.load_kg : 20,
-        completed: false,
-        rpe: 8,
-      });
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => {
+      if (i !== exIdx) return ex;
+      const last = ex.sets[ex.sets.length - 1];
+      return { ...ex, sets: [...ex.sets, {
+        set_number: ex.sets.length + 1, repetitions: last?.repetitions ?? 10,
+        load_kg: last?.load_kg ?? 0, completed: false, rpe: 8,
+      }] };
+    }));
   };
 
   const handleRemoveSet = (exIdx: number, setIdx: number) => {
-    setExerciseLogs((prev) => {
-      const copy = [...prev];
-      if (copy[exIdx].sets.length > 1) {
-        copy[exIdx].sets.splice(setIdx, 1);
-        copy[exIdx].sets.forEach((s, i) => {
-          s.set_number = i + 1;
-        });
-      }
-      return copy;
-    });
+    setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx || ex.sets.length <= 1 ? ex : {
+      ...ex, sets: ex.sets.filter((_, j) => j !== setIdx).map((set, j) => ({ ...set, set_number: j + 1 })),
+    }));
   };
 
   const handleFinishWorkout = async () => {
@@ -244,6 +246,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       return;
     }
 
+    if (!exerciseLogs.some((ex) => ex.sets.some((set) => set.completed)) && !window.confirm('Nenhuma série foi concluída. Salvar a sessão mesmo assim?')) return;
     setIsSaving(true);
     try {
       const flatSets: { exercise_name: string; set_number: number; repetitions: number; load_kg: number; completed: boolean }[] = [];
@@ -271,13 +274,15 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         plan_name: activePlan?.name || 'Treino Livre',
         started_at: (sessionStartTime || new Date()).toISOString(),
         finished_at: new Date().toISOString(),
-        duration_seconds: elapsedSeconds,
+        duration_seconds: sessionStartTime ? Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)) : elapsedSeconds,
         notes: sessionNotes,
         status: 'completed',
         sets: flatSets,
       });
 
       setSessionStarted(false);
+      if (user?.id) clearWorkoutDraft(user.id);
+      setRestoredDraft(false);
       skipTimer();
 
       // Som e vibração festiva de conclusão
@@ -323,10 +328,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   }
 
   return (
-    <div className="space-y-4 pb-36 max-w-md mx-auto">
+    <div className="mx-auto max-w-2xl space-y-4 pb-36">
       
       {/* Top Controller Header (Monochrome Luxury) */}
-      <div className="sticky top-12 z-20 p-4 rounded-2xl bg-[#0A0A0A]/95 backdrop-blur-md border border-white/10 shadow-2xl space-y-3">
+      <div className="sticky top-16 z-20 p-4 rounded-2xl bg-[#0A0A0A]/95 backdrop-blur-md border border-white/10 shadow-2xl space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
@@ -449,6 +454,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           </div>
         )}
       </div>
+
+      {sessionStarted && (
+        <p role="status" className="px-1 text-xs text-neutral-400">
+          {draftError || (restoredDraft ? 'Treino recuperado. Alterações salvas neste aparelho até a conclusão.' : 'Rascunho salvo automaticamente neste aparelho durante o treino.')}
+        </p>
+      )}
 
       {/* Exercises Log Cards */}
       {exerciseLogs.length === 0 && activePlan && (
