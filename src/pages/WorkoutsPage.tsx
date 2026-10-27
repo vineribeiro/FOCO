@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
+import { getTrainingDayLabel } from '../data/exerciseLibrary';
 import { WorkoutPlan } from '../types';
 import {
   Dumbbell,
@@ -243,7 +244,10 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                               <td className="py-2.5 px-2 font-sans font-bold text-white">
                                 <div className="flex min-w-[190px] items-center gap-2.5">
                                   <ExerciseIllustration exerciseName={ex.exercise_name} muscleGroup={ex.muscle_group} className="h-16 w-16 shrink-0" />
-                                  <span>{ex.exercise_name}</span>
+                                  <span>
+                                    <span className="block">{ex.exercise_name}</span>
+                                    {ex.training_day && <span className="mt-1 block text-[9px] font-bold uppercase tracking-wider text-neutral-500">{getTrainingDayLabel(ex.training_day)}</span>}
+                                  </span>
                                 </div>
                               </td>
                               <td className="py-2.5 px-2 text-neutral-400 font-sans">
