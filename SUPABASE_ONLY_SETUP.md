@@ -17,7 +17,7 @@ Opcional: para habilitar exclusão definitiva de contas, verifique se a Edge Fun
 
 A Edge Function `foco-api` é publicada com `verify_jwt = false` porque ela recebe endpoints públicos de login/cadastro; a própria função valida os tokens Supabase nas rotas privadas. O frontend envia a chave publishable no cabeçalho `apikey` (ela é pública por definição).
 
-O frontend é publicado pelo workflow do GitHub Pages. Não desative o serviço Render até terminar os testes do novo endereço.
+O frontend é publicado pelo workflow do GitHub Pages. O modelo primário padrão é Gemini 3.8 Flash, com Gemini 3.5 Flash-Lite como fallback. Não desative o serviço Render até terminar os testes do novo endereço.
 
 ## Teste pós-publicação
 
