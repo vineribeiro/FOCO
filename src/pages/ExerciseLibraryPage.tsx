@@ -8,7 +8,7 @@ import { WorkoutExercise, WorkoutPlan } from '../types';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import {
   ExerciseCatalogItem, getEquipmentLabel, getExerciseDisplayName, getMuscleLabel,
-  getCurrentTrainingDay, getTrainingDayLabel, loadExerciseCatalog, MUSCLE_FILTERS, TRAINING_DAYS
+  getPreferredTrainingDay, getTrainingDayLabel, loadExerciseCatalog, MUSCLE_FILTERS, savePreferredTrainingDay, TRAINING_DAYS
 } from '../data/exerciseLibrary';
 
 interface ExerciseLibraryPageProps {
@@ -25,7 +25,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseCatalogItem | null>(null);
-  const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => getCurrentTrainingDay());
+  const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => getPreferredTrainingDay());
   const [detailExercise, setDetailExercise] = useState<ExerciseCatalogItem | null>(null);
   const [addingPlanId, setAddingPlanId] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -249,7 +249,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
                     key={day.value}
                     type="button"
                     aria-pressed={selectedTrainingDay === day.value}
-                    onClick={() => setSelectedTrainingDay(day.value)}
+                    onClick={() => { setSelectedTrainingDay(day.value); savePreferredTrainingDay(day.value); }}
                     className={`rounded-xl border px-3 py-2.5 text-left text-xs font-bold transition ${selectedTrainingDay === day.value ? 'border-white bg-white text-black' : 'border-white/10 bg-[#171717] text-neutral-400 hover:border-white/30 hover:text-white'}`}
                   >
                     <span className="block">{day.shortLabel}</span>
