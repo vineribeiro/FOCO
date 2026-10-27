@@ -123,7 +123,6 @@ const NAME_ALIASES: Record<string, string[]> = {
   remadabaixa: ['Seated Cable Rows'],
   puxadafrontal: ['Lat Pulldown', 'Wide-Grip Lat Pulldown'],
   puxadafrontalpegadaaberta: ['Wide-Grip Lat Pulldown'],
-  barr fix: ['Pullups'],
   barrafixa: ['Pullups'],
   roscadireta: ['Barbell Curl'],
   roscadiretacombarra: ['Barbell Curl'],
