@@ -1,0 +1,601 @@
+{
+  "arquivo": "14_adutores_abdutores.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "adutores_abdutores",
+  "descricao": "Exercícios para adutores e abdutores do quadril, incluindo musculatura estabilizadora da pelve.",
+  "exercicios": [
+    {
+      "id": "aducao_na_maquina",
+      "nome": "Adução de quadril na máquina",
+      "aliases": [
+        "Máquina adutora",
+        "Adutora"
+      ],
+      "grupo_principal": "adutores",
+      "musculos_primarios": [
+        "adutor_longo",
+        "adutor_curto",
+        "adutor_magno",
+        "gracil",
+        "pectineo"
+      ],
+      "musculos_secundarios": [
+        "obturador_externo"
+      ],
+      "equipamentos": [
+        "maquina_adutora"
+      ],
+      "padrao_movimento": "aducao_de_quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se na máquina com as costas apoiadas e ajuste os apoios na parte interna das coxas.",
+        "Posicione as pernas abertas dentro de uma amplitude confortável.",
+        "Segure as alças e mantenha a pelve estável.",
+        "Aproxime as pernas de forma controlada, vencendo a resistência.",
+        "Retorne lentamente à posição inicial sem deixar os pesos baterem."
+      ],
+      "respiracao": {
+        "fechamento": "Expire ao aproximar as pernas.",
+        "abertura": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar impulso para fechar as pernas.",
+        "Selecionar carga excessiva.",
+        "Permitir que os pesos batam na volta.",
+        "Forçar uma amplitude desconfortável."
+      ],
+      "cuidados": [
+        "Ajuste a amplitude conforme a mobilidade do quadril.",
+        "Evite movimentos bruscos na região da virilha.",
+        "Interrompa se houver dor aguda."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "aducao_de_quadril_na_polia",
+        "aducao_deitado"
+      ],
+      "imagens_execucao": [
+        "Thigh_Adductor/0.jpg",
+        "Thigh_Adductor/1.jpg"
+      ]
+    },
+    {
+      "id": "abducao_na_maquina",
+      "nome": "Abdução de quadril na máquina",
+      "aliases": [
+        "Máquina abdutora",
+        "Abdutora"
+      ],
+      "grupo_principal": "abdutores",
+      "musculos_primarios": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "musculos_secundarios": [
+        "tensor_da_fascia_lata",
+        "gluteo_maximo"
+      ],
+      "equipamentos": [
+        "maquina_abdutora"
+      ],
+      "padrao_movimento": "abducao_de_quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se com as costas apoiadas e posicione a parte externa das coxas nos apoios.",
+        "Mantenha os pés apoiados e a pelve estável.",
+        "Afaste os joelhos contra a resistência sem balançar o tronco.",
+        "Pause brevemente na posição aberta.",
+        "Retorne lentamente sem deixar os pesos baterem."
+      ],
+      "respiracao": {
+        "abertura": "Expire ao afastar os joelhos.",
+        "retorno": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar impulso do tronco.",
+        "Abrir as pernas além da amplitude confortável.",
+        "Soltar os pesos rapidamente.",
+        "Usar carga que prejudique o controle."
+      ],
+      "cuidados": [
+        "Ajuste os apoios para evitar pressão desconfortável.",
+        "Mantenha a pelve estável.",
+        "Interrompa se houver dor no quadril."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "abducao_de_quadril_na_polia",
+        "abducao_deitado_de_lado"
+      ],
+      "imagens_execucao": [
+        "Thigh_Abductor/0.jpg",
+        "Thigh_Abductor/1.jpg"
+      ]
+    },
+    {
+      "id": "abducao_de_quadril_na_polia",
+      "nome": "Abdução de quadril na polia",
+      "aliases": [
+        "Cable hip abduction"
+      ],
+      "grupo_principal": "abdutores",
+      "musculos_primarios": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "musculos_secundarios": [
+        "tensor_da_fascia_lata",
+        "gluteo_maximo"
+      ],
+      "equipamentos": [
+        "polia_baixa",
+        "tornozeleira"
+      ],
+      "padrao_movimento": "abducao_de_quadril",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda uma tornozeleira à polia baixa e coloque-a na perna mais distante do equipamento.",
+        "Segure em um apoio estável e fique em pé com o tronco ereto.",
+        "Afaste a perna lateralmente sem inclinar o corpo.",
+        "Pause brevemente mantendo a pelve nivelada.",
+        "Retorne lentamente à posição inicial e complete as repetições antes de trocar de lado."
+      ],
+      "respiracao": {
+        "abertura": "Expire ao afastar a perna.",
+        "retorno": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Inclinar o tronco para criar impulso.",
+        "Girar o pé ou a pelve excessivamente.",
+        "Usar carga alta demais.",
+        "Afastar a perna além da amplitude controlável."
+      ],
+      "cuidados": [
+        "Confira a fixação da tornozeleira.",
+        "Utilize um apoio estável.",
+        "Mantenha o movimento sem balanço."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "unidade_repeticoes": "por_lado",
+      "variacoes": [
+        "abducao_na_maquina",
+        "abducao_deitado_de_lado"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "aducao_de_quadril_na_polia",
+      "nome": "Adução de quadril na polia",
+      "aliases": [
+        "Cable hip adduction"
+      ],
+      "grupo_principal": "adutores",
+      "musculos_primarios": [
+        "adutor_longo",
+        "adutor_curto",
+        "adutor_magno",
+        "gracil"
+      ],
+      "musculos_secundarios": [
+        "pectineo"
+      ],
+      "equipamentos": [
+        "polia_baixa",
+        "tornozeleira"
+      ],
+      "padrao_movimento": "aducao_de_quadril",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda uma tornozeleira à polia baixa e coloque-a na perna mais próxima do equipamento.",
+        "Segure em um apoio estável e mantenha o tronco ereto.",
+        "Afaste ligeiramente a perna da linha média, criando tensão no cabo.",
+        "Traga a perna em direção à linha média do corpo sem girar a pelve.",
+        "Retorne lentamente e troque de lado após completar as repetições."
+      ],
+      "respiracao": {
+        "aducao": "Expire ao trazer a perna para dentro.",
+        "retorno": "Inspire ao afastar a perna."
+      },
+      "erros_comuns": [
+        "Girar a pelve.",
+        "Inclinar o tronco.",
+        "Usar impulso.",
+        "Cruzar a perna excessivamente à frente do corpo."
+      ],
+      "cuidados": [
+        "Use carga leve no início.",
+        "Confira a fixação da tornozeleira.",
+        "Evite forçar a virilha ou a amplitude do quadril."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "unidade_repeticoes": "por_lado",
+      "variacoes": [
+        "aducao_na_maquina",
+        "aducao_deitado"
+      ],
+      "imagens_execucao": [
+        "Cable_Hip_Adduction/0.jpg",
+        "Cable_Hip_Adduction/1.jpg"
+      ]
+    },
+    {
+      "id": "abducao_deitado_de_lado",
+      "nome": "Abdução de quadril deitado de lado",
+      "aliases": [
+        "Elevação lateral da perna"
+      ],
+      "grupo_principal": "abdutores",
+      "musculos_primarios": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "musculos_secundarios": [
+        "tensor_da_fascia_lata"
+      ],
+      "equipamentos": [
+        "colchonete",
+        "peso_corporal"
+      ],
+      "padrao_movimento": "abducao_de_quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de lado com as pernas estendidas e a cabeça apoiada confortavelmente.",
+        "Mantenha o quadril alinhado e a perna de cima ligeiramente atrás da linha do tronco.",
+        "Eleve a perna superior sem girar a pelve.",
+        "Pause brevemente no topo sem inclinar o corpo para trás.",
+        "Desça lentamente e complete as repetições antes de trocar de lado."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a perna.",
+        "descida": "Inspire ao baixar."
+      },
+      "erros_comuns": [
+        "Girar a ponta do pé excessivamente para cima.",
+        "Balançar o tronco.",
+        "Elevar a perna muito alto e girar a pelve.",
+        "Fazer o movimento rapidamente."
+      ],
+      "cuidados": [
+        "Comece sem carga adicional.",
+        "Use amplitude confortável.",
+        "Interrompa se houver dor na lateral do quadril."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "unidade_repeticoes": "por_lado",
+      "variacoes": [
+        "abducao_na_maquina",
+        "abducao_de_quadril_na_polia"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "aducao_deitado",
+      "nome": "Adução de quadril deitado de lado",
+      "aliases": [
+        "Elevação da perna inferior"
+      ],
+      "grupo_principal": "adutores",
+      "musculos_primarios": [
+        "adutor_longo",
+        "adutor_curto",
+        "adutor_magno",
+        "gracil"
+      ],
+      "musculos_secundarios": [
+        "pectineo"
+      ],
+      "equipamentos": [
+        "colchonete",
+        "peso_corporal"
+      ],
+      "padrao_movimento": "aducao_de_quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de lado e mantenha a perna inferior estendida.",
+        "Flexione a perna superior e apoie o pé à frente da perna inferior.",
+        "Mantenha a pelve estável e eleve a perna inferior alguns centímetros do chão.",
+        "Pause brevemente sem girar o tronco.",
+        "Baixe a perna lentamente e complete as repetições antes de trocar de lado."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a perna inferior.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Girar a pelve para facilitar o movimento.",
+        "Elevar a perna com impulso.",
+        "Usar amplitude excessiva.",
+        "Perder o alinhamento do tronco."
+      ],
+      "cuidados": [
+        "Mantenha a cabeça apoiada.",
+        "Comece com poucas repetições.",
+        "Interrompa se houver dor na virilha."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "unidade_repeticoes": "por_lado",
+      "variacoes": [
+        "aducao_na_maquina",
+        "aducao_de_quadril_na_polia"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "caminhada_lateral_miniband",
+      "nome": "Caminhada lateral com miniband",
+      "aliases": [
+        "Lateral band walk",
+        "Caminhada lateral com elástico"
+      ],
+      "grupo_principal": "abdutores",
+      "musculos_primarios": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "musculos_secundarios": [
+        "gluteo_maximo",
+        "tensor_da_fascia_lata"
+      ],
+      "equipamentos": [
+        "miniband"
+      ],
+      "padrao_movimento": "abducao_de_quadril_em_cadeia_fechada",
+      "nivel": "iniciante",
+      "execucao": [
+        "Coloque uma miniband acima dos joelhos ou ao redor dos tornozelos, conforme a dificuldade desejada.",
+        "Flexione ligeiramente os joelhos e mantenha o tronco estável.",
+        "Dê um passo lateral mantendo tensão no elástico.",
+        "Aproxime a outra perna sem deixar a faixa perder tensão.",
+        "Complete os passos em uma direção e retorne para o outro lado."
+      ],
+      "respiracao": {
+        "execucao": "Respire normalmente durante os passos."
+      },
+      "erros_comuns": [
+        "Arrastar os pés sem controle.",
+        "Deixar os joelhos caírem para dentro.",
+        "Inclinar excessivamente o tronco.",
+        "Usar uma faixa muito forte para o nível atual."
+      ],
+      "cuidados": [
+        "Mantenha os joelhos alinhados com os pés.",
+        "Comece com faixa leve.",
+        "Use uma superfície antiderrapante."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "unidade_repeticoes": "passos_por_lado",
+      "variacoes": [
+        "abducao_deitado_de_lado",
+        "abducao_na_maquina"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "clam_shell",
+      "nome": "Clam shell",
+      "aliases": [
+        "Abertura de quadril deitado"
+      ],
+      "grupo_principal": "abdutores",
+      "musculos_primarios": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "musculos_secundarios": [
+        "rotadores_externos_do_quadril"
+      ],
+      "equipamentos": [
+        "colchonete",
+        "miniband_opcional"
+      ],
+      "padrao_movimento": "rotacao_externa_de_quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de lado com os joelhos flexionados e os pés juntos.",
+        "Mantenha a pelve empilhada, sem girar o tronco para trás.",
+        "Abra o joelho superior mantendo os pés em contato.",
+        "Pause brevemente e controle a posição da pelve.",
+        "Feche o joelho lentamente e repita antes de trocar de lado."
+      ],
+      "respiracao": {
+        "abertura": "Expire ao abrir o joelho.",
+        "fechamento": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Girar a pelve para aumentar a amplitude.",
+        "Separar os pés.",
+        "Usar impulso.",
+        "Usar miniband forte demais."
+      ],
+      "cuidados": [
+        "Mantenha a amplitude controlada.",
+        "Comece sem elástico se necessário.",
+        "Interrompa se houver dor no quadril."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "unidade_repeticoes": "por_lado",
+      "variacoes": [
+        "abducao_deitado_de_lado",
+        "caminhada_lateral_miniband"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "agachamento_sumо",
+      "nome": "Agachamento sumô",
+      "aliases": [
+        "Sumo squat"
+      ],
+      "grupo_principal": "membros_inferiores",
+      "musculos_primarios": [
+        "adutor_magno",
+        "gluteo_maximo",
+        "quadriceps"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores_do_quadril"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "halter_opcional",
+        "kettlebell_opcional"
+      ],
+      "padrao_movimento": "agachamento",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione os pés mais afastados que a largura dos ombros, com as pontas voltadas ligeiramente para fora.",
+        "Mantenha o tronco firme e distribua o peso por todo o pé.",
+        "Flexione quadris e joelhos, mantendo os joelhos alinhados com a direção dos pés.",
+        "Desça até a amplitude confortável sem perder a estabilidade.",
+        "Empurre o chão para retornar à posição inicial."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao descer.",
+        "subida": "Expire ao subir."
+      },
+      "erros_comuns": [
+        "Deixar os joelhos colapsarem para dentro.",
+        "Forçar uma abertura excessiva dos pés.",
+        "Levantar os calcanhares.",
+        "Descer além da mobilidade disponível."
+      ],
+      "cuidados": [
+        "Ajuste a largura da base à sua mobilidade.",
+        "Comece sem carga.",
+        "Interrompa se houver dor na virilha ou nos joelhos."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "agachamento_goblet",
+        "agachamento_sumо_com_halter"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "agachamento_sumо_com_halter",
+      "nome": "Agachamento sumô com halter",
+      "aliases": [
+        "Sumo goblet squat"
+      ],
+      "grupo_principal": "membros_inferiores",
+      "musculos_primarios": [
+        "adutor_magno",
+        "gluteo_maximo",
+        "quadriceps"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores_do_quadril"
+      ],
+      "equipamentos": [
+        "halter"
+      ],
+      "padrao_movimento": "agachamento",
+      "nivel": "intermediario",
+      "execucao": [
+        "Segure um halter verticalmente com as duas mãos à frente do corpo.",
+        "Adote uma base ampla, com os pés apontando ligeiramente para fora.",
+        "Flexione quadris e joelhos mantendo o halter próximo ao corpo.",
+        "Desça até uma amplitude confortável, mantendo os joelhos alinhados com os pés.",
+        "Empurre o chão e retorne à posição em pé sem hiperestender a lombar."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao descer.",
+        "subida": "Expire ao subir."
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Deixar os joelhos caírem para dentro.",
+        "Arredondar a coluna.",
+        "Forçar a abertura dos pés."
+      ],
+      "cuidados": [
+        "Comece com halter leve.",
+        "Mantenha o peso firme nas mãos.",
+        "Ajuste a amplitude conforme o conforto do quadril."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "agachamento_sumо",
+        "agachamento_goblet"
+      ],
+      "imagens_execucao": [
+        "Plie_Dumbbell_Squat/0.jpg",
+        "Plie_Dumbbell_Squat/1.jpg"
+      ]
+    }
+  ],
+  "observacao_imagens": "As imagens associadas são referências do catálogo visual do FOCO para movimentos correspondentes. Exercícios sem correspondência visual específica permanecem sem imagem."
+}
