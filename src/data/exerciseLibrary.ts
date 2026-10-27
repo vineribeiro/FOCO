@@ -63,6 +63,8 @@ const MUSCLE_LABELS: Record<string, string> = {
   'lower back': 'Lombar',
   'middle back': 'Costas médias',
   neck: 'Pescoço',
+  cardio: 'Cardio',
+  functional: 'Funcionais',
   quadriceps: 'Quadríceps',
   shoulders: 'Ombros',
   traps: 'Trapézio',
@@ -240,6 +242,8 @@ export const MUSCLE_FILTERS = [
   { label: 'Antebraços', value: 'forearms' },
   { label: 'Trapézio', value: 'traps' },
   { label: 'Pescoço', value: 'neck' },
+  { label: 'Cardio', value: 'cardio' },
+  { label: 'Funcionais', value: 'functional' },
 ];
 
 // Catálogo editorial: manter somente movimentos listados nos guias do Hipertrofia.org.
@@ -283,21 +287,70 @@ export function getExerciseImageUrl(imagePath: string): string {
   return IMAGE_BASE + imagePath.split('/').map((part) => encodeURIComponent(part)).join('/');
 }
 
+
+type DedicatedMuscleGroup = 'chest' | 'back' | 'shoulders' | 'biceps' | 'triceps'
+  | 'forearms' | 'quadriceps' | 'hamstrings' | 'glutes' | 'calves' | 'abdominals'
+  | 'lower back' | 'traps' | 'adductors' | 'abductors' | 'cardio' | 'functional';
+
+const DEDICATED_LIBRARY_FILES = [
+  { file: '01_peito.json', sourceGroup: 'Peito', primaryGroup: 'chest' },
+  { file: '02_costas.json', sourceGroup: 'Costas', primaryGroup: 'back' },
+  { file: '03_ombros.json', sourceGroup: 'Ombros', primaryGroup: 'shoulders' },
+  { file: '04_biceps.json', sourceGroup: 'Bíceps', primaryGroup: 'biceps' },
+  { file: '05_triceps.json', sourceGroup: 'Tríceps', primaryGroup: 'triceps' },
+  { file: '06_antebracos.json', sourceGroup: 'Antebraços', primaryGroup: 'forearms' },
+  { file: '07_quadriceps.json', sourceGroup: 'Quadríceps', primaryGroup: 'quadriceps' },
+  { file: '08_posteriores.json', sourceGroup: 'Posteriores', primaryGroup: 'hamstrings' },
+  { file: '09_gluteos.json', sourceGroup: 'Glúteos', primaryGroup: 'glutes' },
+  { file: '10_panturrilhas.json', sourceGroup: 'Panturrilhas', primaryGroup: 'calves' },
+  { file: '11_abdomen.json', sourceGroup: 'Abdômen', primaryGroup: 'abdominals' },
+  { file: '12_lombar.json', sourceGroup: 'Lombar', primaryGroup: 'lower back' },
+  { file: '13_trapezio.json', sourceGroup: 'Trapézio', primaryGroup: 'traps' },
+  { file: '14_adutores_abdutores.json', sourceGroup: 'Adutores e abdutores', primaryGroup: 'adductors' },
+  { file: '15_funcionais_e_cardio.json', sourceGroup: 'Funcionais e cardio', primaryGroup: 'functional' },
+] as const satisfies ReadonlyArray<{
+  file: string; sourceGroup: string; primaryGroup: DedicatedMuscleGroup
+}>;
+
+const VOLUME_UNITS: Record<string, { label: string; suffix: string }> = {
+  por_perna: { label: 'Repetições por perna', suffix: 'por perna' },
+  por_lado: { label: 'Repetições por lado', suffix: 'por lado' },
+  total: { label: 'Repetições totais', suffix: 'no total' },
+  segundos: { label: 'Duração sugerida', suffix: 'segundos' },
+  segundos_por_lado: { label: 'Duração por lado', suffix: 'segundos por lado' },
+  segundos_de_esforco: { label: 'Duração de esforço', suffix: 'segundos de esforço' },
+  minutos: { label: 'Duração sugerida', suffix: 'minutos' },
+  metros: { label: 'Distância sugerida', suffix: 'metros' },
+  'metros por lado': { label: 'Distância por lado', suffix: 'metros por lado' },
+  passos_por_lado: { label: 'Passos por lado', suffix: 'passos por lado' },
+};
+
 function mapDedicatedExercise(
   exercise: DedicatedExerciseSource,
-  sourceGroup: 'Peito' | 'Costas' | 'Ombros' | 'Bíceps' | 'Tríceps' | 'Antebraços' | 'Quadríceps' | 'Posteriores' | 'Glúteos',
-  primaryGroup: 'chest' | 'back' | 'shoulders' | 'biceps' | 'triceps' | 'forearms' | 'quadriceps' | 'hamstrings' | 'glutes',
+  sourceGroup: string,
+  defaultGroup: DedicatedMuscleGroup,
 ): ExerciseCatalogItem {
-  const equipmentText = exercise.equipamentos.join(', ').toLocaleLowerCase('pt-BR');
+  // Files 14 and 15 contain multiple distinct categories. Use the category of
+  // each exercise rather than assigning every row to one muscle group.
+  const primaryGroup: DedicatedMuscleGroup =
+    sourceGroup === 'Adutores e abdutores'
+      ? exercise.grupo_principal === 'abdutores' ? 'abductors'
+        : exercise.grupo_principal === 'adutores' ? 'adductors' : 'quadriceps'
+      : sourceGroup === 'Funcionais e cardio'
+        ? exercise.grupo_principal === 'cardio' ? 'cardio' : 'functional'
+        : defaultGroup;
+
+  const equipmentText = exercise.equipamentos.join(', ').replace(/_/g, ' ').toLocaleLowerCase('pt-BR');
   const equipment = !exercise.equipamentos.length ? 'body only'
     : /polia|cabo/i.test(equipmentText) ? 'cable'
       : /halter/i.test(equipmentText) ? 'dumbbell'
-        : /elástico|elastico|faixa/i.test(equipmentText) ? 'bands'
+        : /elástico|elastico|faixa|mini band|elastico/i.test(equipmentText) ? 'bands'
           : /smith/i.test(equipmentText) ? 'smith machine'
-            : /barra|anilha/i.test(equipmentText) ? 'barbell'
-              : /máquina|maquina|peck deck/i.test(equipmentText) ? 'machine'
-                : /paralela|suspensão|suspensao|barra baixa/i.test(equipmentText) ? 'other'
-                  : 'body only';
+            : /máquina|maquina|leg press|esteira|bicicleta|elíptico|eliptico|remador/i.test(equipmentText) ? 'machine'
+              : /kettlebell/i.test(equipmentText) ? 'kettlebells'
+                : /barra|anilha/i.test(equipmentText) ? 'barbell'
+                  : /peso corporal|colchonete|degrau/i.test(equipmentText) ? 'body only'
+                    : 'other';
 
   const muscleText = [...exercise.musculos_primarios, ...exercise.musculos_secundarios]
     .join(' ').replace(/_/g, ' ').toLocaleLowerCase('pt-BR');
@@ -305,41 +358,34 @@ function mapDedicatedExercise(
     ...(/bíceps|biceps|braquial|braquiorradial/i.test(muscleText) ? ['biceps'] : []),
     ...(/tríceps|triceps/i.test(muscleText) ? ['triceps'] : []),
     ...(/deltoide|ombro/i.test(muscleText) ? ['shoulders'] : []),
-    ...(/abdominal|abdômen|abdomen|reto abdominal|transverso/i.test(muscleText) ? ['abdominals'] : []),
+    ...(/abdominal|abdômen|abdomen|reto abdominal|transverso|obliquo|oblíquo/i.test(muscleText) ? ['abdominals'] : []),
     ...(/antebraço|antebraco|pegada|braquiorradial/i.test(muscleText) ? ['forearms'] : []),
     ...(/trapézio|trapezio|levantador da escápula/i.test(muscleText) ? ['traps'] : []),
     ...(/latíssimo|latissimo|dors[o]/i.test(muscleText) ? ['lats'] : []),
     ...(/romboide|costas|trapézio médio|trapezio medio/i.test(muscleText) ? ['middle back'] : []),
     ...(/glúteo|gluteo/i.test(muscleText) ? ['glutes'] : []),
     ...(/posterior de coxa|isquiotib/i.test(muscleText) ? ['hamstrings'] : []),
-    ...(/eretor da coluna|quadrado lombar|lombar/i.test(muscleText) ? ['lower back'] : []),
+    ...(/eretor(?:es)? da coluna|quadrado lombar|lombar|multifido|multífido/i.test(muscleText) ? ['lower back'] : []),
     ...(/peitoral/i.test(muscleText) ? ['chest'] : []),
     ...(/quadríceps|quadriceps/i.test(muscleText) ? ['quadriceps'] : []),
-    ...(/panturrilha|gastrocnêmio|soleo/i.test(muscleText) ? ['calves'] : []),
+    ...(/panturrilha|gastrocnêmio|gastrocnemio|soleo|sóleo/i.test(muscleText) ? ['calves'] : []),
     ...(/adutor/i.test(muscleText) ? ['adductors'] : []),
-    ...(/abdutor|glúteo médio|gluteo medio/i.test(muscleText) ? ['abductors'] : []),
-  ])).filter((muscle) => {
-    if (primaryGroup === 'chest') return muscle !== 'chest';
-    if (primaryGroup === 'back') return muscle !== 'lats' && muscle !== 'middle back';
-    if (primaryGroup === 'shoulders') return muscle !== 'shoulders';
-    if (primaryGroup === 'biceps') return muscle !== 'biceps';
-    if (primaryGroup === 'triceps') return muscle !== 'triceps';
-    if (primaryGroup === 'forearms') return muscle !== 'forearms';
-    if (primaryGroup === 'quadriceps') return muscle !== 'quadriceps';
-    if (primaryGroup === 'hamstrings') return muscle !== 'hamstrings';
-    if (primaryGroup === 'glutes') return muscle !== 'glutes';
-    return muscle !== 'shoulders';
-  });
+    ...(/abdutor|glúteo médio|gluteo medio|glúteo mínimo|gluteo minimo/i.test(muscleText) ? ['abductors'] : []),
+  ])).filter((muscle) => (
+    muscle !== primaryGroup
+    && (primaryGroup !== 'back' || (muscle !== 'lats' && muscle !== 'middle back'))
+  ));
 
-  const primaryMuscles = primaryGroup === 'chest' ? ['chest']
-    : primaryGroup === 'back' ? ['lats', 'middle back']
-      : primaryGroup === 'shoulders' ? ['shoulders']
-        : primaryGroup === 'biceps' ? ['biceps']
-          : primaryGroup === 'triceps' ? ['triceps']
-            : primaryGroup === 'forearms' ? ['forearms']
-            : primaryGroup === 'hamstrings' ? ['hamstrings']
-              : primaryGroup === 'glutes' ? ['glutes']
-                : ['quadriceps'];
+  const primaryMuscles = primaryGroup === 'back' ? ['lats', 'middle back'] : [primaryGroup];
+  const unit = exercise.unidade_repeticoes
+    ? VOLUME_UNITS[exercise.unidade_repeticoes]
+      || { label: 'Volume sugerido', suffix: exercise.unidade_repeticoes.replace(/_/g, ' ') }
+    : null;
+  const repCount = Array.isArray(exercise.repeticoes_sugeridas)
+    ? exercise.repeticoes_sugeridas[0] === exercise.repeticoes_sugeridas[1]
+      ? String(exercise.repeticoes_sugeridas[0])
+      : String(exercise.repeticoes_sugeridas[0]) + '–' + String(exercise.repeticoes_sugeridas[1])
+    : exercise.repeticoes_sugeridas;
 
   return {
     id: exercise.id,
@@ -350,32 +396,22 @@ function mapDedicatedExercise(
     level: exercise.nivel === 'intermediario' ? 'intermediate' : exercise.nivel === 'avancado' ? 'expert' : 'beginner',
     instructions: exercise.execucao,
     images: exercise.imagens_execucao,
-    category: 'strength',
+    category: primaryGroup === 'cardio' ? 'cardio' : primaryGroup === 'functional' ? 'functional' : 'strength',
     aliases: exercise.aliases,
     movementPattern: exercise.padrao_movimento,
     primaryMuscleDisplay: exercise.musculos_primarios,
     secondaryMuscleDisplay: exercise.musculos_secundarios,
-    equipmentDisplay: exercise.equipamentos.length ? exercise.equipamentos.join(' · ') : 'Peso corporal',
+    equipmentDisplay: exercise.equipamentos.length ? exercise.equipamentos.join(' · ').replace(/_/g, ' ') : 'Peso corporal',
     respiration: exercise.respiracao,
     commonErrors: exercise.erros_comuns,
     safetyNotes: exercise.cuidados,
     suggestedSets: Array.isArray(exercise.series_sugeridas)
-      ? (exercise.series_sugeridas[0] === exercise.series_sugeridas[1]
+      ? exercise.series_sugeridas[0] === exercise.series_sugeridas[1]
         ? exercise.series_sugeridas[0]
-        : `${exercise.series_sugeridas[0]}–${exercise.series_sugeridas[1]}`)
+        : String(exercise.series_sugeridas[0]) + '–' + String(exercise.series_sugeridas[1])
       : exercise.series_sugeridas,
-    suggestedRepsLabel: exercise.unidade_repeticoes === 'por_perna'
-      ? 'Repetições por perna'
-      : exercise.unidade_repeticoes
-        ? (/metro/i.test(exercise.unidade_repeticoes) ? 'Distância sugerida'
-          : /segundo/i.test(exercise.unidade_repeticoes) ? 'Duração sugerida'
-            : 'Volume sugerido')
-        : 'Repetições sugeridas',
-    suggestedReps: `${Array.isArray(exercise.repeticoes_sugeridas)
-      ? (exercise.repeticoes_sugeridas[0] === exercise.repeticoes_sugeridas[1]
-        ? String(exercise.repeticoes_sugeridas[0])
-        : `${exercise.repeticoes_sugeridas[0]}–${exercise.repeticoes_sugeridas[1]}`)
-      : exercise.repeticoes_sugeridas}${exercise.unidade_repeticoes ? ` ${exercise.unidade_repeticoes === 'por_perna' ? 'por perna' : exercise.unidade_repeticoes}` : ''}`,
+    suggestedRepsLabel: unit?.label || 'Repetições sugeridas',
+    suggestedReps: repCount + (unit ? ' ' + unit.suffix : ''),
     variations: exercise.variacoes,
     sourceGroup,
   };
@@ -385,59 +421,24 @@ export async function loadExerciseCatalog(): Promise<ExerciseCatalogItem[]> {
   if (!catalogPromise) {
     catalogPromise = (async () => {
       const baseUrl = import.meta.env.BASE_URL;
-      const [catalogResponse, chestResponse, backResponse, shoulderResponse, bicepsResponse, tricepsResponse, forearmsResponse, quadricepsResponse, hamstringsResponse, glutesResponse] = await Promise.all([
-        fetch(`${baseUrl}exercise-catalog.json`),
-        fetch(`${baseUrl}01_peito.json`),
-        fetch(`${baseUrl}02_costas.json`),
-        fetch(`${baseUrl}03_ombros.json`),
-        fetch(`${baseUrl}04_biceps.json`),
-        fetch(`${baseUrl}05_triceps.json`),
-        fetch(`${baseUrl}06_antebracos.json`),
-        fetch(`${baseUrl}07_quadriceps.json`),
-        fetch(`${baseUrl}08_posteriores.json`),
-        fetch(`${baseUrl}09_gluteos.json`),
+      const [catalogResponse, dedicatedResponses] = await Promise.all([
+        fetch(baseUrl + 'exercise-catalog.json'),
+        Promise.all(DEDICATED_LIBRARY_FILES.map((item) => fetch(baseUrl + item.file))),
       ]);
       if (!catalogResponse.ok) throw new Error('Não foi possível carregar a biblioteca de exercícios.');
-      if (!chestResponse.ok || !backResponse.ok || !shoulderResponse.ok || !bicepsResponse.ok || !tricepsResponse.ok || !forearmsResponse.ok || !quadricepsResponse.ok || !hamstringsResponse.ok || !glutesResponse.ok) {
-        throw new Error('Não foi possível carregar uma das bibliotecas musculares do FOCO.');
-      }
+      const unavailable = DEDICATED_LIBRARY_FILES.find((_, index) => !dedicatedResponses[index].ok);
+      if (unavailable) throw new Error('Não foi possível carregar o catálogo ' + unavailable.file);
       const raw = await catalogResponse.json();
-      const [chestData, backData, shoulderData, bicepsData, tricepsData, forearmsData, quadricepsData, hamstringsData, glutesData] = await Promise.all([
-        chestResponse.json() as Promise<DedicatedExerciseFile>,
-        backResponse.json() as Promise<DedicatedExerciseFile>,
-        shoulderResponse.json() as Promise<DedicatedExerciseFile>,
-        bicepsResponse.json() as Promise<DedicatedExerciseFile>,
-        tricepsResponse.json() as Promise<DedicatedExerciseFile>,
-        forearmsResponse.json() as Promise<DedicatedExerciseFile>,
-        quadricepsResponse.json() as Promise<DedicatedExerciseFile>,
-        hamstringsResponse.json() as Promise<DedicatedExerciseFile>,
-        glutesResponse.json() as Promise<DedicatedExerciseFile>,
-      ]);
       if (!Array.isArray(raw)) throw new Error('O catálogo de exercícios está em um formato inválido.');
-      for (const [name, dataset] of [
-        ['peito', chestData], ['costas', backData], ['ombros', shoulderData],
-        ['bíceps', bicepsData], ['tríceps', tricepsData], ['antebraços', forearmsData],
-        ['quadríceps', quadricepsData], ['posteriores', hamstringsData], ['glúteos', glutesData],
-      ] as const) {
-        if (!Array.isArray(dataset.exercicios)) throw new Error(`O catálogo de ${name} está em um formato inválido.`);
-      }
-
-      const allDedicated = [
-        ...chestData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Peito', 'chest')),
-        ...backData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Costas', 'back')),
-        ...shoulderData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Ombros', 'shoulders')),
-        ...bicepsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Bíceps', 'biceps')),
-        ...tricepsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Tríceps', 'triceps')),
-        ...forearmsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Antebraços', 'forearms')),
-        ...quadricepsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Quadríceps', 'quadriceps')),
-        ...hamstringsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Posteriores', 'hamstrings')),
-        ...glutesData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Glúteos', 'glutes')),
-      ];
-      const allSourceExercises = [
-        ...chestData.exercicios, ...backData.exercicios, ...shoulderData.exercicios,
-        ...bicepsData.exercicios, ...tricepsData.exercicios, ...forearmsData.exercicios,
-        ...quadricepsData.exercicios, ...hamstringsData.exercicios, ...glutesData.exercicios,
-      ];
+      const datasets = await Promise.all(dedicatedResponses.map((response) => response.json() as Promise<DedicatedExerciseFile>));
+      const allDedicated = datasets.flatMap((dataset, index) => {
+        if (!Array.isArray(dataset.exercicios)) {
+          throw new Error('Formato inválido no catálogo ' + DEDICATED_LIBRARY_FILES[index].file);
+        }
+        const group = DEDICATED_LIBRARY_FILES[index];
+        return dataset.exercicios.map((exercise) => mapDedicatedExercise(exercise, group.sourceGroup, group.primaryGroup));
+      });
+      const allSourceExercises = datasets.flatMap((dataset) => dataset.exercicios);
       const dedicatedImageIds = new Set(
         allSourceExercises.flatMap((exercise) => exercise.imagens_execucao.map((image) => image.split('/')[0]))
       );
@@ -450,7 +451,6 @@ export async function loadExerciseCatalog(): Promise<ExerciseCatalogItem[]> {
         const nameKeys = [exercise.name, getExerciseDisplayName(exercise.name)].map(normalizeExerciseText);
         return !nameKeys.some((name) => dedicatedNames.has(name));
       });
-
       return [...allDedicated, ...existingExercises];
     })().catch((error) => {
       catalogPromise = null;
