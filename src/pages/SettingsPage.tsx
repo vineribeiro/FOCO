@@ -5,6 +5,7 @@ import {
   UserRound,
   FileUp,
   Dumbbell,
+  BookOpen,
   TrendingUp,
   Target,
   LogOut,
@@ -24,6 +25,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
     { title: 'Perfil do atleta', description: 'Atualize seus dados pessoais e medidas.', icon: UserRound, tab: 'perfil' },
     { title: 'Fichas e avaliações', description: 'Importe uma ficha ou analise sua avaliação corporal.', icon: FileUp, tab: 'arquivos' },
     { title: 'Meus treinos', description: 'Consulte, ajuste ou altere sua ficha ativa.', icon: Dumbbell, tab: 'treinos' },
+    { title: 'Biblioteca de exercícios', description: 'Pesquise movimentos e adicione-os às suas fichas.', icon: BookOpen, tab: 'biblioteca' },
     { title: 'Metas pessoais', description: 'Acompanhe os objetivos que você definiu.', icon: Target, tab: 'objetivos' },
     { title: 'Evolução', description: 'Revise seus registros e seu histórico de treino.', icon: TrendingUp, tab: 'progresso' },
   ];
