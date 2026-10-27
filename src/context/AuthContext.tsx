@@ -31,6 +31,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [authLoadError, setAuthLoadError] = useState<string | null>(null);
 
   useEffect(() => {
+    // A recovery callback must take precedence over any previously stored login session.
+    // The AuthPage effect may strip the one-time token from the URL before this effect runs,
+    // so it also sets this short-lived same-tab marker.
+    const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : '';
+    const params = new URLSearchParams(hash);
+    let recoveryPending = false;
+    try {
+      recoveryPending = sessionStorage.getItem('foco_password_recovery_pending') === '1';
+      if (recoveryPending) sessionStorage.removeItem('foco_password_recovery_pending');
+    } catch {
+      // The URL hash is still checked below if sessionStorage is unavailable.
+    }
+    const hasAuthCallbackError = params.has('error') || params.has('error_description') || params.has('error_code');
+    const isRecoveryCallback = params.get('type') === 'recovery' && Boolean(params.get('access_token'));
+    if (recoveryPending || hasAuthCallbackError || isRecoveryCallback) {
+      removeStoredToken();
+      setUser(null);
+      setProfile(null);
+      setAuthLoadError(null);
+      setIsLoading(false);
+      return;
+    }
+
     async function loadUser() {
       const token = getStoredToken();
       if (!token) {
