@@ -354,7 +354,7 @@
       "imagens_execucao": []
     },
     {
-      "id": "rosca_reversa_barra_ez",
+      "id": "antebracos_rosca_reversa_barra_ez",
       "nome": "Rosca reversa com barra EZ",
       "aliases": [
         "Reverse curl",
@@ -406,7 +406,7 @@
       ],
       "variacoes": [
         "rosca_reversa_halteres",
-        "rosca_reversa_cabo"
+        "antebracos_rosca_reversa_cabo"
       ],
       "imagens_execucao": []
     },
@@ -459,8 +459,8 @@
         15
       ],
       "variacoes": [
-        "rosca_reversa_barra_ez",
-        "rosca_martelo_halteres"
+        "antebracos_rosca_reversa_barra_ez",
+        "antebracos_rosca_martelo_halteres"
       ],
       "imagens_execucao": [
         "Standing_Dumbbell_Reverse_Curl/0.jpg",
@@ -468,7 +468,7 @@
       ]
     },
     {
-      "id": "rosca_reversa_cabo",
+      "id": "antebracos_rosca_reversa_cabo",
       "nome": "Rosca reversa na polia",
       "aliases": [
         "Cable reverse curl"
@@ -517,13 +517,13 @@
         15
       ],
       "variacoes": [
-        "rosca_reversa_barra_ez",
+        "antebracos_rosca_reversa_barra_ez",
         "rosca_reversa_halteres"
       ],
       "imagens_execucao": []
     },
     {
-      "id": "rosca_martelo_halteres",
+      "id": "antebracos_rosca_martelo_halteres",
       "nome": "Rosca martelo com halteres",
       "aliases": [
         "Hammer curl",
@@ -571,7 +571,7 @@
         12
       ],
       "variacoes": [
-        "rosca_martelo_corda",
+        "antebracos_rosca_martelo_corda",
         "rosca_reversa_halteres"
       ],
       "imagens_execucao": [
@@ -580,7 +580,7 @@
       ]
     },
     {
-      "id": "rosca_martelo_corda",
+      "id": "antebracos_rosca_martelo_corda",
       "nome": "Rosca martelo na polia com corda",
       "aliases": [
         "Rope hammer curl"
@@ -628,8 +628,8 @@
         15
       ],
       "variacoes": [
-        "rosca_martelo_halteres",
-        "rosca_reversa_cabo"
+        "antebracos_rosca_martelo_halteres",
+        "antebracos_rosca_reversa_cabo"
       ],
       "imagens_execucao": [
         "Cable_Hammer_Curls_-_Rope_Attachment/0.jpg",
