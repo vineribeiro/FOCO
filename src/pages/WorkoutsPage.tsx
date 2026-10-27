@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
-import { getTrainingDayLabel } from '../data/exerciseLibrary';
-import { WorkoutPlan } from '../types';
+import { getTrainingDayLabel, TRAINING_DAYS } from '../data/exerciseLibrary';
+import { WorkoutExercise, WorkoutPlan } from '../types';
 import {
   Dumbbell,
   Plus,
@@ -20,6 +20,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
   const [plans, setPlans] = useState<WorkoutPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null);
+  const [savingDayKey, setSavingDayKey] = useState<string | null>(null);
   const [actionMsg, setActionMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const loadPlans = async () => {
@@ -58,6 +59,39 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
       loadPlans();
     } catch (e: any) {
       setActionMsg({ type: 'error', text: 'Falha ao excluir ficha: ' + e.message });
+    }
+  };
+
+  const handleTrainingDayChange = async (
+    planId: string,
+    exerciseId: string,
+    value: string
+  ) => {
+    const savingKey = `${planId}:${exerciseId}`;
+    const trainingDay = (value || null) as WorkoutExercise['training_day'];
+    setSavingDayKey(savingKey);
+    setActionMsg(null);
+    try {
+      const saved = await api.updateExerciseTrainingDay(planId, exerciseId, trainingDay);
+      setPlans((current) => current.map((plan) => plan.id !== planId ? plan : {
+        ...plan,
+        exercises: (plan.exercises || []).map((exercise) =>
+          exercise.id === exerciseId ? { ...exercise, training_day: saved.training_day || null } : exercise
+        ),
+      }));
+      setActionMsg({
+        type: 'success',
+        text: trainingDay
+          ? `${saved.exercise_name} foi atribuído a ${getTrainingDayLabel(trainingDay)}.`
+          : `${saved.exercise_name} ficará disponível em qualquer dia.`,
+      });
+    } catch (e: unknown) {
+      setActionMsg({
+        type: 'error',
+        text: e instanceof Error ? e.message : 'Não foi possível atualizar o dia do exercício.',
+      });
+    } finally {
+      setSavingDayKey(null);
     }
   };
 
@@ -231,6 +265,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                           <tr className="text-neutral-500 border-b border-white/10 font-bold uppercase text-[10px]">
                             <th className="py-2 px-2">EXERCÍCIO</th>
                             <th className="py-2 px-2">GRUPAMENTO</th>
+                            <th className="py-2 px-2">DIA</th>
                             <th className="py-2 px-2">SÉRIES</th>
                             <th className="py-2 px-2">FAIXA DE REPS</th>
                             <th className="py-2 px-2">CARGA</th>
@@ -246,12 +281,25 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                                   <ExerciseIllustration exerciseName={ex.exercise_name} muscleGroup={ex.muscle_group} className="h-16 w-16 shrink-0" />
                                   <span>
                                     <span className="block">{ex.exercise_name}</span>
-                                    {ex.training_day && <span className="mt-1 block text-[9px] font-bold uppercase tracking-wider text-neutral-500">{getTrainingDayLabel(ex.training_day)}</span>}
+                                    <span className="mt-1 block text-[9px] font-bold uppercase tracking-wider text-neutral-500">{getTrainingDayLabel(ex.training_day)}</span>
                                   </span>
                                 </div>
                               </td>
                               <td className="py-2.5 px-2 text-neutral-400 font-sans">
                                 {ex.muscle_group}
+                              </td>
+                              <td className="py-2.5 px-2">
+                                <select
+                                  aria-label={`Dia de treino para ${ex.exercise_name}`}
+                                  value={ex.training_day || ''}
+                                  disabled={!ex.id || savingDayKey !== null}
+                                  onChange={(event) => ex.id && handleTrainingDayChange(plan.id, ex.id, event.target.value)}
+                                  className="min-w-[130px] rounded-lg border border-white/10 bg-[#101010] px-2.5 py-2 text-[10px] font-bold text-white outline-none focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                  <option value="">Qualquer dia</option>
+                                  {TRAINING_DAYS.map((day) => <option key={day.value} value={day.value}>{day.label}</option>)}
+                                </select>
+                                {savingDayKey === `${plan.id}:${ex.id}` && <span className="mt-1 block text-[9px] text-neutral-500">Salvando...</span>}
                               </td>
                               <td className="py-2.5 px-2 text-white font-black">
                                 {ex.sets}
