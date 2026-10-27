@@ -284,7 +284,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // A validação de sessão não pode deixar o aplicativo preso no splash se o Render
+  // A validação de sessão não pode deixar o aplicativo preso no splash se a API do Supabase
   // estiver iniciando ou sem responder. Limite apenas esta chamada; operações de IA
   // podem legitimamente demorar mais.
   const isSessionCheck = endpoint === '/api/auth/me';
@@ -761,8 +761,7 @@ export const api = {
     }
   },
 
-  // The static frontend still uses the Render backend for authenticated features,
-  // so health status must come from the real API rather than a simulated demo response.
+  // Read the actual Supabase Edge Function status rather than a simulated demo response.
   async getSystemStatus() {
     return await request<{
       app: string;
