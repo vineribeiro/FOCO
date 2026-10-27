@@ -328,8 +328,13 @@ class FocoDatabase {
     const remoteSnapshot = await this.readRemoteSnapshot();
     if (remoteSnapshot) {
       this.data = remoteSnapshot;
-      this.persistLocal();
       this.remoteReady = true;
+      try {
+        this.persistLocal();
+      } catch (error) {
+        // Local storage is a cache only when Supabase is configured as primary.
+        console.warn('[FOCO DB] Supabase data loaded, but local cache could not be written:', error);
+      }
       console.log('[FOCO DB] Loaded FOCO data from Supabase.');
       return;
     }
@@ -346,7 +351,11 @@ class FocoDatabase {
 
     this.remoteReady = true;
     await this.writeRemoteSnapshot(this.data);
-    this.persistLocal();
+    try {
+      this.persistLocal();
+    } catch (error) {
+      console.warn('[FOCO DB] Supabase initialized, but local cache could not be written:', error);
+    }
     console.log('[FOCO DB] Initialized Supabase storage from the existing local store.');
   }
 
@@ -420,8 +429,18 @@ class FocoDatabase {
   }
 
   private persist(dataToSave?: DatabaseSchema) {
-    this.persistLocal(dataToSave);
-    if (!this.remoteReady) return;
+    if (!this.remoteReady) {
+      this.persistLocal(dataToSave);
+      return;
+    }
+
+    // Once Supabase is initialized it is the source of truth. Local file writes
+    // are best-effort only, so an ephemeral/read-only filesystem cannot block saves.
+    try {
+      this.persistLocal(dataToSave);
+    } catch (error) {
+      console.warn('[FOCO DB] Remote storage is active; local cache write failed:', error);
+    }
 
     // Snapshot requests are serialized so simultaneous mutations cannot finish
     // remote writes out of order within this single-instance MVP backend.
