@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient, type SupabaseClient, type User } from "npm:@supabase/supabase-js@2";
 
-const URL = Deno.env.get("SUPABASE_URL") || "https://buoefcnkpdrhevzbakze.supabase.co";
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "https://buoefcnkpdrhevzbakze.supabase.co";
 function publicApiKey(): string {
   const singular = Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
   if (singular) return singular;
@@ -33,7 +33,7 @@ function response(data: unknown, status = 200, origin = ""): Response {
   }});
 }
 function client(token = ""): SupabaseClient {
-  return createClient(URL, KEY, {
+  return createClient(SUPABASE_URL, KEY, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     global: { headers: token ? { Authorization: "Bearer " + token } : {} },
   });
@@ -55,7 +55,7 @@ function admin(): SupabaseClient | null {
   if (!secret) {
     try { secret = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}").default || ""; } catch { /* optional */ }
   }
-  return secret ? createClient(URL, secret, { auth: { persistSession: false, autoRefreshToken: false } }) : null;
+  return secret ? createClient(SUPABASE_URL, secret, { auth: { persistSession: false, autoRefreshToken: false } }) : null;
 }
 async function body(req: Request): Promise<any> {
   try { return await req.json(); } catch { throw new ApiError(400, "Corpo da requisição inválido."); }
