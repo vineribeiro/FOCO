@@ -148,6 +148,43 @@ interface DatabaseSchema {
   anamneses: Anamnesis[];
 }
 
+const SUPABASE_URL = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '').replace(/\\/+$/, '');
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const SUPABASE_STATE_TABLE = 'foco_app_state';
+const REMOTE_STORAGE_CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_SERVICE_KEY);
+
+function validateDatabaseShape(value: unknown): DatabaseSchema {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('Invalid FOCO database snapshot');
+  }
+  const input = value as Partial<DatabaseSchema>;
+  const arrayKeys: (keyof DatabaseSchema)[] = [
+    'users', 'profiles', 'goals', 'workout_plans', 'workout_exercises',
+    'workout_sessions', 'exercise_sets', 'body_measurements',
+    'uploaded_files', 'ai_recommendations', 'anamneses',
+  ];
+  for (const key of arrayKeys) {
+    if (input[key] !== undefined && !Array.isArray(input[key])) {
+      throw new Error(`Invalid FOCO database field: ${String(key)}`);
+    }
+  }
+  return {
+    ...INITIAL_DB,
+    ...input,
+    users: input.users ?? [],
+    profiles: input.profiles ?? [],
+    goals: input.goals ?? [],
+    workout_plans: input.workout_plans ?? [],
+    workout_exercises: input.workout_exercises ?? [],
+    workout_sessions: input.workout_sessions ?? [],
+    exercise_sets: input.exercise_sets ?? [],
+    body_measurements: input.body_measurements ?? [],
+    uploaded_files: input.uploaded_files ?? [],
+    ai_recommendations: input.ai_recommendations ?? [],
+    anamneses: input.anamneses ?? [],
+  };
+}
+
 const DEFAULT_DATA_DIR = path.resolve(process.cwd(), 'data');
 const RENDER_PERSISTENT_ROOT = path.resolve('/var/data');
 const configuredDataDir = process.env.FOCO_DATA_DIR?.trim();
@@ -176,15 +213,7 @@ const DB_FILE = path.join(DATA_DIR, 'foco_persistent_store.json');
 const LEGACY_DB_FILE = path.join(DEFAULT_DATA_DIR, 'foco_persistent_store.json');
 
 export function getDatabaseStorageStatus() {
-  const isOnRenderDisk =
-    DATA_DIR === RENDER_PERSISTENT_ROOT ||
-    DATA_DIR.startsWith(RENDER_PERSISTENT_ROOT + path.sep);
-  return {
-    engine: 'json-file',
-    directory: DATA_DIR,
-    fileExists: fs.existsSync(DB_FILE),
-    persistentDiskConfigured: isOnRenderDisk && isRenderPersistentDiskMounted(),
-  };
+  return db.getStorageStatus();
 }
 
 const INITIAL_DB: DatabaseSchema = {
@@ -203,9 +232,120 @@ const INITIAL_DB: DatabaseSchema = {
 
 class FocoDatabase {
   private data: DatabaseSchema;
+  private remoteReady = false;
+  private remoteWriteChain: Promise<void> = Promise.resolve();
+  private remoteWriteError: string | null = null;
 
   constructor() {
-    this.data = this.load();
+    try {
+      this.data = this.load();
+    } catch (error) {
+      if (!REMOTE_STORAGE_CONFIGURED) throw error;
+      // If local ephemeral storage is unreadable but a remote source is configured,
+      // restore from the remote source during initializeRemote() instead.
+      this.data = validateDatabaseShape(INITIAL_DB);
+      console.warn('[FOCO DB] Local store is unavailable; attempting recovery from Supabase.');
+    }
+  }
+
+  isRemoteStorageConfigured(): boolean {
+    return REMOTE_STORAGE_CONFIGURED;
+  }
+
+  isRemoteStorageReady(): boolean {
+    return this.remoteReady;
+  }
+
+  getStorageStatus() {
+    const isOnRenderDisk =
+      DATA_DIR === RENDER_PERSISTENT_ROOT ||
+      DATA_DIR.startsWith(RENDER_PERSISTENT_ROOT + path.sep);
+    return {
+      engine: this.remoteReady ? 'supabase-json-snapshot' : 'json-file',
+      directory: DATA_DIR,
+      fileExists: fs.existsSync(DB_FILE),
+      remoteStorageConfigured: REMOTE_STORAGE_CONFIGURED,
+      remoteStorageReady: this.remoteReady,
+      remoteStorageError: this.remoteWriteError,
+      persistentDiskConfigured: isOnRenderDisk && isRenderPersistentDiskMounted(),
+    };
+  }
+
+  private remoteEndpoint(query: string): string {
+    return `${SUPABASE_URL}/rest/v1/${SUPABASE_STATE_TABLE}${query}`;
+  }
+
+  private async readRemoteSnapshot(): Promise<DatabaseSchema | null> {
+    const response = await fetch(this.remoteEndpoint('?key=eq.global&select=payload'), {
+      method: 'GET',
+      headers: {
+        apikey: SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+        Accept: 'application/json',
+      },
+    });
+    if (!response.ok) {
+      const detail = (await response.text()).slice(0, 500);
+      throw new Error(`Supabase read failed (HTTP ${response.status}). Check the migration and server environment. ${detail}`);
+    }
+    const rows = await response.json() as Array<{ payload?: unknown }>;
+    if (!Array.isArray(rows)) throw new Error('Supabase returned an invalid FOCO database response');
+    if (rows.length === 0) return null;
+    return validateDatabaseShape(rows[0].payload);
+  }
+
+  private async writeRemoteSnapshot(snapshot: DatabaseSchema): Promise<void> {
+    const response = await fetch(this.remoteEndpoint('?on_conflict=key'), {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'resolution=merge-duplicates,return=minimal',
+      },
+      body: JSON.stringify({
+        key: 'global',
+        payload: snapshot,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+    if (!response.ok) {
+      const detail = (await response.text()).slice(0, 500);
+      throw new Error(`Supabase write failed (HTTP ${response.status}). ${detail}`);
+    }
+  }
+
+  async initializeRemote(): Promise<void> {
+    if (!REMOTE_STORAGE_CONFIGURED) {
+      console.warn('[FOCO DB] Supabase storage is not configured; using local JSON storage.');
+      return;
+    }
+
+    // Fail startup rather than silently falling back to ephemeral storage if the
+    // remote database was explicitly configured but cannot be reached.
+    const remoteSnapshot = await this.readRemoteSnapshot();
+    if (remoteSnapshot) {
+      this.data = remoteSnapshot;
+      this.persistLocal();
+      this.remoteReady = true;
+      console.log('[FOCO DB] Loaded FOCO data from Supabase.');
+      return;
+    }
+
+    // First connection: seed Supabase with the local data if there is any;
+    // otherwise initialize the remote row with an empty, valid schema.
+    this.remoteReady = true;
+    await this.writeRemoteSnapshot(this.data);
+    this.persistLocal();
+    console.log('[FOCO DB] Initialized Supabase storage from the existing local store.');
+  }
+
+  async flushRemote(): Promise<void> {
+    if (!REMOTE_STORAGE_CONFIGURED || !this.remoteReady) return;
+    await this.remoteWriteChain;
+    if (this.remoteWriteError) {
+      throw new Error('A gravação no banco persistente falhou: ' + this.remoteWriteError);
+    }
   }
 
   private load(): DatabaseSchema {
@@ -237,12 +377,8 @@ class FocoDatabase {
     try {
       const raw = fs.readFileSync(DB_FILE, 'utf-8');
       const parsed = JSON.parse(raw) as Partial<DatabaseSchema>;
-      // Backward-compatible store migration for installations created before anamnesis.
-      return {
-        ...INITIAL_DB,
-        ...parsed,
-        anamneses: Array.isArray(parsed.anamneses) ? parsed.anamneses : [],
-      };
+      // Backward-compatible defaults for stores created before newer features.
+      return validateDatabaseShape(parsed);
     } catch (err) {
       // Preserve the original file and fail closed. Do not replace possibly
       // recoverable user data with an empty database.
@@ -260,19 +396,35 @@ class FocoDatabase {
     }
   }
 
-  private persist(dataToSave?: DatabaseSchema) {
+  private persistLocal(dataToSave?: DatabaseSchema) {
     try {
-      if (!fs.existsSync(DATA_DIR)) {
-        fs.mkdirSync(DATA_DIR, { recursive: true });
-      }
+      if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
       const data = dataToSave || this.data;
-      const tmpPath = `${DB_FILE}.tmp.${Date.now()}`;
+      const tmpPath = `${DB_FILE}.tmp.${Date.now()}.${crypto.randomBytes(3).toString('hex')}`;
       fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
       fs.renameSync(tmpPath, DB_FILE);
     } catch (err) {
-      console.error('Error persisting database:', err);
-      throw new Error('Não foi possível persistir os dados. A operação não pode ser confirmada.', { cause: err });
+      console.error('Error persisting local FOCO snapshot:', err);
+      throw new Error('Não foi possível persistir os dados locais. A operação não pode ser confirmada.', { cause: err });
     }
+  }
+
+  private persist(dataToSave?: DatabaseSchema) {
+    this.persistLocal(dataToSave);
+    if (!this.remoteReady) return;
+
+    // Snapshot requests are serialized so simultaneous mutations cannot finish
+    // remote writes out of order within this single-instance MVP backend.
+    const snapshot = JSON.parse(JSON.stringify(dataToSave || this.data)) as DatabaseSchema;
+    this.remoteWriteChain = this.remoteWriteChain.then(async () => {
+      try {
+        await this.writeRemoteSnapshot(snapshot);
+        this.remoteWriteError = null;
+      } catch (error) {
+        this.remoteWriteError = error instanceof Error ? error.message : String(error);
+        console.error('[FOCO DB] Remote persistence failed:', this.remoteWriteError);
+      }
+    });
   }
 
   // --- Users & Profiles ---
