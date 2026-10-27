@@ -1,0 +1,1046 @@
+{
+  "arquivo": "03_ombros.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "ombros",
+  "descricao_imagens": "Referências de execução do catálogo do FOCO; quando não existe referência específica, imagens_execucao fica vazio.",
+  "exercicios": [
+    {
+      "id": "ombros_desenvolvimento_halteres",
+      "nome": "Desenvolvimento com halteres",
+      "aliases": [
+        "Dumbbell Shoulder Press",
+        "Desenvolvimento sentado"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide anterior",
+        "deltoide lateral"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "trapézio superior"
+      ],
+      "equipamentos": [
+        "halteres",
+        "banco com encosto"
+      ],
+      "padrao_movimento": "Empurrar vertical",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se no banco com encosto e mantenha os pés firmes no chão.",
+        "Segure um halter em cada mão, posicionando-os aproximadamente na altura dos ombros.",
+        "Mantenha os punhos alinhados com os antebraços e o tronco estável.",
+        "Empurre os halteres para cima em uma trajetória confortável.",
+        "Evite arquear excessivamente a lombar ou elevar os ombros em excesso.",
+        "Estenda os cotovelos sem travá-los com força.",
+        "Desça os halteres lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Arquear excessivamente a lombar.",
+        "Usar impulso das pernas.",
+        "Deixar os punhos dobrados para trás.",
+        "Descer os halteres além da amplitude confortável."
+      ],
+      "cuidados": [
+        "Começar com carga que permita controlar os dois halteres.",
+        "Ajustar a amplitude à mobilidade dos ombros.",
+        "Interromper se houver dor articular."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Desenvolvimento com barra",
+        "Desenvolvimento na máquina",
+        "Desenvolvimento unilateral com halter"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Shoulder_Press/0.jpg",
+        "Dumbbell_Shoulder_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "ombros_desenvolvimento_maquina",
+      "nome": "Desenvolvimento na máquina",
+      "aliases": [
+        "Machine Shoulder Press"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide anterior",
+        "deltoide lateral"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "trapézio superior"
+      ],
+      "equipamentos": [
+        "máquina desenvolvimento"
+      ],
+      "padrao_movimento": "Empurrar vertical",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o assento para que as alças fiquem próximas da altura dos ombros.",
+        "Sente-se com as costas apoiadas e os pés firmes no chão.",
+        "Segure as alças com os punhos alinhados aos antebraços.",
+        "Empurre as alças para cima, mantendo o tronco estável.",
+        "Estenda os braços sem travar os cotovelos com força.",
+        "Retorne lentamente à posição inicial.",
+        "Evite elevar os ombros em direção às orelhas durante o esforço."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Ajustar o banco incorretamente.",
+        "Arquear a lombar.",
+        "Usar impulso para vencer a resistência.",
+        "Retornar os pesos de forma brusca."
+      ],
+      "cuidados": [
+        "Conferir os ajustes e o funcionamento da máquina.",
+        "Usar uma amplitude confortável.",
+        "Selecionar uma carga que permita controlar a descida."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Desenvolvimento com halteres",
+        "Desenvolvimento unilateral na máquina",
+        "Desenvolvimento com barra"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_desenvolvimento_barra",
+      "nome": "Desenvolvimento com barra",
+      "aliases": [
+        "Overhead Press",
+        "Barbell Shoulder Press"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide anterior",
+        "deltoide lateral"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "trapézio superior",
+        "serrátil anterior"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas",
+        "suporte"
+      ],
+      "padrao_movimento": "Empurrar vertical",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione a barra no suporte aproximadamente à altura da parte superior do peito.",
+        "Segure-a com pegada firme e os antebraços próximos da vertical.",
+        "Retire a barra do suporte e posicione-a à frente dos ombros.",
+        "Mantenha os pés firmes, o abdômen contraído e a coluna estável.",
+        "Empurre a barra para cima, permitindo que a cabeça se ajuste naturalmente à trajetória.",
+        "Finalize com os braços estendidos de forma controlada, sem hiperestender a lombar.",
+        "Desça a barra lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Arquear excessivamente a lombar.",
+        "Empurrar a barra muito à frente do corpo.",
+        "Usar impulso das pernas sem que a variação seja intencional.",
+        "Perder o alinhamento dos punhos."
+      ],
+      "cuidados": [
+        "Aprender a técnica com carga leve.",
+        "Verificar a estabilidade do suporte.",
+        "Não forçar a amplitude se houver limitação ou dor nos ombros."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "6–10",
+      "variacoes": [
+        "Desenvolvimento sentado com barra",
+        "Desenvolvimento com halteres",
+        "Desenvolvimento na máquina"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_elevacao_lateral_halteres",
+      "nome": "Elevação lateral com halteres",
+      "aliases": [
+        "Dumbbell Lateral Raise"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide lateral"
+      ],
+      "musculos_secundarios": [
+        "deltoide anterior",
+        "trapézio superior",
+        "supraespinal"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "Abdução do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés afastados aproximadamente na largura dos quadris.",
+        "Segure os halteres ao lado do corpo, mantendo os cotovelos ligeiramente flexionados.",
+        "Mantenha o tronco estável e os ombros em posição confortável.",
+        "Eleve os braços lateralmente, conduzindo o movimento pelos cotovelos.",
+        "Suba até uma altura confortável, geralmente próxima da linha dos ombros.",
+        "Evite balançar o corpo ou encolher excessivamente os ombros.",
+        "Desça lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar impulso do tronco.",
+        "Elevar os halteres muito acima da amplitude controlável.",
+        "Escolher carga excessiva.",
+        "Transformar o exercício em uma remada vertical."
+      ],
+      "cuidados": [
+        "Usar halteres leves o suficiente para manter a técnica.",
+        "Permitir que os braços se movimentem em um plano confortável, ligeiramente à frente do tronco se necessário.",
+        "Interromper se houver dor no ombro."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "12–20",
+      "variacoes": [
+        "Elevação lateral no cabo",
+        "Elevação lateral na máquina",
+        "Elevação lateral unilateral"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Lateral_Raise/0.jpg",
+        "Dumbbell_Lateral_Raise/1.jpg"
+      ]
+    },
+    {
+      "id": "ombros_elevacao_lateral_cabo",
+      "nome": "Elevação lateral no cabo",
+      "aliases": [
+        "Cable Lateral Raise"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide lateral"
+      ],
+      "musculos_secundarios": [
+        "deltoide anterior",
+        "trapézio superior",
+        "supraespinal"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador individual"
+      ],
+      "padrao_movimento": "Abdução do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste a polia na posição mais baixa e conecte um pegador individual.",
+        "Fique de lado para a máquina e segure o pegador com a mão mais distante da polia, conforme a montagem escolhida.",
+        "Mantenha os pés firmes e o tronco estável.",
+        "Com o cotovelo ligeiramente flexionado, eleve o braço lateralmente.",
+        "Suba até uma altura confortável, sem elevar excessivamente o ombro.",
+        "Retorne lentamente, mantendo a tensão do cabo.",
+        "Complete as repetições e troque o lado."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Inclinar o tronco para gerar impulso.",
+        "Encolher o ombro.",
+        "Usar carga excessiva.",
+        "Deixar o cabo puxar o braço bruscamente no retorno."
+      ],
+      "cuidados": [
+        "Conferir o acessório e a polia.",
+        "Manter distância adequada da máquina.",
+        "Utilizar uma amplitude confortável para o ombro."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "12–20 por lado",
+      "variacoes": [
+        "Elevação lateral com halteres",
+        "Elevação lateral na máquina",
+        "Elevação lateral inclinada no cabo"
+      ],
+      "imagens_execucao": [
+        "Cable_Lateral_Raise/0.jpg",
+        "Cable_Lateral_Raise/1.jpg"
+      ]
+    },
+    {
+      "id": "ombros_elevacao_lateral_maquina",
+      "nome": "Elevação lateral na máquina",
+      "aliases": [
+        "Machine Lateral Raise"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide lateral"
+      ],
+      "musculos_secundarios": [
+        "deltoide anterior",
+        "trapézio superior",
+        "supraespinal"
+      ],
+      "equipamentos": [
+        "máquina elevação lateral"
+      ],
+      "padrao_movimento": "Abdução do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o assento para alinhar os apoios aos braços conforme o modelo da máquina.",
+        "Sente-se com as costas apoiadas e os pés firmes.",
+        "Posicione os braços nos apoios indicados.",
+        "Eleve os braços lateralmente sem balançar o tronco.",
+        "Suba até a amplitude confortável prevista para o equipamento.",
+        "Retorne lentamente à posição inicial.",
+        "Mantenha os ombros afastados das orelhas, evitando encolhê-los excessivamente."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Ajustar os apoios em altura inadequada.",
+        "Usar impulso.",
+        "Elevar os ombros excessivamente.",
+        "Deixar os pesos retornarem rapidamente."
+      ],
+      "cuidados": [
+        "Conferir os ajustes do equipamento.",
+        "Não forçar uma amplitude desconfortável.",
+        "Utilizar carga compatível com o controle do movimento."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "12–20",
+      "variacoes": [
+        "Elevação lateral com halteres",
+        "Elevação lateral no cabo",
+        "Elevação lateral unilateral"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_elevacao_frontal_halteres",
+      "nome": "Elevação frontal com halteres",
+      "aliases": [
+        "Dumbbell Front Raise"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide anterior"
+      ],
+      "musculos_secundarios": [
+        "deltoide lateral",
+        "peitoral maior — porção clavicular"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "Flexão do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés firmes e segure os halteres à frente das coxas.",
+        "Mantenha os cotovelos ligeiramente flexionados.",
+        "Estabilize o tronco e evite inclinar-se para trás.",
+        "Eleve os braços à frente até uma altura confortável, geralmente próxima da linha dos ombros.",
+        "Evite usar impulso para iniciar a subida.",
+        "Desça os halteres lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Balançar o tronco.",
+        "Elevar os braços muito alto sem controle.",
+        "Usar carga excessiva.",
+        "Elevar os ombros em direção às orelhas."
+      ],
+      "cuidados": [
+        "Considerar que o deltoide anterior já trabalha em supinos e desenvolvimentos.",
+        "Usar o exercício conforme a necessidade do programa.",
+        "Evitar amplitudes dolorosas."
+      ],
+      "series_sugeridas": 2,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Elevação frontal com anilha",
+        "Elevação frontal no cabo",
+        "Elevação frontal unilateral"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Front_Raise/0.jpg",
+        "Dumbbell_Front_Raise/1.jpg"
+      ]
+    },
+    {
+      "id": "ombros_elevacao_frontal_cabo",
+      "nome": "Elevação frontal no cabo",
+      "aliases": [
+        "Cable Front Raise"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide anterior"
+      ],
+      "musculos_secundarios": [
+        "deltoide lateral",
+        "peitoral maior — porção clavicular"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador individual ou barra"
+      ],
+      "padrao_movimento": "Flexão do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste a polia na posição baixa e conecte o acessório.",
+        "Fique de costas para a polia, segurando o acessório à frente das coxas.",
+        "Mantenha os pés firmes e o tronco estável.",
+        "Eleve os braços à frente com os cotovelos ligeiramente flexionados.",
+        "Suba até uma altura confortável, sem arquear a lombar.",
+        "Desça lentamente, mantendo o cabo sob controle."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Inclinar o tronco para trás.",
+        "Usar carga excessiva.",
+        "Deixar a polia puxar os braços bruscamente.",
+        "Elevar os ombros excessivamente."
+      ],
+      "cuidados": [
+        "Verificar o acessório antes da série.",
+        "Manter o tronco estável.",
+        "Avaliar a necessidade do exercício diante do volume de supinos e desenvolvimentos."
+      ],
+      "series_sugeridas": 2,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Elevação frontal com halteres",
+        "Elevação frontal com anilha",
+        "Elevação frontal unilateral"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_crucifixo_inverso_maquina",
+      "nome": "Crucifixo inverso na máquina",
+      "aliases": [
+        "Reverse Pec Deck",
+        "Rear Delt Fly"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide posterior"
+      ],
+      "musculos_secundarios": [
+        "trapézio médio",
+        "romboides",
+        "infraespinal",
+        "redondo menor"
+      ],
+      "equipamentos": [
+        "máquina peck deck"
+      ],
+      "padrao_movimento": "Abdução horizontal do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o assento para que as alças fiquem aproximadamente na altura dos ombros.",
+        "Sente-se de frente para o encosto, apoiando o peito quando o equipamento permitir.",
+        "Segure as alças com os braços à frente e os cotovelos ligeiramente flexionados.",
+        "Abra os braços para os lados, conduzindo o movimento pelos cotovelos.",
+        "Evite elevar os ombros ou arquear o tronco.",
+        "Retorne lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "abertura": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar impulso do tronco.",
+        "Encolher os ombros.",
+        "Flexionar e estender excessivamente os cotovelos.",
+        "Usar carga que impeça a amplitude controlada."
+      ],
+      "cuidados": [
+        "Ajustar o assento e as alças ao corpo.",
+        "Manter uma leve flexão dos cotovelos.",
+        "Utilizar amplitude confortável."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "12–20",
+      "variacoes": [
+        "Crucifixo inverso com halteres",
+        "Crucifixo inverso no cabo",
+        "Remada alta com cotovelos abertos e carga leve"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_crucifixo_inverso_halteres",
+      "nome": "Crucifixo inverso com halteres",
+      "aliases": [
+        "Bent-Over Reverse Fly"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide posterior"
+      ],
+      "musculos_secundarios": [
+        "trapézio médio",
+        "romboides",
+        "infraespinal",
+        "redondo menor"
+      ],
+      "equipamentos": [
+        "halteres",
+        "banco inclinado opcional"
+      ],
+      "padrao_movimento": "Abdução horizontal do ombro",
+      "nivel": "intermediario",
+      "execucao": [
+        "Segure halteres leves e incline o tronco a partir dos quadris ou apoie o peito em um banco inclinado.",
+        "Mantenha a coluna estável e os cotovelos ligeiramente flexionados.",
+        "Deixe os braços apontarem para baixo, com os halteres sob os ombros.",
+        "Abra os braços lateralmente, conduzindo o movimento pelos cotovelos.",
+        "Evite balançar o tronco ou encolher os ombros.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "abertura": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar halteres pesados demais.",
+        "Transformar o movimento em uma remada.",
+        "Balançar o tronco.",
+        "Encolher os ombros."
+      ],
+      "cuidados": [
+        "Começar com carga leve.",
+        "Usar apoio peitoral se houver dificuldade para estabilizar o tronco.",
+        "Manter a amplitude dentro do conforto dos ombros."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "12–20",
+      "variacoes": [
+        "Crucifixo inverso na máquina",
+        "Crucifixo inverso no cabo",
+        "Elevação posterior unilateral"
+      ],
+      "imagens_execucao": [
+        "Bent_Over_Two-Dumbbell_Row/0.jpg",
+        "Bent_Over_Two-Dumbbell_Row/1.jpg"
+      ]
+    },
+    {
+      "id": "ombros_crucifixo_inverso_cabo",
+      "nome": "Crucifixo inverso no cabo",
+      "aliases": [
+        "Cable Rear Delt Fly",
+        "Cross Cable Reverse Fly"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide posterior"
+      ],
+      "musculos_secundarios": [
+        "trapézio médio",
+        "romboides",
+        "infraespinal",
+        "redondo menor"
+      ],
+      "equipamentos": [
+        "estação de polia dupla",
+        "pegadores individuais"
+      ],
+      "padrao_movimento": "Abdução horizontal do ombro",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste as polias aproximadamente à altura dos ombros.",
+        "Segure os pegadores cruzando os cabos à frente do corpo.",
+        "Afaste-se o suficiente para manter uma tensão inicial confortável.",
+        "Mantenha os cotovelos ligeiramente flexionados.",
+        "Abra os braços para os lados, conduzindo o movimento pelos cotovelos.",
+        "Evite girar o tronco ou encolher os ombros.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "abertura": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar impulso do tronco.",
+        "Escolher carga excessiva.",
+        "Flexionar muito os cotovelos durante a repetição.",
+        "Perder o controle dos cabos no retorno."
+      ],
+      "cuidados": [
+        "Verificar a conexão dos dois pegadores.",
+        "Manter uma base estável.",
+        "Utilizar amplitude confortável."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "12–20",
+      "variacoes": [
+        "Crucifixo inverso na máquina",
+        "Crucifixo inverso com halteres",
+        "Crucifixo inverso unilateral"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_remada_alta_cabo",
+      "nome": "Remada alta no cabo",
+      "aliases": [
+        "Cable Upright Row"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide lateral",
+        "trapézio superior"
+      ],
+      "musculos_secundarios": [
+        "deltoide anterior",
+        "braquial",
+        "bíceps braquial"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "barra reta ou pegador"
+      ],
+      "padrao_movimento": "Puxar vertical",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda uma barra ou pegador à polia baixa.",
+        "Fique em pé com os pés firmes e segure o acessório à frente das coxas.",
+        "Mantenha os punhos alinhados e os ombros relaxados.",
+        "Puxe o acessório para cima, conduzindo os cotovelos para fora e para cima.",
+        "Pare na altura em que os ombros permaneçam confortáveis, sem necessidade de elevar muito os cotovelos.",
+        "Desça lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar pegada excessivamente estreita se causar desconforto.",
+        "Puxar muito alto apesar da limitação dos ombros.",
+        "Usar impulso do tronco.",
+        "Dobrar excessivamente os punhos."
+      ],
+      "cuidados": [
+        "Este exercício pode causar desconforto em algumas pessoas; não é obrigatório para desenvolver os ombros.",
+        "Usar pegada e amplitude confortáveis.",
+        "Substituir por elevação lateral se provocar dor."
+      ],
+      "series_sugeridas": 2,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Remada alta com halteres",
+        "Elevação lateral no cabo",
+        "Encolhimento de ombros"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_face_pull",
+      "nome": "Face pull na polia",
+      "aliases": [
+        "Cable Face Pull",
+        "Face Pull"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide posterior"
+      ],
+      "musculos_secundarios": [
+        "trapézio médio",
+        "trapézio inferior",
+        "infraespinal",
+        "redondo menor"
+      ],
+      "equipamentos": [
+        "polia alta",
+        "corda"
+      ],
+      "padrao_movimento": "Puxar horizontal com rotação externa",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma corda à polia aproximadamente na altura do rosto.",
+        "Segure as extremidades da corda com as duas mãos.",
+        "Afaste-se da máquina e mantenha os pés firmes.",
+        "Puxe a corda em direção ao rosto, separando as mãos durante a trajetória.",
+        "Conduza os cotovelos para os lados sem elevar excessivamente os ombros.",
+        "Mantenha o tronco estável e evite inclinar-se para trás.",
+        "Retorne lentamente até estender os braços de forma confortável."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Transformar o exercício em uma extensão do tronco.",
+        "Encolher os ombros.",
+        "Puxar apenas com os braços sem controlar as escápulas."
+      ],
+      "cuidados": [
+        "Começar com carga leve para aprender a trajetória.",
+        "Manter os punhos e ombros em posições confortáveis.",
+        "Não forçar a rotação externa além da mobilidade disponível."
+      ],
+      "series_sugeridas": 2,
+      "repeticoes_sugeridas": "12–20",
+      "variacoes": [
+        "Face pull com elástico",
+        "Crucifixo inverso no cabo",
+        "Rotação externa no cabo"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_rotacao_externa_cabo",
+      "nome": "Rotação externa do ombro no cabo",
+      "aliases": [
+        "Cable External Rotation"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "infraespinal",
+        "redondo menor"
+      ],
+      "musculos_secundarios": [
+        "deltoide posterior"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador individual"
+      ],
+      "padrao_movimento": "Rotação externa do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste a polia aproximadamente à altura do cotovelo.",
+        "Fique de lado para a máquina e segure o pegador com a mão mais distante da polia, conforme a montagem.",
+        "Mantenha o cotovelo flexionado a aproximadamente 90 graus e próximo ao tronco.",
+        "Comece com o antebraço atravessado à frente do abdômen, dentro de uma posição confortável.",
+        "Gire o antebraço para fora sem afastar o cotovelo do corpo.",
+        "Retorne lentamente à posição inicial.",
+        "Complete as repetições e troque o lado."
+      ],
+      "respiracao": {
+        "abertura": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Girar o tronco para completar o movimento.",
+        "Afastar o cotovelo do corpo.",
+        "Fazer movimentos rápidos ou forçados."
+      ],
+      "cuidados": [
+        "Usar resistência leve e movimento controlado.",
+        "Não insistir em amplitude dolorosa.",
+        "Se o exercício fizer parte de uma reabilitação, seguir a orientação do profissional responsável."
+      ],
+      "series_sugeridas": 2,
+      "repeticoes_sugeridas": "12–20 por lado",
+      "variacoes": [
+        "Rotação externa com elástico",
+        "Rotação externa deitado de lado",
+        "Rotação externa no cabo com o braço elevado, quando apropriado"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_rotacao_externa_elastico",
+      "nome": "Rotação externa com elástico",
+      "aliases": [
+        "Band External Rotation"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "infraespinal",
+        "redondo menor"
+      ],
+      "musculos_secundarios": [
+        "deltoide posterior"
+      ],
+      "equipamentos": [
+        "elástico de resistência"
+      ],
+      "padrao_movimento": "Rotação externa do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fixe o elástico em um ponto seguro aproximadamente na altura do cotovelo.",
+        "Segure a extremidade com uma mão e fique de lado em relação ao ponto de fixação.",
+        "Mantenha o cotovelo flexionado e junto ao tronco.",
+        "Comece com o antebraço próximo à frente do abdômen.",
+        "Gire o antebraço para fora contra a resistência do elástico.",
+        "Evite movimentar o cotovelo ou girar o tronco.",
+        "Retorne lentamente à posição inicial e troque o lado após completar as repetições."
+      ],
+      "respiracao": {
+        "abertura": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar elástico com resistência excessiva.",
+        "Afastar o cotovelo do corpo.",
+        "Compensar girando o tronco.",
+        "Deixar o elástico puxar o braço rapidamente."
+      ],
+      "cuidados": [
+        "Verificar o estado do elástico e a segurança da fixação.",
+        "Usar resistência que permita controle total.",
+        "Não forçar o movimento em caso de dor."
+      ],
+      "series_sugeridas": 2,
+      "repeticoes_sugeridas": "12–20 por lado",
+      "variacoes": [
+        "Rotação externa no cabo",
+        "Rotação externa deitado de lado",
+        "Rotação externa com toalha entre o cotovelo e o tronco"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_arnold_press",
+      "nome": "Arnold press",
+      "aliases": [
+        "Arnold Dumbbell Press"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide anterior",
+        "deltoide lateral"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "trapézio superior"
+      ],
+      "equipamentos": [
+        "halteres",
+        "banco com encosto opcional"
+      ],
+      "padrao_movimento": "Empurrar vertical com rotação",
+      "nivel": "intermediario",
+      "execucao": [
+        "Sente-se ou fique em pé com o tronco estável e um halter em cada mão.",
+        "Comece com os halteres à frente dos ombros e as palmas voltadas para o corpo.",
+        "Inicie o empurrão para cima enquanto gira gradualmente as mãos para a frente.",
+        "Continue até elevar os halteres acima da cabeça em uma trajetória confortável.",
+        "Evite arquear excessivamente a lombar.",
+        "Desça lentamente, invertendo a rotação até retornar à posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar halteres pesados demais para controlar a rotação.",
+        "Forçar os punhos ou ombros.",
+        "Arquear excessivamente a lombar.",
+        "Executar a rotação rapidamente."
+      ],
+      "cuidados": [
+        "Começar com carga leve.",
+        "Não forçar a rotação se houver desconforto articular.",
+        "Considerar o desenvolvimento convencional como alternativa mais simples."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Desenvolvimento com halteres",
+        "Desenvolvimento na máquina",
+        "Arnold press unilateral"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_encolhimento_halteres",
+      "nome": "Encolhimento de ombros com halteres",
+      "aliases": [
+        "Dumbbell Shrug"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "trapézio superior"
+      ],
+      "musculos_secundarios": [
+        "levantador da escápula",
+        "antebraços"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "Elevação escapular",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés firmes e segure um halter em cada mão ao lado do corpo.",
+        "Mantenha os braços estendidos e os punhos alinhados.",
+        "Eleve os ombros em direção às orelhas sem projetar a cabeça para a frente.",
+        "Faça uma breve pausa no topo sem girar os ombros.",
+        "Desça os ombros lentamente até a posição inicial.",
+        "Mantenha o tronco estável durante toda a série."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Girar os ombros em círculos.",
+        "Flexionar os cotovelos para levantar a carga.",
+        "Usar impulso do tronco.",
+        "Projetar a cabeça para a frente."
+      ],
+      "cuidados": [
+        "Usar carga que permita movimento controlado.",
+        "Evitar movimentos bruscos do pescoço.",
+        "Não confundir elevação escapular com rotação dos ombros."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Encolhimento com barra",
+        "Encolhimento na máquina",
+        "Encolhimento no cabo"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Shrug/0.jpg",
+        "Dumbbell_Shrug/1.jpg"
+      ]
+    },
+    {
+      "id": "ombros_elevacao_y",
+      "nome": "Elevação em Y",
+      "aliases": [
+        "Y Raise",
+        "Prone Y Raise"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "trapézio inferior"
+      ],
+      "musculos_secundarios": [
+        "trapézio médio",
+        "deltoide posterior",
+        "serrátil anterior"
+      ],
+      "equipamentos": [
+        "banco inclinado opcional",
+        "halteres leves opcionais"
+      ],
+      "padrao_movimento": "Elevação escapular no plano escapular",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de bruços em um banco inclinado ou fique em pé com o tronco inclinado e estável.",
+        "Comece com os braços apontados para baixo, em uma posição confortável.",
+        "Eleve os braços diagonalmente formando um Y com o corpo.",
+        "Mantenha os polegares apontando para cima quando isso for confortável.",
+        "Evite encolher os ombros ou arquear a lombar.",
+        "Retorne lentamente à posição inicial.",
+        "Comece sem carga ou com halteres muito leves."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Encolher os ombros.",
+        "Arquear a lombar para elevar os braços.",
+        "Fazer o movimento rapidamente."
+      ],
+      "cuidados": [
+        "Priorizar a técnica e o controle escapular.",
+        "Começar sem peso se necessário.",
+        "Usar amplitude sem dor."
+      ],
+      "series_sugeridas": 2,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Elevação em Y no banco inclinado",
+        "Elevação em Y no cabo",
+        "Elevação em Y com elástico"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "ombros_rotacao_externa_deitado",
+      "nome": "Rotação externa deitado de lado",
+      "aliases": [
+        "Side-Lying External Rotation"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "infraespinal",
+        "redondo menor"
+      ],
+      "musculos_secundarios": [
+        "deltoide posterior"
+      ],
+      "equipamentos": [
+        "halter leve",
+        "colchonete"
+      ],
+      "padrao_movimento": "Rotação externa do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de lado com a cabeça apoiada e um halter leve na mão de cima.",
+        "Mantenha o cotovelo do braço que trabalha flexionado a aproximadamente 90 graus e junto ao tronco.",
+        "Comece com o antebraço atravessado à frente do abdômen.",
+        "Gire o antebraço para cima, mantendo o cotovelo apoiado junto ao corpo.",
+        "Pare antes de perder o controle ou sentir desconforto.",
+        "Desça lentamente até a posição inicial.",
+        "Complete as repetições e troque de lado."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar halter pesado demais.",
+        "Afastar o cotovelo do tronco.",
+        "Girar o corpo para aumentar a amplitude.",
+        "Executar a descida rapidamente."
+      ],
+      "cuidados": [
+        "Usar carga leve e movimento controlado.",
+        "Não forçar a amplitude articular.",
+        "Se estiver em reabilitação, seguir as orientações do profissional responsável."
+      ],
+      "series_sugeridas": 2,
+      "repeticoes_sugeridas": "12–20 por lado",
+      "variacoes": [
+        "Rotação externa com elástico",
+        "Rotação externa no cabo",
+        "Rotação externa com o cotovelo apoiado"
+      ],
+      "imagens_execucao": []
+    }
+  ]
+}
