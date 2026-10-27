@@ -53,6 +53,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
   };
 
   const handleDelete = async (id: string, name: string) => {
+    if (!window.confirm('Excluir a ficha “' + name + '”? Esta ação não pode ser desfeita.')) return;
     try {
       await api.deleteWorkout(id);
       setActionMsg({ type: 'success', text: 'Ficha excluída com sucesso.' });
