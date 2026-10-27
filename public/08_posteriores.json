@@ -499,33 +499,34 @@
     {
       "id": "posteriores_levantamento_terra_trap_bar",
       "nome": "Levantamento terra com barra hexagonal",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_levantamento_terra",
         "posteriores_levantamento_romeno"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "trap bar deadlift",
         "hex bar deadlift"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "glúteo máximo",
         "quadríceps",
         "isquiotibiais"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "eretores da coluna",
         "trapézio",
         "antebraços",
         "abdômen"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "barra hexagonal",
         "anilhas"
       ],
-      "nivel": "levantamento do chão",
-      "execucao": "intermediario",
-      "respiracao": [
+      "execucao": "levantamento do chão",
+      "respiracao": "intermediario",
+      "erros_comuns": [
         "Entre no centro da barra hexagonal com os pés na largura do quadril.",
         "Segure as alças firmemente e flexione quadris e joelhos.",
         "Mantenha o tronco firme e a coluna estável.",
@@ -533,63 +534,59 @@
         "Mantenha os braços estendidos e a carga equilibrada.",
         "Fique em pé sem inclinar o tronco para trás e retorne a carga ao chão com controle."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "preparacao": "Inspire e estabilize o tronco.",
         "subida": "Expire durante o esforço ou após a parte mais exigente.",
         "descida": "Inspire de forma controlada ao retornar."
       },
-      "cuidados": [
-        "Arredondar as costas.",
-        "Deixar a carga inclinar para um lado.",
-        "Estender os quadris antes dos joelhos sem coordenação.",
-        "Hiperestender a lombar."
-      ],
       "series_sugeridas": [
-        "Confira se a barra está carregada simetricamente.",
-        "Comece com carga leve.",
-        "A distribuição do esforço varia com a altura das alças e a técnica."
-      ],
-      "repeticoes_sugeridas": [
         3,
         4
       ],
-      "unidade_repeticoes": [
-        "Trap_Bar_Deadlift/0.jpg",
-        "Trap_Bar_Deadlift/1.jpg"
-      ],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         5,
         10
       ],
-      "imagens_execucao": []
+      "variacoes": [
+        "posteriores_levantamento_terra",
+        "posteriores_levantamento_romeno"
+      ],
+      "imagens_execucao": [
+        "Trap_Bar_Deadlift/0.jpg",
+        "Trap_Bar_Deadlift/1.jpg"
+      ]
     },
     {
       "id": "posteriores_puxada_cabo_entre_pernas",
       "nome": "Pull-through no cabo",
       "aliases": [
-        "posteriores_levantamento_romeno",
-        "posteriores_stiff_halteres"
-      ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
         "cable pull-through",
         "puxada entre as pernas"
       ],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
+        "posteriores_levantamento_romeno",
+        "posteriores_stiff_halteres"
+      ],
       "musculos_secundarios": [
+        "cable pull-through",
+        "puxada entre as pernas"
+      ],
+      "equipamentos": [
         "glúteo máximo",
         "isquiotibiais"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "eretores da coluna",
         "abdômen"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "polia baixa",
         "corda"
       ],
-      "nivel": "dobradiça de quadril",
-      "execucao": "iniciante",
-      "respiracao": [
+      "execucao": "dobradiça de quadril",
+      "respiracao": "iniciante",
+      "erros_comuns": [
         "Prenda uma corda à polia baixa e fique de costas para a máquina.",
         "Passe a corda entre as pernas e segure as extremidades.",
         "Afaste-se o suficiente para manter tensão no cabo.",
@@ -598,64 +595,54 @@
         "Empurre os quadris para frente e contraia os glúteos para ficar em pé.",
         "Retorne à posição inicial de maneira controlada."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "descida": "Inspire durante a dobradiça de quadril.",
         "subida": "Expire durante a extensão dos quadris."
       },
-      "cuidados": [
-        "Transformar o movimento em agachamento.",
-        "Arredondar a coluna.",
-        "Puxar a corda com os braços.",
-        "Inclinar o tronco para trás no final."
-      ],
       "series_sugeridas": [
-        "Confira a fixação do acessório.",
-        "Mantenha distância suficiente da polia.",
-        "Use carga que permita controlar o movimento."
-      ],
-      "repeticoes_sugeridas": [
         3,
         4
       ],
-      "unidade_repeticoes": [
-        "Pull_Through/0.jpg",
-        "Pull_Through/1.jpg"
-      ],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         10,
         15
       ],
+      "variacoes": [
+        "posteriores_levantamento_romeno",
+        "posteriores_stiff_halteres"
+      ],
       "imagens_execucao": [
-        "cable pull-through",
-        "puxada entre as pernas"
+        "Pull_Through/0.jpg",
+        "Pull_Through/1.jpg"
       ]
     },
     {
       "id": "posteriores_hiperextensao_45",
       "nome": "Extensão de quadril no banco a 45 graus",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_hiperextensao_com_carga",
         "posteriores_puxada_cabo_entre_pernas"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "back extension 45 degrees",
         "hip extension bench"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "glúteo máximo",
         "isquiotibiais"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "eretores da coluna",
         "adutores"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "banco de hiperextensão a 45 graus"
       ],
-      "nivel": "extensão de quadril",
-      "execucao": "iniciante",
-      "respiracao": [
+      "execucao": "extensão de quadril",
+      "respiracao": "iniciante",
+      "erros_comuns": [
         "Ajuste o banco para apoiar a parte superior das coxas e permitir movimento livre dos quadris.",
         "Mantenha os pés presos e cruze os braços sobre o peito.",
         "Incline o tronco a partir dos quadris, mantendo a coluna estável.",
@@ -663,61 +650,54 @@
         "Contraia glúteos e posteriores para elevar o tronco até alinhar o corpo.",
         "Evite ultrapassar o alinhamento neutro e desça controladamente."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "descida": "Inspire durante a flexão dos quadris.",
         "subida": "Expire durante a extensão."
       },
-      "cuidados": [
-        "Hiperestender a lombar no topo.",
-        "Usar balanço.",
-        "Utilizar carga excessiva.",
-        "Ajustar incorretamente o banco."
-      ],
       "series_sugeridas": [
-        "Ajuste o equipamento à sua altura.",
-        "Comece sem carga.",
-        "Para enfatizar glúteos e posteriores, mova-se a partir do quadril sem exagerar a extensão lombar."
-      ],
-      "repeticoes_sugeridas": [
         2,
         4
       ],
-      "unidade_repeticoes": [
-        "Hyperextensions_Back_Extensions/0.jpg",
-        "Hyperextensions_Back_Extensions/1.jpg"
-      ],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         10,
         15
       ],
-      "imagens_execucao": []
+      "variacoes": [
+        "posteriores_hiperextensao_com_carga",
+        "posteriores_puxada_cabo_entre_pernas"
+      ],
+      "imagens_execucao": [
+        "Hyperextensions_Back_Extensions/0.jpg",
+        "Hyperextensions_Back_Extensions/1.jpg"
+      ]
     },
     {
       "id": "posteriores_hiperextensao_com_carga",
       "nome": "Extensão de quadril no banco a 45 graus com carga",
-      "aliases": [
-        "posteriores_hiperextensao_45"
-      ],
+      "aliases": [],
       "grupo_principal": "posteriores",
       "musculos_primarios": [
+        "posteriores_hiperextensao_45"
+      ],
+      "musculos_secundarios": [
         "weighted back extension",
         "hip extension com anilha"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "glúteo máximo",
         "isquiotibiais"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "eretores da coluna",
         "adutores"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "banco de hiperextensão a 45 graus",
         "anilha"
       ],
-      "nivel": "extensão de quadril",
-      "execucao": "intermediario",
-      "respiracao": [
+      "execucao": "extensão de quadril",
+      "respiracao": "intermediario",
+      "erros_comuns": [
         "Ajuste o banco e estabilize os pés.",
         "Segure uma anilha junto ao peito.",
         "Incline o tronco a partir dos quadris, mantendo a coluna estável.",
@@ -725,60 +705,52 @@
         "Contraia glúteos e posteriores para retornar até o corpo ficar alinhado.",
         "Evite hiperestender a lombar e retorne lentamente."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "descida": "Inspire durante a descida.",
         "subida": "Expire durante a subida."
       },
-      "cuidados": [
-        "Começar com carga excessiva.",
-        "Segurar a anilha longe do peito.",
-        "Usar balanço.",
-        "Hiperestender a coluna no topo."
-      ],
       "series_sugeridas": [
-        "Domine primeiro a versão sem carga.",
-        "Aumente o peso gradualmente.",
-        "Interrompa se houver dor lombar."
-      ],
-      "repeticoes_sugeridas": [
         2,
         3
       ],
-      "unidade_repeticoes": [
-        "Weighted_Ball_Hyperextension/0.jpg",
-        "Weighted_Ball_Hyperextension/1.jpg"
-      ],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         8,
         15
       ],
-      "imagens_execucao": []
+      "variacoes": [
+        "posteriores_hiperextensao_45"
+      ],
+      "imagens_execucao": [
+        "Weighted_Ball_Hyperextension/0.jpg",
+        "Weighted_Ball_Hyperextension/1.jpg"
+      ]
     },
     {
       "id": "posteriores_nordic_curl",
       "nome": "Nordic curl",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_nordic_assistido",
         "posteriores_mesa_flexora"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "nordic hamstring curl",
         "flexão nórdica"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "isquiotibiais"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "gastrocnêmio"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "apoio para tornozelos",
         "colchonete"
       ],
-      "nivel": "flexão de joelho excêntrica",
-      "execucao": "avancado",
-      "respiracao": [
+      "execucao": "flexão de joelho excêntrica",
+      "respiracao": "avancado",
+      "erros_comuns": [
         "Ajoelhe-se sobre um colchonete com os tornozelos presos por apoio apropriado.",
         "Mantenha quadris estendidos e tronco alinhado com as coxas.",
         "Ative os posteriores e o abdômen.",
@@ -787,58 +759,51 @@
         "Empurre suavemente com as mãos para retornar se ainda não conseguir subir sem assistência.",
         "Comece com amplitude reduzida e progrida gradualmente."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "descida": "Inspire e controle a fase excêntrica.",
         "retorno": "Expire durante o retorno assistido."
       },
-      "cuidados": [
-        "Cair rapidamente sem controlar a descida.",
-        "Flexionar os quadris para compensar.",
-        "Tentar amplitude total cedo demais.",
-        "Prender os tornozelos sem segurança."
-      ],
       "series_sugeridas": [
-        "É avançado e pode provocar dor muscular tardia intensa.",
-        "Use apoio firme e superfície acolchoada.",
-        "Comece com poucas repetições e amplitude reduzida."
-      ],
-      "repeticoes_sugeridas": [
         2,
         3
       ],
-      "unidade_repeticoes": [],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         3,
         8
+      ],
+      "variacoes": [
+        "posteriores_nordic_assistido",
+        "posteriores_mesa_flexora"
       ],
       "imagens_execucao": []
     },
     {
       "id": "posteriores_nordic_assistido",
       "nome": "Nordic curl assistido",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_nordic_curl",
         "posteriores_mesa_flexora"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "assisted Nordic curl",
         "flexão nórdica assistida"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "isquiotibiais"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "gastrocnêmio"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "apoio para tornozelos",
         "elástico de resistência",
         "colchonete"
       ],
-      "nivel": "flexão de joelho excêntrica",
-      "execucao": "intermediario",
-      "respiracao": [
+      "execucao": "flexão de joelho excêntrica",
+      "respiracao": "intermediario",
+      "erros_comuns": [
         "Prenda os tornozelos em um suporte firme e ajoelhe-se sobre um colchonete.",
         "Use faixa elástica ou apoio para reduzir parte da carga.",
         "Mantenha quadris estendidos e tronco alinhado com as coxas.",
@@ -846,57 +811,50 @@
         "Use as mãos para apoiar o corpo quando necessário.",
         "Retorne com auxílio da faixa ou das mãos e reduza a assistência gradualmente."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "descida": "Inspire durante a descida controlada.",
         "retorno": "Expire durante o retorno assistido."
       },
-      "cuidados": [
-        "Usar assistência insuficiente.",
-        "Cair sem controle.",
-        "Flexionar excessivamente os quadris.",
-        "Prender a faixa incorretamente."
-      ],
       "series_sugeridas": [
-        "Confira a fixação da faixa e dos tornozelos.",
-        "Aumente a dificuldade progressivamente.",
-        "Interrompa se houver dor aguda."
-      ],
-      "repeticoes_sugeridas": [
         2,
         3
       ],
-      "unidade_repeticoes": [],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         5,
         10
+      ],
+      "variacoes": [
+        "posteriores_nordic_curl",
+        "posteriores_mesa_flexora"
       ],
       "imagens_execucao": []
     },
     {
       "id": "posteriores_flexao_de_joelho_no_cabo",
       "nome": "Flexão de joelho no cabo",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_flexora_unilateral",
         "posteriores_mesa_flexora"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "cable leg curl",
         "flexora em pé no cabo"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "isquiotibiais"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "gastrocnêmio"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "polia baixa",
         "tornozeleira para cabo"
       ],
-      "nivel": "flexão de joelho unilateral",
-      "execucao": "intermediario",
-      "respiracao": [
+      "execucao": "flexão de joelho unilateral",
+      "respiracao": "intermediario",
+      "erros_comuns": [
         "Prenda uma tornozeleira à polia baixa e fixe-a ao tornozelo.",
         "Fique de frente para a máquina e segure um apoio firme.",
         "Mantenha a coxa da perna de trabalho relativamente estável.",
@@ -904,29 +862,22 @@
         "Evite movimentar o quadril para gerar impulso.",
         "Retorne lentamente e troque de perna após completar as repetições."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "flexao": "Expire ao flexionar o joelho.",
         "retorno": "Inspire durante o retorno."
       },
-      "cuidados": [
-        "Movimentar o quadril para ajudar.",
-        "Inclinar o tronco excessivamente.",
-        "Usar carga que comprometa o equilíbrio.",
-        "Deixar o cabo retornar rapidamente."
-      ],
       "series_sugeridas": [
-        "Verifique a fixação da tornozeleira.",
-        "Utilize apoio estável.",
-        "Comece com pouca carga."
-      ],
-      "repeticoes_sugeridas": [
         2,
         3
       ],
-      "unidade_repeticoes": [],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         10,
         15
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "posteriores_flexora_unilateral",
+        "posteriores_mesa_flexora"
       ],
       "imagens_execucao": []
     },
@@ -934,30 +885,34 @@
       "id": "posteriores_bom_dia",
       "nome": "Bom dia com barra",
       "aliases": [
-        "posteriores_stiff_barra",
-        "posteriores_levantamento_romeno"
-      ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
         "good morning",
         "barbell good morning"
       ],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
+        "posteriores_stiff_barra",
+        "posteriores_levantamento_romeno"
+      ],
       "musculos_secundarios": [
+        "good morning",
+        "barbell good morning"
+      ],
+      "equipamentos": [
         "isquiotibiais",
         "glúteo máximo"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "eretores da coluna",
         "adutores",
         "abdômen"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "barra",
         "rack"
       ],
-      "nivel": "dobradiça de quadril",
-      "execucao": "avancado",
-      "respiracao": [
+      "execucao": "dobradiça de quadril",
+      "respiracao": "avancado",
+      "erros_comuns": [
         "Posicione a barra na parte superior das costas, sem pressionar o pescoço.",
         "Afaste os pés na largura do quadril e mantenha os joelhos levemente flexionados.",
         "Ative o abdômen e estabilize a coluna.",
@@ -965,65 +920,54 @@
         "Desça somente até a amplitude em que consiga manter coluna e equilíbrio estáveis.",
         "Contraia glúteos e posteriores para retornar à posição inicial, sem inclinar o tronco para trás."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "descida": "Inspire e estabilize o tronco.",
         "subida": "Expire durante a extensão do quadril."
       },
-      "cuidados": [
-        "Usar carga excessiva.",
-        "Arredondar a coluna.",
-        "Transformar o movimento em agachamento.",
-        "Descer além do controle.",
-        "Hiperestender a lombar."
-      ],
       "series_sugeridas": [
-        "Exige controle técnico e não é obrigatório para hipertrofia dos posteriores.",
-        "Comece com carga leve e supervisão se necessário.",
-        "Evite se não conseguir manter a postura estável."
-      ],
-      "repeticoes_sugeridas": [
         2,
         3
       ],
-      "unidade_repeticoes": [
-        "Good_Morning/0.jpg",
-        "Good_Morning/1.jpg"
-      ],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         8,
         12
       ],
+      "variacoes": [
+        "posteriores_stiff_barra",
+        "posteriores_levantamento_romeno"
+      ],
       "imagens_execucao": [
-        "good morning",
-        "barbell good morning"
+        "Good_Morning/0.jpg",
+        "Good_Morning/1.jpg"
       ]
     },
     {
       "id": "posteriores_ponte_gluteos",
       "nome": "Ponte de glúteos com pés no chão",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_hip_thrust",
         "posteriores_ponte_unilateral"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "glute bridge",
         "ponte de quadril"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "glúteo máximo"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "isquiotibiais",
         "abdômen"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "peso corporal",
         "colchonete"
       ],
-      "nivel": "extensão de quadril",
-      "execucao": "iniciante",
-      "respiracao": [
+      "execucao": "extensão de quadril",
+      "respiracao": "iniciante",
+      "erros_comuns": [
         "Deite-se de costas no colchonete com os joelhos flexionados e os pés no chão.",
         "Posicione os pés na largura do quadril.",
         "Ative o abdômen e mantenha a coluna confortável.",
@@ -1031,64 +975,57 @@
         "Suba até alinhar tronco e coxas, sem arquear excessivamente a lombar.",
         "Contraia os glúteos brevemente e desça de forma controlada."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "subida": "Expire ao elevar a pelve.",
         "descida": "Inspire durante o retorno."
       },
-      "cuidados": [
-        "Arquear excessivamente a lombar.",
-        "Empurrar principalmente com as pontas dos pés.",
-        "Deixar os joelhos colapsarem para dentro.",
-        "Usar impulso."
-      ],
       "series_sugeridas": [
-        "Ajuste a distância dos pés para conforto.",
-        "Não force a extensão do quadril.",
-        "Enfatiza principalmente os glúteos e complementa o treino de posteriores."
-      ],
-      "repeticoes_sugeridas": [
         2,
         4
       ],
-      "unidade_repeticoes": [
-        "Barbell_Glute_Bridge/0.jpg",
-        "Barbell_Glute_Bridge/1.jpg"
-      ],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         10,
         20
       ],
-      "imagens_execucao": []
+      "variacoes": [
+        "posteriores_hip_thrust",
+        "posteriores_ponte_unilateral"
+      ],
+      "imagens_execucao": [
+        "Barbell_Glute_Bridge/0.jpg",
+        "Barbell_Glute_Bridge/1.jpg"
+      ]
     },
     {
       "id": "posteriores_hip_thrust",
       "nome": "Hip thrust",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_ponte_gluteos",
         "posteriores_hip_thrust_unilateral"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "elevação pélvica com barra",
         "barbell hip thrust"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "glúteo máximo"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "isquiotibiais",
         "quadríceps",
         "abdômen"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "banco",
         "barra",
         "anilhas",
         "protetor de barra"
       ],
-      "nivel": "extensão de quadril",
-      "execucao": "intermediario",
-      "respiracao": [
+      "execucao": "extensão de quadril",
+      "respiracao": "intermediario",
+      "erros_comuns": [
         "Apoie a parte inferior das escápulas em banco firme e posicione a barra sobre o quadril com proteção.",
         "Mantenha os pés apoiados e os joelhos flexionados.",
         "Ative o abdômen antes de iniciar.",
@@ -1096,61 +1033,54 @@
         "Mantenha o queixo levemente recolhido e evite arquear a lombar.",
         "Contraia os glúteos no topo e desça lentamente."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "subida": "Expire durante a extensão do quadril.",
         "descida": "Inspire durante o retorno controlado."
       },
-      "cuidados": [
-        "Hiperestender a lombar.",
-        "Usar banco instável.",
-        "Utilizar carga excessiva.",
-        "Deixar os joelhos colapsarem para dentro."
-      ],
       "series_sugeridas": [
-        "Verifique a estabilidade do banco e a posição da barra.",
-        "Use proteção entre barra e quadril.",
-        "Comece com carga leve."
-      ],
-      "repeticoes_sugeridas": [
         3,
         4
       ],
-      "unidade_repeticoes": [
-        "Barbell_Hip_Thrust/0.jpg",
-        "Barbell_Hip_Thrust/1.jpg"
-      ],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         8,
         15
       ],
-      "imagens_execucao": []
+      "variacoes": [
+        "posteriores_ponte_gluteos",
+        "posteriores_hip_thrust_unilateral"
+      ],
+      "imagens_execucao": [
+        "Barbell_Hip_Thrust/0.jpg",
+        "Barbell_Hip_Thrust/1.jpg"
+      ]
     },
     {
       "id": "posteriores_ponte_unilateral",
       "nome": "Ponte de glúteos unilateral",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_ponte_gluteos",
         "posteriores_hip_thrust"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "single-leg glute bridge",
         "ponte unilateral"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "glúteo máximo"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "isquiotibiais",
         "abdômen"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "peso corporal",
         "colchonete"
       ],
-      "nivel": "extensão de quadril unilateral",
-      "execucao": "intermediario",
-      "respiracao": [
+      "execucao": "extensão de quadril unilateral",
+      "respiracao": "intermediario",
+      "erros_comuns": [
         "Deite-se de costas com um joelho flexionado e o pé apoiado no chão.",
         "Estenda a outra perna sem elevar excessivamente a coxa.",
         "Ative o abdômen e mantenha a pelve nivelada.",
@@ -1158,63 +1088,57 @@
         "Suba até alinhar tronco e coxa, sem arquear a lombar.",
         "Desça lentamente, sem deixar a pelve girar, e troque de lado."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "subida": "Expire ao elevar a pelve.",
         "descida": "Inspire durante o retorno."
       },
-      "cuidados": [
-        "Girar a pelve.",
-        "Arquear a lombar.",
-        "Usar impulso.",
-        "Perder o apoio do pé."
-      ],
       "series_sugeridas": [
-        "Domine primeiro a versão bilateral.",
-        "Reduza a amplitude se houver cãibras ou perda de controle.",
-        "Enfatiza principalmente os glúteos."
-      ],
-      "repeticoes_sugeridas": [
         2,
         3
       ],
-      "unidade_repeticoes": [
-        "Single_Leg_Glute_Bridge/0.jpg",
-        "Single_Leg_Glute_Bridge/1.jpg"
-      ],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         8,
         15
       ],
-      "imagens_execucao": []
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "posteriores_ponte_gluteos",
+        "posteriores_hip_thrust"
+      ],
+      "imagens_execucao": [
+        "Single_Leg_Glute_Bridge/0.jpg",
+        "Single_Leg_Glute_Bridge/1.jpg"
+      ]
     },
     {
       "id": "posteriores_hip_thrust_unilateral",
       "nome": "Hip thrust unilateral",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_hip_thrust",
         "posteriores_ponte_unilateral"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "single-leg hip thrust",
         "elevação pélvica unilateral"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "glúteo máximo"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "isquiotibiais",
         "quadríceps",
         "abdômen"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "banco",
         "peso corporal",
         "halter"
       ],
-      "nivel": "extensão de quadril unilateral",
-      "execucao": "avancado",
-      "respiracao": [
+      "execucao": "extensão de quadril unilateral",
+      "respiracao": "avancado",
+      "erros_comuns": [
         "Apoie as escápulas em banco estável.",
         "Posicione um pé no chão e mantenha a outra perna elevada.",
         "Estabilize a pelve e ative o abdômen.",
@@ -1222,60 +1146,54 @@
         "Suba até alinhar tronco e coxa sem hiperestender a lombar.",
         "Desça de forma controlada e troque de lado após as repetições."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "subida": "Expire durante a elevação da pelve.",
         "descida": "Inspire durante o retorno."
       },
-      "cuidados": [
-        "Deixar a pelve girar.",
-        "Usar impulso.",
-        "Arquear a lombar no topo.",
-        "Adicionar carga antes de dominar a estabilidade."
-      ],
       "series_sugeridas": [
-        "Comece sem carga.",
-        "Verifique a estabilidade do banco.",
-        "Interrompa se houver dor no quadril ou lombar."
-      ],
-      "repeticoes_sugeridas": [
         2,
         3
       ],
-      "unidade_repeticoes": [],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         8,
         12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "posteriores_hip_thrust",
+        "posteriores_ponte_unilateral"
       ],
       "imagens_execucao": []
     },
     {
       "id": "posteriores_agachamento_bulgaro",
       "nome": "Agachamento búlgaro com ênfase no quadril",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_levantamento_romeno",
         "posteriores_hip_thrust"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "bulgarian split squat glute emphasis"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "glúteo máximo",
         "isquiotibiais"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "quadríceps",
         "adutores",
         "abdômen"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "banco",
         "peso corporal",
         "halteres"
       ],
-      "nivel": "agachamento unilateral",
-      "execucao": "intermediario",
-      "respiracao": [
+      "execucao": "agachamento unilateral",
+      "respiracao": "intermediario",
+      "erros_comuns": [
         "Apoie o peito do pé de trás em banco firme.",
         "Posicione o pé da frente para conseguir controlar a descida.",
         "Incline levemente o tronco a partir do quadril mantendo a coluna estável.",
@@ -1283,59 +1201,53 @@
         "Mantenha o pé da frente apoiado e o joelho alinhado com os dedos.",
         "Empurre o chão com o pé da frente e estenda o quadril para subir; troque de lado."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "descida": "Inspire durante a descida.",
         "subida": "Expire durante a subida."
       },
-      "cuidados": [
-        "Arredondar a coluna ao inclinar o tronco.",
-        "Perder o equilíbrio.",
-        "Usar banco alto demais.",
-        "Permitir que o joelho colapse."
-      ],
       "series_sugeridas": [
-        "A ênfase muscular depende da técnica e das proporções corporais.",
-        "Comece sem carga e use apoio se necessário.",
-        "Não force a amplitude se houver dor."
-      ],
-      "repeticoes_sugeridas": [
         2,
         3
       ],
-      "unidade_repeticoes": [],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         8,
         12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "posteriores_levantamento_romeno",
+        "posteriores_hip_thrust"
       ],
       "imagens_execucao": []
     },
     {
       "id": "posteriores_pull_in_no_slider",
       "nome": "Flexão de joelhos com sliders",
-      "aliases": [
+      "aliases": [],
+      "grupo_principal": "posteriores",
+      "musculos_primarios": [
         "posteriores_mesa_flexora",
         "posteriores_nordic_assistido"
       ],
-      "grupo_principal": "posteriores",
-      "musculos_primarios": [
+      "musculos_secundarios": [
         "sliding leg curl",
         "hamstring curl no chão"
       ],
-      "musculos_secundarios": [
+      "equipamentos": [
         "isquiotibiais"
       ],
-      "equipamentos": [
+      "padrao_movimento": [
         "glúteo máximo",
         "abdômen"
       ],
-      "padrao_movimento": [
+      "nivel": [
         "sliders",
         "toalhas deslizantes",
         "colchonete"
       ],
-      "nivel": "flexão de joelho",
-      "execucao": "intermediario",
-      "respiracao": [
+      "execucao": "flexão de joelho",
+      "respiracao": "intermediario",
+      "erros_comuns": [
         "Deite-se de costas com os calcanhares sobre sliders ou toalhas adequadas à superfície.",
         "Eleve a pelve e mantenha o tronco estável.",
         "Deslize os calcanhares para longe, estendendo os joelhos de forma controlada.",
@@ -1343,29 +1255,21 @@
         "Flexione os joelhos e traga os calcanhares de volta em direção aos glúteos.",
         "Se necessário, comece com amplitude reduzida ou enfatize apenas o retorno."
       ],
-      "erros_comuns": {
+      "cuidados": {
         "extensao": "Inspire durante o afastamento dos calcanhares.",
         "flexao": "Expire ao aproximar os calcanhares."
       },
-      "cuidados": [
-        "Deixar a pelve cair.",
-        "Arquear a lombar.",
-        "Deslizar rapidamente sem controle.",
-        "Tentar amplitude completa antes de ter força suficiente."
-      ],
       "series_sugeridas": [
-        "Confirme que sliders e superfície são compatíveis e seguros.",
-        "Comece com amplitude reduzida.",
-        "Interrompa se houver cãibras intensas ou dor."
-      ],
-      "repeticoes_sugeridas": [
         2,
         3
       ],
-      "unidade_repeticoes": [],
-      "variacoes": [
+      "repeticoes_sugeridas": [
         6,
         12
+      ],
+      "variacoes": [
+        "posteriores_mesa_flexora",
+        "posteriores_nordic_assistido"
       ],
       "imagens_execucao": []
     }
