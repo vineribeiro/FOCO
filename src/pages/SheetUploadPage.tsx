@@ -5,6 +5,7 @@ import {
   FileUp,
   Image,
   FileText,
+  Download,
   Trash2,
   Sparkles,
   CheckCircle2,
@@ -184,7 +185,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
     setBodyReport(null);
     try {
       const { base64, mimeType } = await readSelectedFile(selectedFile);
-      const result = await api.analyzeBioimpedanceReport({ base64, mime_type: mimeType, context: bodyContext });
+      const result = await api.analyzeBioimpedanceReport({ base64, mime_type: mimeType, filename: selectedFile.name, context: bodyContext });
       setBodyReport(result);
       setSuccessMsg('Relatório analisado. Confira os dados extraídos e as interpretações abaixo.');
     } catch (err: any) {
@@ -221,10 +222,23 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
     }
   };
 
+  const handleDownloadFile = async (file: UploadedFile) => {
+    const tab = window.open('about:blank', '_blank');
+    if (tab) tab.opener = null;
+    try {
+      const result = await api.getFileDownloadUrl(file.id);
+      if (tab) tab.location.href = result.url;
+      else window.location.assign(result.url);
+    } catch (e: any) {
+      tab?.close();
+      setErrorMsg('Falha ao abrir o original do arquivo: ' + (e?.message || 'tente novamente.'));
+    }
+  };
+
   const handleDeleteFile = async (id: string) => {
     try {
       await api.deleteFile(id);
-      loadFiles();
+      await loadFiles();
     } catch (e: any) {
       setErrorMsg('Falha ao excluir arquivo: ' + e.message);
     }
@@ -468,12 +482,22 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
                   <div>
                     <p className="font-bold text-white">{file.filename}</p>
                     <p className="text-[10px] text-neutral-500 font-mono">
-                      {new Date(file.created_at).toLocaleDateString('pt-BR')} · Processado com sucesso
+                      {new Date(file.created_at).toLocaleDateString('pt-BR')} · {file.processing_status === 'processed' ? 'Original salvo · Processado' : file.processing_status === 'failed' ? 'Original salvo · Análise falhou' : file.processing_status === 'processing' ? 'Processando arquivo' : 'Arquivo salvo · Aguardando análise'}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
+                  {file.storage_path !== 'processed-data-only' && (
+                    <button
+                      onClick={() => handleDownloadFile(file)}
+                      className="p-1.5 text-neutral-500 hover:text-white rounded transition-colors cursor-pointer"
+                      title="Abrir original (link seguro temporário)"
+                      aria-label={`Abrir arquivo ${file.filename}`}
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
+                  )}
                   <button
                     onClick={() => handleDeleteFile(file.id)}
                     className="p-1.5 text-neutral-500 hover:text-white rounded transition-colors cursor-pointer"
