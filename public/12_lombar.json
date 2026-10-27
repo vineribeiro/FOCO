@@ -1,0 +1,611 @@
+{
+  "arquivo": "12_lombar.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "lombar",
+  "descricao": "Exercícios para fortalecimento dos extensores da coluna, quadrado lombar e musculatura estabilizadora do tronco.",
+  "exercicios": [
+    {
+      "id": "extensao_lombar_banco_45",
+      "nome": "Extensão lombar no banco 45 graus",
+      "aliases": [
+        "Hiperextensão lombar",
+        "Back extension 45 graus"
+      ],
+      "grupo_principal": "lombar",
+      "musculos_primarios": [
+        "eretores_da_coluna",
+        "multifidos"
+      ],
+      "musculos_secundarios": [
+        "gluteo_maximo",
+        "isquiotibiais"
+      ],
+      "equipamentos": [
+        "banco_romano_45_graus"
+      ],
+      "padrao_movimento": "extensao_de_quadril_e_tronco",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o banco para que o apoio fique abaixo da dobra do quadril, permitindo movimentar o tronco.",
+        "Posicione os pés firmemente nos suportes e mantenha o corpo alinhado.",
+        "Desça o tronco de forma controlada, flexionando o quadril e mantendo a coluna em posição confortável.",
+        "Eleve o tronco até alinhar cabeça, tronco e pernas, sem hiperestender a lombar.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a elevação.",
+        "descida": "Inspire durante a descida controlada."
+      },
+      "erros_comuns": [
+        "Subir além do alinhamento corporal.",
+        "Realizar movimentos bruscos.",
+        "Arredondar excessivamente a coluna.",
+        "Usar carga antes de dominar a técnica."
+      ],
+      "cuidados": [
+        "Comece sem carga adicional.",
+        "O movimento deve ser confortável e controlado.",
+        "Interrompa se houver dor aguda ou irradiação para as pernas."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "extensao_lombar_no_chao",
+        "extensao_lombar_com_carga"
+      ],
+      "imagens_execucao": [
+        "Hyperextensions_Back_Extensions/0.jpg",
+        "Hyperextensions_Back_Extensions/1.jpg"
+      ]
+    },
+    {
+      "id": "extensao_lombar_com_carga",
+      "nome": "Extensão lombar com carga",
+      "aliases": [
+        "Back extension com anilha"
+      ],
+      "grupo_principal": "lombar",
+      "musculos_primarios": [
+        "eretores_da_coluna",
+        "multifidos"
+      ],
+      "musculos_secundarios": [
+        "gluteo_maximo",
+        "isquiotibiais"
+      ],
+      "equipamentos": [
+        "banco_romano_45_graus",
+        "anilha"
+      ],
+      "padrao_movimento": "extensao_de_quadril_e_tronco_com_resistencia",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione-se no banco de extensão lombar com os pés firmes nos suportes.",
+        "Segure uma anilha junto ao peito, sem afastá-la desnecessariamente do corpo.",
+        "Desça de forma controlada, mantendo a coluna em posição confortável.",
+        "Eleve o tronco até alinhar o corpo, evitando ultrapassar a posição neutra.",
+        "Retorne lentamente e mantenha o peso seguro durante todo o movimento."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar o tronco.",
+        "descida": "Inspire ao descer."
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Hiperestender a lombar no topo.",
+        "Segurar a anilha longe do peito.",
+        "Usar impulso para completar as repetições."
+      ],
+      "cuidados": [
+        "Domine a versão sem carga antes de progredir.",
+        "Aumente a carga gradualmente.",
+        "Interrompa se o exercício provocar dor."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "extensao_lombar_banco_45"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "extensao_lombar_no_chao",
+      "nome": "Extensão de tronco no chão",
+      "aliases": [
+        "Prone back extension",
+        "Extensão lombar deitado"
+      ],
+      "grupo_principal": "lombar",
+      "musculos_primarios": [
+        "eretores_da_coluna",
+        "multifidos"
+      ],
+      "musculos_secundarios": [
+        "gluteo_maximo"
+      ],
+      "equipamentos": [
+        "colchonete",
+        "peso_corporal"
+      ],
+      "padrao_movimento": "extensao_controlada_do_tronco",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de barriga para baixo em um colchonete.",
+        "Mantenha as pernas estendidas e os braços junto ao corpo ou cruzados sobre o peito.",
+        "Contraia suavemente a musculatura do tronco e eleve o peito alguns centímetros do chão.",
+        "Mantenha o pescoço alinhado com a coluna.",
+        "Desça lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar o peito.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Elevar o tronco excessivamente.",
+        "Forçar o pescoço para olhar para a frente.",
+        "Usar impulso.",
+        "Prender a respiração."
+      ],
+      "cuidados": [
+        "Use uma amplitude pequena e confortável.",
+        "Não force a extensão se houver desconforto lombar.",
+        "Esse exercício não substitui avaliação profissional em caso de dor persistente."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "bird_dog",
+        "superman"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "bird_dog",
+      "nome": "Bird dog",
+      "aliases": [
+        "Extensão contralateral em quatro apoios"
+      ],
+      "grupo_principal": "lombar",
+      "musculos_primarios": [
+        "multifidos",
+        "eretores_da_coluna"
+      ],
+      "musculos_secundarios": [
+        "transverso_do_abdomen",
+        "gluteo_maximo",
+        "deltoides"
+      ],
+      "equipamentos": [
+        "colchonete",
+        "peso_corporal"
+      ],
+      "padrao_movimento": "estabilizacao_antirotacional",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em quatro apoios, com as mãos abaixo dos ombros e os joelhos abaixo dos quadris.",
+        "Contraia suavemente o abdômen e mantenha a coluna neutra.",
+        "Estenda um braço à frente e a perna oposta para trás.",
+        "Evite girar a pelve ou arquear a lombar.",
+        "Retorne ao centro e alterne os lados de maneira controlada."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao estender braço e perna.",
+        "retorno": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Elevar a perna acima da linha do corpo.",
+        "Girar a pelve.",
+        "Mover o tronco durante a extensão.",
+        "Executar rapidamente."
+      ],
+      "cuidados": [
+        "Comece estendendo apenas um membro por vez se necessário.",
+        "Mantenha o pescoço alinhado.",
+        "Interrompa se houver dor."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_lado",
+      "variacoes": [
+        "dead_bug",
+        "prancha_abdominal"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "superman",
+      "nome": "Superman",
+      "aliases": [
+        "Extensão simultânea de braços e pernas"
+      ],
+      "grupo_principal": "lombar",
+      "musculos_primarios": [
+        "eretores_da_coluna",
+        "multifidos"
+      ],
+      "musculos_secundarios": [
+        "gluteo_maximo",
+        "deltoide_posterior"
+      ],
+      "equipamentos": [
+        "colchonete",
+        "peso_corporal"
+      ],
+      "padrao_movimento": "extensao_isometrica_do_tronco",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se de barriga para baixo com os braços estendidos à frente.",
+        "Mantenha o abdômen suavemente contraído e o pescoço alinhado.",
+        "Eleve levemente braços e pernas do chão, sem forçar a lombar.",
+        "Sustente brevemente a posição mantendo a respiração contínua.",
+        "Desça os membros lentamente."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a elevação.",
+        "sustentacao": "Respire normalmente.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Elevar os membros excessivamente.",
+        "Prender a respiração.",
+        "Forçar o pescoço para cima.",
+        "Usar balanço para levantar."
+      ],
+      "cuidados": [
+        "Use amplitude pequena.",
+        "Se houver desconforto lombar, prefira uma variação unilateral, como o bird dog.",
+        "Evite manter a posição se houver dor."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "bird_dog",
+        "extensao_lombar_no_chao"
+      ],
+      "imagens_execucao": [
+        "Superman/0.jpg",
+        "Superman/1.jpg"
+      ]
+    },
+    {
+      "id": "good_morning",
+      "nome": "Good morning",
+      "aliases": [
+        "Flexão de quadril com barra"
+      ],
+      "grupo_principal": "lombar",
+      "musculos_primarios": [
+        "eretores_da_coluna",
+        "isquiotibiais",
+        "gluteo_maximo"
+      ],
+      "musculos_secundarios": [
+        "adutor_magno",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipamentos": [
+        "barra",
+        "rack"
+      ],
+      "padrao_movimento": "dobradica_de_quadril",
+      "nivel": "avancado",
+      "execucao": [
+        "Posicione a barra sobre os trapézios, em um rack ajustado à sua altura.",
+        "Afaste os pés aproximadamente na largura dos quadris e mantenha os joelhos levemente flexionados.",
+        "Leve o quadril para trás enquanto inclina o tronco, preservando a coluna em posição neutra.",
+        "Desça somente até o limite em que consiga manter o controle da postura.",
+        "Empurre o chão com os pés e leve o quadril à frente para retornar à posição inicial."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao levar o quadril para trás.",
+        "subida": "Expire ao retornar à posição em pé."
+      },
+      "erros_comuns": [
+        "Arredondar a coluna.",
+        "Flexionar demais os joelhos e transformar o movimento em agachamento.",
+        "Usar carga excessiva.",
+        "Descer além da amplitude controlável."
+      ],
+      "cuidados": [
+        "Aprenda a dobradiça de quadril sem carga antes de usar a barra.",
+        "Use um rack e travas de segurança adequados.",
+        "Não é necessário alcançar uma profundidade específica se a postura se perder."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        12
+      ],
+      "variacoes": [
+        "levantamento_terra_romeno",
+        "extensao_lombar_banco_45"
+      ],
+      "imagens_execucao": [
+        "Good_Morning/0.jpg",
+        "Good_Morning/1.jpg"
+      ]
+    },
+    {
+      "id": "levantamento_terra_romeno",
+      "nome": "Levantamento terra romeno",
+      "aliases": [
+        "Romanian deadlift",
+        "RDL"
+      ],
+      "grupo_principal": "cadeia_posterior",
+      "musculos_primarios": [
+        "isquiotibiais",
+        "gluteo_maximo",
+        "eretores_da_coluna"
+      ],
+      "musculos_secundarios": [
+        "adutor_magno",
+        "antebracos",
+        "trapezio"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas"
+      ],
+      "padrao_movimento": "dobradica_de_quadril",
+      "nivel": "intermediario",
+      "execucao": [
+        "Fique em pé segurando a barra à frente das coxas, com os pés aproximadamente na largura dos quadris.",
+        "Mantenha os joelhos levemente flexionados e a barra próxima ao corpo.",
+        "Leve o quadril para trás e desça a barra junto às pernas.",
+        "Pare quando atingir o alongamento tolerável dos posteriores sem arredondar a coluna.",
+        "Estenda o quadril e retorne à posição em pé sem hiperestender a lombar."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida controlada.",
+        "subida": "Expire ao retornar à posição em pé."
+      },
+      "erros_comuns": [
+        "Afastar a barra das pernas.",
+        "Transformar o exercício em agachamento.",
+        "Arredondar a coluna.",
+        "Hiperestender a lombar no topo."
+      ],
+      "cuidados": [
+        "Comece com carga leve para aprender a dobradiça de quadril.",
+        "A amplitude deve respeitar a mobilidade individual.",
+        "O exercício recruta a lombar como estabilizadora e não deve ser tratado como um movimento isolado de lombar."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        12
+      ],
+      "variacoes": [
+        "good_morning",
+        "levantamento_terra_com_barra"
+      ],
+      "imagens_execucao": [
+        "Romanian_Deadlift/0.jpg",
+        "Romanian_Deadlift/1.jpg"
+      ]
+    },
+    {
+      "id": "levantamento_terra_com_barra",
+      "nome": "Levantamento terra com barra",
+      "aliases": [
+        "Deadlift convencional"
+      ],
+      "grupo_principal": "cadeia_posterior",
+      "musculos_primarios": [
+        "gluteo_maximo",
+        "quadriceps",
+        "eretores_da_coluna"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "trapezio",
+        "antebracos",
+        "adutor_magno"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas"
+      ],
+      "padrao_movimento": "extensao_de_quadril_e_joelhos",
+      "nivel": "avancado",
+      "execucao": [
+        "Posicione a barra sobre o meio dos pés e aproxime as canelas dela.",
+        "Flexione quadris e joelhos para segurar a barra, mantendo a coluna em posição neutra.",
+        "Contraia o tronco e mantenha a barra próxima às pernas.",
+        "Empurre o chão com os pés e estenda joelhos e quadris para levantar a barra.",
+        "Retorne levando o quadril para trás e dobrando os joelhos quando a barra passar deles."
+      ],
+      "respiracao": {
+        "preparacao": "Inspire e estabilize o tronco antes de levantar.",
+        "subida": "Mantenha a estabilização durante o esforço e expire de forma controlada após a fase mais exigente.",
+        "descida": "Inspire novamente quando estiver em posição segura para a próxima repetição."
+      },
+      "erros_comuns": [
+        "Arredondar excessivamente a coluna.",
+        "Afastar a barra do corpo.",
+        "Puxar a barra antes de estabilizar o tronco.",
+        "Estender a lombar excessivamente no topo."
+      ],
+      "cuidados": [
+        "Aprenda a técnica com carga leve e supervisão quando necessário.",
+        "Não tente cargas máximas sem preparação adequada.",
+        "Interrompa se houver dor aguda ou sintomas irradiados."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        4,
+        8
+      ],
+      "variacoes": [
+        "levantamento_terra_romeno",
+        "good_morning"
+      ],
+      "imagens_execucao": [
+        "Barbell_Deadlift/0.jpg",
+        "Barbell_Deadlift/1.jpg"
+      ]
+    },
+    {
+      "id": "lombar_prancha_lateral",
+      "nome": "Prancha lateral",
+      "aliases": [
+        "Side plank"
+      ],
+      "grupo_principal": "lombar",
+      "musculos_primarios": [
+        "quadrado_lombar",
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "musculos_secundarios": [
+        "transverso_do_abdomen",
+        "gluteo_medio"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "estabilizacao_lateral_isometrica",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de lado e posicione o cotovelo abaixo do ombro.",
+        "Mantenha as pernas estendidas ou apoie os joelhos para facilitar.",
+        "Eleve o quadril até alinhar o tronco.",
+        "Mantenha a pelve estável e respire normalmente.",
+        "Sustente a posição e repita do outro lado."
+      ],
+      "respiracao": {
+        "execucao": "Respire continuamente durante a sustentação."
+      },
+      "erros_comuns": [
+        "Deixar o quadril cair.",
+        "Girar o tronco.",
+        "Prender a respiração.",
+        "Apoiar o cotovelo longe do ombro."
+      ],
+      "cuidados": [
+        "Use a versão com joelhos apoiados se necessário.",
+        "Interrompa se houver dor no ombro ou na lombar."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        15,
+        45
+      ],
+      "unidade_repeticoes": "segundos_por_lado",
+      "variacoes": [
+        "bird_dog",
+        "prancha_abdominal"
+      ],
+      "imagens_execucao": [
+        "Side_Bridge/0.jpg",
+        "Side_Bridge/1.jpg"
+      ]
+    },
+    {
+      "id": "pull_through_polia",
+      "nome": "Pull-through na polia",
+      "aliases": [
+        "Cable pull-through"
+      ],
+      "grupo_principal": "cadeia_posterior",
+      "musculos_primarios": [
+        "gluteo_maximo",
+        "isquiotibiais"
+      ],
+      "musculos_secundarios": [
+        "eretores_da_coluna",
+        "adutor_magno"
+      ],
+      "equipamentos": [
+        "polia_baixa",
+        "corda"
+      ],
+      "padrao_movimento": "dobradica_de_quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma corda à polia baixa e fique de costas para o equipamento.",
+        "Passe a corda entre as pernas e segure as extremidades.",
+        "Afaste-se o suficiente para manter tensão no cabo e posicione os pés de forma estável.",
+        "Leve o quadril para trás, inclinando o tronco com a coluna neutra.",
+        "Estenda o quadril para voltar à posição em pé, mantendo os braços relaxados."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao levar o quadril para trás.",
+        "subida": "Expire ao estender o quadril."
+      },
+      "erros_comuns": [
+        "Transformar o movimento em agachamento.",
+        "Puxar a corda com os braços.",
+        "Arredondar a coluna.",
+        "Hiperestender a lombar no final."
+      ],
+      "cuidados": [
+        "Verifique a fixação da corda.",
+        "Comece com resistência leve.",
+        "Mantenha distância suficiente para que o cabo não perca tensão durante a execução."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "levantamento_terra_romeno",
+        "good_morning"
+      ],
+      "imagens_execucao": [
+        "Pull_Through/0.jpg",
+        "Pull_Through/1.jpg"
+      ]
+    }
+  ],
+  "observacao_imagens": "As imagens associadas são referências do catálogo visual do FOCO para movimentos correspondentes. Exercícios sem correspondência visual específica permanecem sem imagem."
+}
