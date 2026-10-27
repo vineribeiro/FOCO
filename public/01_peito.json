@@ -1,0 +1,683 @@
+{
+  "arquivo": "01_peito.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "peito",
+  "fonte_imagens": "Imagens de execução já presentes no catálogo Free Exercise DB usado pelo FOCO; cada variação usa sua própria referência quando encontrada.",
+  "exercicios": [
+    {
+      "id": "peito_supino_reto_barra",
+      "nome": "Supino reto com barra",
+      "aliases": [
+        "Barbell Bench Press",
+        "Supino plano"
+      ],
+      "musculos_primarios": [
+        "peitoral maior"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "barra",
+        "banco reto",
+        "anilhas"
+      ],
+      "padrao_movimento": "Empurrar horizontal",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite no banco com os olhos aproximadamente alinhados à barra.",
+        "Mantenha os pés apoiados no chão, as escápulas estáveis e as costas em posição confortável.",
+        "Segure a barra com uma pegada firme, um pouco mais larga que os ombros.",
+        "Retire a barra do suporte com controle e posicione-a sobre o meio do peito.",
+        "Inspire e desça a barra de forma controlada em direção ao peito, mantendo os antebraços aproximadamente verticais.",
+        "Toque levemente o peito, se a mobilidade e o controle permitirem.",
+        "Expire enquanto empurra a barra para cima, sem perder a estabilidade dos ombros.",
+        "Finalize com os braços estendidos de forma controlada, sem hiperestender os cotovelos."
+      ],
+      "respiracao": {
+        "descida": "Inspirar",
+        "subida": "Expirar"
+      },
+      "erros_comuns": [
+        "Quicar a barra no peito.",
+        "Retirar os pés do chão ou perder a estabilidade corporal.",
+        "Deixar os punhos excessivamente dobrados.",
+        "Descer a barra sem controle.",
+        "Usar carga que comprometa a técnica."
+      ],
+      "cuidados": [
+        "Utilizar travas de segurança ou auxílio de um parceiro quando necessário.",
+        "Não treinar até a falha sem uma estratégia segura para retirar a barra.",
+        "Interromper o movimento se houver dor aguda."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "6–12",
+      "variacoes": [
+        "Supino reto com halteres",
+        "Supino na máquina",
+        "Supino com pegada fechada"
+      ],
+      "imagens_execucao": [
+        "Barbell_Bench_Press_-_Medium_Grip/0.jpg",
+        "Barbell_Bench_Press_-_Medium_Grip/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_supino_inclinado_halteres",
+      "nome": "Supino inclinado com halteres",
+      "aliases": [
+        "Incline Dumbbell Press",
+        "Supino inclinado"
+      ],
+      "musculos_primarios": [
+        "peitoral maior — porção clavicular"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "halteres",
+        "banco inclinável"
+      ],
+      "padrao_movimento": "Empurrar diagonal",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste o banco a uma inclinação moderada, geralmente entre 20 e 45 graus.",
+        "Sente-se com um halter em cada mão e apoie os pés no chão.",
+        "Posicione os halteres ao lado da parte superior do peito.",
+        "Mantenha os punhos alinhados e os cotovelos ligeiramente abaixo ou próximos da linha dos ombros.",
+        "Inspire enquanto desce os halteres de forma controlada.",
+        "Desça até uma amplitude confortável, sem forçar a articulação do ombro.",
+        "Expire e empurre os halteres para cima, aproximando-os sem precisar bater um no outro.",
+        "Retorne à posição inicial com controle."
+      ],
+      "respiracao": {
+        "descida": "Inspirar",
+        "subida": "Expirar"
+      },
+      "erros_comuns": [
+        "Utilizar inclinação excessiva do banco.",
+        "Deixar os cotovelos muito abertos.",
+        "Bater os halteres no topo.",
+        "Arquear excessivamente a região lombar."
+      ],
+      "cuidados": [
+        "Escolher uma carga que permita controlar os dois halteres.",
+        "Evitar descer além da amplitude tolerada pelos ombros.",
+        "Pedir ajuda para posicionar os halteres se a carga for elevada."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Supino inclinado com barra",
+        "Supino inclinado na máquina",
+        "Supino inclinado com pegada neutra"
+      ],
+      "imagens_execucao": [
+        "Incline_Dumbbell_Press/0.jpg",
+        "Incline_Dumbbell_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_supino_declinado_barra",
+      "nome": "Supino declinado com barra",
+      "aliases": [
+        "Decline Barbell Bench Press"
+      ],
+      "musculos_primarios": [
+        "peitoral maior — porção esternocostal"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "barra",
+        "banco declinado",
+        "anilhas"
+      ],
+      "padrao_movimento": "Empurrar diagonal",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste o banco declinado e prenda os pés nos suportes.",
+        "Deite-se e estabilize o tronco no banco.",
+        "Segure a barra com pegada firme e simétrica.",
+        "Retire a barra do suporte e alinhe-a sobre a região inferior do peito.",
+        "Inspire enquanto desce a barra de forma controlada.",
+        "Mantenha os cotovelos em uma trajetória confortável e os punhos alinhados.",
+        "Expire e empurre a barra até estender os braços de forma controlada.",
+        "Recoloque a barra no suporte somente quando estiver estável."
+      ],
+      "respiracao": {
+        "descida": "Inspirar",
+        "subida": "Expirar"
+      },
+      "erros_comuns": [
+        "Descer a barra muito rapidamente.",
+        "Perder a estabilidade do tronco.",
+        "Usar uma pegada assimétrica.",
+        "Tentar recolocar a barra sem alinhá-la ao suporte."
+      ],
+      "cuidados": [
+        "Verificar o travamento dos pés e a estabilidade do banco.",
+        "Utilizar auxílio ou travas de segurança.",
+        "Não é obrigatório incluir este exercício se outras variações já atenderem ao objetivo."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Supino declinado com halteres",
+        "Supino declinado na máquina",
+        "Flexão com mãos elevadas"
+      ],
+      "imagens_execucao": [
+        "Decline_Barbell_Bench_Press/0.jpg",
+        "Decline_Barbell_Bench_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_supino_maquina",
+      "nome": "Supino na máquina",
+      "aliases": [
+        "Machine Chest Press",
+        "Chest Press",
+        "Machine Bench Press"
+      ],
+      "musculos_primarios": [
+        "peitoral maior"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "máquina de supino"
+      ],
+      "padrao_movimento": "Empurrar horizontal",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o banco para que as alças fiquem aproximadamente na altura do meio do peito.",
+        "Sente-se com as costas apoiadas e os pés firmes no chão.",
+        "Segure as alças com os punhos alinhados aos antebraços.",
+        "Empurre as alças para a frente sem elevar os ombros.",
+        "Estenda os braços sem travar os cotovelos com força.",
+        "Retorne lentamente até sentir um alongamento confortável no peito.",
+        "Mantenha o tronco apoiado durante toda a repetição."
+      ],
+      "respiracao": {
+        "empurrar": "Expirar",
+        "retornar": "Inspirar"
+      },
+      "erros_comuns": [
+        "Ajustar o banco em uma altura inadequada.",
+        "Elevar os ombros durante o empurrão.",
+        "Deixar os pesos retornarem bruscamente.",
+        "Usar impulso com o tronco."
+      ],
+      "cuidados": [
+        "Conferir o ajuste do equipamento antes de começar.",
+        "Respeitar a amplitude confortável dos ombros.",
+        "Selecionar uma carga que permita retorno controlado."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–15",
+      "variacoes": [
+        "Supino convergente",
+        "Supino unilateral na máquina",
+        "Supino com halteres"
+      ],
+      "imagens_execucao": [
+        "Machine_Bench_Press/0.jpg",
+        "Machine_Bench_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_flexao_solo",
+      "nome": "Flexão de braços",
+      "aliases": [
+        "Push-up",
+        "Flexão tradicional",
+        "Pushups"
+      ],
+      "musculos_primarios": [
+        "peitoral maior"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "deltoide anterior",
+        "reto abdominal"
+      ],
+      "equipamentos": [],
+      "padrao_movimento": "Empurrar horizontal com peso corporal",
+      "nivel": "iniciante",
+      "execucao": [
+        "Apoie as mãos no chão um pouco além da largura dos ombros.",
+        "Estenda as pernas e apoie-se nas mãos e nas pontas dos pés.",
+        "Mantenha cabeça, tronco e quadris alinhados.",
+        "Contraia o abdômen e evite deixar a lombar afundar.",
+        "Inspire enquanto flexiona os cotovelos e aproxima o peito do chão.",
+        "Mantenha os cotovelos em uma trajetória confortável, sem abri-los excessivamente.",
+        "Expire e empurre o chão até retornar à posição inicial.",
+        "Repita sem perder o alinhamento corporal."
+      ],
+      "respiracao": {
+        "descida": "Inspirar",
+        "subida": "Expirar"
+      },
+      "erros_comuns": [
+        "Deixar os quadris caírem.",
+        "Elevar demais os quadris.",
+        "Abrir excessivamente os cotovelos.",
+        "Realizar repetições incompletas sem necessidade."
+      ],
+      "cuidados": [
+        "Começar com as mãos apoiadas em uma superfície elevada se necessário.",
+        "Progredir para o chão conforme a técnica melhorar.",
+        "Interromper se houver dor nos punhos ou ombros."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "6–15",
+      "variacoes": [
+        "Flexão inclinada",
+        "Flexão com joelhos apoiados",
+        "Flexão com pés elevados",
+        "Flexão com carga adicional"
+      ],
+      "imagens_execucao": [
+        "Pushups/0.jpg",
+        "Pushups/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_crucifixo_halteres",
+      "nome": "Crucifixo com halteres",
+      "aliases": [
+        "Dumbbell Fly",
+        "Crucifixo reto",
+        "Dumbbell Flyes"
+      ],
+      "musculos_primarios": [
+        "peitoral maior"
+      ],
+      "musculos_secundarios": [
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "halteres",
+        "banco reto"
+      ],
+      "padrao_movimento": "Adução horizontal do ombro",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se no banco com os pés apoiados no chão.",
+        "Segure os halteres acima do peito com as palmas voltadas uma para a outra.",
+        "Mantenha os cotovelos ligeiramente flexionados durante todo o movimento.",
+        "Abra os braços em arco, descendo os halteres lentamente.",
+        "Pare quando atingir uma amplitude confortável para os ombros.",
+        "Aproxime os braços novamente, contraindo o peitoral.",
+        "Mantenha o mesmo ângulo dos cotovelos durante a repetição."
+      ],
+      "respiracao": {
+        "abertura": "Inspirar",
+        "fechamento": "Expirar"
+      },
+      "erros_comuns": [
+        "Transformar o movimento em um supino, flexionando muito os cotovelos.",
+        "Descer os halteres além da amplitude confortável.",
+        "Utilizar carga excessiva.",
+        "Fazer movimentos bruscos."
+      ],
+      "cuidados": [
+        "Começar com halteres leves.",
+        "Evitar forçar a articulação do ombro no alongamento.",
+        "Manter uma leve flexão dos cotovelos."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Crucifixo inclinado com halteres",
+        "Crucifixo na máquina",
+        "Crossover no cabo"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Flyes/0.jpg",
+        "Dumbbell_Flyes/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_crossover_polias",
+      "nome": "Crossover nas polias",
+      "aliases": [
+        "Cable Crossover",
+        "Crossover"
+      ],
+      "musculos_primarios": [
+        "peitoral maior"
+      ],
+      "musculos_secundarios": [
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "estação de polia dupla",
+        "pegadores"
+      ],
+      "padrao_movimento": "Adução horizontal do ombro",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste as polias na altura desejada e selecione uma carga adequada.",
+        "Segure os pegadores e fique no centro da estação com um pé à frente, se isso ajudar no equilíbrio.",
+        "Incline levemente o tronco, mantendo a coluna estável.",
+        "Mantenha os cotovelos ligeiramente flexionados.",
+        "Leve as mãos para a frente em um arco controlado, aproximando-as à frente do tronco.",
+        "Contraia o peitoral sem projetar os ombros excessivamente para a frente.",
+        "Retorne lentamente até sentir alongamento confortável.",
+        "Mantenha os pés e o tronco estáveis."
+      ],
+      "respiracao": {
+        "aproximação": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar impulso do tronco.",
+        "Flexionar e estender os cotovelos durante a repetição.",
+        "Utilizar carga que puxe os ombros para trás sem controle.",
+        "Bater os pesos no final do movimento."
+      ],
+      "cuidados": [
+        "Conferir a fixação dos cabos e dos pegadores.",
+        "Ajustar a altura das polias ao objetivo e à amplitude confortável.",
+        "Evitar alongamento forçado dos ombros."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Crossover de cima para baixo",
+        "Crossover de baixo para cima",
+        "Crossover unilateral"
+      ],
+      "imagens_execucao": [
+        "Cable_Crossover/0.jpg",
+        "Cable_Crossover/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_peck_deck",
+      "nome": "Peck deck",
+      "aliases": [
+        "Machine Chest Fly",
+        "Voador",
+        "Butterfly"
+      ],
+      "musculos_primarios": [
+        "peitoral maior"
+      ],
+      "musculos_secundarios": [
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "máquina peck deck"
+      ],
+      "padrao_movimento": "Adução horizontal do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o banco para que os braços fiquem alinhados à altura do peito.",
+        "Apoie as costas no encosto e mantenha os pés firmes no chão.",
+        "Posicione os braços nos apoios ou segure as alças conforme o modelo da máquina.",
+        "Inicie com os braços abertos dentro de uma amplitude confortável.",
+        "Aproxime os braços à frente do peito sem bater os apoios.",
+        "Contraia o peitoral brevemente, sem elevar os ombros.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "fechamento": "Expirar",
+        "abertura": "Inspirar"
+      },
+      "erros_comuns": [
+        "Ajustar os apoios em uma posição desconfortável.",
+        "Utilizar impulso para fechar os braços.",
+        "Deixar os pesos retornarem bruscamente.",
+        "Forçar a abertura dos ombros."
+      ],
+      "cuidados": [
+        "Regular a máquina antes de iniciar.",
+        "Utilizar amplitude sem dor.",
+        "Não relaxar completamente sob carga no final da abertura."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Crucifixo com halteres",
+        "Crossover nas polias",
+        "Peck deck unilateral"
+      ],
+      "imagens_execucao": [
+        "Butterfly/0.jpg",
+        "Butterfly/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_supino_halteres",
+      "nome": "Supino reto com halteres",
+      "aliases": [
+        "Dumbbell Bench Press"
+      ],
+      "musculos_primarios": [
+        "peitoral maior"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "halteres",
+        "banco reto"
+      ],
+      "padrao_movimento": "Empurrar horizontal",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se na ponta do banco com um halter em cada mão.",
+        "Deite-se de forma controlada e posicione os halteres ao lado do peito.",
+        "Apoie os pés no chão e estabilize as escápulas.",
+        "Mantenha os punhos firmes e alinhados com os antebraços.",
+        "Inspire enquanto desce os halteres até uma amplitude confortável.",
+        "Expire e empurre os halteres para cima, mantendo o controle.",
+        "Retorne à posição inicial sem deixar os halteres caírem ou se chocarem."
+      ],
+      "respiracao": {
+        "descida": "Inspirar",
+        "subida": "Expirar"
+      },
+      "erros_comuns": [
+        "Deixar os punhos dobrarem para trás.",
+        "Descer os halteres de maneira descontrolada.",
+        "Bater os halteres no topo.",
+        "Escolher uma carga que impeça a estabilização."
+      ],
+      "cuidados": [
+        "Aprender a posicionar e retirar os halteres com segurança.",
+        "Utilizar carga compatível com a capacidade de estabilização.",
+        "Evitar amplitude que provoque dor nos ombros."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Supino inclinado com halteres",
+        "Supino com pegada neutra",
+        "Supino unilateral com halter"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Bench_Press/0.jpg",
+        "Dumbbell_Bench_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_paralelas",
+      "nome": "Mergulho nas paralelas com foco no peito",
+      "aliases": [
+        "Chest Dips",
+        "Dips"
+      ],
+      "musculos_primarios": [
+        "peitoral maior — porção esternocostal"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "barras paralelas"
+      ],
+      "padrao_movimento": "Empurrar vertical com peso corporal",
+      "nivel": "avancado",
+      "execucao": [
+        "Segure as barras paralelas e suba até apoiar o peso do corpo com os braços estendidos.",
+        "Estabilize os ombros e mantenha as pernas em uma posição confortável.",
+        "Incline levemente o tronco para a frente, sem perder o controle.",
+        "Inspire enquanto flexiona os cotovelos e desce lentamente.",
+        "Pare antes de atingir uma amplitude que force excessivamente os ombros.",
+        "Expire e empurre as barras para retornar à posição inicial.",
+        "Mantenha o movimento controlado, sem balançar o corpo."
+      ],
+      "respiracao": {
+        "descida": "Inspirar",
+        "subida": "Expirar"
+      },
+      "erros_comuns": [
+        "Descer profundamente apesar de desconforto nos ombros.",
+        "Balançar o corpo para ganhar impulso.",
+        "Deixar os ombros perderem a estabilidade.",
+        "Tentar o exercício sem força suficiente para controlar a descida."
+      ],
+      "cuidados": [
+        "Começar com máquina assistida ou elástico se necessário.",
+        "Evitar o exercício se provocar dor nos ombros.",
+        "Adicionar carga somente quando a técnica estiver consistente."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "6–12",
+      "variacoes": [
+        "Paralelas na máquina assistida",
+        "Flexão de braços",
+        "Mergulho em máquina"
+      ],
+      "imagens_execucao": [
+        "Dips_-_Chest_Version/0.jpg",
+        "Dips_-_Chest_Version/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_supino_smith",
+      "nome": "Supino no Smith",
+      "aliases": [
+        "Smith Machine Bench Press"
+      ],
+      "musculos_primarios": [
+        "peitoral maior"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipamentos": [
+        "máquina Smith",
+        "banco reto"
+      ],
+      "padrao_movimento": "Empurrar horizontal",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione o banco sob a barra e ajuste a altura para iniciar com segurança.",
+        "Deite-se com os pés apoiados e as escápulas estáveis.",
+        "Segure a barra com pegada simétrica e destrave o mecanismo.",
+        "Desça a barra lentamente em direção ao peito, respeitando a trajetória fixa.",
+        "Pare na amplitude confortável para os ombros e punhos.",
+        "Empurre a barra para cima, expirando durante o esforço.",
+        "Trave a barra nos ganchos somente quando estiver alinhada e sob controle."
+      ],
+      "respiracao": {
+        "descida": "Inspirar",
+        "subida": "Expirar"
+      },
+      "erros_comuns": [
+        "Posicionar o banco de modo incompatível com a trajetória da barra.",
+        "Descer rápido demais.",
+        "Perder o apoio dos pés.",
+        "Não aprender o mecanismo de travamento antes de usar carga."
+      ],
+      "cuidados": [
+        "Testar o mecanismo de segurança com pouca ou nenhuma carga.",
+        "Ajustar os limitadores de segurança quando disponíveis.",
+        "Não presumir que a trajetória fixa será confortável para todas as pessoas."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Supino inclinado no Smith",
+        "Supino reto com barra",
+        "Supino reto com halteres"
+      ],
+      "imagens_execucao": [
+        "Smith_Machine_Bench_Press/0.jpg",
+        "Smith_Machine_Bench_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "peito_flexao_inclinada",
+      "nome": "Flexão inclinada",
+      "aliases": [
+        "Incline Push-Up",
+        "Flexão com mãos elevadas"
+      ],
+      "musculos_primarios": [
+        "peitoral maior"
+      ],
+      "musculos_secundarios": [
+        "tríceps braquial",
+        "deltoide anterior",
+        "reto abdominal"
+      ],
+      "equipamentos": [
+        "banco ou suporte estável"
+      ],
+      "padrao_movimento": "Empurrar horizontal com peso corporal",
+      "nivel": "iniciante",
+      "execucao": [
+        "Apoie as mãos em um banco ou suporte firme, aproximadamente na largura dos ombros.",
+        "Afaste os pés para formar uma linha estável entre cabeça, tronco e quadris.",
+        "Contraia o abdômen e mantenha os ombros afastados das orelhas.",
+        "Inspire enquanto flexiona os cotovelos e aproxima o peito do suporte.",
+        "Mantenha o corpo alinhado e evite deixar os quadris caírem.",
+        "Expire e empurre o suporte para voltar à posição inicial.",
+        "Ajuste a altura do apoio para adequar a dificuldade."
+      ],
+      "respiracao": {
+        "descida": "Inspirar",
+        "subida": "Expirar"
+      },
+      "erros_comuns": [
+        "Usar um suporte instável.",
+        "Dobrar o quadril durante o movimento.",
+        "Projetar a cabeça à frente.",
+        "Fazer as repetições rapidamente."
+      ],
+      "cuidados": [
+        "Verificar a estabilidade do apoio antes de começar.",
+        "Usar uma superfície mais alta para reduzir a dificuldade.",
+        "Diminuir a altura do apoio gradualmente conforme a força melhorar."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–15",
+      "variacoes": [
+        "Flexão na parede",
+        "Flexão com joelhos apoiados",
+        "Flexão tradicional"
+      ],
+      "imagens_execucao": [
+        "Incline_Push-Up/0.jpg",
+        "Incline_Push-Up/1.jpg"
+      ]
+    }
+  ]
+}
