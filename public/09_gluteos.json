@@ -188,10 +188,7 @@
         "gluteos_ponte_unilateral",
         "gluteos_hip_thrust_barra"
       ],
-      "imagens_execucao": [
-        "Barbell_Glute_Bridge/0.jpg",
-        "Barbell_Glute_Bridge/1.jpg"
-      ]
+      "imagens_execucao": []
     },
     {
       "id": "gluteos_hip_thrust_unilateral",
@@ -551,10 +548,7 @@
         "gluteos_coice_cabo",
         "gluteos_extensao_quadril_quatro_apoios"
       ],
-      "imagens_execucao": [
-        "Glute_Kickback/0.jpg",
-        "Glute_Kickback/1.jpg"
-      ]
+      "imagens_execucao": []
     },
     {
       "id": "gluteos_extensao_quadril_quatro_apoios",
@@ -737,10 +731,7 @@
         "gluteos_agachamento_sumo",
         "gluteos_step_up"
       ],
-      "imagens_execucao": [
-        "Split_Squat_with_Dumbbells/0.jpg",
-        "Split_Squat_with_Dumbbells/1.jpg"
-      ]
+      "imagens_execucao": []
     },
     {
       "id": "gluteos_step_up",
@@ -1173,10 +1164,7 @@
         "gluteos_levantamento_romeno",
         "gluteos_pull_through"
       ],
-      "imagens_execucao": [
-        "Stiff-Legged_Dumbbell_Deadlift/0.jpg",
-        "Stiff-Legged_Dumbbell_Deadlift/1.jpg"
-      ]
+      "imagens_execucao": []
     },
     {
       "id": "gluteos_pull_through",
