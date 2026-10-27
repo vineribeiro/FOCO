@@ -165,6 +165,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
   const isLogin = mode === 'login';
   const isRegister = mode === 'register';
   const isForgot = mode === 'forgot';
+  const isReset = mode === 'reset';
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#080808] text-white selection:bg-white selection:text-black">
@@ -240,7 +241,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
             <div className="border-b border-white/[0.07] px-5 pb-5 pt-6 sm:px-8 sm:pt-8">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">
-                  {isLogin ? 'Bem-vindo de volta' : isRegister ? 'Comece sua jornada' : 'Recuperar acesso'}
+                  {isLogin ? 'Bem-vindo de volta' : isRegister ? 'Comece sua jornada' : isReset ? 'Definir nova senha' : 'Recuperar acesso'}
                 </span>
                 <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-neutral-600">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
@@ -248,19 +249,21 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                 </div>
               </div>
               <h2 className="text-2xl font-black tracking-tight sm:text-[28px]">
-                {isLogin ? 'Entre na sua conta.' : isRegister ? 'Crie seu perfil.' : 'Vamos recuperar seu acesso.'}
+                {isLogin ? 'Entre na sua conta.' : isRegister ? 'Crie seu perfil.' : isReset ? 'Defina sua nova senha.' : 'Vamos recuperar seu acesso.'}
               </h2>
               <p className="mt-2 max-w-md text-xs leading-6 text-neutral-400 sm:text-sm">
                 {isLogin
                   ? 'Continue de onde parou e mantenha seu treino em movimento.'
                   : isRegister
                   ? 'Sua rotina de treino começa com um perfil simples e personalizado.'
+                  : isReset
+                  ? 'Crie uma senha nova, diferente das que você já usa em outros serviços.'
                   : 'Informe o e-mail da sua conta para receber as instruções de recuperação.'}
               </p>
             </div>
 
             <div className="px-5 py-5 sm:px-8 sm:py-7">
-              {!isForgot && (
+              {!isForgot && !isReset && (
                 <div className="mb-6 grid grid-cols-2 rounded-xl border border-white/10 bg-black/40 p-1" role="tablist" aria-label="Tipo de acesso">
                   <button
                     type="button"
@@ -317,24 +320,28 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                   </div>
                 )}
 
-                <div>
-                  <label htmlFor="foco-email" className="mb-2 block text-[11px] font-bold text-neutral-300">E-mail</label>
-                  <div className="relative">
-                    <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
-                    <input
-                      id="foco-email"
-                      type="email"
-                      autoComplete="email"
-                      inputMode="email"
-                      required
-                      maxLength={254}
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                      placeholder="voce@email.com"
-                      className="w-full rounded-xl border border-white/10 bg-black/40 py-3.5 pl-10 pr-3.5 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-white/40 focus:ring-2 focus:ring-white/[0.04]"
-                    />
+                {!isReset && (
+                  <div>
+                    <label htmlFor="foco-email" className="mb-2 block text-[11px] font-bold text-neutral-300">E-mail</label>
+                    <div className="relative">
+                      <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+                      <input
+                        id="foco-email"
+                        type="email"
+                        autoComplete="email"
+                        inputMode="email"
+                        required
+                        maxLength={254}
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        placeholder="voce@email.com"
+                        className="w-full rounded-xl border border-white/10 bg-black/40 py-3.5 pl-10 pr-3.5 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-white/40 focus:ring-2 focus:ring-white/[0.04]"
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {!isForgot && (                </div>
 
                 {!isForgot && (
                   <div>
@@ -351,23 +358,23 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                       <input
                         id="foco-password"
                         type={showPassword ? 'text' : 'password'}
-                        autoComplete={isRegister ? 'new-password' : 'current-password'}
+                        autoComplete={isRegister || isReset ? 'new-password' : 'current-password'}
                         required
-                        minLength={6}
+                        minLength={isRegister || isReset ? 8 : 6}
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
-                        placeholder={isRegister ? 'Crie uma senha com 6+ caracteres' : 'Digite sua senha'}
+                        placeholder={isReset ? 'Digite sua nova senha' : isRegister ? 'Crie uma senha com 8+ caracteres' : 'Digite sua senha'}
                         className="w-full rounded-xl border border-white/10 bg-black/40 py-3.5 pl-10 pr-11 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-white/40 focus:ring-2 focus:ring-white/[0.04]"
                       />
                       <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-neutral-500 transition hover:text-white">
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
                     </div>
-                    {isRegister && <p className="mt-2 text-[10px] text-neutral-600">Use pelo menos 6 caracteres. Evite senhas já usadas em outros sites.</p>}
+                    {(isRegister || isReset) && <p className="mt-2 text-[10px] text-neutral-600">Use pelo menos 8 caracteres e evite senhas já usadas em outros sites.</p>}
                   </div>
                 )}
 
-                {isRegister && (
+                {(isRegister || isReset) && (
                   <>
                     <div>
                       <label htmlFor="foco-confirm-password" className="mb-2 block text-[11px] font-bold text-neutral-300">Confirmar senha</label>
@@ -378,10 +385,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                           type={showConfirmPassword ? 'text' : 'password'}
                           autoComplete="new-password"
                           required
-                          minLength={6}
+                          minLength={8}
                           value={confirmPassword}
                           onChange={(event) => setConfirmPassword(event.target.value)}
-                          placeholder="Digite a senha novamente"
+                          placeholder={isReset ? 'Digite a nova senha novamente' : 'Digite a senha novamente'}
                           className="w-full rounded-xl border border-white/10 bg-black/40 py-3.5 pl-10 pr-11 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-white/40 focus:ring-2 focus:ring-white/[0.04]"
                         />
                         <button type="button" onClick={() => setShowConfirmPassword((value) => !value)} aria-label={showConfirmPassword ? 'Ocultar confirmação de senha' : 'Mostrar confirmação de senha'} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-neutral-500 transition hover:text-white">
@@ -390,7 +397,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                       </div>
                     </div>
 
-                    <details className="group rounded-xl border border-white/[0.08] bg-black/20">
+                    {isRegister && <details className="group rounded-xl border border-white/[0.08] bg-black/20">
                       <summary className="cursor-pointer list-none px-4 py-3.5 text-[11px] font-bold text-neutral-300 marker:hidden">
                         Personalizar meu perfil de atleta
                         <span className="float-right text-neutral-600 transition group-open:rotate-180">⌄</span>
@@ -414,7 +421,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                           </select>
                         </div>
                       </div>
-                    </details>
+                    </details>}
                   </>
                 )}
 
@@ -423,18 +430,18 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                   disabled={busy}
                   className="group mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-4 text-[11px] font-black uppercase tracking-[0.16em] text-black shadow-[0_8px_28px_rgba(255,255,255,.08)] transition hover:bg-neutral-200 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <span>{busy ? 'Aguarde um instante...' : isLogin ? 'Entrar no FOCO' : isRegister ? 'Criar minha conta' : 'Enviar instruções'}</span>
+                  <span>{busy ? 'Aguarde um instante...' : isLogin ? 'Entrar no FOCO' : isRegister ? 'Criar minha conta' : isReset ? 'Atualizar senha' : 'Enviar instruções'}</span>
                   {!busy && <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />}
                 </button>
               </form>
 
-              {isForgot && (
-                <button type="button" onClick={() => changeMode('login')} className="mt-5 flex w-full items-center justify-center gap-2 text-xs font-bold text-neutral-400 transition hover:text-white">
+              {(isForgot || isReset) && (
+                <button type="button" onClick={() => { if (isReset) removeStoredToken(); changeMode('login'); }} className="mt-5 flex w-full items-center justify-center gap-2 text-xs font-bold text-neutral-400 transition hover:text-white">
                   Voltar para entrar
                 </button>
               )}
 
-              {!isForgot && (
+              {!isForgot && !isReset && (
                 <p className="mt-5 text-center text-[11px] text-neutral-500">
                   {isLogin ? 'Ainda não tem uma conta?' : 'Já tem uma conta?'}{' '}
                   <button type="button" onClick={() => changeMode(isLogin ? 'register' : 'login')} className="font-black text-white underline decoration-white/30 underline-offset-4 transition hover:decoration-white">
