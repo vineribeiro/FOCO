@@ -135,6 +135,7 @@ export const ProgressPage: React.FC = () => {
         </div>
       )}
 
+      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
       {/* Weight Evolution Chart (Monochrome Area) */}
       <div className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3">
         <div className="flex items-center justify-between">
@@ -171,7 +172,7 @@ export const ProgressPage: React.FC = () => {
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0E1015',
+                    backgroundColor: '#171717',
                     borderColor: 'rgba(255,255,255,0.2)',
                     borderRadius: '12px',
                     fontSize: '11px',
@@ -220,7 +221,7 @@ export const ProgressPage: React.FC = () => {
                 <YAxis stroke="#A3A3A3" fontSize={10} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0E1015',
+                    backgroundColor: '#171717',
                     borderColor: 'rgba(255,255,255,0.2)',
                     borderRadius: '12px',
                     fontSize: '11px',
@@ -243,6 +244,7 @@ export const ProgressPage: React.FC = () => {
         </div>
       </div>
 
+      </div>
       {/* Record Measurement Form & List */}
       <form
         onSubmit={handleAddMeasurement}
