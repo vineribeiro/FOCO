@@ -96,7 +96,19 @@ if (approval || rejection) {
 }
 
 function promptFor(e) {
+  const name = String(e.nome || '').toLocaleLowerCase('pt-BR');
+  const isIsometric = /prancha|isometr|wall sit|apoio parado|segurar posição|hold/.test(name);
+  const isCardio = /cardio|esteira|caminhada|corrida|bicicleta ergométrica|elíptico|remo ergométrico/.test(name + ' ' + e.sourceGroup);
+  const unilateral = /unilateral|um braço|uma perna|alternad|lado/.test(name);
+  const phaseRule = isIsometric
+    ? 'Panel A: controlled setup position. Panel B: correctly held isometric position. Do not invent a repetitive motion.'
+    : isCardio
+      ? 'Panel A and B: two distinct, realistic points of one movement cycle for this specific aerobic activity. Preserve realistic machine geometry.'
+      : 'Panel A: biomechanically correct start of resistance exercise. Panel B: safe terminal range-of-motion with same camera and exercise equipment.';
   return [
+    phaseRule,
+    unilateral ? 'Unilateral exercise: clearly represent only the working side and the necessary stabilizing side.' : 'When the movement is bilateral, show symmetric motion consistent with the exercise.',
+
     'FOCO Anatomy Engine v3. Produce ONE premium educational fitness anatomical atlas image.',
     'Critical: this is ONLY the following exercise, not a similar variation:',
     'EXERCISE: ' + e.nome + '.',
