@@ -26,6 +26,7 @@ export interface ExerciseCatalogItem {
 interface DedicatedExerciseSource {
   id: string;
   nome: string;
+  grupo_principal: string;
   aliases: string[];
   musculos_primarios: string[];
   musculos_secundarios: string[];
