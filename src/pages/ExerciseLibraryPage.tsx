@@ -312,7 +312,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
                   <p className="mt-1 text-xl font-black text-white">{detailExercise.suggestedSets ?? '—'}</p>
                 </div>
                 <div className="rounded-xl border border-orange-500/20 bg-orange-500/[0.07] p-3">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-orange-300">Repetições sugeridas</p>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-orange-300">{detailExercise.suggestedRepsLabel || 'Repetições sugeridas'}</p>
                   <p className="mt-1 text-xl font-black text-white">{detailExercise.suggestedReps ?? '—'}</p>
                 </div>
               </div>
