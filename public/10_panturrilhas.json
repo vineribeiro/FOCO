@@ -1,0 +1,692 @@
+{
+  "arquivo": "10_panturrilhas.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "panturrilhas",
+  "descricao": "Exercícios para gastrocnêmio, sóleo e musculatura auxiliar do tornozelo.",
+  "exercicios": [
+    {
+      "id": "panturrilha_em_pe_maquina",
+      "nome": "Panturrilha em pé na máquina",
+      "aliases": [
+        "Elevação de panturrilha em pé"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "maquina_de_panturrilha_em_pe"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione os ombros sob as almofadas da máquina e apoie a parte anterior dos pés na plataforma.",
+        "Mantenha os joelhos estendidos, sem travá-los com força, e o tronco estável.",
+        "Desça os calcanhares lentamente até sentir alongamento confortável na panturrilha.",
+        "Eleve os calcanhares o máximo que conseguir sem perder o controle.",
+        "Contraia a panturrilha no topo e retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os calcanhares.",
+        "descida": "Inspire ao baixar os calcanhares."
+      },
+      "erros_comuns": [
+        "Realizar movimentos curtos e sem amplitude.",
+        "Quicar no final da descida.",
+        "Usar impulso do corpo.",
+        "Deixar os pés rolarem para dentro ou para fora."
+      ],
+      "cuidados": [
+        "Use uma carga que permita controlar toda a amplitude.",
+        "Evite forçar o alongamento se houver dor no tendão de Aquiles.",
+        "Ajuste a máquina para manter o apoio firme nos ombros."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "panturrilha_em_pe_unilateral",
+        "panturrilha_no_smith"
+      ],
+      "imagens_execucao": [
+        "Standing_Calf_Raises/0.jpg",
+        "Standing_Calf_Raises/1.jpg"
+      ]
+    },
+    {
+      "id": "panturrilha_sentado_maquina",
+      "nome": "Panturrilha sentada na máquina",
+      "aliases": [
+        "Elevação de panturrilha sentada"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "gastrocnemio",
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "maquina_de_panturrilha_sentado"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se na máquina e ajuste a almofada sobre a parte inferior das coxas, próximo aos joelhos.",
+        "Apoie a parte anterior dos pés na plataforma e mantenha os joelhos alinhados com os pés.",
+        "Baixe os calcanhares lentamente até obter um alongamento confortável.",
+        "Eleve os calcanhares pressionando a plataforma com a parte anterior dos pés.",
+        "Pause brevemente no topo e retorne de forma controlada."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a elevação dos calcanhares.",
+        "descida": "Inspire durante a descida."
+      },
+      "erros_comuns": [
+        "Usar carga excessiva e reduzir a amplitude.",
+        "Fazer repetições rápidas com impulso.",
+        "Deixar os joelhos perderem o alinhamento.",
+        "Soltar o peso bruscamente na descida."
+      ],
+      "cuidados": [
+        "Ajuste a almofada sem pressionar excessivamente os joelhos.",
+        "Não force a amplitude diante de dor no tornozelo ou tendão de Aquiles."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "panturrilha_sentado_unilateral",
+        "panturrilha_com_halteres_sentado"
+      ],
+      "imagens_execucao": [
+        "Seated_Calf_Raise/0.jpg",
+        "Seated_Calf_Raise/1.jpg"
+      ]
+    },
+    {
+      "id": "panturrilha_no_leg_press",
+      "nome": "Panturrilha no leg press",
+      "aliases": [
+        "Elevação de panturrilha no leg press"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "leg_press"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se no leg press e posicione a parte anterior dos pés na borda inferior da plataforma.",
+        "Mantenha os joelhos estendidos, mas sem hiperextensão.",
+        "Desloque os calcanhares em direção ao corpo, permitindo a dorsiflexão controlada dos tornozelos.",
+        "Empurre a plataforma com a parte anterior dos pés, elevando os calcanhares.",
+        "Retorne lentamente sem deixar os pés escorregarem da plataforma."
+      ],
+      "respiracao": {
+        "subida": "Expire ao empurrar a plataforma com os pés.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Apoiar os pés muito perto da borda sem segurança.",
+        "Dobrar e estender os joelhos para ajudar no movimento.",
+        "Usar carga que impeça a amplitude completa.",
+        "Deixar a plataforma se mover sem controle."
+      ],
+      "cuidados": [
+        "Mantenha a parte anterior dos pés firmemente apoiada.",
+        "Não destrave nem altere os mecanismos de segurança do aparelho.",
+        "Comece com carga baixa para aprender o movimento."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "panturrilha_no_leg_press_unilateral"
+      ],
+      "imagens_execucao": [
+        "Calf_Press_On_The_Leg_Press_Machine/0.jpg",
+        "Calf_Press_On_The_Leg_Press_Machine/1.jpg"
+      ]
+    },
+    {
+      "id": "panturrilha_em_pe_unilateral",
+      "nome": "Panturrilha em pé unilateral",
+      "aliases": [
+        "Elevação unilateral de panturrilha"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "degrau",
+        "peso_corporal",
+        "apoio_estavel"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "intermediario",
+      "execucao": [
+        "Fique em pé sobre uma superfície firme, apoiando a parte anterior de um pé e deixando o calcanhar livre.",
+        "Segure em um apoio para manter o equilíbrio.",
+        "Desça o calcanhar lentamente até um alongamento confortável.",
+        "Eleve o calcanhar usando apenas a perna de apoio.",
+        "Complete as repetições e troque de lado."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar o calcanhar.",
+        "descida": "Inspire ao descer."
+      },
+      "erros_comuns": [
+        "Inclinar o corpo para criar impulso.",
+        "Fazer o movimento rapidamente.",
+        "Girar o tornozelo para compensar.",
+        "Usar um degrau instável."
+      ],
+      "cuidados": [
+        "Utilize um apoio firme para evitar quedas.",
+        "Comece sem carga adicional.",
+        "Reduza a amplitude se houver desconforto no tendão de Aquiles."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "panturrilha_em_pe_maquina",
+        "panturrilha_unilateral_com_halter"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "panturrilha_no_smith",
+      "nome": "Panturrilha em pé no Smith",
+      "aliases": [
+        "Elevação de panturrilha no Smith"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "maquina_smith",
+        "degrau"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione a barra sobre a região superior das costas e fique com a parte anterior dos pés apoiada em um degrau estável.",
+        "Destrave a barra e mantenha o tronco firme.",
+        "Baixe os calcanhares lentamente, sem perder o equilíbrio.",
+        "Eleve os calcanhares até a maior amplitude confortável.",
+        "Ao terminar, trave a barra corretamente nos suportes."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os calcanhares.",
+        "descida": "Inspire ao baixar os calcanhares."
+      },
+      "erros_comuns": [
+        "Usar um degrau instável.",
+        "Adicionar carga antes de dominar o equilíbrio.",
+        "Quicar na parte inferior do movimento.",
+        "Posicionar a barra sobre o pescoço."
+      ],
+      "cuidados": [
+        "Use travas de segurança e confira o encaixe da barra.",
+        "Posicione a barra sobre os trapézios, com proteção se necessário.",
+        "Não utilize uma amplitude que provoque dor."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "panturrilha_em_pe_unilateral"
+      ],
+      "imagens_execucao": [
+        "Smith_Machine_Calf_Raise/0.jpg",
+        "Smith_Machine_Calf_Raise/1.jpg"
+      ]
+    },
+    {
+      "id": "panturrilha_com_halteres",
+      "nome": "Panturrilha em pé com halteres",
+      "aliases": [
+        "Elevação de panturrilha com halteres"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "halteres",
+        "peso_corporal"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés afastados aproximadamente na largura do quadril.",
+        "Segure um halter em cada mão e mantenha os braços ao lado do corpo.",
+        "Eleve os calcanhares sem dobrar os joelhos para gerar impulso.",
+        "Pause brevemente na posição mais alta.",
+        "Desça lentamente até apoiar os calcanhares, mantendo o equilíbrio."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os calcanhares.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Balançar o tronco.",
+        "Usar halteres pesados demais.",
+        "Não completar a amplitude.",
+        "Distribuir o peso de forma desigual entre os pés."
+      ],
+      "cuidados": [
+        "Use uma superfície antiderrapante.",
+        "Reduza a carga se não conseguir manter o equilíbrio."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "panturrilha_em_pe_unilateral",
+        "panturrilha_no_smith"
+      ],
+      "imagens_execucao": [
+        "Standing_Dumbbell_Calf_Raise/0.jpg",
+        "Standing_Dumbbell_Calf_Raise/1.jpg"
+      ]
+    },
+    {
+      "id": "panturrilha_no_degrau_peso_corporal",
+      "nome": "Panturrilha no degrau com peso corporal",
+      "aliases": [
+        "Elevação de panturrilha no degrau"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "degrau",
+        "peso_corporal",
+        "apoio_estavel"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione a parte anterior dos dois pés sobre um degrau firme, com os calcanhares livres.",
+        "Segure em um apoio estável.",
+        "Desça os calcanhares lentamente até um alongamento confortável.",
+        "Eleve os calcanhares o máximo possível sem balançar o corpo.",
+        "Retorne de forma controlada e repita."
+      ],
+      "respiracao": {
+        "subida": "Expire ao subir.",
+        "descida": "Inspire ao descer."
+      },
+      "erros_comuns": [
+        "Usar um degrau escorregadio.",
+        "Descer além da amplitude confortável.",
+        "Quicar no final do movimento.",
+        "Transferir o peso excessivamente para as mãos."
+      ],
+      "cuidados": [
+        "Verifique se o degrau não se movimenta.",
+        "Use apoio para manter o equilíbrio.",
+        "Se houver dor no tendão de Aquiles, interrompa e avalie a causa."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        25
+      ],
+      "variacoes": [
+        "panturrilha_em_pe_unilateral",
+        "panturrilha_com_halteres"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "panturrilha_sentado_com_halter",
+      "nome": "Panturrilha sentada com halter",
+      "aliases": [
+        "Elevação de panturrilha sentada com peso livre"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "gastrocnemio",
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "banco",
+        "halter",
+        "degrau_opcional"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se em um banco e mantenha os pés apoiados no chão ou em um degrau firme.",
+        "Coloque um halter apoiado com cuidado sobre a parte inferior das coxas, próximo aos joelhos.",
+        "Desça os calcanhares lentamente.",
+        "Eleve os calcanhares pressionando a parte anterior dos pés contra o apoio.",
+        "Retorne controladamente e repita."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a elevação.",
+        "descida": "Inspire durante a descida."
+      },
+      "erros_comuns": [
+        "Apoiar o halter diretamente sobre a articulação do joelho.",
+        "Usar um peso instável.",
+        "Fazer repetições com impulso.",
+        "Reduzir a amplitude por excesso de carga."
+      ],
+      "cuidados": [
+        "Use uma toalha ou almofada para melhorar o conforto.",
+        "Certifique-se de que o halter está estável antes de iniciar.",
+        "Peça ajuda para posicionar cargas pesadas."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "panturrilha_sentado_maquina"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "panturrilha_unilateral_com_halter",
+      "nome": "Panturrilha unilateral com halter",
+      "aliases": [
+        "Elevação unilateral com halter"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "halter",
+        "degrau",
+        "apoio_estavel"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "intermediario",
+      "execucao": [
+        "Segure um halter em uma mão e utilize a outra para manter o equilíbrio.",
+        "Apoie a parte anterior de um pé em um degrau firme, deixando o calcanhar livre.",
+        "Desça o calcanhar lentamente.",
+        "Eleve o calcanhar sem girar o tornozelo ou inclinar o tronco.",
+        "Finalize as repetições e troque de lado."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar o calcanhar.",
+        "descida": "Inspire ao baixar."
+      },
+      "erros_comuns": [
+        "Escolher um halter que comprometa o equilíbrio.",
+        "Girar o pé durante a subida.",
+        "Usar impulso.",
+        "Fazer a descida rapidamente."
+      ],
+      "cuidados": [
+        "Mantenha o apoio próximo e firme.",
+        "Comece com carga leve.",
+        "Não force o alongamento diante de dor."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "panturrilha_em_pe_unilateral",
+        "panturrilha_com_halteres"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "panturrilha_no_leg_press_unilateral",
+      "nome": "Panturrilha unilateral no leg press",
+      "aliases": [
+        "Elevação unilateral no leg press"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "leg_press"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste o leg press e posicione a parte anterior de um pé na plataforma.",
+        "Mantenha a perna alinhada e a carga sob controle.",
+        "Desça o calcanhar lentamente até uma amplitude confortável.",
+        "Empurre a plataforma com a parte anterior do pé, elevando o calcanhar.",
+        "Complete as repetições e troque de perna."
+      ],
+      "respiracao": {
+        "subida": "Expire ao empurrar a plataforma.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Colocar o pé próximo demais da borda.",
+        "Usar carga excessiva.",
+        "Deixar o tornozelo girar.",
+        "Perder o controle do equipamento."
+      ],
+      "cuidados": [
+        "Mantenha o pé firmemente apoiado.",
+        "Confira as travas de segurança antes de iniciar.",
+        "Não faça o exercício se não conseguir controlar a plataforma com uma perna."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "panturrilha_no_leg_press"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "panturrilha_donkey",
+      "nome": "Panturrilha donkey",
+      "aliases": [
+        "Elevação de panturrilha com tronco inclinado"
+      ],
+      "grupo_principal": "panturrilhas",
+      "musculos_primarios": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "musculos_secundarios": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipamentos": [
+        "maquina_donkey",
+        "degrau",
+        "apoio_estavel"
+      ],
+      "padrao_movimento": "flexao_plantar",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione a parte anterior dos pés em uma plataforma estável e mantenha o tronco inclinado com apoio seguro.",
+        "Mantenha os joelhos levemente flexionados ou na posição prevista pela máquina.",
+        "Baixe os calcanhares lentamente até um alongamento confortável.",
+        "Eleve os calcanhares sem balançar o tronco.",
+        "Pause no topo e retorne de forma controlada."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os calcanhares.",
+        "descida": "Inspire ao descer."
+      },
+      "erros_comuns": [
+        "Arredondar excessivamente a coluna.",
+        "Usar impulso do tronco.",
+        "Quicar na parte inferior.",
+        "Utilizar apoio improvisado ou instável."
+      ],
+      "cuidados": [
+        "Priorize uma posição confortável para a coluna.",
+        "Utilize somente equipamentos e apoios firmes.",
+        "Interrompa o movimento se houver dor lombar ou no tornozelo."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "panturrilha_em_pe_maquina",
+        "panturrilha_no_degrau_peso_corporal"
+      ],
+      "imagens_execucao": [
+        "Donkey_Calf_Raises/0.jpg",
+        "Donkey_Calf_Raises/1.jpg"
+      ]
+    },
+    {
+      "id": "elevacao_tibial",
+      "nome": "Elevação de ponta dos pés",
+      "aliases": [
+        "Tibialis raise",
+        "Dorsiflexão do tornozelo"
+      ],
+      "grupo_principal": "musculatura_anterior_da_perna",
+      "musculos_primarios": [
+        "tibial_anterior"
+      ],
+      "musculos_secundarios": [
+        "extensores_dos_dedos"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "parede"
+      ],
+      "padrao_movimento": "dorsiflexao",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com as costas apoiadas em uma parede e os calcanhares no chão.",
+        "Posicione os pés à frente o suficiente para permitir o movimento com estabilidade.",
+        "Mantenha os calcanhares apoiados e levante a parte anterior dos pés.",
+        "Pause brevemente no topo.",
+        "Baixe as pontas dos pés lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar as pontas dos pés.",
+        "descida": "Inspire ao baixar as pontas dos pés."
+      },
+      "erros_comuns": [
+        "Levantar os calcanhares junto com os dedos.",
+        "Balançar o corpo para criar impulso.",
+        "Fazer o movimento rapidamente.",
+        "Usar uma posição instável."
+      ],
+      "cuidados": [
+        "Este exercício trabalha principalmente a parte anterior da perna, não a panturrilha posterior.",
+        "Comece com amplitude confortável.",
+        "Interrompa se surgir dor no tornozelo."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [],
+      "imagens_execucao": []
+    }
+  ],
+  "observacao_imagens": "As imagens associadas são referências do catálogo visual do FOCO para movimentos correspondentes. Exercícios sem correspondência visual específica permanecem sem imagem."
+}
