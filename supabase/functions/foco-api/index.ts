@@ -199,7 +199,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
   // Normalize the route supplied by the Supabase gateway. Auth endpoints must
   // remain public even when the runtime exposes an extra prefix or trailing slash.
-  path = path.replace(/\\+/g, "/").replace(/\\/+$/, "") || "/";
+  path = path.replace(/\/+/g, "/").replace(/\/+$/, "") || "/";
   const apiPathIndex = path.lastIndexOf("/api/");
   if (apiPathIndex > 0) path = path.slice(apiPathIndex);
   if (path === "/api/auth/login" || path === "/api/auth/register" || path === "/api/auth/refresh" || path === "/api/auth/forgot-password") {
