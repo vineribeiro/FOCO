@@ -12,6 +12,8 @@ import {
 } from '../types';
 
 const TOKEN_KEY = 'foco_auth_token';
+const REFRESH_TOKEN_KEY = 'foco_auth_refresh_token';
+const TOKEN_EXPIRES_KEY = 'foco_auth_expires_at';
 const LOCAL_DB_KEY = 'foco_local_db_v1';
 
 // Public publishable key: safe in the browser. Gemini and Supabase secret keys stay server-side.
@@ -26,9 +28,13 @@ export function getStoredToken(): string | null {
   }
 }
 
-export function setStoredToken(token: string): void {
+export function setStoredToken(token: string, refreshToken?: string, expiresAt?: number): void {
   try {
     localStorage.setItem(TOKEN_KEY, token);
+    if (refreshToken) localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    if (typeof expiresAt === 'number' && Number.isFinite(expiresAt)) {
+      localStorage.setItem(TOKEN_EXPIRES_KEY, String(expiresAt));
+    }
   } catch {
     // Ignore
   }
@@ -37,8 +43,47 @@ export function setStoredToken(token: string): void {
 export function removeStoredToken(): void {
   try {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(TOKEN_EXPIRES_KEY);
   } catch {
     // Ignore
+  }
+}
+
+async function getValidAccessToken(): Promise<string | null> {
+  const token = getStoredToken();
+  if (!token) return null;
+
+  try {
+    const expiresAt = Number(localStorage.getItem(TOKEN_EXPIRES_KEY) || 0);
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+    // Older sessions without expiry metadata will be validated by the API as usual.
+    if (!expiresAt || expiresAt * 1000 > Date.now() + 60_000) return token;
+    if (!refreshToken) {
+      removeStoredToken();
+      return null;
+    }
+
+    const response = await fetch(SUPABASE_FUNCTION_URL + '/api/auth/refresh', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+      },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.token || !data.refresh_token) {
+      removeStoredToken();
+      throw new Error(data.error || 'Sua sessão expirou. Entre novamente no FOCO.');
+    }
+    setStoredToken(data.token, data.refresh_token, data.expires_at);
+    return data.token as string;
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error('Não foi possível atualizar a sessão no Supabase. Verifique sua conexão.');
+    }
+    throw error;
   }
 }
 
@@ -273,17 +318,6 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const apiBaseUrl = SUPABASE_FUNCTION_URL;
   const requestUrl = endpoint.startsWith('http') ? endpoint : apiBaseUrl + endpoint;
 
-  const token = getStoredToken();
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'apikey': SUPABASE_PUBLISHABLE_KEY,
-    ...(options.headers as Record<string, string>),
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
   // A validação de sessão não pode deixar o aplicativo preso no splash se a API do Supabase
   // estiver iniciando ou sem responder. Limite apenas esta chamada; operações de IA
   // podem legitimamente demorar mais.
@@ -292,6 +326,14 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const timeoutId = controller ? window.setTimeout(() => controller.abort(), 12_000) : null;
 
   try {
+    const token = endpoint === '/api/auth/refresh' ? null : await getValidAccessToken();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_PUBLISHABLE_KEY,
+      ...(options.headers as Record<string, string>),
+    };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
     const response = await fetch(requestUrl, {
       ...options,
       ...(controller ? { signal: controller.signal } : {}),
@@ -321,20 +363,20 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 export const api = {
   // Autenticação sempre validada pelo servidor; não criar contas locais falsas em produção.
   async register(payload: { email: string; password: string; full_name: string; experience_level?: string; current_weight_kg?: number; height_cm?: number }) {
-    const res = await request<{ token: string; user: User; profile: Profile }>('/api/auth/register', {
+    const res = await request<{ token: string; refresh_token?: string; expires_at?: number; user: User; profile: Profile }>('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
-    setStoredToken(res.token);
+    setStoredToken(res.token, res.refresh_token, res.expires_at);
     return res;
   },
 
   async login(credentials: { email: string; password: string }) {
-    const res = await request<{ token: string; user: User; profile: Profile }>('/api/auth/login', {
+    const res = await request<{ token: string; refresh_token?: string; expires_at?: number; user: User; profile: Profile }>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ ...credentials, email: credentials.email.trim().toLowerCase() }),
     });
-    setStoredToken(res.token);
+    setStoredToken(res.token, res.refresh_token, res.expires_at);
     return res;
   },
 
