@@ -1,0 +1,1082 @@
+{
+  "arquivo": "07_quadriceps.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "quadriceps",
+  "descricao": "Biblioteca de exercícios para desenvolvimento de força, hipertrofia e resistência do quadríceps, incluindo movimentos compostos e isolados.",
+  "observacao_imagens": "As imagens só são associadas quando o catálogo disponível contém uma referência compatível com o movimento. Variantes sem referência específica permanecem sem imagem para evitar movimentos visuais enganosos.",
+  "exercicios": [
+    {
+      "id": "quadriceps_agachamento_livre",
+      "nome": "Agachamento livre com barra",
+      "aliases": [
+        "agachamento com barra",
+        "barbell squat",
+        "back squat"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "adutores",
+        "isquiotibiais",
+        "eretores da coluna",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas",
+        "rack"
+      ],
+      "padrao_movimento": "Agachamento",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione a barra apoiada na musculatura superior das costas, sem pressionar diretamente as vértebras cervicais.",
+        "Afaste os pés aproximadamente na largura dos ombros, ajustando a abertura conforme sua mobilidade e anatomia.",
+        "Mantenha os pés apoiados no chão, o tronco firme e a coluna em posição estável.",
+        "Inspire e flexione quadris e joelhos, descendo de forma controlada.",
+        "Permita que os joelhos acompanhem a direção dos pés e mantenha o equilíbrio sobre a base de apoio.",
+        "Desça até a profundidade que consiga controlar sem perder a estabilidade ou apresentar dor.",
+        "Empurre o chão com os pés e estenda quadris e joelhos para retornar à posição inicial.",
+        "Finalize sem hiperestender os joelhos ou relaxar o tronco."
+      ],
+      "respiracao": {
+        "descida": "Inspire e mantenha o tronco firme.",
+        "subida": "Expire durante a fase de maior esforço, mantendo a estabilidade abdominal."
+      },
+      "erros_comuns": [
+        "Perder a estabilidade do tronco.",
+        "Permitir que os joelhos colapsem excessivamente para dentro.",
+        "Levantar os calcanhares sem controle.",
+        "Usar carga incompatível com a técnica.",
+        "Descer além da amplitude controlada."
+      ],
+      "cuidados": [
+        "Ajuste as travas de segurança do rack antes de iniciar.",
+        "Aprenda a técnica com carga leve antes de aumentar o peso.",
+        "Interrompa se houver dor aguda ou perda de controle."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        12
+      ],
+      "variacoes": [
+        "quadriceps_agachamento_frontal",
+        "quadriceps_agachamento_com_halteres",
+        "quadriceps_agachamento_smith"
+      ],
+      "imagens_execucao": [
+        "Barbell_Full_Squat/0.jpg",
+        "Barbell_Full_Squat/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_agachamento_frontal",
+      "nome": "Agachamento frontal",
+      "aliases": [
+        "front squat",
+        "agachamento front squat"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps"
+      ],
+      "musculos_secundarios": [
+        "glúteo máximo",
+        "adutores",
+        "eretores da coluna",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas",
+        "rack"
+      ],
+      "padrao_movimento": "Agachamento",
+      "nivel": "avancado",
+      "execucao": [
+        "Posicione a barra na parte frontal dos ombros, próxima à base do pescoço, sem pressionar a garganta.",
+        "Utilize a pegada frontal que conseguir manter com segurança, preservando a barra apoiada nos ombros.",
+        "Mantenha os cotovelos elevados e o tronco firme.",
+        "Afaste os pés aproximadamente na largura dos ombros.",
+        "Flexione quadris e joelhos, mantendo o tronco relativamente ereto.",
+        "Desça até uma profundidade controlada, sem perder a posição da barra.",
+        "Empurre o chão e estenda os joelhos e quadris para retornar.",
+        "Mantenha os cotovelos elevados durante a subida."
+      ],
+      "respiracao": {
+        "descida": "Inspire e estabilize o tronco.",
+        "subida": "Expire durante o esforço, sem perder a posição da barra."
+      },
+      "erros_comuns": [
+        "Deixar os cotovelos caírem.",
+        "Permitir que a barra role para frente.",
+        "Inclinar excessivamente o tronco.",
+        "Usar carga excessiva para a mobilidade disponível."
+      ],
+      "cuidados": [
+        "Exige mobilidade adequada de punhos, ombros e tornozelos.",
+        "Utilize travas de segurança e ajuste a altura do rack.",
+        "Se a pegada frontal for desconfortável, procure orientação para adaptar a técnica."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        10
+      ],
+      "variacoes": [
+        "quadriceps_agachamento_livre",
+        "quadriceps_agachamento_goblet"
+      ],
+      "imagens_execucao": [
+        "Front_Squat_Clean_Grip/0.jpg",
+        "Front_Squat_Clean_Grip/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_leg_press",
+      "nome": "Leg press 45 graus",
+      "aliases": [
+        "leg press",
+        "leg press inclinado"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores"
+      ],
+      "equipamentos": [
+        "máquina leg press"
+      ],
+      "padrao_movimento": "Empurrar com membros inferiores",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se na máquina e apoie as costas e a pelve no encosto.",
+        "Posicione os pés na plataforma aproximadamente na largura dos ombros.",
+        "Destrave a máquina mantendo os joelhos levemente flexionados.",
+        "Flexione os joelhos de forma controlada, aproximando a plataforma sem permitir que a pelve se descole do encosto.",
+        "Desça até a amplitude que consiga controlar sem desconforto.",
+        "Empurre a plataforma distribuindo a pressão pelos pés.",
+        "Estenda os joelhos sem travá-los bruscamente.",
+        "Mantenha o controle da plataforma durante toda a série."
+      ],
+      "respiracao": {
+        "descida": "Inspire enquanto flexiona os joelhos.",
+        "subida": "Expire enquanto empurra a plataforma."
+      },
+      "erros_comuns": [
+        "Descer tanto que a lombar arredonde ou a pelve se descole.",
+        "Retirar os calcanhares da plataforma.",
+        "Travar os joelhos bruscamente.",
+        "Deixar a plataforma descer sem controle.",
+        "Usar carga que impeça uma amplitude segura."
+      ],
+      "cuidados": [
+        "Verifique o sistema de travamento antes de começar.",
+        "Não utilize amplitude que cause dor no joelho, quadril ou lombar.",
+        "Ajuste o banco à sua anatomia."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "leg_press_horizontal",
+        "quadriceps_leg_press_unilateral"
+      ],
+      "imagens_execucao": [
+        "Leg_Press/0.jpg",
+        "Leg_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_cadeira_extensora",
+      "nome": "Cadeira extensora",
+      "aliases": [
+        "extensora",
+        "leg extension"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps"
+      ],
+      "musculos_secundarios": [],
+      "equipamentos": [
+        "máquina cadeira extensora"
+      ],
+      "padrao_movimento": "Extensão de joelho",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o encosto para que o eixo da máquina fique alinhado aproximadamente com o eixo do joelho.",
+        "Posicione a almofada na parte inferior da perna, acima do tornozelo.",
+        "Mantenha as costas apoiadas e segure os apoios da máquina.",
+        "Estenda os joelhos elevando a almofada de maneira controlada.",
+        "Evite impulso e mantenha o quadril encostado no banco.",
+        "Faça uma breve contração do quadríceps no alto sem forçar a articulação.",
+        "Flexione os joelhos lentamente para retornar à posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a extensão dos joelhos.",
+        "descida": "Inspire durante o retorno controlado."
+      },
+      "erros_comuns": [
+        "Utilizar impulso para levantar a carga.",
+        "Escolher carga excessiva.",
+        "Ajustar incorretamente o eixo da máquina.",
+        "Deixar a carga cair rapidamente na descida."
+      ],
+      "cuidados": [
+        "Ajuste a máquina à sua estatura.",
+        "Se houver dor no joelho, reduza carga e amplitude e procure avaliação profissional se persistir.",
+        "Não confunda desconforto articular com esforço muscular normal."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "quadriceps_cadeira_extensora_unilateral"
+      ],
+      "imagens_execucao": [
+        "Leg_Extensions/0.jpg",
+        "Leg_Extensions/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_agachamento_goblet",
+      "nome": "Agachamento goblet",
+      "aliases": [
+        "goblet squat",
+        "agachamento com halter no peito"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "adutores",
+        "eretores da coluna",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "halter",
+        "kettlebell"
+      ],
+      "padrao_movimento": "Agachamento",
+      "nivel": "iniciante",
+      "execucao": [
+        "Segure um halter ou kettlebell junto ao peito.",
+        "Afaste os pés em uma posição confortável e mantenha o tronco firme.",
+        "Flexione quadris e joelhos, descendo entre as pernas.",
+        "Mantenha os pés apoiados e os joelhos acompanhando a direção dos dedos.",
+        "Desça até uma profundidade confortável e controlada.",
+        "Empurre o chão e retorne à posição inicial.",
+        "Mantenha o peso próximo ao corpo durante toda a execução."
+      ],
+      "respiracao": {
+        "descida": "Inspire de forma controlada.",
+        "subida": "Expire durante a subida."
+      },
+      "erros_comuns": [
+        "Afastar o peso do corpo.",
+        "Arredondar excessivamente as costas.",
+        "Levantar os calcanhares.",
+        "Usar carga que comprometa o equilíbrio."
+      ],
+      "cuidados": [
+        "Comece com carga leve para aprender o movimento.",
+        "Adapte a posição dos pés à sua mobilidade.",
+        "Não force profundidade que cause dor."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "quadriceps_agachamento_livre",
+        "quadriceps_agachamento_com_halteres"
+      ],
+      "imagens_execucao": [
+        "Goblet_Squat/0.jpg",
+        "Goblet_Squat/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_agachamento_smith",
+      "nome": "Agachamento no Smith",
+      "aliases": [
+        "smith squat",
+        "agachamento na máquina Smith"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "adutores",
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "máquina Smith"
+      ],
+      "padrao_movimento": "Agachamento",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione-se sob a barra e apoie-a na região superior das costas.",
+        "Coloque os pés em uma posição que permita manter equilíbrio e conforto durante a descida.",
+        "Destrave a barra e mantenha o tronco firme.",
+        "Flexione os joelhos e quadris, descendo de maneira controlada.",
+        "Mantenha os pés apoiados e os joelhos alinhados com os pés.",
+        "Desça apenas até onde consiga preservar postura e conforto articular.",
+        "Empurre o chão e retorne à posição inicial.",
+        "Gire a barra para travá-la ao terminar a série."
+      ],
+      "respiracao": {
+        "descida": "Inspire e estabilize o tronco.",
+        "subida": "Expire durante o esforço."
+      },
+      "erros_comuns": [
+        "Posicionar os pés de modo que cause desconforto nos joelhos ou quadris.",
+        "Descer sem controle.",
+        "Colocar a barra sobre a região cervical.",
+        "Esquecer de travar a barra ao terminar."
+      ],
+      "cuidados": [
+        "Confira o funcionamento dos ganchos de segurança.",
+        "A trajetória fixa não se adapta igualmente a todas as pessoas.",
+        "Ajuste os pés e a amplitude conforme sua anatomia."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "quadriceps_agachamento_livre",
+        "quadriceps_agachamento_goblet"
+      ],
+      "imagens_execucao": [
+        "Smith_Machine_Squat/0.jpg",
+        "Smith_Machine_Squat/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_afundo",
+      "nome": "Afundo",
+      "aliases": [
+        "lunge",
+        "avanço",
+        "passada estacionária"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "halteres"
+      ],
+      "padrao_movimento": "Afundo unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés afastados aproximadamente na largura do quadril.",
+        "Dê um passo à frente mantendo o equilíbrio.",
+        "Flexione os dois joelhos, descendo o corpo verticalmente de maneira controlada.",
+        "Mantenha o joelho da frente acompanhando a direção do pé.",
+        "Desça até uma amplitude confortável sem perder o equilíbrio.",
+        "Empurre o chão com o pé da frente para retornar à posição inicial.",
+        "Complete as repetições de um lado e depois troque, ou alterne as pernas."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida.",
+        "subida": "Expire ao retornar à posição inicial."
+      },
+      "erros_comuns": [
+        "Dar um passo muito curto e perder o equilíbrio.",
+        "Deixar o joelho colapsar para dentro.",
+        "Inclinar excessivamente o tronco.",
+        "Impulsionar o corpo sem controle."
+      ],
+      "cuidados": [
+        "Comece sem carga até dominar o equilíbrio.",
+        "Use apoio estável se necessário.",
+        "Interrompa se houver dor articular."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "quadriceps_afundo_reverso",
+        "quadriceps_agachamento_bulgaro"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Lunges/0.jpg",
+        "Dumbbell_Lunges/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_afundo_reverso",
+      "nome": "Afundo reverso",
+      "aliases": [
+        "reverse lunge",
+        "passada para trás"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "halteres"
+      ],
+      "padrao_movimento": "Afundo unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com o tronco firme e os pés na largura do quadril.",
+        "Dê um passo para trás com uma das pernas.",
+        "Flexione os joelhos e desça de forma controlada.",
+        "Mantenha o pé da frente totalmente apoiado e o joelho alinhado com o pé.",
+        "Evite bater o joelho de trás no chão.",
+        "Empurre o chão com a perna da frente para retornar à posição inicial.",
+        "Alterne as pernas ou complete as repetições de um lado antes de trocar."
+      ],
+      "respiracao": {
+        "descida": "Inspire ao dar o passo para trás e descer.",
+        "subida": "Expire ao retornar."
+      },
+      "erros_comuns": [
+        "Perder o equilíbrio.",
+        "Dar um passo para trás curto demais.",
+        "Empurrar excessivamente com a perna de trás.",
+        "Permitir que o joelho da frente desvie para dentro."
+      ],
+      "cuidados": [
+        "Use apoio estável se precisar melhorar o equilíbrio.",
+        "Comece com peso corporal antes de acrescentar halteres.",
+        "Adapte a amplitude se houver desconforto."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "quadriceps_afundo",
+        "quadriceps_agachamento_bulgaro"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Rear_Lunge/0.jpg",
+        "Dumbbell_Rear_Lunge/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_agachamento_bulgaro",
+      "nome": "Agachamento búlgaro",
+      "aliases": [
+        "bulgarian split squat",
+        "afundo búlgaro"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "banco",
+        "peso corporal",
+        "halteres"
+      ],
+      "padrao_movimento": "Agachamento unilateral",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione o peito do pé de trás sobre um banco estável.",
+        "Coloque o pé da frente à distância que permita descer sem perder o equilíbrio.",
+        "Mantenha o tronco firme e o olhar direcionado à frente.",
+        "Flexione o joelho da frente e desça o corpo de maneira controlada.",
+        "Mantenha o joelho da frente acompanhando a direção dos dedos do pé.",
+        "Desça até a amplitude que consiga controlar confortavelmente.",
+        "Empurre o chão com o pé da frente para retornar à posição inicial.",
+        "Complete as repetições de uma perna e depois troque."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida.",
+        "subida": "Expire durante a subida."
+      },
+      "erros_comuns": [
+        "Usar banco alto demais.",
+        "Aproximar excessivamente o pé da frente do banco.",
+        "Perder o equilíbrio por usar carga elevada.",
+        "Deixar o joelho da frente colapsar para dentro."
+      ],
+      "cuidados": [
+        "Comece sem carga e use apoio se necessário.",
+        "Certifique-se de que o banco não deslize.",
+        "Não force se houver desconforto no joelho ou quadril."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "quadriceps_afundo",
+        "quadriceps_afundo_reverso"
+      ],
+      "imagens_execucao": [
+        "Split_Squat_with_Dumbbells/0.jpg",
+        "Split_Squat_with_Dumbbells/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_step_up",
+      "nome": "Subida no banco",
+      "aliases": [
+        "step-up",
+        "subida na caixa"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "panturrilhas",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "caixa estável",
+        "banco",
+        "halteres"
+      ],
+      "padrao_movimento": "Subida unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione-se diante de uma caixa ou banco firme e antiderrapante.",
+        "Coloque um pé completamente sobre a superfície.",
+        "Mantenha o tronco firme e transfira o peso para a perna apoiada.",
+        "Empurre a superfície com essa perna até ficar em pé sobre o banco.",
+        "Evite impulsionar excessivamente com o pé que permanece no chão.",
+        "Desça de forma controlada, mantendo o equilíbrio.",
+        "Repita com a mesma perna ou alterne os lados."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a subida.",
+        "descida": "Inspire durante a descida controlada."
+      },
+      "erros_comuns": [
+        "Usar uma caixa alta demais.",
+        "Impulsionar o corpo com a perna de trás.",
+        "Deixar o joelho desviar para dentro.",
+        "Descer de forma abrupta."
+      ],
+      "cuidados": [
+        "Verifique a estabilidade da superfície.",
+        "Comece com altura baixa e sem carga.",
+        "Não utilize altura que comprometa o controle."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "quadriceps_step_up"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Step_Ups/0.jpg",
+        "Dumbbell_Step_Ups/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_agachamento_sissy_assistido",
+      "nome": "Agachamento sissy assistido",
+      "aliases": [
+        "sissy squat assistido"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps"
+      ],
+      "musculos_secundarios": [
+        "glúteo máximo",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "apoio estável"
+      ],
+      "padrao_movimento": "Agachamento com extensão de joelho",
+      "nivel": "avancado",
+      "execucao": [
+        "Segure um apoio firme para manter o equilíbrio.",
+        "Fique em pé com os pés aproximadamente na largura do quadril.",
+        "Mantenha os quadris relativamente estendidos e eleve os calcanhares apenas se a variação escolhida exigir isso e você controlar a posição.",
+        "Flexione os joelhos e incline o corpo para trás de forma coordenada.",
+        "Desça somente até a amplitude em que consiga manter o controle.",
+        "Estenda os joelhos de maneira controlada para retornar à posição inicial.",
+        "Utilize apoio durante toda a execução se necessário."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a flexão dos joelhos.",
+        "subida": "Expire durante a extensão."
+      },
+      "erros_comuns": [
+        "Forçar amplitude excessiva.",
+        "Executar sem apoio apesar de não ter equilíbrio.",
+        "Usar impulso na subida.",
+        "Ignorar desconforto no joelho."
+      ],
+      "cuidados": [
+        "É uma variação exigente para o joelho e não é necessária para desenvolver quadríceps.",
+        "Evite se provocar dor ou se não tiver controle adequado.",
+        "Prefira alternativas mais simples caso não tenha experiência."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "quadriceps_cadeira_extensora",
+        "quadriceps_agachamento_goblet"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "quadriceps_hack_machine",
+      "nome": "Agachamento na máquina hack",
+      "aliases": [
+        "hack squat",
+        "hack machine"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "adutores",
+        "isquiotibiais"
+      ],
+      "equipamentos": [
+        "máquina hack"
+      ],
+      "padrao_movimento": "Agachamento",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione as costas e os ombros nos apoios da máquina.",
+        "Coloque os pés na plataforma em uma posição confortável e estável.",
+        "Destrave o equipamento conforme as instruções da máquina.",
+        "Flexione os joelhos e quadris, descendo lentamente.",
+        "Mantenha as costas apoiadas e os joelhos alinhados com os pés.",
+        "Desça até uma amplitude confortável, sem perder a posição da pelve.",
+        "Empurre a plataforma com os pés e retorne à posição inicial.",
+        "Trave a máquina antes de sair do equipamento."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida.",
+        "subida": "Expire durante a subida."
+      },
+      "erros_comuns": [
+        "Descer além da amplitude controlada.",
+        "Retirar os calcanhares da plataforma.",
+        "Travar os joelhos com força.",
+        "Esquecer de travar a máquina."
+      ],
+      "cuidados": [
+        "Confira o sistema de travamento antes de iniciar.",
+        "Ajuste os pés conforme sua anatomia e conforto.",
+        "Não aumente a carga sacrificando a amplitude controlada."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "quadriceps_leg_press",
+        "quadriceps_agachamento_goblet"
+      ],
+      "imagens_execucao": [
+        "Hack_Squat/0.jpg",
+        "Hack_Squat/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_agachamento_com_halteres",
+      "nome": "Agachamento com halteres",
+      "aliases": [
+        "dumbbell squat",
+        "agachamento com pesos"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "adutores",
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "Agachamento",
+      "nivel": "iniciante",
+      "execucao": [
+        "Segure um halter em cada mão ao lado do corpo ou posicione os halteres junto aos ombros.",
+        "Afaste os pés em uma posição confortável.",
+        "Mantenha o tronco firme e os pés apoiados.",
+        "Flexione quadris e joelhos para descer de maneira controlada.",
+        "Mantenha os joelhos acompanhando a direção dos pés.",
+        "Desça até a amplitude que consiga controlar.",
+        "Empurre o chão com os pés e retorne à posição inicial."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida.",
+        "subida": "Expire durante a subida."
+      },
+      "erros_comuns": [
+        "Arredondar excessivamente as costas.",
+        "Deixar os halteres se afastarem do corpo.",
+        "Usar carga que prejudique o equilíbrio.",
+        "Descer sem controle."
+      ],
+      "cuidados": [
+        "Escolha halteres que consiga segurar com firmeza.",
+        "Mantenha espaço livre ao redor.",
+        "Ajuste a amplitude ao seu nível de mobilidade."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "quadriceps_agachamento_goblet",
+        "quadriceps_agachamento_livre"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Squat/0.jpg",
+        "Dumbbell_Squat/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_agachamento_com_calcanhares_elevados",
+      "nome": "Agachamento com calcanhares elevados",
+      "aliases": [
+        "heel elevated squat",
+        "cyclist squat"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps"
+      ],
+      "musculos_secundarios": [
+        "glúteo máximo",
+        "adutores",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "halter",
+        "anilhas estáveis",
+        "cunha de agachamento"
+      ],
+      "padrao_movimento": "Agachamento",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione os calcanhares sobre uma cunha própria ou suporte firme e antiderrapante.",
+        "Mantenha os pés em uma abertura confortável e o tronco firme.",
+        "Segure um halter junto ao peito se desejar acrescentar carga.",
+        "Flexione os joelhos e quadris, descendo de forma controlada.",
+        "Permita que os joelhos avancem conforme a mobilidade e o conforto permitirem, mantendo a direção dos pés.",
+        "Desça até a amplitude que consiga controlar sem dor.",
+        "Empurre o chão e retorne à posição inicial."
+      ],
+      "respiracao": {
+        "descida": "Inspire e mantenha o tronco estável.",
+        "subida": "Expire durante o esforço."
+      },
+      "erros_comuns": [
+        "Utilizar suporte instável.",
+        "Forçar o avanço dos joelhos além do conforto.",
+        "Perder o equilíbrio.",
+        "Usar carga excessiva."
+      ],
+      "cuidados": [
+        "Use uma cunha específica ou suporte firme, nunca objetos que possam deslizar.",
+        "A elevação do calcanhar pode ajudar algumas pessoas a alcançar maior profundidade, mas não é obrigatória.",
+        "Interrompa se houver dor."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "quadriceps_agachamento_goblet",
+        "quadriceps_agachamento_livre"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "quadriceps_leg_press_unilateral",
+      "nome": "Leg press unilateral",
+      "aliases": [
+        "single-leg leg press",
+        "leg press uma perna"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores"
+      ],
+      "equipamentos": [
+        "máquina leg press"
+      ],
+      "padrao_movimento": "Empurrar com membros inferiores unilateral",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste o banco e posicione uma perna no centro da plataforma.",
+        "Mantenha a pelve e as costas apoiadas no encosto.",
+        "Destrave a máquina e controle a carga com a perna posicionada.",
+        "Flexione o joelho lentamente, sem deixar a pelve se deslocar.",
+        "Empurre a plataforma até quase estender o joelho, sem travá-lo bruscamente.",
+        "Complete as repetições e troque de perna.",
+        "Use carga menor do que usaria na versão bilateral, se necessário."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a flexão do joelho.",
+        "subida": "Expire durante a extensão."
+      },
+      "erros_comuns": [
+        "Utilizar carga excessiva.",
+        "Deixar a pelve girar ou se descolar do banco.",
+        "Descer além da amplitude controlada.",
+        "Travar o joelho na extensão."
+      ],
+      "cuidados": [
+        "Confirme que a máquina permite uso unilateral com segurança.",
+        "Mantenha o sistema de travamento sob controle.",
+        "Não continue se houver dor ou perda de estabilidade."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "quadriceps_leg_press",
+        "quadriceps_agachamento_bulgaro"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "quadriceps_cadeira_extensora_unilateral",
+      "nome": "Cadeira extensora unilateral",
+      "aliases": [
+        "single-leg extension",
+        "extensora unilateral"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps"
+      ],
+      "musculos_secundarios": [],
+      "equipamentos": [
+        "máquina cadeira extensora"
+      ],
+      "padrao_movimento": "Extensão de joelho unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste a máquina para alinhar o eixo com o joelho.",
+        "Posicione uma perna sob a almofada e mantenha o quadril apoiado.",
+        "Estenda o joelho de maneira controlada, sem usar impulso.",
+        "Faça uma breve contração muscular no alto, sem forçar a articulação.",
+        "Retorne lentamente à posição inicial.",
+        "Complete as repetições de um lado e repita com a outra perna."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a extensão.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Usar impulso.",
+        "Elevar o quadril do banco.",
+        "Usar cargas diferentes sem considerar a capacidade de cada lado.",
+        "Deixar a carga cair na descida."
+      ],
+      "cuidados": [
+        "Comece com carga leve para avaliar o controle de cada perna.",
+        "Ajuste o eixo e a almofada corretamente.",
+        "Reduza a amplitude se houver desconforto articular."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "quadriceps_cadeira_extensora"
+      ],
+      "imagens_execucao": [
+        "Single-Leg_Leg_Extension/0.jpg",
+        "Single-Leg_Leg_Extension/1.jpg"
+      ]
+    },
+    {
+      "id": "quadriceps_agachamento_com_peso_corporal",
+      "nome": "Agachamento com peso corporal",
+      "aliases": [
+        "bodyweight squat",
+        "agachamento livre sem carga"
+      ],
+      "grupo_principal": "quadriceps",
+      "musculos_primarios": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "adutores",
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "peso corporal"
+      ],
+      "padrao_movimento": "Agachamento",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés aproximadamente na largura dos ombros.",
+        "Mantenha o tronco firme e os braços à frente para ajudar no equilíbrio, se necessário.",
+        "Flexione os quadris e joelhos, levando o corpo para baixo de forma controlada.",
+        "Mantenha os pés apoiados e os joelhos acompanhando a direção dos pés.",
+        "Desça até a amplitude que consiga controlar.",
+        "Empurre o chão com os pés e retorne à posição inicial."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida.",
+        "subida": "Expire durante a subida."
+      },
+      "erros_comuns": [
+        "Perder o equilíbrio.",
+        "Deixar os calcanhares levantarem sem controle.",
+        "Deixar os joelhos colapsarem para dentro.",
+        "Descer rapidamente e perder a estabilidade."
+      ],
+      "cuidados": [
+        "Use um banco como referência de profundidade se estiver aprendendo.",
+        "Adapte a abertura dos pés à sua anatomia.",
+        "Não force amplitudes dolorosas."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "quadriceps_agachamento_goblet",
+        "quadriceps_agachamento_com_halteres"
+      ],
+      "imagens_execucao": [
+        "Bodyweight_Squat/0.jpg",
+        "Bodyweight_Squat/1.jpg"
+      ]
+    }
+  ]
+}
