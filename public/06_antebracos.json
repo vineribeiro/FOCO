@@ -1,0 +1,1285 @@
+{
+  "arquivo": "06_antebracos.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "antebracos",
+  "descricao": "Biblioteca de exercícios para flexores e extensores do punho, pronadores, supinadores, braquiorradial e força de pegada.",
+  "observacao_imagens": "As referências visuais foram associadas somente quando o catálogo disponível contém imagens específicas para movimento correspondente. Exercícios sem correspondência ficam sem imagem para evitar ilustrações enganosas.",
+  "exercicios": [
+    {
+      "id": "rosca_punho_barra",
+      "nome": "Flexão de punho com barra",
+      "aliases": [
+        "Wrist curl",
+        "Rosca de punho",
+        "Wrist Curls"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "flexores_do_punho"
+      ],
+      "musculos_secundarios": [
+        "flexores_dos_dedos",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "barra",
+        "banco"
+      ],
+      "padrao_movimento": "flexao_de_punho",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se em um banco e apoie os antebraços nas coxas ou em um banco, com os punhos ultrapassando a borda.",
+        "Segure a barra com as palmas voltadas para cima e uma pegada confortável.",
+        "Comece com os punhos em posição neutra ou ligeiramente estendida.",
+        "Flexione os punhos para elevar a barra usando o movimento das mãos, sem retirar os antebraços do apoio.",
+        "Faça uma contração controlada no ponto superior.",
+        "Abaixe lentamente até uma amplitude confortável."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a flexão dos punhos.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Movimentar os antebraços para gerar impulso.",
+        "Usar carga excessiva.",
+        "Realizar movimentos rápidos e curtos.",
+        "Forçar a amplitude apesar de dor no punho."
+      ],
+      "cuidados": [
+        "Comece com carga leve, pois os músculos do punho podem fatigar rapidamente.",
+        "Mantenha os antebraços apoiados durante a execução.",
+        "Interrompa se sentir dor articular ou formigamento."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "rosca_punho_halteres",
+        "rosca_punho_cabo"
+      ],
+      "imagens_execucao": [
+        "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench/0.jpg",
+        "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_punho_halteres",
+      "nome": "Flexão de punho com halteres",
+      "aliases": [
+        "Dumbbell wrist curl"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "flexores_do_punho"
+      ],
+      "musculos_secundarios": [
+        "flexores_dos_dedos"
+      ],
+      "equipamentos": [
+        "halteres",
+        "banco"
+      ],
+      "padrao_movimento": "flexao_de_punho",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se e apoie os antebraços nas coxas ou em um banco.",
+        "Segure um halter em cada mão com as palmas voltadas para cima.",
+        "Posicione os punhos além da borda do apoio.",
+        "Flexione os punhos para elevar os halteres sem mover os antebraços.",
+        "Abaixe os pesos lentamente até a posição inicial.",
+        "Mantenha o mesmo controle nos dois lados."
+      ],
+      "respiracao": {
+        "subida": "Expire ao flexionar os punhos.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Levantar os antebraços junto com os halteres.",
+        "Usar amplitudes diferentes entre os lados.",
+        "Deixar os pesos cair na descida."
+      ],
+      "cuidados": [
+        "Use halteres leves no início.",
+        "Mantenha os punhos alinhados com os antebraços durante o controle do movimento."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "rosca_punho_barra",
+        "rosca_punho_unilateral"
+      ],
+      "imagens_execucao": [
+        "Palms-Up_Dumbbell_Wrist_Curl_Over_A_Bench/0.jpg",
+        "Palms-Up_Dumbbell_Wrist_Curl_Over_A_Bench/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_punho_cabo",
+      "nome": "Flexão de punho na polia",
+      "aliases": [
+        "Cable wrist curl"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "flexores_do_punho"
+      ],
+      "musculos_secundarios": [
+        "flexores_dos_dedos"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "barra curta"
+      ],
+      "padrao_movimento": "flexao_de_punho",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma barra curta à polia baixa.",
+        "Sente-se ou ajoelhe-se diante da polia e apoie os antebraços de forma estável.",
+        "Segure a barra com as palmas voltadas para cima.",
+        "Flexione os punhos para elevar a barra, mantendo os antebraços apoiados.",
+        "Retorne lentamente à posição inicial, controlando a resistência do cabo."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a flexão dos punhos.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Movimentar os cotovelos.",
+        "Usar carga que puxe os punhos de forma brusca.",
+        "Perder o apoio dos antebraços."
+      ],
+      "cuidados": [
+        "Confira a fixação da barra.",
+        "Mantenha uma carga que permita controlar todo o percurso."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "rosca_punho_barra",
+        "rosca_punho_halteres"
+      ],
+      "imagens_execucao": [
+        "Cable_Wrist_Curl/0.jpg",
+        "Cable_Wrist_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "extensao_punho_halteres",
+      "nome": "Extensão de punho com halteres",
+      "aliases": [
+        "Dumbbell wrist extension",
+        "Reverse wrist curl"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "extensores_do_punho"
+      ],
+      "musculos_secundarios": [
+        "extensores_dos_dedos",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "halteres",
+        "banco"
+      ],
+      "padrao_movimento": "extensao_de_punho",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se e apoie os antebraços nas coxas ou em um banco, com as palmas voltadas para baixo.",
+        "Segure um halter em cada mão e deixe os punhos ultrapassarem a borda do apoio.",
+        "Comece com os punhos em posição neutra ou ligeiramente flexionada.",
+        "Eleve o dorso das mãos por meio da extensão dos punhos, sem levantar os antebraços.",
+        "Faça uma breve pausa no alto.",
+        "Abaixe os halteres lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a extensão dos punhos.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Usar halteres pesados demais.",
+        "Movimentar os antebraços.",
+        "Executar repetições com impulso.",
+        "Forçar a extensão do punho além do confortável."
+      ],
+      "cuidados": [
+        "Utilize cargas menores do que as usadas em exercícios gerais de braço, se necessário.",
+        "Pare se houver dor no punho ou no cotovelo."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "extensao_punho_barra",
+        "extensao_punho_cabo"
+      ],
+      "imagens_execucao": [
+        "Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench/0.jpg",
+        "Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench/1.jpg"
+      ]
+    },
+    {
+      "id": "extensao_punho_barra",
+      "nome": "Extensão de punho com barra",
+      "aliases": [
+        "Barbell wrist extension",
+        "Rosca inversa de punho"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "extensores_do_punho"
+      ],
+      "musculos_secundarios": [
+        "extensores_dos_dedos"
+      ],
+      "equipamentos": [
+        "barra leve",
+        "banco"
+      ],
+      "padrao_movimento": "extensao_de_punho",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se em um banco e apoie os antebraços nas coxas.",
+        "Segure uma barra leve com as palmas voltadas para baixo.",
+        "Deixe os punhos ultrapassarem a borda das coxas ou do apoio.",
+        "Eleve o dorso das mãos por meio da extensão dos punhos.",
+        "Abaixe a barra lentamente até uma posição confortável.",
+        "Mantenha os cotovelos e antebraços estáveis."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a extensão.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Usar uma barra pesada demais.",
+        "Elevar os antebraços durante o movimento.",
+        "Deixar a barra deslizar nas mãos."
+      ],
+      "cuidados": [
+        "Escolha uma barra leve e fácil de segurar.",
+        "Evite movimentos bruscos e amplitudes dolorosas."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "extensao_punho_halteres",
+        "extensao_punho_cabo"
+      ],
+      "imagens_execucao": [
+        "Palms-Down_Wrist_Curl_Over_A_Bench/0.jpg",
+        "Palms-Down_Wrist_Curl_Over_A_Bench/1.jpg"
+      ]
+    },
+    {
+      "id": "extensao_punho_cabo",
+      "nome": "Extensão de punho na polia",
+      "aliases": [
+        "Cable wrist extension"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "extensores_do_punho"
+      ],
+      "musculos_secundarios": [
+        "extensores_dos_dedos"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador ou barra curta"
+      ],
+      "padrao_movimento": "extensao_de_punho",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda um pegador ou barra curta à polia baixa.",
+        "Posicione-se de forma que consiga apoiar os antebraços sem perder a estabilidade.",
+        "Segure o acessório com as palmas voltadas para baixo.",
+        "Estenda os punhos para elevar as mãos contra a resistência.",
+        "Retorne lentamente à posição inicial.",
+        "Mantenha os cotovelos e os antebraços imóveis."
+      ],
+      "respiracao": {
+        "subida": "Expire ao estender os punhos.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Movimentar os cotovelos.",
+        "Usar carga excessiva.",
+        "Deixar o cabo puxar as mãos de forma abrupta."
+      ],
+      "cuidados": [
+        "Confira a fixação do acessório.",
+        "Use uma carga leve o suficiente para manter o movimento isolado."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "extensao_punho_halteres",
+        "extensao_punho_barra"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "rosca_reversa_barra_ez",
+      "nome": "Rosca reversa com barra EZ",
+      "aliases": [
+        "Reverse curl",
+        "Rosca inversa"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "musculos_secundarios": [
+        "extensores_do_antebraco",
+        "biceps_braquial"
+      ],
+      "equipamentos": [
+        "barra EZ",
+        "anilhas"
+      ],
+      "padrao_movimento": "flexao_de_cotovelo_pegada_pronada",
+      "nivel": "intermediario",
+      "execucao": [
+        "Fique em pé segurando a barra EZ com as palmas voltadas para baixo.",
+        "Mantenha os cotovelos próximos ao tronco e os punhos alinhados.",
+        "Flexione os cotovelos para elevar a barra sem balançar o corpo.",
+        "Mantenha os ombros relaxados durante a subida.",
+        "Abaixe a barra lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a barra.",
+        "descida": "Inspire ao abaixar."
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Dobrar os punhos para compensar.",
+        "Balançar o tronco.",
+        "Projetar os cotovelos para a frente."
+      ],
+      "cuidados": [
+        "Comece com carga menor que a utilizada na rosca direta supinada.",
+        "Interrompa se houver dor no punho ou no cotovelo."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "rosca_reversa_halteres",
+        "rosca_reversa_cabo"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "rosca_reversa_halteres",
+      "nome": "Rosca reversa com halteres",
+      "aliases": [
+        "Dumbbell reverse curl"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "musculos_secundarios": [
+        "extensores_do_antebraco"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "flexao_de_cotovelo_pegada_pronada",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé segurando um halter em cada mão com as palmas voltadas para trás.",
+        "Mantenha os cotovelos próximos ao corpo.",
+        "Flexione os cotovelos para elevar os halteres sem girar os punhos.",
+        "Evite balançar o tronco ou elevar os ombros.",
+        "Abaixe os halteres lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a flexão dos cotovelos.",
+        "descida": "Inspire durante a descida."
+      },
+      "erros_comuns": [
+        "Usar impulso do quadril.",
+        "Dobrar os punhos.",
+        "Elevar os ombros.",
+        "Usar cargas que não permitam controlar a descida."
+      ],
+      "cuidados": [
+        "Escolha pesos que permitam manter a pegada pronada.",
+        "Mantenha os punhos confortáveis durante toda a execução."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_reversa_barra_ez",
+        "rosca_martelo_halteres"
+      ],
+      "imagens_execucao": [
+        "Standing_Dumbbell_Reverse_Curl/0.jpg",
+        "Standing_Dumbbell_Reverse_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_reversa_cabo",
+      "nome": "Rosca reversa na polia",
+      "aliases": [
+        "Cable reverse curl"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "musculos_secundarios": [
+        "extensores_do_antebraco"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "barra reta"
+      ],
+      "padrao_movimento": "flexao_de_cotovelo_pegada_pronada",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda uma barra reta à polia baixa.",
+        "Segure a barra com as palmas voltadas para baixo.",
+        "Mantenha o tronco estável e os cotovelos junto ao corpo.",
+        "Flexione os cotovelos para elevar a barra.",
+        "Abaixe lentamente, mantendo os punhos alinhados.",
+        "Evite que a carga retorne sem controle."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a barra.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Inclinar o tronco para trás.",
+        "Flexionar os punhos.",
+        "Movimentar os cotovelos excessivamente."
+      ],
+      "cuidados": [
+        "Verifique o acessório antes de iniciar.",
+        "Ajuste a carga para não comprometer a pegada."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_reversa_barra_ez",
+        "rosca_reversa_halteres"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "rosca_martelo_halteres",
+      "nome": "Rosca martelo com halteres",
+      "aliases": [
+        "Hammer curl",
+        "Hammer Curls"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "musculos_secundarios": [
+        "biceps_braquial"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "flexao_de_cotovelo_pegada_neutra",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com um halter em cada mão e as palmas voltadas uma para a outra.",
+        "Mantenha os cotovelos próximos ao tronco.",
+        "Flexione os cotovelos e eleve os halteres sem girar os punhos.",
+        "Contraia os músculos do braço sem elevar os ombros.",
+        "Abaixe os halteres lentamente."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os halteres.",
+        "descida": "Inspire ao abaixar."
+      },
+      "erros_comuns": [
+        "Balançar o tronco.",
+        "Girar os punhos durante a subida.",
+        "Usar carga excessiva."
+      ],
+      "cuidados": [
+        "Mantenha os punhos alinhados.",
+        "Não force a amplitude diante de dor articular."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_martelo_corda",
+        "rosca_reversa_halteres"
+      ],
+      "imagens_execucao": [
+        "Hammer_Curls/0.jpg",
+        "Hammer_Curls/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_martelo_corda",
+      "nome": "Rosca martelo na polia com corda",
+      "aliases": [
+        "Rope hammer curl"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "musculos_secundarios": [
+        "biceps_braquial"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "corda"
+      ],
+      "padrao_movimento": "flexao_de_cotovelo_pegada_neutra",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma corda à polia baixa e segure uma extremidade em cada mão.",
+        "Mantenha as palmas voltadas uma para a outra.",
+        "Posicione os cotovelos junto ao tronco.",
+        "Flexione os cotovelos para elevar as mãos em direção aos ombros.",
+        "Retorne lentamente até a posição inicial, mantendo o controle do cabo."
+      ],
+      "respiracao": {
+        "subida": "Expire ao flexionar os cotovelos.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Balançar o corpo.",
+        "Abrir os cotovelos excessivamente.",
+        "Deixar a carga retornar abruptamente."
+      ],
+      "cuidados": [
+        "Confira a fixação da corda.",
+        "Mantenha uma pegada firme sem tensionar excessivamente os punhos."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_martelo_halteres",
+        "rosca_reversa_cabo"
+      ],
+      "imagens_execucao": [
+        "Cable_Hammer_Curls_-_Rope_Attachment/0.jpg",
+        "Cable_Hammer_Curls_-_Rope_Attachment/1.jpg"
+      ]
+    },
+    {
+      "id": "pronacao_antebraco_halter",
+      "nome": "Pronação do antebraço com halter",
+      "aliases": [
+        "Dumbbell forearm pronation"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "pronador_redondo",
+        "pronador_quadrado"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_punho"
+      ],
+      "equipamentos": [
+        "halter leve",
+        "banco"
+      ],
+      "padrao_movimento": "rotacao_de_antebraco_pronacao",
+      "nivel": "intermediario",
+      "execucao": [
+        "Sente-se e apoie o antebraço em um banco ou na coxa, mantendo o cotovelo dobrado aproximadamente a 90 graus.",
+        "Segure um halter leve pela extremidade, se isso permitir uma pegada segura.",
+        "Comece com o polegar apontando para cima e o punho alinhado.",
+        "Gire lentamente o antebraço para orientar a palma para baixo, mantendo o cotovelo estável.",
+        "Retorne devagar à posição inicial.",
+        "Execute todas as repetições com amplitude confortável antes de trocar de lado."
+      ],
+      "respiracao": {
+        "rotacao": "Respire normalmente durante a rotação controlada.",
+        "retorno": "Mantenha a respiração regular."
+      },
+      "erros_comuns": [
+        "Girar o ombro em vez do antebraço.",
+        "Usar carga excessiva.",
+        "Realizar a rotação rapidamente.",
+        "Dobrar o punho para compensar."
+      ],
+      "cuidados": [
+        "Use carga muito leve no início.",
+        "Evite forçar a rotação se houver dor no punho ou no cotovelo."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "supinacao_antebraco_halter",
+        "pronacao_supinacao_martelo"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "supinacao_antebraco_halter",
+      "nome": "Supinação do antebraço com halter",
+      "aliases": [
+        "Dumbbell forearm supination"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "supinador",
+        "biceps_braquial"
+      ],
+      "musculos_secundarios": [
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "halter leve",
+        "banco"
+      ],
+      "padrao_movimento": "rotacao_de_antebraco_supinacao",
+      "nivel": "intermediario",
+      "execucao": [
+        "Sente-se e apoie o antebraço em uma superfície estável, com o cotovelo dobrado aproximadamente a 90 graus.",
+        "Segure um halter leve com o polegar apontando para cima.",
+        "Mantenha o cotovelo junto ao corpo e o punho alinhado.",
+        "Gire lentamente o antebraço para orientar a palma para cima.",
+        "Retorne à posição neutra sem movimentar o ombro.",
+        "Complete as repetições e troque de braço."
+      ],
+      "respiracao": {
+        "rotacao": "Respire normalmente durante a rotação.",
+        "retorno": "Mantenha a respiração regular."
+      },
+      "erros_comuns": [
+        "Movimentar o cotovelo para ajudar.",
+        "Usar carga excessiva.",
+        "Girar o punho isoladamente.",
+        "Forçar a amplitude."
+      ],
+      "cuidados": [
+        "Utilize um halter leve.",
+        "Mantenha a rotação dentro da amplitude confortável."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "pronacao_antebraco_halter",
+        "pronacao_supinacao_martelo"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "pronacao_supinacao_martelo",
+      "nome": "Pronação e supinação com martelo",
+      "aliases": [
+        "Hammer pronation supination",
+        "Lever forearm rotation"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "pronador_redondo",
+        "pronador_quadrado",
+        "supinador"
+      ],
+      "musculos_secundarios": [
+        "biceps_braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "martelo leve ou implemento com alavanca"
+      ],
+      "padrao_movimento": "rotacao_de_antebraco",
+      "nivel": "intermediario",
+      "execucao": [
+        "Sente-se e apoie o antebraço em uma superfície estável, mantendo o cotovelo dobrado.",
+        "Segure o cabo do martelo próximo à cabeça para reduzir a alavanca no início.",
+        "Comece com o implemento apontando para a frente e o punho alinhado.",
+        "Gire lentamente o antebraço para orientar a palma para baixo.",
+        "Gire no sentido oposto para orientar a palma para cima, mantendo o cotovelo estável.",
+        "Aumente gradualmente a alavanca apenas quando conseguir controlar o movimento sem dor."
+      ],
+      "respiracao": {
+        "rotacao": "Respire normalmente durante os dois sentidos da rotação."
+      },
+      "erros_comuns": [
+        "Segurar o implemento muito longe da cabeça logo no início.",
+        "Girar o ombro para compensar.",
+        "Acelerar o movimento.",
+        "Usar um implemento pesado demais."
+      ],
+      "cuidados": [
+        "Comece com um martelo leve e com a mão próxima à cabeça do implemento.",
+        "Não force a rotação diante de dor ou formigamento.",
+        "Este exercício exige controle e não deve ser tratado como um teste máximo de força."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "pronacao_antebraco_halter",
+        "supinacao_antebraco_halter"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "farmer_walk",
+      "nome": "Caminhada do fazendeiro",
+      "aliases": [
+        "Farmer's walk",
+        "Farmer carry",
+        "Farmers Walk"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "musculos_secundarios": [
+        "trapezio",
+        "core",
+        "deltoides",
+        "quadriceps",
+        "gluteos"
+      ],
+      "equipamentos": [
+        "halteres pesados ou kettlebells"
+      ],
+      "padrao_movimento": "transporte_de_carga",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione um halter ou kettlebell ao lado de cada pé.",
+        "Agache e pegue os pesos com uma pegada firme, mantendo a coluna em posição confortável.",
+        "Levante-se estendendo quadris e joelhos, sem puxar os pesos com as costas arredondadas.",
+        "Mantenha os braços ao lado do corpo, os ombros estáveis e o tronco ereto.",
+        "Caminhe com passos controlados por uma distância ou duração planejada.",
+        "Pare antes de perder a pegada ou a postura e apoie os pesos no chão com controle."
+      ],
+      "respiracao": {
+        "durante_a_caminhada": "Respire de forma contínua, sem prender o ar por períodos prolongados.",
+        "ao_levantar_e_abaixar": "Coordene a respiração com o esforço e mantenha o tronco estável."
+      },
+      "erros_comuns": [
+        "Inclinar o tronco para os lados.",
+        "Encolher excessivamente os ombros.",
+        "Dar passos descontrolados.",
+        "Usar peso que faça a pegada falhar rapidamente."
+      ],
+      "cuidados": [
+        "Utilize um percurso livre de obstáculos.",
+        "Não caminhe até a falha da pegada em uma área onde os pesos possam atingir outras pessoas.",
+        "Aumente a carga ou a distância gradualmente."
+      ],
+      "series_sugeridas": [
+        3,
+        5
+      ],
+      "repeticoes_sugeridas": [
+        20,
+        40
+      ],
+      "unidade_repeticoes": "metros",
+      "variacoes": [
+        "suitcase_carry",
+        "farmer_hold"
+      ],
+      "imagens_execucao": [
+        "Farmers_Walk/0.jpg",
+        "Farmers_Walk/1.jpg"
+      ]
+    },
+    {
+      "id": "suitcase_carry",
+      "nome": "Caminhada unilateral com carga",
+      "aliases": [
+        "Suitcase carry",
+        "Caminhada com halter de um lado"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "musculos_secundarios": [
+        "obliquos_abdominais",
+        "quadrado_lombar",
+        "trapezio",
+        "core"
+      ],
+      "equipamentos": [
+        "halter ou kettlebell"
+      ],
+      "padrao_movimento": "transporte_unilateral_de_carga",
+      "nivel": "intermediario",
+      "execucao": [
+        "Segure um halter ou kettlebell ao lado de um quadril.",
+        "Fique em pé com o tronco alinhado, os ombros nivelados e os pés estáveis.",
+        "Caminhe com passos controlados sem inclinar o corpo em direção à carga ou para o lado oposto.",
+        "Mantenha a mão fechada em torno do peso e o braço ao lado do corpo.",
+        "Percorra a distância planejada e apoie o peso no chão com controle.",
+        "Repita a mesma distância com o outro lado."
+      ],
+      "respiracao": {
+        "durante_a_caminhada": "Respire continuamente e mantenha o abdômen ativo."
+      },
+      "erros_comuns": [
+        "Inclinar o tronco lateralmente.",
+        "Girar o corpo durante os passos.",
+        "Usar carga que comprometa a pegada.",
+        "Caminhar com pressa."
+      ],
+      "cuidados": [
+        "Comece com carga moderada.",
+        "Mantenha o percurso livre e compare os dois lados.",
+        "Interrompa se houver dor lombar ou perda de equilíbrio."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        15,
+        30
+      ],
+      "unidade_repeticoes": "metros por lado",
+      "variacoes": [
+        "farmer_walk",
+        "farmer_hold"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "farmer_hold",
+      "nome": "Sustentação estática de carga",
+      "aliases": [
+        "Farmer hold",
+        "Static grip hold"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "musculos_secundarios": [
+        "trapezio",
+        "core",
+        "deltoides"
+      ],
+      "equipamentos": [
+        "halteres pesados ou kettlebells"
+      ],
+      "padrao_movimento": "isometria_de_pegada",
+      "nivel": "iniciante",
+      "execucao": [
+        "Segure um peso em cada mão, com os braços ao lado do corpo.",
+        "Levante os pesos e fique em pé com o tronco alinhado.",
+        "Mantenha os punhos neutros, os ombros estáveis e a pegada firme.",
+        "Sustente a posição durante o tempo planejado sem prender a respiração.",
+        "Encerre a série antes de perder a pegada ou a postura.",
+        "Apoie os pesos no chão com controle."
+      ],
+      "respiracao": {
+        "durante_a_isometria": "Respire continuamente, mantendo o tronco estável."
+      },
+      "erros_comuns": [
+        "Prender a respiração durante toda a sustentação.",
+        "Dobrar os punhos.",
+        "Deixar os ombros caírem.",
+        "Continuar após perder a pegada segura."
+      ],
+      "cuidados": [
+        "Use uma área livre para apoiar os pesos.",
+        "Não tente sustentações máximas sem experiência.",
+        "Ajuste o tempo de acordo com a técnica e a segurança."
+      ],
+      "series_sugeridas": [
+        3,
+        5
+      ],
+      "repeticoes_sugeridas": [
+        15,
+        45
+      ],
+      "unidade_repeticoes": "segundos",
+      "variacoes": [
+        "farmer_walk",
+        "suitcase_carry"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "dead_hang",
+      "nome": "Suspensão na barra",
+      "aliases": [
+        "Dead hang",
+        "Hang na barra"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "musculos_secundarios": [
+        "latissimo_do_dorso",
+        "trapezio",
+        "deltoides"
+      ],
+      "equipamentos": [
+        "barra fixa resistente"
+      ],
+      "padrao_movimento": "isometria_de_pegada_em_suspensao",
+      "nivel": "intermediario",
+      "execucao": [
+        "Confira se a barra está firme e suporta o peso corporal.",
+        "Segure a barra com as mãos aproximadamente na largura dos ombros ou em uma posição confortável.",
+        "Retire os pés do chão de maneira controlada, utilizando um apoio seguro se necessário.",
+        "Mantenha a pegada firme e os ombros em uma posição tolerável, sem forçar uma suspensão passiva se houver desconforto.",
+        "Sustente a posição pelo tempo planejado, respirando normalmente.",
+        "Retorne os pés ao apoio antes de soltar as mãos."
+      ],
+      "respiracao": {
+        "durante_a_suspensao": "Respire continuamente, sem prender o ar."
+      },
+      "erros_comuns": [
+        "Soltar a barra de forma repentina.",
+        "Usar uma barra instável.",
+        "Ignorar desconforto nos ombros.",
+        "Continuar quando a pegada já não é segura."
+      ],
+      "cuidados": [
+        "Evite se houver dor no ombro ou restrição que torne a suspensão inadequada.",
+        "Use um apoio para entrar e sair com segurança.",
+        "Comece com períodos curtos e progrida gradualmente."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        30
+      ],
+      "unidade_repeticoes": "segundos",
+      "variacoes": [
+        "farmer_hold",
+        "dead_hang_assistido"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "dead_hang_assistido",
+      "nome": "Suspensão assistida na barra",
+      "aliases": [
+        "Assisted dead hang"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "musculos_secundarios": [
+        "latissimo_do_dorso",
+        "trapezio",
+        "deltoides"
+      ],
+      "equipamentos": [
+        "barra fixa",
+        "caixa ou apoio firme"
+      ],
+      "padrao_movimento": "isometria_assistida_de_pegada",
+      "nivel": "iniciante",
+      "execucao": [
+        "Use uma barra fixa estável e posicione um apoio firme sob os pés.",
+        "Segure a barra com as mãos em uma largura confortável.",
+        "Transfira apenas parte do peso corporal para as mãos, mantendo os pés apoiados no suporte.",
+        "Mantenha a pegada firme e os ombros confortáveis.",
+        "Sustente por um período curto enquanto respira normalmente.",
+        "Desça completamente para o apoio antes de soltar a barra."
+      ],
+      "respiracao": {
+        "durante_a_suspensao": "Respire normalmente e evite prender o ar."
+      },
+      "erros_comuns": [
+        "Retirar os pés do apoio antes de estar preparado.",
+        "Usar um apoio instável.",
+        "Ignorar dor no ombro ou no punho."
+      ],
+      "cuidados": [
+        "Mantenha o apoio firme e antiderrapante.",
+        "Ajuste a quantidade de peso sustentada pelas mãos conforme a capacidade individual."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        30
+      ],
+      "unidade_repeticoes": "segundos",
+      "variacoes": [
+        "dead_hang",
+        "farmer_hold"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "pinch_grip_hold",
+      "nome": "Sustentação de pegada em pinça",
+      "aliases": [
+        "Plate pinch",
+        "Plate pinch hold",
+        "Pinch grip"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "musculos_da_pegada",
+        "flexores_dos_dedos"
+      ],
+      "musculos_secundarios": [
+        "musculos_intrinsecos_da_mao",
+        "extensores_do_punho"
+      ],
+      "equipamentos": [
+        "anilhas lisas ou implemento próprio para pinça"
+      ],
+      "padrao_movimento": "isometria_de_pegada_em_pinça",
+      "nivel": "intermediario",
+      "execucao": [
+        "Escolha uma ou duas anilhas compatíveis com a sua capacidade e com superfícies que possam ser seguradas com segurança.",
+        "Segure a anilha entre o polegar e os dedos, utilizando a pressão da pinça.",
+        "Levante o peso de forma controlada, mantendo o punho neutro.",
+        "Sustente pelo tempo planejado sem deixar o peso se aproximar dos pés.",
+        "Abaixe a anilha cuidadosamente antes de perder a pegada."
+      ],
+      "respiracao": {
+        "durante_a_isometria": "Respire normalmente durante a sustentação."
+      },
+      "erros_comuns": [
+        "Usar anilhas escorregadias ou instáveis.",
+        "Começar com carga excessiva.",
+        "Dobrar o punho para compensar.",
+        "Deixar o peso cair ao atingir a fadiga."
+      ],
+      "cuidados": [
+        "Execute sobre uma superfície que tolere a queda acidental do peso.",
+        "Mantenha os pés afastados da trajetória da anilha.",
+        "Não use superfícies danificadas ou com risco de escorregar."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        30
+      ],
+      "unidade_repeticoes": "segundos",
+      "variacoes": [
+        "farmer_hold",
+        "dead_hang"
+      ],
+      "imagens_execucao": [
+        "Plate_Pinch/0.jpg",
+        "Plate_Pinch/1.jpg"
+      ]
+    },
+    {
+      "id": "hand_gripper",
+      "nome": "Fechamento de hand gripper",
+      "aliases": [
+        "Hand gripper",
+        "Grip trainer"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "musculos_secundarios": [
+        "musculos_intrinsecos_da_mao"
+      ],
+      "equipamentos": [
+        "hand gripper ajustável"
+      ],
+      "padrao_movimento": "fechamento_de_pegada",
+      "nivel": "iniciante",
+      "execucao": [
+        "Escolha um hand gripper com resistência que consiga fechar sem compensações.",
+        "Posicione a empunhadura na palma e acomode os dedos ao redor da alça móvel.",
+        "Mantenha o punho alinhado com o antebraço.",
+        "Comprima as alças até fechar o aparelho, sem torcer o punho ou elevar o ombro.",
+        "Solte a pressão lentamente até a posição inicial.",
+        "Complete as repetições com cada mão."
+      ],
+      "respiracao": {
+        "fechamento": "Expire durante a compressão.",
+        "abertura": "Inspire durante o retorno controlado."
+      },
+      "erros_comuns": [
+        "Usar resistência que não permite fechar o aparelho com controle.",
+        "Dobrar o punho.",
+        "Soltar a alça de maneira abrupta.",
+        "Treinar sempre apenas a mão dominante."
+      ],
+      "cuidados": [
+        "Ajuste a resistência gradualmente.",
+        "Interrompa se houver dor, formigamento ou desconforto persistente nos dedos.",
+        "Equilibre o volume entre as mãos."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "pinch_grip_hold",
+        "farmer_hold"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "finger_extension_elastico",
+      "nome": "Extensão dos dedos com elástico",
+      "aliases": [
+        "Finger extension band",
+        "Extensão de dedos"
+      ],
+      "grupo_principal": "antebracos",
+      "musculos_primarios": [
+        "extensores_dos_dedos"
+      ],
+      "musculos_secundarios": [
+        "musculos_intrinsecos_da_mao",
+        "extensores_do_punho"
+      ],
+      "equipamentos": [
+        "elástico leve para dedos"
+      ],
+      "padrao_movimento": "extensao_dos_dedos",
+      "nivel": "iniciante",
+      "execucao": [
+        "Coloque um elástico leve ao redor dos dedos, próximo às pontas, sem comprimir excessivamente.",
+        "Mantenha a mão em uma posição confortável e o punho neutro.",
+        "Abra os dedos contra a resistência do elástico.",
+        "Faça uma pausa breve com os dedos afastados.",
+        "Retorne lentamente à posição inicial.",
+        "Repita com a outra mão."
+      ],
+      "respiracao": {
+        "abertura": "Expire durante a abertura dos dedos.",
+        "retorno": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Usar um elástico excessivamente resistente.",
+        "Movimentar o punho para compensar.",
+        "Executar repetições rápidas e sem controle."
+      ],
+      "cuidados": [
+        "Utilize resistência leve no início.",
+        "Evite elásticos danificados ou apertados demais.",
+        "Interrompa diante de dor ou formigamento."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        15,
+        25
+      ],
+      "variacoes": [
+        "hand_gripper",
+        "extensao_punho_halteres"
+      ],
+      "imagens_execucao": []
+    }
+  ]
+}
