@@ -1,0 +1,89 @@
+name: FOCO - Generate anatomy atlases (manual approval required)
+
+on:
+  workflow_dispatch:
+    inputs:
+      group:
+        description: "Muscle file prefix, e.g. 01_peito, or leave blank for all"
+        type: string
+        default: "01_peito"
+        required: false
+      max_images:
+        description: "Maximum images generated in this run (each counts as billable API request)"
+        type: string
+        default: "12"
+        required: true
+      billing_confirmation:
+        description: "Enter I_ACCEPT_COSTS to call image provider; leave PREVIEW for free dry-run"
+        type: string
+        default: "PREVIEW"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: foco-anatomy-generation
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout application
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Prepare review branch
+        if: ${{ inputs.billing_confirmation == 'I_ACCEPT_COSTS' }}
+        shell: bash
+        run: |
+          if git ls-remote --exit-code --heads origin anatomy-review-output >/dev/null 2>&1; then
+            git fetch origin anatomy-review-output
+            git checkout -B anatomy-review-output origin/anatomy-review-output
+            git merge --no-edit -X ours origin/main
+          else
+            git checkout -b anatomy-review-output
+          fi
+      - name: Generate approved-cost batch or dry-run
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROUP: ${{ inputs.group }}
+          MAX_IMAGES: ${{ inputs.max_images }}
+          BILLING_CONFIRMATION: ${{ inputs.billing_confirmation }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$BILLING_CONFIRMATION" = "I_ACCEPT_COSTS" ]; then
+            node scripts/generate-anatomy.mjs --execute --accept-costs --max-images="$MAX_IMAGES" ${GROUP:+--group="$GROUP"}
+          else
+            node scripts/generate-anatomy.mjs --max-images="$MAX_IMAGES" ${GROUP:+--group="$GROUP"}
+          fi
+      - name: Verify atlas metadata
+        run: npm run audit:anatomy
+      - name: Preserve unreviewed images on review branch
+        if: ${{ inputs.billing_confirmation == 'I_ACCEPT_COSTS' }}
+        shell: bash
+        run: |
+          git config user.name "FOCO Anatomy CI"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/anatomy/v3/
+          if ! git diff --cached --quiet; then
+            git commit -m "assets(anatomy): generate pending-review atlas batch"
+            git push origin HEAD:refs/heads/anatomy-review-output
+          fi
+      - name: Export non-billable production prompt plan
+        if: ${{ inputs.billing_confirmation != 'I_ACCEPT_COSTS' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: foco-anatomy-dry-run-prompts
+          path: anatomy-generation-plan.json
+          if-no-files-found: error
