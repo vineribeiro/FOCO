@@ -8,7 +8,7 @@ import { generateAiWorkout, extractWorkoutFromSheet, reviewProgressionCycle, ana
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || '';
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
   throw new Error('JWT_SECRET ausente ou fraco. Configure um segredo aleatório de pelo menos 32 caracteres no ambiente do servidor.');
 }
@@ -77,7 +77,7 @@ function requireAuth(req: AuthenticatedRequest, res: Response, next: NextFunctio
 
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as unknown as { id: string; email: string };
     const user = db.findUserById(decoded.id);
     if (!user) {
       return res.status(401).json({
