@@ -189,18 +189,18 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
         <>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {filteredExercises.slice(0, visibleCount).map((exercise) => (
-              <article key={exercise.id} className="overflow-hidden rounded-2xl border border-white/10 bg-[#141414] transition hover:border-white/25">
-                <div className="grid grid-cols-[112px_1fr] gap-3 p-3">
-                  <ExerciseIllustration exerciseName={exercise.name} muscleGroup={getMuscleLabel(exercise.primaryMuscles[0] || '')} className="h-28 w-full" showCaption />
-                  <div className="min-w-0 py-1">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">{getMuscleLabel(exercise.primaryMuscles[0] || 'Geral')}</p>
-                    <h2 className="mt-1 line-clamp-2 text-sm font-black leading-snug">{getExerciseDisplayName(exercise.name)}</h2>
-                    <p className="mt-2 text-[10px] text-neutral-500">{getEquipmentLabel(exercise.equipment)} · {exercise.level === 'beginner' ? 'Iniciante' : exercise.level === 'intermediate' ? 'Intermediário' : exercise.level === 'expert' ? 'Avançado' : exercise.level}</p>
-                    <button type="button" onClick={() => setDetailExercise(exercise)} className="mt-3 inline-flex items-center gap-1 text-[10px] font-bold text-neutral-300 hover:text-white">
-                      Ver execução e instruções <ArrowUpRight className="h-3 w-3" />
-                    </button>
+              <article key={exercise.id} className="overflow-hidden rounded-2xl border border-white/10 bg-[#141414] transition hover:border-orange-500/40">
+                <button type="button" onClick={() => setDetailExercise(exercise)} aria-label={`Abrir execução de ${getExerciseDisplayName(exercise.name)}`} className="block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500">
+                  <ExerciseIllustration exerciseName={exercise.name} muscleGroup={getMuscleLabel(exercise.primaryMuscles[0] || '')} className="h-64 w-full rounded-none border-0 sm:h-72" showCaption />
+                  <div className="p-4">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-orange-500">{getMuscleLabel(exercise.primaryMuscles[0] || 'Geral')}</p>
+                    <h2 className="mt-1 text-base font-black leading-snug">{getExerciseDisplayName(exercise.name)}</h2>
+                    <p className="mt-2 text-xs text-neutral-500">{getEquipmentLabel(exercise.equipment)} · {exercise.level === 'beginner' ? 'Iniciante' : exercise.level === 'intermediate' ? 'Intermediário' : exercise.level === 'expert' ? 'Avançado' : exercise.level}</p>
+                    <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-neutral-300 hover:text-white">
+                      Toque para ver execução e passo a passo <ArrowUpRight className="h-3.5 w-3.5" />
+                    </span>
                   </div>
-                </div>
+                </button>
                 <div className="flex items-center justify-between gap-3 border-t border-white/10 px-3 py-3">
                   <p className="truncate text-[10px] text-neutral-500">{exercise.secondaryMuscles.length ? `Também trabalha ${exercise.secondaryMuscles.slice(0,2).map(getMuscleLabel).join(', ')}` : 'Exercício principal'}</p>
                   <button type="button" onClick={() => { setSelectedExercise(exercise); setActionMessage(null); }} className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-[10px] font-black uppercase tracking-wide text-black transition hover:bg-neutral-200">
@@ -219,7 +219,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
       )}
 
       <footer className="rounded-xl border border-white/5 bg-[#101010] p-3 text-[10px] leading-relaxed text-neutral-500">
-        Demonstrações e metadados do catálogo Free Exercise DB (licença Unlicense / domínio público). As figuras são imagens de referência em duas posições; quando disponível, alternam para ajudar a visualizar o movimento.
+        As demonstrações são diagramas SVG vetoriais próprios, ampliáveis sem perder nitidez. Toque em qualquer exercício para abrir a execução detalhada e o passo a passo.
       </footer>
 
       {selectedExercise && (
@@ -234,7 +234,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               <button type="button" onClick={() => setSelectedExercise(null)} className="rounded-lg p-2 text-neutral-400 hover:bg-white/10 hover:text-white" aria-label="Fechar"><X className="h-4 w-4" /></button>
             </div>
             <div className="mt-4 grid grid-cols-[104px_1fr] gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-3">
-              <ExerciseIllustration exerciseName={selectedExercise.name} muscleGroup={getMuscleLabel(selectedExercise.primaryMuscles[0] || '')} className="h-28 w-full" showCaption />
+              <ExerciseIllustration exerciseName={selectedExercise.name} muscleGroup={getMuscleLabel(selectedExercise.primaryMuscles[0] || '')} className="h-44 w-full" showCaption />
               <div className="py-1">
                 <p className="text-xs font-bold">{getMuscleLabel(selectedExercise.primaryMuscles[0] || 'Geral')}</p>
                 <p className="mt-1 text-[10px] text-neutral-500">{getEquipmentLabel(selectedExercise.equipment)}</p>
@@ -292,7 +292,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               <div><p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Execução do exercício</p><h2 className="mt-1 text-lg font-black">{getExerciseDisplayName(detailExercise.name)}</h2></div>
               <button type="button" onClick={() => setDetailExercise(null)} className="rounded-lg p-2 text-neutral-400 hover:bg-white/10 hover:text-white" aria-label="Fechar"><X className="h-4 w-4" /></button>
             </div>
-            <ExerciseIllustration exerciseName={detailExercise.name} muscleGroup={getMuscleLabel(detailExercise.primaryMuscles[0] || '')} className="mt-4 h-64 w-full sm:h-72" showCaption />
+            <ExerciseIllustration exerciseName={detailExercise.name} muscleGroup={getMuscleLabel(detailExercise.primaryMuscles[0] || '')} className="mt-4 h-[360px] w-full sm:h-[440px]" showCaption />
             <div className="mt-4 grid grid-cols-2 gap-2">
               <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3"><p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Músculo principal</p><p className="mt-1 text-sm font-bold">{getMuscleLabel(detailExercise.primaryMuscles[0] || 'Geral')}</p></div>
               <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3"><p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Equipamento</p><p className="mt-1 text-sm font-bold">{getEquipmentLabel(detailExercise.equipment)}</p></div>
