@@ -660,7 +660,7 @@ app.get('/api/system/status', (_req: Request, res: Response) => {
     storage_file_exists: storage.fileExists,
     remote_storage_configured: storage.remoteStorageConfigured,
     remote_storage_ready: storage.remoteStorageReady,
-    remote_storage_error: storage.remoteStorageError,
+    remote_storage_error: Boolean(storage.remoteStorageError),
     supabase_sync_available: storage.remoteStorageReady,
     timestamp: new Date().toISOString(),
   });
