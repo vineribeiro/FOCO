@@ -34,16 +34,11 @@ jobs:
         with:
           path: dist
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  wait-for-branch-pages:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # Some repositories have both the built-in branch/Jekyll publisher and this Vite
-      # workflow enabled. Wait for that run on the same commit before publishing dist,
-      # otherwise it can overwrite the compiled app with unbundled TSX.
+      # Wait outside the github-pages environment so the automatic branch publisher can finish.
       - name: Wait for automatic Pages build to finish
         uses: actions/github-script@v7
         with:
@@ -73,6 +68,14 @@ jobs:
               await new Promise((resolve) => setTimeout(resolve, 5000));
             }
             core.setFailed("Timed out waiting for the automatic Pages build; refusing to publish into a race.");
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: [build, wait-for-branch-pages]
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
