@@ -116,7 +116,6 @@ const NAME_ALIASES: Record<string, string[]> = {
   agachamento: ['Barbell Full Squat', 'Dumbbell Squat'],
   agachamentolivre: ['Barbell Full Squat'],
   agachamentolivrecombarra: ['Barbell Full Squat'],
-  levantamento terra: ['Barbell Deadlift'],
   levantamentoterra: ['Barbell Deadlift'],
   terraromeno: ['Romanian Deadlift'],
   remadacurvada: ['Bent Over Barbell Row', 'Barbell Row'],
@@ -224,7 +223,7 @@ export function findMatchingExercise(
     }
   }
 
-  const tokens = normalized.split(/(?=[a-z])|[^a-z0-9]+/).filter((token) => token.length > 2);
+  const tokens = exerciseName.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').split(/[^a-z0-9]+/).filter((token) => token.length > 2);
   const candidates = catalog.map((exercise) => {
     const name = normalizeExerciseText(exercise.name);
     const matchCount = tokens.filter((token) => name.includes(token)).length;
