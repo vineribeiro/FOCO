@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { WorkoutPlan } from '../types';
 import {
   Dumbbell,
@@ -72,6 +73,12 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setActiveTab('biblioteca')}
+            className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer border border-white/15 transition-all"
+          >
+            Biblioteca de exercícios
+          </button>
           <button
             onClick={() => setActiveTab('novo-treino')}
             className="px-4 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-md transition-all"
@@ -234,7 +241,10 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                           {(plan.exercises || []).map((ex, idx) => (
                             <tr key={idx} className="hover:bg-white/5 transition-colors">
                               <td className="py-2.5 px-2 font-sans font-bold text-white">
-                                {ex.exercise_name}
+                                <div className="flex min-w-[190px] items-center gap-2.5">
+                                  <ExerciseIllustration exerciseName={ex.exercise_name} muscleGroup={ex.muscle_group} className="h-16 w-16 shrink-0" />
+                                  <span>{ex.exercise_name}</span>
+                                </div>
                               </td>
                               <td className="py-2.5 px-2 text-neutral-400 font-sans">
                                 {ex.muscle_group}
