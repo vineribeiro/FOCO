@@ -1,0 +1,703 @@
+{
+  "arquivo": "13_trapezio.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "trapezio",
+  "descricao": "Exercícios para as porções superior, média e inferior do trapézio, além de músculos auxiliares do controle escapular.",
+  "exercicios": [
+    {
+      "id": "encolhimento_com_halteres",
+      "nome": "Encolhimento com halteres",
+      "aliases": [
+        "Dumbbell shrug"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_superior"
+      ],
+      "musculos_secundarios": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "elevacao_escapular",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés afastados na largura dos quadris e um halter em cada mão.",
+        "Mantenha os braços estendidos ao lado do corpo e os ombros relaxados na posição inicial.",
+        "Eleve os ombros em direção às orelhas sem dobrar os cotovelos.",
+        "Pause brevemente no topo, sem projetar a cabeça para a frente.",
+        "Baixe os ombros lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os ombros.",
+        "descida": "Inspire ao baixar os ombros."
+      },
+      "erros_comuns": [
+        "Girar os ombros em círculos.",
+        "Usar impulso das pernas.",
+        "Dobrar os cotovelos para ajudar na subida.",
+        "Projetar a cabeça para a frente."
+      ],
+      "cuidados": [
+        "Use uma carga que permita controlar a descida.",
+        "Evite movimentos bruscos no pescoço.",
+        "Interrompa se houver dor cervical ou no ombro."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "encolhimento_com_barra",
+        "encolhimento_na_maquina"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Shrug/0.jpg",
+        "Dumbbell_Shrug/1.jpg"
+      ]
+    },
+    {
+      "id": "encolhimento_com_barra",
+      "nome": "Encolhimento com barra",
+      "aliases": [
+        "Barbell shrug"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_superior"
+      ],
+      "musculos_secundarios": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas"
+      ],
+      "padrao_movimento": "elevacao_escapular",
+      "nivel": "intermediario",
+      "execucao": [
+        "Segure a barra à frente das coxas, com as mãos aproximadamente na largura dos ombros.",
+        "Mantenha os pés firmes, o tronco estável e os braços estendidos.",
+        "Eleve os ombros verticalmente em direção às orelhas.",
+        "Pause brevemente no topo sem girar os ombros.",
+        "Desça a barra lentamente mantendo o controle."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os ombros.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Girar os ombros para trás ou para a frente.",
+        "Balançar o tronco.",
+        "Deixar a barra afastar-se excessivamente do corpo."
+      ],
+      "cuidados": [
+        "Use presilhas adequadas nas anilhas.",
+        "Mantenha o pescoço em posição neutra.",
+        "Evite cargas que comprometam a execução."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "encolhimento_com_halteres",
+        "encolhimento_no_smith"
+      ],
+      "imagens_execucao": [
+        "Barbell_Shrug/0.jpg",
+        "Barbell_Shrug/1.jpg"
+      ]
+    },
+    {
+      "id": "encolhimento_no_smith",
+      "nome": "Encolhimento no Smith",
+      "aliases": [
+        "Smith machine shrug"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_superior"
+      ],
+      "musculos_secundarios": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipamentos": [
+        "maquina_smith"
+      ],
+      "padrao_movimento": "elevacao_escapular",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione-se diante da barra do Smith e ajuste-a para segurá-la à frente das coxas.",
+        "Segure a barra com os braços estendidos e os pés firmes no chão.",
+        "Eleve os ombros verticalmente sem dobrar os cotovelos.",
+        "Pause brevemente no topo.",
+        "Baixe os ombros de forma controlada e trave a barra ao terminar."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os ombros.",
+        "descida": "Inspire ao baixar."
+      },
+      "erros_comuns": [
+        "Girar os ombros.",
+        "Dobrar os cotovelos.",
+        "Usar carga excessiva.",
+        "Não travar a barra ao terminar."
+      ],
+      "cuidados": [
+        "Confira os mecanismos de segurança.",
+        "Mantenha a cabeça alinhada com a coluna.",
+        "Evite amplitude que cause desconforto."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "encolhimento_com_barra",
+        "encolhimento_com_halteres"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "encolhimento_na_maquina",
+      "nome": "Encolhimento na máquina",
+      "aliases": [
+        "Machine shrug"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_superior"
+      ],
+      "musculos_secundarios": [
+        "levantador_da_escapula"
+      ],
+      "equipamentos": [
+        "maquina_de_encolhimento"
+      ],
+      "padrao_movimento": "elevacao_escapular",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o assento e os apoios conforme as instruções do equipamento.",
+        "Segure as alças e mantenha o tronco estável.",
+        "Eleve os ombros em direção às orelhas sem dobrar os cotovelos.",
+        "Pause brevemente no topo.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os ombros.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar impulso.",
+        "Girar os ombros.",
+        "Elevar o queixo.",
+        "Selecionar carga que impeça a descida controlada."
+      ],
+      "cuidados": [
+        "Ajuste o equipamento antes de iniciar.",
+        "Evite tensão excessiva no pescoço.",
+        "Não force o movimento diante de dor."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "encolhimento_com_halteres"
+      ],
+      "imagens_execucao": [
+        "Leverage_Shrug/0.jpg",
+        "Leverage_Shrug/1.jpg"
+      ]
+    },
+    {
+      "id": "remada_alta_com_corda",
+      "nome": "Remada alta com corda na polia",
+      "aliases": [
+        "Cable upright row com corda"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_superior",
+        "deltoide_lateral"
+      ],
+      "musculos_secundarios": [
+        "biceps",
+        "antebracos"
+      ],
+      "equipamentos": [
+        "polia_baixa",
+        "corda"
+      ],
+      "padrao_movimento": "tracao_vertical",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda uma corda à polia baixa e segure as extremidades à frente das coxas.",
+        "Fique em pé com os pés firmes e o tronco estável.",
+        "Puxe a corda para cima, mantendo-a próxima ao corpo e conduzindo o movimento com os cotovelos.",
+        "Pare em uma altura confortável, sem forçar os ombros.",
+        "Baixe a corda lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao puxar a corda.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Elevar os cotovelos muito acima da amplitude confortável.",
+        "Usar impulso do tronco.",
+        "Puxar com carga excessiva.",
+        "Encolher os ombros de forma descontrolada."
+      ],
+      "cuidados": [
+        "Ajuste a altura final conforme a mobilidade e o conforto dos ombros.",
+        "Interrompa se houver pinçamento ou dor no ombro.",
+        "Considere outra variação se esse padrão causar desconforto."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "remada_alta_com_halteres"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "remada_alta_com_halteres",
+      "nome": "Remada alta com halteres",
+      "aliases": [
+        "Dumbbell upright row"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_superior",
+        "deltoide_lateral"
+      ],
+      "musculos_secundarios": [
+        "biceps",
+        "antebracos"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "tracao_vertical",
+      "nivel": "intermediario",
+      "execucao": [
+        "Fique em pé segurando um halter em cada mão à frente das coxas.",
+        "Mantenha os punhos neutros e o tronco estável.",
+        "Eleve os halteres próximos ao corpo, conduzindo o movimento com os cotovelos.",
+        "Pare antes de qualquer desconforto nos ombros.",
+        "Desça lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os halteres.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Elevar os cotovelos excessivamente.",
+        "Usar balanço do tronco.",
+        "Flexionar os punhos de forma exagerada.",
+        "Usar carga que prejudique o controle."
+      ],
+      "cuidados": [
+        "Use amplitude confortável para os ombros.",
+        "Não é necessário elevar os halteres até o queixo.",
+        "Substitua o exercício se houver dor."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "remada_alta_com_corda"
+      ],
+      "imagens_execucao": [
+        "Standing_Dumbbell_Upright_Row/0.jpg",
+        "Standing_Dumbbell_Upright_Row/1.jpg"
+      ]
+    },
+    {
+      "id": "face_pull",
+      "nome": "Face pull",
+      "aliases": [
+        "Puxada para o rosto na polia"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_medio",
+        "trapezio_inferior",
+        "deltoide_posterior"
+      ],
+      "musculos_secundarios": [
+        "romboides",
+        "rotadores_externos_do_ombro"
+      ],
+      "equipamentos": [
+        "polia_alta",
+        "corda"
+      ],
+      "padrao_movimento": "tracao_horizontal_com_rotacao_externa",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma corda à polia aproximadamente na altura do rosto.",
+        "Segure as extremidades com as duas mãos e recue até sentir tensão no cabo.",
+        "Puxe a corda em direção ao rosto, afastando as mãos uma da outra.",
+        "Mantenha os cotovelos elevados de forma confortável e controle o movimento das escápulas.",
+        "Retorne lentamente sem deixar a carga puxar os ombros bruscamente."
+      ],
+      "respiracao": {
+        "puxada": "Expire ao puxar a corda.",
+        "retorno": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Arquear a lombar para gerar impulso.",
+        "Puxar apenas com os braços.",
+        "Elevar os ombros em direção às orelhas."
+      ],
+      "cuidados": [
+        "Comece com resistência leve.",
+        "Mantenha os ombros em uma amplitude confortável.",
+        "Evite movimentos bruscos."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "crucifixo_invertido",
+        "remada_alta_com_corda"
+      ],
+      "imagens_execucao": [
+        "Face_Pull/0.jpg",
+        "Face_Pull/1.jpg"
+      ]
+    },
+    {
+      "id": "encolhimento_com_barra_atras",
+      "nome": "Encolhimento com barra atrás do corpo",
+      "aliases": [
+        "Behind-the-back barbell shrug"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_superior"
+      ],
+      "musculos_secundarios": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas"
+      ],
+      "padrao_movimento": "elevacao_escapular",
+      "nivel": "avancado",
+      "execucao": [
+        "Segure a barra atrás do corpo, com os braços estendidos e a carga controlada.",
+        "Mantenha o tronco ereto e os ombros em posição confortável.",
+        "Eleve os ombros verticalmente sem dobrar os cotovelos.",
+        "Pause brevemente no topo.",
+        "Desça lentamente sem inclinar o tronco para a frente."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os ombros.",
+        "descida": "Inspire ao baixar."
+      },
+      "erros_comuns": [
+        "Forçar a posição dos ombros para trás.",
+        "Usar carga excessiva.",
+        "Balançar o tronco.",
+        "Perder o controle da barra."
+      ],
+      "cuidados": [
+        "Exige mobilidade e controle dos ombros; não é necessário para desenvolver o trapézio.",
+        "Prefira encolhimentos convencionais se houver desconforto.",
+        "Utilize uma posição de pegada que não provoque dor."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "encolhimento_com_barra",
+        "encolhimento_com_halteres"
+      ],
+      "imagens_execucao": [
+        "Barbell_Shrug_Behind_The_Back/0.jpg",
+        "Barbell_Shrug_Behind_The_Back/1.jpg"
+      ]
+    },
+    {
+      "id": "crucifixo_invertido",
+      "nome": "Crucifixo invertido",
+      "aliases": [
+        "Reverse fly",
+        "Elevação posterior"
+      ],
+      "grupo_principal": "ombros",
+      "musculos_primarios": [
+        "deltoide_posterior",
+        "trapezio_medio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "trapezio_inferior",
+        "infraespinal"
+      ],
+      "equipamentos": [
+        "halteres",
+        "banco_inclinado_opcional"
+      ],
+      "padrao_movimento": "abducao_horizontal_do_ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Segure um halter em cada mão e incline o tronco com a coluna em posição neutra, ou apoie o peito em um banco inclinado.",
+        "Mantenha os cotovelos levemente flexionados.",
+        "Afaste os braços lateralmente até uma amplitude confortável.",
+        "Controle as escápulas sem encolher os ombros excessivamente.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao afastar os braços.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar balanço do tronco.",
+        "Elevar os ombros em direção às orelhas.",
+        "Usar halteres pesados demais.",
+        "Dobrar excessivamente os cotovelos durante o movimento."
+      ],
+      "cuidados": [
+        "Mantenha os pesos leves o suficiente para controlar o movimento.",
+        "Evite elevar os braços além da amplitude confortável.",
+        "O exercício trabalha principalmente deltoide posterior e musculatura escapular, não apenas o trapézio."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "face_pull"
+      ],
+      "imagens_execucao": [
+        "Reverse_Flyes/0.jpg",
+        "Reverse_Flyes/1.jpg"
+      ]
+    },
+    {
+      "id": "remada_alta_com_barra",
+      "nome": "Remada alta com barra",
+      "aliases": [
+        "Barbell upright row"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_superior",
+        "deltoide_lateral"
+      ],
+      "musculos_secundarios": [
+        "biceps",
+        "antebracos"
+      ],
+      "equipamentos": [
+        "barra"
+      ],
+      "padrao_movimento": "tracao_vertical",
+      "nivel": "intermediario",
+      "execucao": [
+        "Segure a barra à frente das coxas com uma pegada confortável.",
+        "Mantenha os pés firmes e o tronco estável.",
+        "Puxe a barra próxima ao corpo, conduzindo o movimento com os cotovelos.",
+        "Encerre a subida na amplitude que não provoque desconforto nos ombros.",
+        "Desça a barra lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao puxar a barra.",
+        "descida": "Inspire ao baixar."
+      },
+      "erros_comuns": [
+        "Puxar a barra excessivamente alto.",
+        "Usar carga excessiva.",
+        "Inclinar o tronco para gerar impulso.",
+        "Forçar a rotação interna do ombro."
+      ],
+      "cuidados": [
+        "Utilize uma pegada e amplitude confortáveis.",
+        "Substitua o exercício se houver dor no ombro.",
+        "A remada alta é opcional; existem alternativas para o trapézio e deltoide lateral."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "remada_alta_com_corda",
+        "remada_alta_com_halteres"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "y_raise",
+      "nome": "Elevação em Y",
+      "aliases": [
+        "Y raise",
+        "Elevação em Y para trapézio inferior"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_inferior"
+      ],
+      "musculos_secundarios": [
+        "trapezio_medio",
+        "deltoide_posterior",
+        "serratr_anterior"
+      ],
+      "equipamentos": [
+        "halteres_leves",
+        "banco_inclinado_opcional",
+        "peso_corporal"
+      ],
+      "padrao_movimento": "elevacao_diagonal_dos_bracos",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de bruços em um banco inclinado ou incline o tronco com apoio estável.",
+        "Estenda os braços em diagonal formando um Y, com os polegares voltados para cima.",
+        "Eleve os braços de forma controlada, sem encolher os ombros.",
+        "Pause brevemente mantendo o pescoço alinhado.",
+        "Baixe os braços lentamente."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os braços.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar halteres pesados demais.",
+        "Encolher os ombros.",
+        "Arquear a lombar.",
+        "Elevar os braços com impulso."
+      ],
+      "cuidados": [
+        "Comece sem carga ou com pesos muito leves.",
+        "Mantenha os ombros em amplitude confortável.",
+        "Interrompa se houver dor."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "face_pull",
+        "crucifixo_invertido"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "encolhimento_com_kettlebell",
+      "nome": "Encolhimento com kettlebells",
+      "aliases": [
+        "Kettlebell shrug"
+      ],
+      "grupo_principal": "trapezio",
+      "musculos_primarios": [
+        "trapezio_superior"
+      ],
+      "musculos_secundarios": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipamentos": [
+        "kettlebells"
+      ],
+      "padrao_movimento": "elevacao_escapular",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé segurando um kettlebell em cada mão, ao lado do corpo.",
+        "Mantenha os braços estendidos e o tronco estável.",
+        "Eleve os ombros em direção às orelhas sem girá-los.",
+        "Pause brevemente no topo.",
+        "Baixe os ombros lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os ombros.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar impulso.",
+        "Girar os ombros.",
+        "Perder a postura do tronco.",
+        "Usar carga que comprometa a pegada."
+      ],
+      "cuidados": [
+        "Escolha kettlebells que consiga segurar com segurança.",
+        "Mantenha o pescoço neutro.",
+        "Não balance os pesos."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "encolhimento_com_halteres",
+        "encolhimento_com_barra"
+      ],
+      "imagens_execucao": []
+    }
+  ],
+  "observacao_imagens": "As imagens associadas são referências do catálogo visual do FOCO para movimentos correspondentes. Exercícios sem correspondência visual específica permanecem sem imagem."
+}
