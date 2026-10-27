@@ -56,6 +56,9 @@ export interface WorkoutExercise {
   rest_seconds: number;
   suggested_load_kg: number;
   notes?: string;
+  /** Optional weekday assignment; null means this legacy/general exercise can appear on any workout day. */
+  training_day?: 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo' | null;
+  position?: number;
 }
 
 export interface WorkoutPlan {
