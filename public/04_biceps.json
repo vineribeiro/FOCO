@@ -1,0 +1,1162 @@
+{
+  "arquivo": "04_biceps.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "biceps",
+  "descricao": "Biblioteca de exercícios para bíceps e flexores do cotovelo, com execução, músculos envolvidos, erros comuns e parâmetros iniciais de treinamento.",
+  "observacao_imagens": "Referências do catálogo atual do FOCO; exercícios sem imagem específica permanecem sem mídia, para evitar uma ilustração incorreta.",
+  "exercicios": [
+    {
+      "id": "rosca_direta_barra_reta",
+      "nome": "Rosca direta com barra reta",
+      "aliases": [
+        "Rosca direta",
+        "Barbell curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial",
+        "flexores do antebraço"
+      ],
+      "equipamentos": [
+        "barra reta"
+      ],
+      "padrao_movimento": "Flexão de cotovelo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés afastados aproximadamente na largura dos quadris.",
+        "Segure a barra com as palmas voltadas para a frente e as mãos aproximadamente na largura dos ombros.",
+        "Mantenha os cotovelos próximos ao tronco e os ombros estáveis.",
+        "Flexione os cotovelos para elevar a barra em direção à parte superior do abdômen ou ao peito, sem projetar os cotovelos excessivamente para a frente.",
+        "Contraia os bíceps no ponto mais alto sem elevar os ombros.",
+        "Abaixe a barra lentamente até próximo da extensão completa dos cotovelos, mantendo o controle."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a flexão dos cotovelos.",
+        "descida": "Inspire durante a extensão controlada."
+      },
+      "erros_comuns": [
+        "Balançar o tronco para gerar impulso.",
+        "Projetar os cotovelos para a frente.",
+        "Usar carga excessiva e encurtar o movimento.",
+        "Deixar a barra cair rapidamente na descida."
+      ],
+      "cuidados": [
+        "Utilize uma carga que permita manter o tronco estável.",
+        "Não force a extensão se houver dor no cotovelo ou no punho.",
+        "Mantenha os punhos alinhados com os antebraços."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_direta_barra_ez",
+        "rosca_cabo_barra_reta"
+      ],
+      "imagens_execucao": [
+        "Barbell_Curl/0.jpg",
+        "Barbell_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_direta_barra_ez",
+      "nome": "Rosca direta com barra EZ",
+      "aliases": [
+        "Rosca barra W",
+        "EZ-bar curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "barra EZ",
+        "anilhas"
+      ],
+      "padrao_movimento": "Flexão de cotovelo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os joelhos levemente flexionados e o tronco ereto.",
+        "Segure a barra EZ nas áreas anguladas, escolhendo uma posição confortável para os punhos.",
+        "Mantenha os cotovelos próximos às laterais do corpo.",
+        "Flexione os cotovelos e eleve a barra sem balançar o tronco.",
+        "Faça uma breve contração no alto sem elevar os ombros.",
+        "Retorne lentamente à posição inicial, controlando a descida."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a barra.",
+        "descida": "Inspire ao abaixar a barra."
+      },
+      "erros_comuns": [
+        "Usar impulso do quadril.",
+        "Dobrar excessivamente os punhos.",
+        "Deixar os cotovelos avançarem durante toda a repetição."
+      ],
+      "cuidados": [
+        "Ajuste a pegada para reduzir desconforto nos punhos.",
+        "Evite cargas que provoquem dor nos cotovelos."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_direta_barra_reta",
+        "rosca_scott_barra_ez"
+      ],
+      "imagens_execucao": [
+        "EZ-Bar_Curl/0.jpg",
+        "EZ-Bar_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_direta_halteres",
+      "nome": "Rosca direta com halteres",
+      "aliases": [
+        "Dumbbell curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "Flexão de cotovelo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé ou sente-se com o tronco ereto, segurando um halter em cada mão.",
+        "Comece com os braços ao lado do corpo e as palmas voltadas para a frente.",
+        "Mantenha os cotovelos próximos ao tronco.",
+        "Flexione os cotovelos para elevar os halteres sem balançar o corpo.",
+        "Contraia os bíceps no alto do movimento.",
+        "Abaixe os halteres lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a elevação.",
+        "descida": "Inspire durante a descida."
+      },
+      "erros_comuns": [
+        "Inclinar o tronco para trás.",
+        "Elevar os ombros.",
+        "Descer os halteres sem controle."
+      ],
+      "cuidados": [
+        "Escolha halteres que permitam executar as repetições sem impulso.",
+        "Mantenha os punhos neutros ou confortavelmente alinhados."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_alternada_halteres",
+        "rosca_concentrada"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Bicep_Curl/0.jpg",
+        "Dumbbell_Bicep_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_alternada_halteres",
+      "nome": "Rosca alternada com halteres",
+      "aliases": [
+        "Alternating dumbbell curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "Flexão de cotovelo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com um halter em cada mão e os braços estendidos ao lado do corpo.",
+        "Mantenha o tronco estável e os cotovelos próximos às laterais.",
+        "Flexione um cotovelo e eleve o halter correspondente.",
+        "Se desejar, gire gradualmente a palma para cima durante a subida, sem forçar o punho.",
+        "Abaixe o halter de maneira controlada e repita com o outro braço.",
+        "Alterne os lados mantendo o mesmo padrão de movimento."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar cada halter.",
+        "descida": "Inspire ao abaixar cada halter."
+      },
+      "erros_comuns": [
+        "Girar o tronco para ajudar na subida.",
+        "Usar velocidades diferentes entre os braços sem intenção.",
+        "Elevar os ombros."
+      ],
+      "cuidados": [
+        "Evite compensações do tronco.",
+        "Utilize amplitude confortável para cada cotovelo."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_direta_halteres",
+        "rosca_martelo_alternada"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Alternate_Bicep_Curl/0.jpg",
+        "Dumbbell_Alternate_Bicep_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_martelo_halteres",
+      "nome": "Rosca martelo com halteres",
+      "aliases": [
+        "Hammer curl",
+        "Rosca neutra"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "flexores do antebraço"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com pegada neutra",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé segurando os halteres ao lado do corpo.",
+        "Mantenha as palmas voltadas uma para a outra durante todo o movimento.",
+        "Estabilize o tronco e mantenha os cotovelos próximos ao corpo.",
+        "Flexione os cotovelos e eleve os halteres sem girar os punhos.",
+        "Faça uma breve contração no alto.",
+        "Abaixe os halteres lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os halteres.",
+        "descida": "Inspire ao abaixar."
+      },
+      "erros_comuns": [
+        "Balançar o corpo.",
+        "Deixar os cotovelos se afastarem excessivamente.",
+        "Transformar o movimento em uma elevação dos ombros."
+      ],
+      "cuidados": [
+        "Mantenha a pegada confortável.",
+        "Não force a amplitude diante de dor no punho ou cotovelo."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_martelo_corda",
+        "rosca_martelo_alternada"
+      ],
+      "imagens_execucao": [
+        "Hammer_Curls/0.jpg",
+        "Hammer_Curls/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_martelo_corda",
+      "nome": "Rosca martelo na polia com corda",
+      "aliases": [
+        "Cable rope hammer curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "corda"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com pegada neutra",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma corda à polia baixa e segure uma extremidade em cada mão.",
+        "Fique de frente para a máquina, com os pés firmes e o tronco ereto.",
+        "Mantenha as palmas voltadas uma para a outra e os cotovelos junto ao tronco.",
+        "Flexione os cotovelos para trazer as mãos em direção aos ombros.",
+        "Evite abrir os cotovelos ou balançar o corpo.",
+        "Retorne lentamente até a extensão confortável dos braços."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a flexão.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Inclinar o tronco para trás.",
+        "Puxar com os ombros.",
+        "Soltar a corda rapidamente na volta."
+      ],
+      "cuidados": [
+        "Confira se a corda está presa corretamente.",
+        "Mantenha distância suficiente da pilha de pesos."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_martelo_halteres",
+        "rosca_cabo_barra_reta"
+      ],
+      "imagens_execucao": [
+        "Cable_Hammer_Curls_-_Rope_Attachment/0.jpg",
+        "Cable_Hammer_Curls_-_Rope_Attachment/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_scott_barra_ez",
+      "nome": "Rosca Scott com barra EZ",
+      "aliases": [
+        "Preacher curl EZ bar"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "banco Scott",
+        "barra EZ",
+        "anilhas"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com braços apoiados",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste o banco Scott para que as axilas fiquem próximas à parte superior do apoio, sem desconforto.",
+        "Apoie a parte posterior dos braços no suporte e segure a barra EZ.",
+        "Comece com os cotovelos flexionados e a barra controlada.",
+        "Estenda os cotovelos lentamente até uma posição confortável, sem travá-los com força.",
+        "Flexione os cotovelos para elevar a barra.",
+        "Finalize a repetição sem retirar os braços do apoio."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a barra.",
+        "descida": "Inspire ao estender os cotovelos."
+      },
+      "erros_comuns": [
+        "Descer a barra abruptamente.",
+        "Estender os cotovelos de forma agressiva.",
+        "Levantar os braços do apoio para completar a repetição."
+      ],
+      "cuidados": [
+        "Evite a extensão forçada sob cargas elevadas.",
+        "Reduza a carga se houver pressão ou dor na região anterior do cotovelo."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_scott_halteres",
+        "rosca_scott_maquina"
+      ],
+      "imagens_execucao": [
+        "Preacher_Curl/0.jpg",
+        "Preacher_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_scott_halteres",
+      "nome": "Rosca Scott com halter",
+      "aliases": [
+        "Single-arm preacher curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "banco Scott",
+        "halter"
+      ],
+      "padrao_movimento": "Flexão de cotovelo unilateral com braço apoiado",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste o banco Scott e apoie o braço de trabalho inteiramente no suporte.",
+        "Segure um halter com a palma voltada para cima ou em uma posição confortável.",
+        "Comece com o cotovelo flexionado, mantendo o ombro relaxado.",
+        "Estenda o cotovelo lentamente sem forçar o limite da articulação.",
+        "Flexione o cotovelo para elevar o halter até a contração confortável.",
+        "Complete as repetições de um lado e depois troque de braço."
+      ],
+      "respiracao": {
+        "subida": "Expire ao flexionar o cotovelo.",
+        "descida": "Inspire ao estender o cotovelo."
+      },
+      "erros_comuns": [
+        "Descolar o braço do apoio.",
+        "Girar o tronco para ajudar.",
+        "Usar um halter pesado demais para controlar a descida."
+      ],
+      "cuidados": [
+        "Mantenha a amplitude sem dor.",
+        "Evite deixar o peso puxar bruscamente o cotovelo para a extensão."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_scott_barra_ez",
+        "rosca_concentrada"
+      ],
+      "imagens_execucao": [
+        "One_Arm_Dumbbell_Preacher_Curl/0.jpg",
+        "One_Arm_Dumbbell_Preacher_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_concentrada",
+      "nome": "Rosca concentrada com halter",
+      "aliases": [
+        "Concentration curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "halter",
+        "banco"
+      ],
+      "padrao_movimento": "Flexão de cotovelo unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se em um banco com os pés firmes no chão.",
+        "Segure um halter e apoie a parte posterior do braço contra a face interna da coxa, sem pressionar diretamente a articulação.",
+        "Comece com o cotovelo quase estendido e a palma voltada para a frente ou em posição confortável.",
+        "Flexione o cotovelo e eleve o halter sem movimentar o ombro.",
+        "Contraia o bíceps no alto do movimento.",
+        "Abaixe o halter lentamente e repita antes de trocar de braço."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a elevação.",
+        "descida": "Inspire durante a descida."
+      },
+      "erros_comuns": [
+        "Usar o tronco para impulsionar o peso.",
+        "Mover o cotovelo durante a repetição.",
+        "Usar carga que impeça a descida controlada."
+      ],
+      "cuidados": [
+        "Não pressione o cotovelo contra a perna.",
+        "Mantenha o punho alinhado e a amplitude confortável."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_scott_halteres",
+        "rosca_alternada_halteres"
+      ],
+      "imagens_execucao": [
+        "Concentration_Curls/0.jpg",
+        "Concentration_Curls/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_cabo_barra_reta",
+      "nome": "Rosca direta na polia com barra reta",
+      "aliases": [
+        "Cable curl",
+        "Rosca na polia baixa"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "barra reta"
+      ],
+      "padrao_movimento": "Flexão de cotovelo",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma barra reta à polia baixa e segure-a com as palmas voltadas para cima.",
+        "Fique de frente para a máquina, com os pés firmes e o tronco ereto.",
+        "Mantenha os cotovelos próximos ao corpo.",
+        "Flexione os cotovelos e eleve a barra sem movimentar o tronco.",
+        "Contraia os bíceps no alto sem elevar os ombros.",
+        "Retorne lentamente até a posição inicial, mantendo a tensão do cabo."
+      ],
+      "respiracao": {
+        "subida": "Expire ao puxar a barra para cima.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Inclinar o corpo para gerar impulso.",
+        "Deixar os cotovelos avançarem excessivamente.",
+        "Permitir que a pilha de pesos desça sem controle."
+      ],
+      "cuidados": [
+        "Verifique o acessório e o cabo antes de iniciar.",
+        "Não fique tão próximo da polia a ponto de perder estabilidade."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_cabo_corda",
+        "rosca_cabo_unilateral"
+      ],
+      "imagens_execucao": [
+        "Standing_Biceps_Cable_Curl/0.jpg",
+        "Standing_Biceps_Cable_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_cabo_unilateral",
+      "nome": "Rosca unilateral na polia",
+      "aliases": [
+        "Single-arm cable curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador individual"
+      ],
+      "padrao_movimento": "Flexão de cotovelo unilateral",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda um pegador individual à polia baixa.",
+        "Posicione-se de frente para a máquina ou ligeiramente afastado, conforme a trajetória do cabo.",
+        "Segure o pegador com a palma voltada para cima, mantendo o cotovelo junto ao corpo.",
+        "Flexione o cotovelo até uma contração confortável do bíceps.",
+        "Evite girar o tronco ou deslocar o ombro para completar o movimento.",
+        "Estenda o cotovelo lentamente e finalize as repetições antes de trocar de lado."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a flexão.",
+        "descida": "Inspire durante a extensão."
+      },
+      "erros_comuns": [
+        "Rotacionar o tronco.",
+        "Elevar o ombro.",
+        "Deixar o cabo puxar o braço abruptamente."
+      ],
+      "cuidados": [
+        "Mantenha uma postura estável.",
+        "Use carga equivalente à capacidade de controlar os dois lados."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_cabo_barra_reta",
+        "rosca_concentrada"
+      ],
+      "imagens_execucao": [
+        "Standing_One-Arm_Cable_Curl/0.jpg",
+        "Standing_One-Arm_Cable_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_inclinada_halteres",
+      "nome": "Rosca inclinada com halteres",
+      "aliases": [
+        "Incline dumbbell curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "banco inclinável",
+        "halteres"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com ombro em extensão",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste o banco para uma inclinação moderada e sente-se com as costas apoiadas.",
+        "Segure os halteres ao lado do corpo, deixando os braços pendentes de maneira confortável.",
+        "Mantenha os ombros estáveis e os cotovelos apontando para baixo.",
+        "Flexione os cotovelos para elevar os halteres sem deslocar os braços para a frente.",
+        "Faça uma contração controlada no alto.",
+        "Abaixe lentamente, evitando forçar a extensão do cotovelo ou alongar excessivamente o ombro."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a elevação.",
+        "descida": "Inspire durante a descida."
+      },
+      "erros_comuns": [
+        "Usar inclinação excessiva sem mobilidade suficiente.",
+        "Projetar os cotovelos para a frente.",
+        "Descer os pesos além da amplitude confortável do ombro."
+      ],
+      "cuidados": [
+        "Comece com carga leve para avaliar o conforto do ombro.",
+        "Não force a posição alongada se houver dor na parte anterior do ombro."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_direta_halteres",
+        "rosca_alternada_halteres"
+      ],
+      "imagens_execucao": [
+        "Incline_Dumbbell_Curl/0.jpg",
+        "Incline_Dumbbell_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_bayesiana_cabo",
+      "nome": "Rosca bayesiana na polia",
+      "aliases": [
+        "Bayesian cable curl",
+        "Behind-the-body cable curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador individual"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com ombro em extensão",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda um pegador individual à polia baixa.",
+        "Fique de costas para a máquina e segure o pegador com uma das mãos, mantendo o cabo atrás do corpo.",
+        "Dê um passo à frente até sentir uma tensão leve e confortável, sem perder o equilíbrio.",
+        "Mantenha o braço ligeiramente atrás do tronco e o cotovelo estável.",
+        "Flexione o cotovelo para elevar a mão em direção ao ombro.",
+        "Estenda o cotovelo lentamente, sem deixar o cabo puxar o ombro para uma posição dolorosa.",
+        "Repita com o outro braço."
+      ],
+      "respiracao": {
+        "subida": "Expire ao flexionar o cotovelo.",
+        "descida": "Inspire ao estender o cotovelo."
+      },
+      "erros_comuns": [
+        "Dar um passo excessivo à frente.",
+        "Arquear a lombar para manter a posição.",
+        "Movimentar o ombro para ajudar na repetição."
+      ],
+      "cuidados": [
+        "Use carga leve inicialmente.",
+        "Interrompa ou ajuste a posição se houver dor no ombro.",
+        "Mantenha os pés firmes e o cabo afastado do rosto."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_inclinada_halteres",
+        "rosca_cabo_unilateral"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "rosca_martelo_alternada",
+      "nome": "Rosca martelo alternada",
+      "aliases": [
+        "Alternating hammer curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "Flexão de cotovelo unilateral com pegada neutra",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé segurando um halter em cada mão, com as palmas voltadas uma para a outra.",
+        "Mantenha os cotovelos próximos ao tronco.",
+        "Flexione um cotovelo e eleve o halter sem girar o punho.",
+        "Abaixe o peso de forma controlada.",
+        "Repita com o outro braço, mantendo o tronco estável."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar o halter.",
+        "descida": "Inspire ao abaixar."
+      },
+      "erros_comuns": [
+        "Girar a palma para cima durante a repetição.",
+        "Balançar o tronco.",
+        "Usar amplitude diferente entre os lados sem motivo."
+      ],
+      "cuidados": [
+        "Mantenha os punhos alinhados.",
+        "Escolha carga que permita controlar toda a descida."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_martelo_halteres",
+        "rosca_martelo_corda"
+      ],
+      "imagens_execucao": [
+        "Alternate_Hammer_Curl/0.jpg",
+        "Alternate_Hammer_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_reversa_barra_ez",
+      "nome": "Rosca reversa com barra EZ",
+      "aliases": [
+        "Reverse curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "musculos_secundarios": [
+        "extensores do antebraço",
+        "bíceps braquial"
+      ],
+      "equipamentos": [
+        "barra EZ",
+        "anilhas"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com pegada pronada",
+      "nivel": "intermediario",
+      "execucao": [
+        "Fique em pé segurando a barra EZ com as palmas voltadas para baixo.",
+        "Mantenha os punhos alinhados com os antebraços e os cotovelos próximos ao tronco.",
+        "Flexione os cotovelos para elevar a barra sem movimentar os ombros.",
+        "Evite inclinar o tronco ou usar impulso.",
+        "Abaixe a barra lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a elevação.",
+        "descida": "Inspire durante a descida."
+      },
+      "erros_comuns": [
+        "Utilizar carga excessiva.",
+        "Dobrar os punhos para compensar.",
+        "Balançar o corpo."
+      ],
+      "cuidados": [
+        "Comece com uma carga inferior à utilizada na rosca supinada.",
+        "Reduza a amplitude ou interrompa se houver dor no punho ou cotovelo."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_reversa_barra_reta",
+        "rosca_reversa_cabo"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "rosca_reversa_cabo",
+      "nome": "Rosca reversa na polia",
+      "aliases": [
+        "Cable reverse curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "musculos_secundarios": [
+        "extensores do antebraço"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "barra reta"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com pegada pronada",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda uma barra reta à polia baixa e segure-a com as palmas voltadas para baixo.",
+        "Fique de frente para a máquina, com os cotovelos próximos ao tronco.",
+        "Flexione os cotovelos e eleve a barra mantendo os punhos alinhados.",
+        "Evite movimentar os ombros ou inclinar o corpo.",
+        "Retorne lentamente à posição inicial, controlando a resistência do cabo."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a barra.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar impulso do quadril.",
+        "Flexionar os punhos.",
+        "Deixar os cotovelos se deslocarem excessivamente."
+      ],
+      "cuidados": [
+        "Ajuste a carga para manter a pegada firme.",
+        "Evite continuar se surgir dor no punho."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_reversa_barra_ez",
+        "rosca_martelo_corda"
+      ],
+      "imagens_execucao": [
+        "Reverse_Cable_Curl/0.jpg",
+        "Reverse_Cable_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_biceps_maquina",
+      "nome": "Rosca de bíceps na máquina",
+      "aliases": [
+        "Biceps curl machine"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "máquina de rosca para bíceps"
+      ],
+      "padrao_movimento": "Flexão de cotovelo guiada",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o assento para que os cotovelos fiquem alinhados ao eixo de rotação da máquina, quando aplicável.",
+        "Apoie os braços no suporte e segure as manoplas.",
+        "Mantenha os ombros relaxados e os punhos alinhados.",
+        "Flexione os cotovelos para puxar as manoplas em direção ao corpo.",
+        "Faça uma contração controlada sem levantar os braços do apoio.",
+        "Retorne lentamente até a posição inicial, sem deixar a carga bater."
+      ],
+      "respiracao": {
+        "subida": "Expire ao flexionar os cotovelos.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar impulso do tronco.",
+        "Levantar os braços do apoio.",
+        "Deixar a carga retornar abruptamente."
+      ],
+      "cuidados": [
+        "Ajuste o assento e o apoio ao seu tamanho.",
+        "Não force a amplitude além do movimento permitido pela máquina."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_scott_maquina",
+        "rosca_cabo_barra_reta"
+      ],
+      "imagens_execucao": [
+        "Machine_Bicep_Curl/0.jpg",
+        "Machine_Bicep_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_scott_maquina",
+      "nome": "Rosca Scott na máquina",
+      "aliases": [
+        "Machine preacher curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "máquina Scott"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com braços apoiados",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o assento para posicionar os braços sobre o apoio de forma confortável.",
+        "Segure as manoplas mantendo os punhos alinhados.",
+        "Comece com os cotovelos flexionados conforme a posição inicial da máquina.",
+        "Estenda os cotovelos lentamente, sem forçar o limite articular.",
+        "Flexione os cotovelos para retornar, mantendo os braços apoiados.",
+        "Controle a carga durante toda a repetição."
+      ],
+      "respiracao": {
+        "subida": "Expire ao flexionar os cotovelos.",
+        "descida": "Inspire ao estender os cotovelos."
+      },
+      "erros_comuns": [
+        "Ajustar mal o banco.",
+        "Deixar os braços saírem do apoio.",
+        "Realizar repetições rápidas e sem controle."
+      ],
+      "cuidados": [
+        "Siga a amplitude confortável permitida pela máquina.",
+        "Evite a extensão brusca dos cotovelos."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "rosca_scott_barra_ez",
+        "rosca_biceps_maquina"
+      ],
+      "imagens_execucao": [
+        "Machine_Preacher_Curls/0.jpg",
+        "Machine_Preacher_Curls/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_drag",
+      "nome": "Rosca drag com barra",
+      "aliases": [
+        "Drag curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "barra reta ou barra EZ"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com cotovelos recuando",
+      "nivel": "intermediario",
+      "execucao": [
+        "Fique em pé segurando a barra com as palmas voltadas para a frente.",
+        "Mantenha a barra próxima ao tronco.",
+        "Flexione os cotovelos enquanto eles se deslocam ligeiramente para trás, permitindo que a barra suba junto ao corpo.",
+        "Eleve a barra apenas até onde conseguir manter os ombros confortáveis e o movimento controlado.",
+        "Abaixe lentamente seguindo a trajetória próxima ao tronco.",
+        "Evite transformar o exercício em uma remada ou usar impulso do quadril."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a barra.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Elevar os ombros em direção às orelhas.",
+        "Balançar o tronco para iniciar o movimento."
+      ],
+      "cuidados": [
+        "Use amplitude confortável para os ombros.",
+        "Interrompa se houver desconforto no ombro ou cotovelo."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "rosca_direta_barra_reta",
+        "rosca_direta_barra_ez"
+      ],
+      "imagens_execucao": [
+        "Drag_Curl/0.jpg",
+        "Drag_Curl/1.jpg"
+      ]
+    },
+    {
+      "id": "rosca_21",
+      "nome": "Rosca 21",
+      "aliases": [
+        "21s biceps curl"
+      ],
+      "grupo_principal": "biceps",
+      "musculos_primarios": [
+        "bíceps braquial"
+      ],
+      "musculos_secundarios": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipamentos": [
+        "barra EZ ou halteres"
+      ],
+      "padrao_movimento": "Flexão de cotovelo com amplitude parcial e completa",
+      "nivel": "intermediario",
+      "execucao": [
+        "Escolha uma carga mais leve do que usaria em uma série convencional.",
+        "Execute sete repetições na metade inferior da amplitude, da extensão confortável até aproximadamente metade da subida.",
+        "Execute sete repetições na metade superior da amplitude, da metade da subida até a contração superior.",
+        "Finalize com sete repetições completas, mantendo o tronco estável.",
+        "Controle a descida em todas as fases e evite pausas longas entre os blocos."
+      ],
+      "respiracao": {
+        "subida": "Expire durante cada fase de elevação.",
+        "descida": "Inspire durante cada retorno controlado."
+      },
+      "erros_comuns": [
+        "Usar a mesma carga de uma série convencional pesada.",
+        "Reduzir a amplitude de forma inconsistente.",
+        "Balançar o corpo nas últimas repetições."
+      ],
+      "cuidados": [
+        "Conte as 21 repetições como uma série completa.",
+        "Interrompa se perder a técnica ou sentir dor articular.",
+        "Não é necessário levar todas as séries à falha muscular."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        21,
+        21
+      ],
+      "variacoes": [
+        "rosca_direta_barra_ez",
+        "rosca_direta_halteres"
+      ],
+      "imagens_execucao": []
+    }
+  ]
+}
