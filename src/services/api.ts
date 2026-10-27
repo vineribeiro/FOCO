@@ -385,8 +385,11 @@ export const api = {
     return await request<{ user: User; profile: Profile }>('/api/auth/me');
   },
 
-  async forgotPassword(_email: string) {
-    throw new Error('A recuperação de senha por e-mail ainda não está configurada. Nenhuma senha foi alterada.');
+  async forgotPassword(email: string) {
+    return await request<{ message: string }>('/api/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email: email.trim().toLowerCase() }),
+    });
   },
 
   async resetPassword(_payload: { token: string; new_password: string }) {
