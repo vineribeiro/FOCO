@@ -237,7 +237,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               <ExerciseIllustration exerciseName={selectedExercise.name} muscleGroup={getMuscleLabel(selectedExercise.primaryMuscles[0] || '')} imagePaths={selectedExercise.images} className="h-44 w-full" showCaption />
               <div className="py-1">
                 <p className="text-xs font-bold">{getMuscleLabel(selectedExercise.primaryMuscles[0] || 'Geral')}</p>
-                <p className="mt-1 text-[10px] text-neutral-500">{getEquipmentLabel(selectedExercise.equipment)}</p>
+                <p className="mt-1 text-[10px] text-neutral-500">{selectedExercise.equipmentDisplay || getEquipmentLabel(selectedExercise.equipment)}</p>
                 <p className="mt-3 text-[10px] leading-relaxed text-neutral-400">Configuração inicial: 3 séries · 8–12 repetições · 60 s de descanso. Você pode ajustar a ficha depois.</p>
               </div>
             </div>
@@ -294,15 +294,71 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
             </div>
             <ExerciseIllustration exerciseName={detailExercise.name} muscleGroup={getMuscleLabel(detailExercise.primaryMuscles[0] || '')} imagePaths={detailExercise.images} className="mt-4 h-[360px] w-full sm:h-[440px]" showCaption />
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3"><p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Músculo principal</p><p className="mt-1 text-sm font-bold">{getMuscleLabel(detailExercise.primaryMuscles[0] || 'Geral')}</p></div>
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3"><p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Equipamento</p><p className="mt-1 text-sm font-bold">{getEquipmentLabel(detailExercise.equipment)}</p></div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                <p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Músculos primários</p>
+                <p className="mt-1 text-sm font-bold">{detailExercise.primaryMuscleDisplay?.join(', ') || getMuscleLabel(detailExercise.primaryMuscles[0] || 'Geral')}</p>
+                {detailExercise.secondaryMuscleDisplay?.length ? <p className="mt-2 text-[10px] leading-relaxed text-neutral-500">Secundários: {detailExercise.secondaryMuscleDisplay.join(', ')}</p> : null}
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                <p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Equipamento</p>
+                <p className="mt-1 text-sm font-bold">{detailExercise.equipmentDisplay || getEquipmentLabel(detailExercise.equipment)}</p>
+                {detailExercise.movementPattern && <p className="mt-2 text-[10px] text-neutral-500">{detailExercise.movementPattern}</p>}
+              </div>
             </div>
+            {(detailExercise.suggestedSets || detailExercise.suggestedReps) && (
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="rounded-xl border border-orange-500/20 bg-orange-500/[0.07] p-3">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-orange-300">Séries sugeridas</p>
+                  <p className="mt-1 text-xl font-black text-white">{detailExercise.suggestedSets ?? '—'}</p>
+                </div>
+                <div className="rounded-xl border border-orange-500/20 bg-orange-500/[0.07] p-3">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-orange-300">Repetições sugeridas</p>
+                  <p className="mt-1 text-xl font-black text-white">{detailExercise.suggestedReps ?? '—'}</p>
+                </div>
+              </div>
+            )}
             <div className="mt-5">
               <h3 className="text-xs font-black uppercase tracking-widest text-neutral-300">Passo a passo</h3>
               <ol className="mt-3 space-y-2">
                 {detailExercise.instructions.map((instruction, index) => <li key={index} className="flex gap-3 text-xs leading-relaxed text-neutral-400"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-black text-white">{index + 1}</span><span>{instruction}</span></li>)}
               </ol>
             </div>
+            {detailExercise.respiration && Object.keys(detailExercise.respiration).length > 0 && (
+              <section className="mt-5 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-300">Respiração</h3>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {Object.entries(detailExercise.respiration).map(([phase, instruction]) => (
+                    <span key={phase} className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-[11px] text-neutral-300">
+                      <strong className="text-white">{phase.charAt(0).toUpperCase() + phase.slice(1)}:</strong> {instruction}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
+            {detailExercise.commonErrors?.length ? (
+              <section className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.045] p-3">
+                <h3 className="text-xs font-black uppercase tracking-widest text-amber-200">Erros comuns</h3>
+                <ul className="mt-2 space-y-1.5">
+                  {detailExercise.commonErrors.map((error, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-amber-400">•</span><span>{error}</span></li>)}
+                </ul>
+              </section>
+            ) : null}
+            {detailExercise.safetyNotes?.length ? (
+              <section className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-3">
+                <h3 className="text-xs font-black uppercase tracking-widest text-emerald-200">Cuidados e segurança</h3>
+                <ul className="mt-2 space-y-1.5">
+                  {detailExercise.safetyNotes.map((note, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-emerald-400">•</span><span>{note}</span></li>)}
+                </ul>
+              </section>
+            ) : null}
+            {detailExercise.variations?.length ? (
+              <section className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-300">Variações relacionadas</h3>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {detailExercise.variations.map((variation) => <span key={variation} className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] text-neutral-300">{variation}</span>)}
+                </div>
+              </section>
+            ) : null}
             <button type="button" onClick={() => { setDetailExercise(null); setSelectedExercise(detailExercise); }} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-black uppercase tracking-wide text-black"><Plus className="h-4 w-4" /> Adicionar ao meu plano</button>
           </div>
         </div>
