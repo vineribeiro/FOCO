@@ -1,0 +1,1063 @@
+{
+  "arquivo": "02_costas.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "costas",
+  "descricao_imagens": "Ilustrações de início/fim vinculadas ao catálogo existente do FOCO quando há uma referência pertinente. imagens_execucao vazio significa que não há imagem específica correspondente; nesses casos a interface deve indicar a ausência em vez de reutilizar imagem incorreta.",
+  "exercicios": [
+    {
+      "id": "costas_puxada_frontal_polia",
+      "nome": "Puxada frontal na polia",
+      "aliases": [
+        "Lat Pulldown",
+        "Puxada alta"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "braquial",
+        "braquiorradial",
+        "trapézio inferior",
+        "romboides"
+      ],
+      "equipamentos": [
+        "polia alta",
+        "barra longa"
+      ],
+      "padrao_movimento": "Puxar vertical",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o apoio das coxas para manter o corpo estável.",
+        "Sente-se de frente para a máquina e segure a barra com pegada pronada, um pouco mais larga que os ombros.",
+        "Mantenha o tronco estável e os pés apoiados no chão.",
+        "Inicie o movimento levando os cotovelos para baixo.",
+        "Puxe a barra em direção à parte superior do peito, sem forçar o pescoço.",
+        "Evite balançar o tronco para gerar impulso.",
+        "Retorne lentamente até estender os braços de forma confortável."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Puxar a barra atrás da nuca.",
+        "Balançar excessivamente o tronco.",
+        "Puxar apenas com os braços sem controlar o movimento dos ombros.",
+        "Usar carga que impeça a extensão controlada."
+      ],
+      "cuidados": [
+        "Evitar puxar atrás da nuca se isso exigir uma posição desconfortável dos ombros.",
+        "Manter a barra sob controle durante todo o movimento.",
+        "Ajustar a pegada à mobilidade e ao conforto."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Puxada com pegada neutra",
+        "Puxada unilateral",
+        "Puxada com pegada supinada"
+      ],
+      "imagens_execucao": [
+        "Wide-Grip_Lat_Pulldown/0.jpg",
+        "Wide-Grip_Lat_Pulldown/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_curvada_barra",
+      "nome": "Remada curvada com barra",
+      "aliases": [
+        "Barbell Bent-Over Row",
+        "Remada inclinada"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "deltoide posterior",
+        "bíceps braquial",
+        "eretores da coluna"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas"
+      ],
+      "padrao_movimento": "Puxar horizontal",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione os pés aproximadamente na largura dos quadris.",
+        "Segure a barra com pegada pronada ou supinada, conforme a variação escolhida.",
+        "Flexione levemente os joelhos e incline o tronco a partir dos quadris.",
+        "Mantenha a coluna estável e a barra próxima às pernas.",
+        "Puxe a barra em direção à região inferior do abdômen, conduzindo os cotovelos para trás.",
+        "Evite elevar os ombros ou usar impulso para completar a repetição.",
+        "Desça a barra lentamente até estender os braços de forma confortável.",
+        "Mantenha a posição do tronco estável durante a série."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Arredondar excessivamente a coluna.",
+        "Usar balanço do tronco para levantar a barra.",
+        "Transformar o movimento em uma extensão do quadril.",
+        "Usar carga incompatível com o controle técnico."
+      ],
+      "cuidados": [
+        "Aprender a dobradiça de quadril antes de aumentar a carga.",
+        "Interromper a série se não conseguir manter a posição do tronco.",
+        "Escolher uma variação apoiada se houver dificuldade para estabilizar a lombar."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "6–12",
+      "variacoes": [
+        "Remada curvada com halteres",
+        "Remada Pendlay",
+        "Remada com barra T"
+      ],
+      "imagens_execucao": [
+        "Bent_Over_Barbell_Row/0.jpg",
+        "Bent_Over_Barbell_Row/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_baixa_cabo",
+      "nome": "Remada baixa no cabo",
+      "aliases": [
+        "Seated Cable Row",
+        "Remada sentada"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador neutro"
+      ],
+      "padrao_movimento": "Puxar horizontal",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se no equipamento e apoie os pés na plataforma.",
+        "Segure o pegador com os braços estendidos e o tronco estável.",
+        "Mantenha a coluna em posição confortável, sem arredondar excessivamente a lombar.",
+        "Puxe o pegador em direção ao abdômen, conduzindo os cotovelos para trás.",
+        "Aproxime as escápulas naturalmente sem exagerar a retração.",
+        "Evite inclinar o tronco para trás para ganhar impulso.",
+        "Retorne lentamente até estender os braços sem perder o controle."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Balançar o tronco para frente e para trás.",
+        "Encolher os ombros.",
+        "Puxar o pegador muito alto sem necessidade.",
+        "Soltar a carga rapidamente."
+      ],
+      "cuidados": [
+        "Manter os pés firmes na plataforma.",
+        "Evitar arredondar a lombar para alcançar maior amplitude.",
+        "Ajustar a carga para permitir uma volta controlada."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Remada com barra reta",
+        "Remada com pegada aberta",
+        "Remada unilateral no cabo"
+      ],
+      "imagens_execucao": [
+        "Seated_Cable_Rows/0.jpg",
+        "Seated_Cable_Rows/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_halter_unilateral",
+      "nome": "Remada unilateral com halter",
+      "aliases": [
+        "One-Arm Dumbbell Row",
+        "Remada serrote"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "romboides",
+        "trapézio médio"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior"
+      ],
+      "equipamentos": [
+        "halter",
+        "banco"
+      ],
+      "padrao_movimento": "Puxar horizontal unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Apoie uma mão e, se necessário, um joelho no banco firme.",
+        "Posicione o outro pé no chão para formar uma base estável.",
+        "Segure o halter com o braço livre, deixando-o estendido em direção ao chão.",
+        "Mantenha o tronco estável e a coluna em posição confortável.",
+        "Puxe o halter em direção ao quadril, levando o cotovelo para trás.",
+        "Evite girar o tronco para levantar a carga.",
+        "Desça o halter lentamente até estender o braço de forma confortável.",
+        "Complete as repetições de um lado e depois troque."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Girar o tronco durante a puxada.",
+        "Usar impulso para levantar o halter.",
+        "Encolher o ombro em direção à orelha.",
+        "Usar uma amplitude que provoque desconforto."
+      ],
+      "cuidados": [
+        "Verificar a estabilidade do banco.",
+        "Manter o apoio firme durante toda a série.",
+        "Usar carga que permita controlar o movimento unilateral."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12 por lado",
+      "variacoes": [
+        "Remada unilateral no cabo",
+        "Remada com peito apoiado",
+        "Remada com halteres em banco inclinado"
+      ],
+      "imagens_execucao": [
+        "One-Arm_Dumbbell_Row/0.jpg",
+        "One-Arm_Dumbbell_Row/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_barra_fixa_pronada",
+      "nome": "Barra fixa pronada",
+      "aliases": [
+        "Pull-up",
+        "Pull-up pronado"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "redondo maior"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "braquial",
+        "braquiorradial",
+        "trapézio inferior"
+      ],
+      "equipamentos": [
+        "barra fixa"
+      ],
+      "padrao_movimento": "Puxar vertical com peso corporal",
+      "nivel": "avancado",
+      "execucao": [
+        "Segure a barra com as palmas voltadas para a frente e uma pegada confortável.",
+        "Comece pendurado com os braços estendidos, mantendo os ombros sob controle.",
+        "Estabilize o tronco e evite balançar as pernas.",
+        "Puxe o corpo para cima conduzindo os cotovelos para baixo.",
+        "Suba até o queixo ultrapassar a barra, se conseguir sem compensações.",
+        "Desça lentamente até a posição inicial.",
+        "Mantenha o movimento controlado em todas as repetições."
+      ],
+      "respiracao": {
+        "subida": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Usar balanço excessivo das pernas.",
+        "Fazer repetições parciais sem que isso seja intencional.",
+        "Forçar a amplitude apesar de dor nos ombros.",
+        "Descer sem controle."
+      ],
+      "cuidados": [
+        "Utilizar máquina assistida ou elástico se necessário.",
+        "Verificar a fixação da barra.",
+        "Não insistir em repetições que provoquem dor."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "4–10",
+      "variacoes": [
+        "Barra fixa supinada",
+        "Barra fixa assistida",
+        "Puxada frontal na polia"
+      ],
+      "imagens_execucao": [
+        "Pullups/0.jpg",
+        "Pullups/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_peito_apoiado",
+      "nome": "Remada com peito apoiado",
+      "aliases": [
+        "Chest-Supported Row",
+        "Remada inclinada apoiada"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "deltoide posterior",
+        "bíceps braquial",
+        "braquial"
+      ],
+      "equipamentos": [
+        "banco inclinado",
+        "halteres"
+      ],
+      "padrao_movimento": "Puxar horizontal com apoio",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o banco inclinado e deite com o peito apoiado no encosto.",
+        "Mantenha os pés firmes no chão e segure um halter em cada mão.",
+        "Deixe os braços estendidos em direção ao chão, sem relaxar completamente os ombros.",
+        "Puxe os halteres em direção às laterais do tronco.",
+        "Conduza os cotovelos para trás sem elevar excessivamente os ombros.",
+        "Pause brevemente no final da puxada, mantendo o controle.",
+        "Desça lentamente os halteres até a posição inicial."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Tirar o peito do apoio.",
+        "Usar impulso com o corpo.",
+        "Elevar os ombros excessivamente.",
+        "Escolher halteres pesados demais."
+      ],
+      "cuidados": [
+        "Conferir a estabilidade e o ângulo do banco.",
+        "Manter o peito apoiado durante a série.",
+        "Ajustar a trajetória dos cotovelos conforme o conforto."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Remada na máquina com peito apoiado",
+        "Remada com halteres em banco inclinado",
+        "Remada com barra T apoiada"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Incline_Row/0.jpg",
+        "Dumbbell_Incline_Row/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_barra_t",
+      "nome": "Remada com barra T",
+      "aliases": [
+        "T-Bar Row",
+        "Remada T"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior",
+        "eretores da coluna"
+      ],
+      "equipamentos": [
+        "barra T ou landmine",
+        "pegador"
+      ],
+      "padrao_movimento": "Puxar horizontal",
+      "nivel": "intermediario",
+      "execucao": [
+        "Posicione-se na máquina ou na extremidade preparada da barra T.",
+        "Apoie os pés firmemente e ajuste a posição do tronco conforme o equipamento.",
+        "Segure o pegador com os braços estendidos.",
+        "Mantenha a coluna estável e os joelhos levemente flexionados quando necessário.",
+        "Puxe o pegador em direção ao tronco, levando os cotovelos para trás.",
+        "Evite usar balanço para movimentar a carga.",
+        "Retorne lentamente até estender os braços de forma confortável."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Arredondar excessivamente a lombar.",
+        "Usar impulso para iniciar cada repetição.",
+        "Elevar os ombros em excesso.",
+        "Aumentar a carga antes de dominar a técnica."
+      ],
+      "cuidados": [
+        "Verificar a fixação da barra e do pegador.",
+        "Manter o tronco estável conforme a versão utilizada.",
+        "Preferir uma versão com apoio peitoral se houver dificuldade de estabilização."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Remada T com peito apoiado",
+        "Remada T na máquina",
+        "Remada curvada com barra"
+      ],
+      "imagens_execucao": [
+        "T-Bar_Row_with_Handle/0.jpg",
+        "T-Bar_Row_with_Handle/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_pulldown_bracos_estendidos",
+      "nome": "Pulldown com braços estendidos",
+      "aliases": [
+        "Straight-Arm Pulldown",
+        "Pullover na polia alta"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "redondo maior"
+      ],
+      "musculos_secundarios": [
+        "tríceps — cabeça longa",
+        "deltoide posterior"
+      ],
+      "equipamentos": [
+        "polia alta",
+        "barra reta ou corda"
+      ],
+      "padrao_movimento": "Extensão do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma barra ou corda à polia alta e selecione uma carga moderada.",
+        "Fique de frente para a máquina, com os pés afastados para manter o equilíbrio.",
+        "Segure o acessório com os braços estendidos e os cotovelos ligeiramente flexionados.",
+        "Incline levemente o tronco, mantendo a coluna estável.",
+        "Leve as mãos para baixo em direção às coxas, movimentando os ombros.",
+        "Evite transformar o exercício em uma flexão repetida dos cotovelos.",
+        "Retorne lentamente até os braços ficarem elevados em uma amplitude confortável."
+      ],
+      "respiracao": {
+        "descida": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Dobrar excessivamente os cotovelos.",
+        "Usar impulso do tronco.",
+        "Elevar a carga acima da capacidade de controle.",
+        "Forçar a amplitude dos ombros."
+      ],
+      "cuidados": [
+        "Manter os cotovelos em uma flexão leve e estável.",
+        "Ajustar a amplitude à mobilidade dos ombros.",
+        "Evitar inclinar excessivamente o tronco para movimentar mais peso."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Pulldown com corda",
+        "Pullover com halter",
+        "Pullover na máquina"
+      ],
+      "imagens_execucao": [
+        "Straight-Arm_Pulldown/0.jpg",
+        "Straight-Arm_Pulldown/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_pullover_halter",
+      "nome": "Pullover com halter",
+      "aliases": [
+        "Dumbbell Pullover"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso"
+      ],
+      "musculos_secundarios": [
+        "peitoral maior",
+        "tríceps — cabeça longa",
+        "serrátil anterior"
+      ],
+      "equipamentos": [
+        "halter",
+        "banco reto"
+      ],
+      "padrao_movimento": "Extensão do ombro",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se no banco com os pés apoiados no chão.",
+        "Segure um halter com as duas mãos sobre o peito, mantendo uma pegada segura.",
+        "Mantenha os cotovelos ligeiramente flexionados.",
+        "Leve o halter lentamente para trás da cabeça, movimentando os ombros.",
+        "Pare quando atingir uma amplitude confortável sem arquear excessivamente a lombar.",
+        "Traga o halter de volta sobre o peito, controlando o movimento.",
+        "Mantenha a posição dos cotovelos relativamente estável."
+      ],
+      "respiracao": {
+        "descida": "Inspirar",
+        "retorno": "Expirar"
+      },
+      "erros_comuns": [
+        "Descer o halter além da mobilidade disponível.",
+        "Arquear excessivamente a lombar.",
+        "Flexionar e estender os cotovelos durante a repetição.",
+        "Segurar o halter de forma insegura."
+      ],
+      "cuidados": [
+        "Começar com carga leve.",
+        "Verificar a pegada antes de posicionar o halter sobre o corpo.",
+        "Evitar amplitudes que causem dor ou instabilidade nos ombros."
+      ],
+      "series_sugeridas": 2,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Pullover na polia",
+        "Pullover na máquina",
+        "Pulldown com braços estendidos"
+      ],
+      "imagens_execucao": [
+        "Bent-Arm_Dumbbell_Pullover/0.jpg",
+        "Bent-Arm_Dumbbell_Pullover/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_invertida",
+      "nome": "Remada invertida",
+      "aliases": [
+        "Inverted Row",
+        "Australian Pull-up"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "deltoide posterior",
+        "eretores da coluna",
+        "reto abdominal"
+      ],
+      "equipamentos": [
+        "barra baixa ou suspensão"
+      ],
+      "padrao_movimento": "Puxar horizontal com peso corporal",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste uma barra baixa ou sistema de suspensão devidamente fixado.",
+        "Posicione-se abaixo da barra e segure-a com pegada firme.",
+        "Estenda o corpo, mantendo cabeça, tronco e quadris alinhados.",
+        "Comece com os braços estendidos e os pés apoiados no chão.",
+        "Puxe o peito em direção à barra, levando os cotovelos para trás.",
+        "Evite deixar os quadris caírem durante a puxada.",
+        "Desça lentamente até a posição inicial.",
+        "Dobre os joelhos ou eleve a barra para reduzir a dificuldade, se necessário."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Deixar os quadris caírem.",
+        "Usar impulso para subir.",
+        "Perder a firmeza da pegada.",
+        "Usar uma barra ou suporte mal fixado."
+      ],
+      "cuidados": [
+        "Verificar a fixação do equipamento antes de iniciar.",
+        "Ajustar o ângulo do corpo ao nível de força.",
+        "Manter o corpo alinhado durante toda a repetição."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–15",
+      "variacoes": [
+        "Remada invertida com joelhos flexionados",
+        "Remada em suspensão",
+        "Barra fixa assistida"
+      ],
+      "imagens_execucao": [
+        "Inverted_Row/0.jpg",
+        "Inverted_Row/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_maquina",
+      "nome": "Remada na máquina",
+      "aliases": [
+        "Machine Row",
+        "Remada articulada"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior"
+      ],
+      "equipamentos": [
+        "máquina de remada"
+      ],
+      "padrao_movimento": "Puxar horizontal",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o assento e o apoio peitoral, se disponíveis, conforme o equipamento.",
+        "Segure as alças com os punhos alinhados.",
+        "Mantenha o tronco estável e os pés apoiados.",
+        "Puxe as alças em direção ao tronco conduzindo os cotovelos para trás.",
+        "Evite encolher os ombros ou inclinar excessivamente o corpo.",
+        "Retorne lentamente à posição inicial.",
+        "Mantenha o movimento controlado durante toda a série."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Ajustar o assento incorretamente.",
+        "Usar impulso do tronco.",
+        "Soltar a carga rapidamente.",
+        "Forçar a amplitude dos ombros."
+      ],
+      "cuidados": [
+        "Conferir os ajustes e a carga antes da série.",
+        "Seguir as orientações específicas do equipamento.",
+        "Utilizar uma amplitude confortável e controlada."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Remada com apoio peitoral",
+        "Remada unilateral na máquina",
+        "Remada baixa no cabo"
+      ],
+      "imagens_execucao": [
+        "Leverage_Iso_Row/0.jpg",
+        "Leverage_Iso_Row/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_puxada_neutra",
+      "nome": "Puxada frontal com pegada neutra",
+      "aliases": [
+        "Neutral-Grip Lat Pulldown",
+        "Puxada triângulo"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "braquial",
+        "braquiorradial",
+        "redondo maior"
+      ],
+      "equipamentos": [
+        "polia alta",
+        "pegador neutro"
+      ],
+      "padrao_movimento": "Puxar vertical",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda um pegador neutro adequado à polia alta.",
+        "Sente-se e ajuste o apoio das coxas.",
+        "Segure o pegador com as palmas voltadas uma para a outra.",
+        "Mantenha o tronco estável e os ombros sob controle.",
+        "Puxe os cotovelos para baixo, levando o pegador em direção à parte superior do peito.",
+        "Evite inclinar excessivamente o tronco para trás.",
+        "Retorne lentamente até estender os braços de forma confortável."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Balançar o tronco.",
+        "Elevar os ombros excessivamente.",
+        "Usar uma carga que impeça o retorno controlado.",
+        "Puxar o pegador para trás da cabeça."
+      ],
+      "cuidados": [
+        "Verificar a conexão do pegador ao cabo.",
+        "Manter o tronco estável.",
+        "Ajustar a pegada ao conforto dos punhos e ombros."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Puxada pronada",
+        "Puxada supinada",
+        "Puxada unilateral no cabo"
+      ],
+      "imagens_execucao": [
+        "Close-Grip_Front_Lat_Pulldown/0.jpg",
+        "Close-Grip_Front_Lat_Pulldown/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_smith",
+      "nome": "Remada curvada no Smith",
+      "aliases": [
+        "Smith Machine Bent-Over Row"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "deltoide posterior",
+        "eretores da coluna"
+      ],
+      "equipamentos": [
+        "máquina Smith"
+      ],
+      "padrao_movimento": "Puxar horizontal",
+      "nivel": "intermediario",
+      "execucao": [
+        "Ajuste a barra do Smith a uma altura que permita iniciar o movimento com segurança.",
+        "Posicione os pés firmemente e segure a barra com pegada simétrica.",
+        "Flexione levemente os joelhos e incline o tronco a partir dos quadris.",
+        "Mantenha a coluna estável e os braços estendidos.",
+        "Puxe a barra em direção ao abdômen, levando os cotovelos para trás.",
+        "Evite movimentar o tronco para gerar impulso.",
+        "Desça a barra lentamente até a posição inicial.",
+        "Recoloque a barra nos ganchos somente quando estiver sob controle."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "descida": "Inspirar"
+      },
+      "erros_comuns": [
+        "Arredondar a lombar.",
+        "Usar impulso do quadril.",
+        "Posicionar os pés de modo instável.",
+        "Não conferir os ganchos de segurança."
+      ],
+      "cuidados": [
+        "Aprender o mecanismo do Smith antes de iniciar.",
+        "Manter a posição do tronco estável.",
+        "Preferir remada com apoio peitoral se houver dificuldade de estabilização."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Remada curvada com barra livre",
+        "Remada no Smith com pegada supinada",
+        "Remada com peito apoiado"
+      ],
+      "imagens_execucao": [
+        "Smith_Machine_Bent_Over_Row/0.jpg",
+        "Smith_Machine_Bent_Over_Row/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_unilateral_cabo",
+      "nome": "Remada unilateral no cabo",
+      "aliases": [
+        "Single-Arm Cable Row"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "romboides",
+        "trapézio médio"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "pegador individual"
+      ],
+      "padrao_movimento": "Puxar horizontal unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste a polia aproximadamente à altura do tronco e conecte um pegador individual.",
+        "Fique sentado ou em pé, conforme a configuração, com uma base estável.",
+        "Segure o pegador e estenda o braço de maneira confortável.",
+        "Mantenha o tronco estável e puxe o cotovelo para trás.",
+        "Evite girar o corpo para aumentar a amplitude.",
+        "Retorne lentamente até estender o braço sem perder o controle.",
+        "Complete as repetições de um lado antes de trocar."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Girar o tronco excessivamente.",
+        "Elevar o ombro em direção à orelha.",
+        "Usar impulso.",
+        "Perder a estabilidade durante o movimento."
+      ],
+      "cuidados": [
+        "Conferir a conexão do pegador.",
+        "Manter uma base estável.",
+        "Usar carga que permita controlar os dois lados."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12 por lado",
+      "variacoes": [
+        "Remada unilateral com halter",
+        "Remada unilateral na máquina",
+        "Remada baixa bilateral"
+      ],
+      "imagens_execucao": [
+        "Seated_One-arm_Cable_Pulley_Rows/0.jpg",
+        "Seated_One-arm_Cable_Pulley_Rows/1.jpg"
+      ]
+    },
+    {
+      "id": "costas_remada_pendlay",
+      "nome": "Remada Pendlay",
+      "aliases": [
+        "Pendlay Row"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "deltoide posterior",
+        "eretores da coluna"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas"
+      ],
+      "padrao_movimento": "Puxar horizontal com reinício no chão",
+      "nivel": "avancado",
+      "execucao": [
+        "Posicione a barra no chão com carga adequada.",
+        "Afaste os pés aproximadamente na largura dos quadris e incline o tronco até alcançar a barra.",
+        "Segure a barra com pegada pronada e mantenha a coluna estável.",
+        "Mantenha o tronco próximo da horizontal, conforme sua mobilidade e técnica.",
+        "Puxe a barra rapidamente em direção à parte inferior do peito ou ao abdômen superior.",
+        "Retorne a barra ao chão de forma controlada após cada repetição.",
+        "Reorganize a posição e a tensão corporal antes de iniciar a repetição seguinte."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar e reorganizar a posição"
+      },
+      "erros_comuns": [
+        "Arredondar a coluna para alcançar a barra.",
+        "Usar impulso excessivo do quadril.",
+        "Aumentar a carga antes de dominar a posição inicial.",
+        "Deixar a barra cair sem controle."
+      ],
+      "cuidados": [
+        "Exige domínio da dobradiça de quadril e da estabilização do tronco.",
+        "Começar com carga leve e supervisão quando necessário.",
+        "Interromper a série se a posição da coluna se deteriorar."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "5–8",
+      "variacoes": [
+        "Remada curvada com barra",
+        "Remada com peito apoiado",
+        "Remada na máquina"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "costas_remada_inclinada_cabo",
+      "nome": "Remada inclinada no cabo",
+      "aliases": [
+        "Bent-Over Cable Row"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "deltoide posterior",
+        "eretores da coluna"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "barra reta ou pegador"
+      ],
+      "padrao_movimento": "Puxar horizontal com tronco inclinado",
+      "nivel": "intermediario",
+      "execucao": [
+        "Conecte o acessório à polia baixa e selecione uma carga moderada.",
+        "Segure o acessório e afaste-se o suficiente para manter o cabo tensionado.",
+        "Flexione levemente os joelhos e incline o tronco a partir dos quadris.",
+        "Mantenha a coluna estável e os braços estendidos.",
+        "Puxe o acessório em direção ao abdômen, levando os cotovelos para trás.",
+        "Evite alterar a inclinação do tronco durante a puxada.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Balançar o tronco.",
+        "Arredondar a lombar.",
+        "Usar carga que puxe o corpo para a frente sem controle.",
+        "Fazer a puxada apenas com os braços sem controlar os ombros."
+      ],
+      "cuidados": [
+        "Verificar o cabo e o acessório.",
+        "Manter uma base estável.",
+        "Escolher uma carga compatível com a capacidade de estabilização."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Remada baixa sentada",
+        "Remada curvada com barra",
+        "Remada unilateral no cabo"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "costas_puxada_supinada",
+      "nome": "Puxada frontal com pegada supinada",
+      "aliases": [
+        "Reverse-Grip Lat Pulldown",
+        "Puxada supinada"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso"
+      ],
+      "musculos_secundarios": [
+        "bíceps braquial",
+        "braquial",
+        "redondo maior"
+      ],
+      "equipamentos": [
+        "polia alta",
+        "barra reta"
+      ],
+      "padrao_movimento": "Puxar vertical",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma barra adequada à polia alta.",
+        "Sente-se e ajuste o apoio das coxas.",
+        "Segure a barra com as palmas voltadas para si e uma pegada confortável.",
+        "Mantenha o tronco estável e os cotovelos próximos da trajetória natural do corpo.",
+        "Puxe a barra em direção à parte superior do peito.",
+        "Evite inclinar excessivamente o tronco para trás.",
+        "Retorne lentamente até estender os braços de forma confortável."
+      ],
+      "respiracao": {
+        "puxada": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Forçar os punhos em uma posição desconfortável.",
+        "Balançar o tronco.",
+        "Puxar atrás da nuca.",
+        "Usar carga excessiva."
+      ],
+      "cuidados": [
+        "Ajustar a largura da pegada ao conforto dos punhos.",
+        "Manter o movimento controlado.",
+        "Evitar amplitude que cause dor nos ombros ou cotovelos."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "8–12",
+      "variacoes": [
+        "Puxada pronada",
+        "Puxada neutra",
+        "Barra fixa supinada"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "costas_pullover_maquina",
+      "nome": "Pullover na máquina",
+      "aliases": [
+        "Machine Pullover"
+      ],
+      "grupo_principal": "costas",
+      "musculos_primarios": [
+        "latíssimo do dorso",
+        "redondo maior"
+      ],
+      "musculos_secundarios": [
+        "tríceps — cabeça longa",
+        "peitoral maior"
+      ],
+      "equipamentos": [
+        "máquina pullover"
+      ],
+      "padrao_movimento": "Extensão do ombro",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o assento e os apoios conforme as instruções da máquina.",
+        "Posicione os braços ou as mãos nos apoios indicados pelo equipamento.",
+        "Mantenha o tronco estável e os ombros em posição confortável.",
+        "Leve os braços para baixo em direção ao tronco, movimentando os ombros.",
+        "Evite usar impulso ou arquear excessivamente a lombar.",
+        "Retorne lentamente à posição inicial, controlando a resistência.",
+        "Mantenha a amplitude dentro do conforto articular."
+      ],
+      "respiracao": {
+        "descida_dos_braços": "Expirar",
+        "retorno": "Inspirar"
+      },
+      "erros_comuns": [
+        "Ajustar os apoios incorretamente.",
+        "Usar impulso do tronco.",
+        "Forçar a amplitude dos ombros.",
+        "Deixar a carga retornar bruscamente."
+      ],
+      "cuidados": [
+        "Seguir os ajustes específicos do fabricante.",
+        "Começar com carga leve para compreender a trajetória.",
+        "Interromper o movimento em caso de dor."
+      ],
+      "series_sugeridas": 3,
+      "repeticoes_sugeridas": "10–15",
+      "variacoes": [
+        "Pullover com halter",
+        "Pulldown com braços estendidos",
+        "Pullover no cabo"
+      ],
+      "imagens_execucao": []
+    }
+  ]
+}
