@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { DesktopNav } from './components/DesktopNav';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { RestTimerProvider } from './context/RestTimerContext';
 import { BottomNavBar } from './components/BottomNavBar';
@@ -30,7 +31,27 @@ import { ExerciseLibraryPage } from './pages/ExerciseLibraryPage';
 
 function MainApp() {
   const { user, isAuthenticated, isLoading, authLoadError } = useAuth();
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const validViews = ['dashboard', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos'];
+  const [activeTab, setActiveTabState] = useState<string>(() => {
+    const view = new URLSearchParams(window.location.search).get('view');
+    return view && validViews.includes(view) ? view : 'dashboard';
+  });
+  const setActiveTab = useCallback((tab: string) => {
+    if (!validViews.includes(tab)) return;
+    setActiveTabState(tab);
+    const url = new URL(window.location.href);
+    if (tab === 'dashboard') url.searchParams.delete('view');
+    else url.searchParams.set('view', tab);
+    window.history.pushState({ focoView: tab }, '', url.pathname + url.search + url.hash);
+  }, []);
+  useEffect(() => {
+    const onPopState = () => {
+      const view = new URLSearchParams(window.location.search).get('view');
+      setActiveTabState(view && validViews.includes(view) ? view : 'dashboard');
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated || !user?.id) return;
@@ -136,13 +157,14 @@ function MainApp() {
     <div className="min-h-screen bg-[#000000] text-[#FFFFFF] antialiased flex justify-center">
       
       {/* Mobile Ergonomic Container Shell (Zero-Overlap Guarantee) */}
-      <div className="w-full max-w-6xl min-h-screen bg-[#0A0A0A] border-x border-white/10 flex flex-col relative shadow-2xl overflow-x-hidden">
-        
-        {/* Top Header with Official FOCO Brand Monogram */}
-        <header className="px-4 py-3 flex items-center justify-between border-b border-white/10 bg-[#0A0A0A]/95 backdrop-blur-md sticky top-0 z-30">
+      <div className="w-full min-h-screen bg-[#0A0A0A] flex flex-col relative">
+        <div className="flex min-h-screen flex-1">
+          <DesktopNav activeTab={activeTab} navigate={setActiveTab} />
+          <div className="min-w-0 flex flex-1 flex-col">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#0A0A0A]/95 px-4 backdrop-blur-md sm:px-6">
           <button
             onClick={() => setActiveTab('dashboard')}
-            className="flex items-center text-left cursor-pointer group"
+            className="flex items-center text-left cursor-pointer group md:hidden"
             aria-label="FOCO — voltar ao início"
           >
             <FocoLogoHorizontal
@@ -152,37 +174,38 @@ function MainApp() {
             />
           </button>
 
-          {/* Atalhos funcionais do aplicativo */}
-          <div className="flex items-center gap-1.5">
+          <span className="hidden text-xs font-semibold text-neutral-400 md:block">FOCO EM EVOLUIR.</span>
+          {/* Atalhos da conta */}
+          <div className="flex items-center gap-2">
             <InstallAppButton />
             <button
               onClick={() => setActiveTab('configuracoes')}
-              className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
+              aria-label="Preferências" className={`foco-touch rounded-xl border transition-colors cursor-pointer ${
                 activeTab === 'configuracoes'
                   ? 'bg-white text-black border-white'
                   : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
               }`}
               title="Preferências"
             >
-              <Settings className="w-3.5 h-3.5" />
+              <Settings className="w-5 h-5" />
             </button>
             
             <button
               onClick={() => setActiveTab('perfil')}
-              className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
+              aria-label="Meu perfil" className={`foco-touch rounded-xl border transition-colors cursor-pointer ${
                 activeTab === 'perfil'
                   ? 'bg-white text-black border-white'
                   : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
               }`}
               title="Perfil"
             >
-              <User className="w-3.5 h-3.5" />
+              <User className="w-5 h-5" />
             </button>
           </div>
         </header>
 
         {/* Viewport Content Area with Protected Bottom Space (pb-32) */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-32 overflow-y-auto">
+        <main id="foco-main-content" className="flex-1 min-w-0 p-4 pb-28 sm:p-6 lg:p-8 md:pb-12">
           {renderActiveView()}
         </main>
 
@@ -195,7 +218,8 @@ function MainApp() {
           setActiveTab={setActiveTab}
           onStartSession={() => setActiveTab('sessao')}
         />
-
+          </div>
+        </div>
       </div>
     </div>
   );
