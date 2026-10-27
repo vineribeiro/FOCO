@@ -128,13 +128,18 @@ async function createPlan(db: SupabaseClient, uid: string, input: any, givenExer
     status, approved_at: new Date().toISOString(),
   }).select("*").single();
   fail(p.error, "Não foi possível criar a ficha.");
-  const rows = exercises.map((e: any, i: number) => ({
-    plan_id: p.data.id, exercise_name: text(e.exercise_name, 160) || "Exercício",
-    muscle_group: text(e.muscle_group, 80) || "Geral",
-    sets: Number(e.sets) || 3, reps_min: Number(e.reps_min) || 8, reps_max: Number(e.reps_max) || 12,
-    rest_seconds: Number(e.rest_seconds) || 60, suggested_load_kg: Number(e.suggested_load_kg) || 0,
-    notes: text(e.notes, 500), position: i,
-  }));
+  const validDays = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
+  const rows = exercises.map((e: any, i: number) => {
+    const trainingDay = e.training_day == null || e.training_day === "" ? null : text(e.training_day, 20);
+    if (trainingDay && !validDays.includes(trainingDay)) throw new ApiError(400, "Dia da semana inválido no exercício.");
+    return {
+      plan_id: p.data.id, exercise_name: text(e.exercise_name, 160) || "Exercício",
+      muscle_group: text(e.muscle_group, 80) || "Geral",
+      sets: Number(e.sets) || 3, reps_min: Number(e.reps_min) || 8, reps_max: Number(e.reps_max) || 12,
+      rest_seconds: Number(e.rest_seconds) || 60, suggested_load_kg: Number(e.suggested_load_kg) || 0,
+      notes: text(e.notes, 500), training_day: trainingDay, position: i,
+    };
+  });
   const ex = await db.from("workout_exercises").insert(rows).select("*");
   if (ex.error) { await db.from("workout_plans").delete().eq("id", p.data.id); fail(ex.error, "Não foi possível salvar os exercícios."); }
   return { ...p.data, exercises: ex.data || [] };
@@ -306,6 +311,9 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
     const exerciseName = text(input.exercise_name, 160);
     if (!exerciseName) throw new ApiError(400, "O nome do exercício é obrigatório.");
+    const validDays = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
+    const trainingDay = input.training_day == null || input.training_day === "" ? null : text(input.training_day, 20);
+    if (trainingDay && !validDays.includes(trainingDay)) throw new ApiError(400, "Dia da semana inválido.");
     const duplicate = await db.from("workout_exercises").select("id").eq("plan_id", planId).ilike("exercise_name", exerciseName).limit(1).maybeSingle();
     fail(duplicate.error, "Não foi possível verificar os exercícios existentes.");
     if (duplicate.data) throw new ApiError(409, "Esse exercício já está na ficha selecionada.");
@@ -322,6 +330,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
       rest_seconds: Math.min(600, Math.max(5, Number(input.rest_seconds) || 60)),
       suggested_load_kg: Math.max(0, Number(input.suggested_load_kg) || 0),
       notes: text(input.notes, 500),
+      training_day: trainingDay,
       position: Number(last.data?.position ?? -1) + 1,
     }).select("*").single();
     fail(exercise.error, "Não foi possível adicionar o exercício à ficha.");
