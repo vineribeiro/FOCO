@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { FocoSymbol, FocoLettering } from '../components/FocoBrand';
-import { api, removeStoredToken, setStoredToken } from '../services/api';
+import { api, removeStoredToken } from '../services/api';
 import { InstallAppButton } from '../components/InstallAppButton';
 
 interface AuthPageProps {
@@ -38,12 +38,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recoveryAccessToken, setRecoveryAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
     const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : '';
     const params = new URLSearchParams(hash);
     const authError = params.get('error_description') || params.get('error') || params.get('error_code');
     if (authError) {
+      try { sessionStorage.setItem('foco_password_recovery_pending', '1'); } catch { /* continue to show a recoverable error */ }
       window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
       setErrorMsg(/expired|otp_expired/i.test(authError)
         ? 'Este link de recuperação expirou ou já foi utilizado. Solicite um novo link.'
@@ -52,9 +54,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
     }
     const accessToken = params.get('access_token');
     if (params.get('type') === 'recovery' && accessToken) {
-      const refreshToken = params.get('refresh_token') || undefined;
-      const expiresAt = Number(params.get('expires_at')) || Math.floor(Date.now() / 1000) + (Number(params.get('expires_in')) || 3600);
-      setStoredToken(accessToken, refreshToken, expiresAt);
+      try { sessionStorage.setItem('foco_password_recovery_pending', '1'); } catch { /* state below still holds the one-time token */ }
+      setRecoveryAccessToken(accessToken);
       setMode('reset');
       setSuccessMsg('Link validado. Defina uma nova senha para recuperar o acesso.');
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -93,6 +94,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
     setSuccessMsg(null);
 
     const normalizedEmail = email.trim().toLowerCase();
+    if (mode === 'reset' && !recoveryAccessToken) {
+      setErrorMsg('O link de recuperação não está válido nesta página. Solicite um novo e-mail de recuperação.');
+      return;
+    }
     if (mode !== 'reset' && !normalizedEmail) {
       setErrorMsg('Informe seu e-mail para continuar.');
       return;
@@ -142,8 +147,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
         const response = await api.forgotPassword(normalizedEmail);
         setSuccessMsg(response.message || 'Se o e-mail estiver cadastrado, enviaremos instruções para recuperar o acesso.');
       } else {
-        const response = await api.resetPassword({ new_password: password });
+        const response = await api.resetPassword({ new_password: password, access_token: recoveryAccessToken! });
         removeStoredToken();
+        setRecoveryAccessToken(null);
         setPassword('');
         setConfirmPassword('');
         setMode('login');
@@ -434,7 +440,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
               </form>
 
               {(isForgot || isReset) && (
-                <button type="button" onClick={() => { if (isReset) removeStoredToken(); changeMode('login'); }} className="mt-5 flex w-full items-center justify-center gap-2 text-xs font-bold text-neutral-400 transition hover:text-white">
+                <button type="button" onClick={() => { if (isReset) { removeStoredToken(); setRecoveryAccessToken(null); try { sessionStorage.removeItem('foco_password_recovery_pending'); } catch { /* ignore unavailable session storage */ } } changeMode('login'); }} className="mt-5 flex w-full items-center justify-center gap-2 text-xs font-bold text-neutral-400 transition hover:text-white">
                   Voltar para entrar
                 </button>
               )}
