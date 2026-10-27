@@ -148,7 +148,7 @@ interface DatabaseSchema {
   anamneses: Anamnesis[];
 }
 
-const SUPABASE_URL = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '').replace(/\\/+$/, '');
+const SUPABASE_URL = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '').replace(/\/+$/, '');
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const SUPABASE_STATE_TABLE = 'foco_app_state';
 const REMOTE_STORAGE_CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_SERVICE_KEY);
