@@ -8,7 +8,7 @@ import { WorkoutExercise, WorkoutPlan } from '../types';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import {
   ExerciseCatalogItem, getEquipmentLabel, getExerciseDisplayName, getMuscleLabel,
-  loadExerciseCatalog, MUSCLE_FILTERS
+  getCurrentTrainingDay, getTrainingDayLabel, loadExerciseCatalog, MUSCLE_FILTERS, TRAINING_DAYS
 } from '../data/exerciseLibrary';
 
 interface ExerciseLibraryPageProps {
@@ -25,6 +25,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseCatalogItem | null>(null);
+  const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => getCurrentTrainingDay());
   const [detailExercise, setDetailExercise] = useState<ExerciseCatalogItem | null>(null);
   const [addingPlanId, setAddingPlanId] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -88,6 +89,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
       rest_seconds: 60,
       suggested_load_kg: 0,
       notes: '',
+      training_day: selectedTrainingDay as WorkoutExercise['training_day'],
     };
     try {
       const saved = await api.addExerciseToWorkout(plan.id, workoutExercise);
@@ -95,7 +97,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
         item.id === plan.id ? { ...item, exercises: [...(item.exercises || []), saved] } : item
       ));
       setSelectedExercise(null);
-      setActionMessage({ type: 'success', text: `${displayName} foi adicionado a “${plan.name}”.` });
+      setActionMessage({ type: 'success', text: `${displayName} foi adicionado à ${getTrainingDayLabel(selectedTrainingDay)} de “${plan.name}”.` });
     } catch (error: unknown) {
       setActionMessage({
         type: 'error',
@@ -227,7 +229,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               <div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Adicionar à minha ficha</p>
                 <h2 className="mt-1 text-lg font-black">{getExerciseDisplayName(selectedExercise.name)}</h2>
-                <p className="mt-1 text-xs text-neutral-400">Escolha em qual treino/dia esse exercício deve entrar.</p>
+                <p className="mt-1 text-xs text-neutral-400">Escolha o dia da semana e depois a ficha de destino — como adicionar uma música a uma playlist.</p>
               </div>
               <button type="button" onClick={() => setSelectedExercise(null)} className="rounded-lg p-2 text-neutral-400 hover:bg-white/10 hover:text-white" aria-label="Fechar"><X className="h-4 w-4" /></button>
             </div>
@@ -237,6 +239,23 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
                 <p className="text-xs font-bold">{getMuscleLabel(selectedExercise.primaryMuscles[0] || 'Geral')}</p>
                 <p className="mt-1 text-[10px] text-neutral-500">{getEquipmentLabel(selectedExercise.equipment)}</p>
                 <p className="mt-3 text-[10px] leading-relaxed text-neutral-400">Configuração inicial: 3 séries · 8–12 repetições · 60 s de descanso. Você pode ajustar a ficha depois.</p>
+              </div>
+            </div>
+            <div className="mt-4 space-y-2">
+              <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Adicionar ao dia</p>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {TRAINING_DAYS.map((day) => (
+                  <button
+                    key={day.value}
+                    type="button"
+                    aria-pressed={selectedTrainingDay === day.value}
+                    onClick={() => setSelectedTrainingDay(day.value)}
+                    className={`rounded-xl border px-3 py-2.5 text-left text-xs font-bold transition ${selectedTrainingDay === day.value ? 'border-white bg-white text-black' : 'border-white/10 bg-[#171717] text-neutral-400 hover:border-white/30 hover:text-white'}`}
+                  >
+                    <span className="block">{day.shortLabel}</span>
+                    <span className={`mt-0.5 block text-[9px] ${selectedTrainingDay === day.value ? 'text-neutral-600' : 'text-neutral-600'}`}>{selectedTrainingDay === day.value ? 'Selecionado' : 'Escolher dia'}</span>
+                  </button>
+                ))}
               </div>
             </div>
             {plans.length === 0 ? (
