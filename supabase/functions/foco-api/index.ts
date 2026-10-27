@@ -64,9 +64,9 @@ async function saveProfile(db: SupabaseClient, user: User, input: any): Promise<
   const current = await profile(db, user);
   const row = {
     id: user.id, full_name: text(input.full_name || current.full_name, 160) || "Atleta",
-    birth_date: input.birth_date || null,
-    height_cm: input.height_cm === "" || input.height_cm == null ? null : Number(input.height_cm),
-    current_weight_kg: input.current_weight_kg === "" || input.current_weight_kg == null ? null : Number(input.current_weight_kg),
+    birth_date: Object.prototype.hasOwnProperty.call(input, "birth_date") ? (input.birth_date || null) : (current.birth_date || null),
+    height_cm: !Object.prototype.hasOwnProperty.call(input, "height_cm") ? (current.height_cm ?? null) : (input.height_cm === "" || input.height_cm == null ? null : Number(input.height_cm)),
+    current_weight_kg: !Object.prototype.hasOwnProperty.call(input, "current_weight_kg") ? (current.current_weight_kg ?? null) : (input.current_weight_kg === "" || input.current_weight_kg == null ? null : Number(input.current_weight_kg)),
     experience_level: ["iniciante", "intermediario", "avancado"].includes(input.experience_level) ? input.experience_level : (current.experience_level || "iniciante"),
     updated_at: new Date().toISOString(),
   };
