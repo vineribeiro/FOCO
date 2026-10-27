@@ -4,7 +4,7 @@ import { WorkoutPlan, WorkoutExercise } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
 import { soundEngine } from '../utils/soundEngine';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
-import { getCurrentTrainingDay, getTrainingDayLabel, TRAINING_DAYS } from '../data/exerciseLibrary';
+import { getPreferredTrainingDay, getTrainingDayLabel, savePreferredTrainingDay, TRAINING_DAYS } from '../data/exerciseLibrary';
 import {
   Play,
   Pause,
@@ -71,7 +71,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
   // Exercise state for the session
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLog[]>([]);
-  const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => getCurrentTrainingDay());
+  const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => getPreferredTrainingDay());
   const [sessionNotes, setSessionNotes] = useState('');
   const [sessionCompletedModal, setSessionCompletedModal] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -371,7 +371,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             id="foco-training-day"
             value={selectedTrainingDay}
             disabled={sessionStarted}
-            onChange={(event) => setSelectedTrainingDay(event.target.value)}
+            onChange={(event) => { setSelectedTrainingDay(event.target.value); savePreferredTrainingDay(event.target.value); }}
             className="w-full rounded-xl border border-white/10 bg-[#141414] px-3 py-2.5 text-xs font-bold text-white outline-none focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {TRAINING_DAYS.map((day) => <option key={day.value} value={day.value}>{day.label}</option>)}
