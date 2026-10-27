@@ -565,7 +565,7 @@ export const api = {
       const existing = plan.exercises || [];
       if (existing.some((item) =>
         item.exercise_name.toLowerCase() === exercise.exercise_name.toLowerCase() &&
-        (item.training_day || null) === (exercise.training_day || null)
+        (!exercise.training_day || !item.training_day || item.training_day === exercise.training_day)
       )) {
         throw new Error('Esse exercício já está na ficha selecionada para esse dia.');
       }
@@ -595,6 +595,12 @@ export const api = {
       const plan = db.workouts.find((item) => item.id === planId);
       const exercise = plan?.exercises?.find((item) => item.id === exerciseId);
       if (!plan || !exercise) throw new Error('Exercício não encontrado na ficha.');
+      const conflicting = (plan.exercises || []).some((item) =>
+        item.id !== exerciseId &&
+        item.exercise_name.toLowerCase() === exercise.exercise_name.toLowerCase() &&
+        (!trainingDay || !item.training_day || item.training_day === trainingDay)
+      );
+      if (conflicting) throw new Error('Já existe um exercício com esse nome neste dia.');
       exercise.training_day = trainingDay || null;
       saveLocalDb(db);
       return exercise;
