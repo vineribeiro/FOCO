@@ -271,7 +271,9 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
                     <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${plan.status === 'ativo' ? 'bg-white text-black' : 'bg-white/5 text-neutral-300'}`}>{plan.status === 'ativo' ? <CheckCircle2 className="h-5 w-5" /> : <Dumbbell className="h-5 w-5" />}</span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-bold">{plan.name}</span>
-                      <span className="mt-1 block text-[10px] text-neutral-500">{plan.exercises?.length || 0} exercícios {plan.status === 'ativo' ? '· ficha ativa' : ''}</span>
+                      <span className="mt-1 block text-[10px] text-neutral-500">
+                        {plan.exercises?.length || 0} exercícios · {(plan.exercises || []).filter((item) => !item.training_day || item.training_day === selectedTrainingDay).length} disponíveis neste dia {plan.status === 'ativo' ? '· ficha ativa' : ''}
+                      </span>
                     </span>
                     {addingPlanId === plan.id ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                   </button>
