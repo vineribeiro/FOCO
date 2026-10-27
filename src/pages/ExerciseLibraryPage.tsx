@@ -201,7 +201,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
             {filteredExercises.slice(0, visibleCount).map((exercise) => (
               <article key={exercise.id} className="overflow-hidden rounded-2xl border border-white/10 bg-[#141414] transition hover:border-white/35">
                 <button type="button" onClick={() => setDetailExercise(exercise)} aria-label={`Abrir execução de ${getExerciseDisplayName(exercise.name)}`} className="block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                  <ExerciseIllustration exerciseName={exercise.name} muscleGroup={getMuscleLabel(exercise.primaryMuscles[0] || '')} imagePaths={exercise.images} className="h-44 w-full rounded-none border-0 sm:h-48" showCaption />
+                  <ExerciseIllustration exerciseId={exercise.id} exerciseName={exercise.name} muscleGroup={getMuscleLabel(exercise.primaryMuscles[0] || '')} imagePaths={exercise.images} className="h-44 w-full rounded-none border-0 sm:h-48" showCaption />
                   <div className="p-4">
                     <p className="text-xs font-semibold text-neutral-300">{getMuscleLabel(exercise.primaryMuscles[0] || 'Geral')}</p>
                     <h2 className="mt-1 text-base font-bold leading-snug">{getExerciseDisplayName(exercise.name)}</h2>
@@ -244,7 +244,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               <button type="button" onClick={() => setSelectedExercise(null)} className="rounded-lg p-2 text-neutral-400 hover:bg-white/10 hover:text-white" aria-label="Fechar"><X className="h-4 w-4" /></button>
             </div>
             <div className="mt-4 grid grid-cols-[104px_1fr] gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-3">
-              <ExerciseIllustration exerciseName={selectedExercise.name} muscleGroup={getMuscleLabel(selectedExercise.primaryMuscles[0] || '')} imagePaths={selectedExercise.images} className="h-44 w-full" showCaption />
+              <ExerciseIllustration exerciseId={selectedExercise.id} exerciseName={selectedExercise.name} muscleGroup={getMuscleLabel(selectedExercise.primaryMuscles[0] || '')} imagePaths={selectedExercise.images} className="h-44 w-full" showCaption />
               <div className="py-1">
                 <p className="text-xs font-bold">{getMuscleLabel(selectedExercise.primaryMuscles[0] || 'Geral')}</p>
                 <p className="mt-1 text-[10px] text-neutral-500">{selectedExercise.equipmentDisplay || getEquipmentLabel(selectedExercise.equipment)}</p>
@@ -302,7 +302,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               <div><p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Execução do exercício</p><h2 className="mt-1 text-lg font-black">{getExerciseDisplayName(detailExercise.name)}</h2></div>
               <button type="button" onClick={() => setDetailExercise(null)} className="rounded-lg p-2 text-neutral-400 hover:bg-white/10 hover:text-white" aria-label="Fechar"><X className="h-4 w-4" /></button>
             </div>
-            <ExerciseIllustration exerciseName={detailExercise.name} muscleGroup={getMuscleLabel(detailExercise.primaryMuscles[0] || '')} imagePaths={detailExercise.images} className="mt-4 h-[360px] w-full sm:h-[440px]" showCaption />
+            <ExerciseIllustration exerciseId={detailExercise.id} exerciseName={detailExercise.name} muscleGroup={getMuscleLabel(detailExercise.primaryMuscles[0] || '')} imagePaths={detailExercise.images} className="mt-4 h-[360px] w-full sm:h-[440px]" showCaption />
             <div className="mt-4 grid grid-cols-2 gap-2">
               <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
                 <p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Músculos primários</p>

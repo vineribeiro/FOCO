@@ -1,0 +1,5072 @@
+{
+  "schema_version": 3,
+  "project": "FOCO",
+  "engine": "anatomy-v3",
+  "atlas_layout": "two_pose_three_views_closeup",
+  "policy": "Human review required before approved status. Pending and needs_review images are not visible in the application.",
+  "total_exercises": 254,
+  "groups": [
+    {
+      "source": "01_peito.json",
+      "count": 12
+    },
+    {
+      "source": "02_costas.json",
+      "count": 18
+    },
+    {
+      "source": "03_ombros.json",
+      "count": 19
+    },
+    {
+      "source": "04_biceps.json",
+      "count": 20
+    },
+    {
+      "source": "05_triceps.json",
+      "count": 21
+    },
+    {
+      "source": "06_antebracos.json",
+      "count": 22
+    },
+    {
+      "source": "07_quadriceps.json",
+      "count": 17
+    },
+    {
+      "source": "08_posteriores.json",
+      "count": 22
+    },
+    {
+      "source": "09_gluteos.json",
+      "count": 20
+    },
+    {
+      "source": "10_panturrilhas.json",
+      "count": 12
+    },
+    {
+      "source": "11_abdomen.json",
+      "count": 21
+    },
+    {
+      "source": "12_lombar.json",
+      "count": 10
+    },
+    {
+      "source": "13_trapezio.json",
+      "count": 12
+    },
+    {
+      "source": "14_adutores_abdutores.json",
+      "count": 10
+    },
+    {
+      "source": "15_funcionais_e_cardio.json",
+      "count": 18
+    }
+  ],
+  "exercises": {
+    "peito_supino_reto_barra": {
+      "id": "peito_supino_reto_barra",
+      "name": "Supino reto com barra",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "barra",
+        "banco reto",
+        "anilhas"
+      ]
+    },
+    "peito_supino_inclinado_halteres": {
+      "id": "peito_supino_inclinado_halteres",
+      "name": "Supino inclinado com halteres",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior — porção clavicular"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "halteres",
+        "banco inclinável"
+      ]
+    },
+    "peito_supino_declinado_barra": {
+      "id": "peito_supino_declinado_barra",
+      "name": "Supino declinado com barra",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior — porção esternocostal"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "barra",
+        "banco declinado",
+        "anilhas"
+      ]
+    },
+    "peito_supino_maquina": {
+      "id": "peito_supino_maquina",
+      "name": "Supino na máquina",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "máquina de supino"
+      ]
+    },
+    "peito_flexao_solo": {
+      "id": "peito_flexao_solo",
+      "name": "Flexão de braços",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "deltoide anterior",
+        "reto abdominal"
+      ],
+      "equipment": []
+    },
+    "peito_crucifixo_halteres": {
+      "id": "peito_crucifixo_halteres",
+      "name": "Crucifixo com halteres",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior"
+      ],
+      "secondary_muscles": [
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "halteres",
+        "banco reto"
+      ]
+    },
+    "peito_crossover_polias": {
+      "id": "peito_crossover_polias",
+      "name": "Crossover nas polias",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior"
+      ],
+      "secondary_muscles": [
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "estação de polia dupla",
+        "pegadores"
+      ]
+    },
+    "peito_peck_deck": {
+      "id": "peito_peck_deck",
+      "name": "Peck deck",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior"
+      ],
+      "secondary_muscles": [
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "máquina peck deck"
+      ]
+    },
+    "peito_supino_halteres": {
+      "id": "peito_supino_halteres",
+      "name": "Supino reto com halteres",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "halteres",
+        "banco reto"
+      ]
+    },
+    "peito_paralelas": {
+      "id": "peito_paralelas",
+      "name": "Mergulho nas paralelas com foco no peito",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior — porção esternocostal"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "barras paralelas"
+      ]
+    },
+    "peito_supino_smith": {
+      "id": "peito_supino_smith",
+      "name": "Supino no Smith",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "máquina Smith",
+        "banco reto"
+      ]
+    },
+    "peito_flexao_inclinada": {
+      "id": "peito_flexao_inclinada",
+      "name": "Flexão inclinada",
+      "group": "peito",
+      "source": "01_peito.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "peitoral maior"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "deltoide anterior",
+        "reto abdominal"
+      ],
+      "equipment": [
+        "banco ou suporte estável"
+      ]
+    },
+    "costas_puxada_frontal_polia": {
+      "id": "costas_puxada_frontal_polia",
+      "name": "Puxada frontal na polia",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "braquial",
+        "braquiorradial",
+        "trapézio inferior",
+        "romboides"
+      ],
+      "equipment": [
+        "polia alta",
+        "barra longa"
+      ]
+    },
+    "costas_remada_curvada_barra": {
+      "id": "costas_remada_curvada_barra",
+      "name": "Remada curvada com barra",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "deltoide posterior",
+        "bíceps braquial",
+        "eretores da coluna"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "costas_remada_baixa_cabo": {
+      "id": "costas_remada_baixa_cabo",
+      "name": "Remada baixa no cabo",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador neutro"
+      ]
+    },
+    "costas_remada_halter_unilateral": {
+      "id": "costas_remada_halter_unilateral",
+      "name": "Remada unilateral com halter",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "romboides",
+        "trapézio médio"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior"
+      ],
+      "equipment": [
+        "halter",
+        "banco"
+      ]
+    },
+    "costas_barra_fixa_pronada": {
+      "id": "costas_barra_fixa_pronada",
+      "name": "Barra fixa pronada",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "redondo maior"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "braquial",
+        "braquiorradial",
+        "trapézio inferior"
+      ],
+      "equipment": [
+        "barra fixa"
+      ]
+    },
+    "costas_remada_peito_apoiado": {
+      "id": "costas_remada_peito_apoiado",
+      "name": "Remada com peito apoiado",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "deltoide posterior",
+        "bíceps braquial",
+        "braquial"
+      ],
+      "equipment": [
+        "banco inclinado",
+        "halteres"
+      ]
+    },
+    "costas_remada_barra_t": {
+      "id": "costas_remada_barra_t",
+      "name": "Remada com barra T",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior",
+        "eretores da coluna"
+      ],
+      "equipment": [
+        "barra T ou landmine",
+        "pegador"
+      ]
+    },
+    "costas_pulldown_bracos_estendidos": {
+      "id": "costas_pulldown_bracos_estendidos",
+      "name": "Pulldown com braços estendidos",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "redondo maior"
+      ],
+      "secondary_muscles": [
+        "tríceps — cabeça longa",
+        "deltoide posterior"
+      ],
+      "equipment": [
+        "polia alta",
+        "barra reta ou corda"
+      ]
+    },
+    "costas_pullover_halter": {
+      "id": "costas_pullover_halter",
+      "name": "Pullover com halter",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso"
+      ],
+      "secondary_muscles": [
+        "peitoral maior",
+        "tríceps — cabeça longa",
+        "serrátil anterior"
+      ],
+      "equipment": [
+        "halter",
+        "banco reto"
+      ]
+    },
+    "costas_remada_invertida": {
+      "id": "costas_remada_invertida",
+      "name": "Remada invertida",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "deltoide posterior",
+        "eretores da coluna",
+        "reto abdominal"
+      ],
+      "equipment": [
+        "barra baixa ou suspensão"
+      ]
+    },
+    "costas_remada_maquina": {
+      "id": "costas_remada_maquina",
+      "name": "Remada na máquina",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior"
+      ],
+      "equipment": [
+        "máquina de remada"
+      ]
+    },
+    "costas_puxada_neutra": {
+      "id": "costas_puxada_neutra",
+      "name": "Puxada frontal com pegada neutra",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "braquial",
+        "braquiorradial",
+        "redondo maior"
+      ],
+      "equipment": [
+        "polia alta",
+        "pegador neutro"
+      ]
+    },
+    "costas_remada_smith": {
+      "id": "costas_remada_smith",
+      "name": "Remada curvada no Smith",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "deltoide posterior",
+        "eretores da coluna"
+      ],
+      "equipment": [
+        "máquina Smith"
+      ]
+    },
+    "costas_remada_unilateral_cabo": {
+      "id": "costas_remada_unilateral_cabo",
+      "name": "Remada unilateral no cabo",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "romboides",
+        "trapézio médio"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "braquial",
+        "deltoide posterior"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador individual"
+      ]
+    },
+    "costas_remada_pendlay": {
+      "id": "costas_remada_pendlay",
+      "name": "Remada Pendlay",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "deltoide posterior",
+        "eretores da coluna"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "costas_remada_inclinada_cabo": {
+      "id": "costas_remada_inclinada_cabo",
+      "name": "Remada inclinada no cabo",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "trapézio médio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "deltoide posterior",
+        "eretores da coluna"
+      ],
+      "equipment": [
+        "polia baixa",
+        "barra reta ou pegador"
+      ]
+    },
+    "costas_puxada_supinada": {
+      "id": "costas_puxada_supinada",
+      "name": "Puxada frontal com pegada supinada",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "braquial",
+        "redondo maior"
+      ],
+      "equipment": [
+        "polia alta",
+        "barra reta"
+      ]
+    },
+    "costas_pullover_maquina": {
+      "id": "costas_pullover_maquina",
+      "name": "Pullover na máquina",
+      "group": "costas",
+      "source": "02_costas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "latíssimo do dorso",
+        "redondo maior"
+      ],
+      "secondary_muscles": [
+        "tríceps — cabeça longa",
+        "peitoral maior"
+      ],
+      "equipment": [
+        "máquina pullover"
+      ]
+    },
+    "ombros_desenvolvimento_halteres": {
+      "id": "ombros_desenvolvimento_halteres",
+      "name": "Desenvolvimento com halteres",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide anterior",
+        "deltoide lateral"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "trapézio superior"
+      ],
+      "equipment": [
+        "halteres",
+        "banco com encosto"
+      ]
+    },
+    "ombros_desenvolvimento_maquina": {
+      "id": "ombros_desenvolvimento_maquina",
+      "name": "Desenvolvimento na máquina",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide anterior",
+        "deltoide lateral"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "trapézio superior"
+      ],
+      "equipment": [
+        "máquina desenvolvimento"
+      ]
+    },
+    "ombros_desenvolvimento_barra": {
+      "id": "ombros_desenvolvimento_barra",
+      "name": "Desenvolvimento com barra",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide anterior",
+        "deltoide lateral"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "trapézio superior",
+        "serrátil anterior"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas",
+        "suporte"
+      ]
+    },
+    "ombros_elevacao_lateral_halteres": {
+      "id": "ombros_elevacao_lateral_halteres",
+      "name": "Elevação lateral com halteres",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide lateral"
+      ],
+      "secondary_muscles": [
+        "deltoide anterior",
+        "trapézio superior",
+        "supraespinal"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "ombros_elevacao_lateral_cabo": {
+      "id": "ombros_elevacao_lateral_cabo",
+      "name": "Elevação lateral no cabo",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide lateral"
+      ],
+      "secondary_muscles": [
+        "deltoide anterior",
+        "trapézio superior",
+        "supraespinal"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador individual"
+      ]
+    },
+    "ombros_elevacao_lateral_maquina": {
+      "id": "ombros_elevacao_lateral_maquina",
+      "name": "Elevação lateral na máquina",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide lateral"
+      ],
+      "secondary_muscles": [
+        "deltoide anterior",
+        "trapézio superior",
+        "supraespinal"
+      ],
+      "equipment": [
+        "máquina elevação lateral"
+      ]
+    },
+    "ombros_elevacao_frontal_halteres": {
+      "id": "ombros_elevacao_frontal_halteres",
+      "name": "Elevação frontal com halteres",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide anterior"
+      ],
+      "secondary_muscles": [
+        "deltoide lateral",
+        "peitoral maior — porção clavicular"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "ombros_elevacao_frontal_cabo": {
+      "id": "ombros_elevacao_frontal_cabo",
+      "name": "Elevação frontal no cabo",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide anterior"
+      ],
+      "secondary_muscles": [
+        "deltoide lateral",
+        "peitoral maior — porção clavicular"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador individual ou barra"
+      ]
+    },
+    "ombros_crucifixo_inverso_maquina": {
+      "id": "ombros_crucifixo_inverso_maquina",
+      "name": "Crucifixo inverso na máquina",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide posterior"
+      ],
+      "secondary_muscles": [
+        "trapézio médio",
+        "romboides",
+        "infraespinal",
+        "redondo menor"
+      ],
+      "equipment": [
+        "máquina peck deck"
+      ]
+    },
+    "ombros_crucifixo_inverso_halteres": {
+      "id": "ombros_crucifixo_inverso_halteres",
+      "name": "Crucifixo inverso com halteres",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide posterior"
+      ],
+      "secondary_muscles": [
+        "trapézio médio",
+        "romboides",
+        "infraespinal",
+        "redondo menor"
+      ],
+      "equipment": [
+        "halteres",
+        "banco inclinado opcional"
+      ]
+    },
+    "ombros_crucifixo_inverso_cabo": {
+      "id": "ombros_crucifixo_inverso_cabo",
+      "name": "Crucifixo inverso no cabo",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide posterior"
+      ],
+      "secondary_muscles": [
+        "trapézio médio",
+        "romboides",
+        "infraespinal",
+        "redondo menor"
+      ],
+      "equipment": [
+        "estação de polia dupla",
+        "pegadores individuais"
+      ]
+    },
+    "ombros_remada_alta_cabo": {
+      "id": "ombros_remada_alta_cabo",
+      "name": "Remada alta no cabo",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide lateral",
+        "trapézio superior"
+      ],
+      "secondary_muscles": [
+        "deltoide anterior",
+        "braquial",
+        "bíceps braquial"
+      ],
+      "equipment": [
+        "polia baixa",
+        "barra reta ou pegador"
+      ]
+    },
+    "ombros_face_pull": {
+      "id": "ombros_face_pull",
+      "name": "Face pull na polia",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide posterior"
+      ],
+      "secondary_muscles": [
+        "trapézio médio",
+        "trapézio inferior",
+        "infraespinal",
+        "redondo menor"
+      ],
+      "equipment": [
+        "polia alta",
+        "corda"
+      ]
+    },
+    "ombros_rotacao_externa_cabo": {
+      "id": "ombros_rotacao_externa_cabo",
+      "name": "Rotação externa do ombro no cabo",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "infraespinal",
+        "redondo menor"
+      ],
+      "secondary_muscles": [
+        "deltoide posterior"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador individual"
+      ]
+    },
+    "ombros_rotacao_externa_elastico": {
+      "id": "ombros_rotacao_externa_elastico",
+      "name": "Rotação externa com elástico",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "infraespinal",
+        "redondo menor"
+      ],
+      "secondary_muscles": [
+        "deltoide posterior"
+      ],
+      "equipment": [
+        "elástico de resistência"
+      ]
+    },
+    "ombros_arnold_press": {
+      "id": "ombros_arnold_press",
+      "name": "Arnold press",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide anterior",
+        "deltoide lateral"
+      ],
+      "secondary_muscles": [
+        "tríceps braquial",
+        "trapézio superior"
+      ],
+      "equipment": [
+        "halteres",
+        "banco com encosto opcional"
+      ]
+    },
+    "ombros_encolhimento_halteres": {
+      "id": "ombros_encolhimento_halteres",
+      "name": "Encolhimento de ombros com halteres",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapézio superior"
+      ],
+      "secondary_muscles": [
+        "levantador da escápula",
+        "antebraços"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "ombros_elevacao_y": {
+      "id": "ombros_elevacao_y",
+      "name": "Elevação em Y",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapézio inferior"
+      ],
+      "secondary_muscles": [
+        "trapézio médio",
+        "deltoide posterior",
+        "serrátil anterior"
+      ],
+      "equipment": [
+        "banco inclinado opcional",
+        "halteres leves opcionais"
+      ]
+    },
+    "ombros_rotacao_externa_deitado": {
+      "id": "ombros_rotacao_externa_deitado",
+      "name": "Rotação externa deitado de lado",
+      "group": "ombros",
+      "source": "03_ombros.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "infraespinal",
+        "redondo menor"
+      ],
+      "secondary_muscles": [
+        "deltoide posterior"
+      ],
+      "equipment": [
+        "halter leve",
+        "colchonete"
+      ]
+    },
+    "rosca_direta_barra_reta": {
+      "id": "rosca_direta_barra_reta",
+      "name": "Rosca direta com barra reta",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial",
+        "flexores do antebraço"
+      ],
+      "equipment": [
+        "barra reta"
+      ]
+    },
+    "rosca_direta_barra_ez": {
+      "id": "rosca_direta_barra_ez",
+      "name": "Rosca direta com barra EZ",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "barra EZ",
+        "anilhas"
+      ]
+    },
+    "rosca_direta_halteres": {
+      "id": "rosca_direta_halteres",
+      "name": "Rosca direta com halteres",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "rosca_alternada_halteres": {
+      "id": "rosca_alternada_halteres",
+      "name": "Rosca alternada com halteres",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "rosca_martelo_halteres": {
+      "id": "rosca_martelo_halteres",
+      "name": "Rosca martelo com halteres",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial",
+        "flexores do antebraço"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "rosca_martelo_corda": {
+      "id": "rosca_martelo_corda",
+      "name": "Rosca martelo na polia com corda",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial"
+      ],
+      "equipment": [
+        "polia baixa",
+        "corda"
+      ]
+    },
+    "rosca_scott_barra_ez": {
+      "id": "rosca_scott_barra_ez",
+      "name": "Rosca Scott com barra EZ",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "banco Scott",
+        "barra EZ",
+        "anilhas"
+      ]
+    },
+    "rosca_scott_halteres": {
+      "id": "rosca_scott_halteres",
+      "name": "Rosca Scott com halter",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "banco Scott",
+        "halter"
+      ]
+    },
+    "rosca_concentrada": {
+      "id": "rosca_concentrada",
+      "name": "Rosca concentrada com halter",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "halter",
+        "banco"
+      ]
+    },
+    "rosca_cabo_barra_reta": {
+      "id": "rosca_cabo_barra_reta",
+      "name": "Rosca direta na polia com barra reta",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "polia baixa",
+        "barra reta"
+      ]
+    },
+    "rosca_cabo_unilateral": {
+      "id": "rosca_cabo_unilateral",
+      "name": "Rosca unilateral na polia",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador individual"
+      ]
+    },
+    "rosca_inclinada_halteres": {
+      "id": "rosca_inclinada_halteres",
+      "name": "Rosca inclinada com halteres",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "banco inclinável",
+        "halteres"
+      ]
+    },
+    "rosca_bayesiana_cabo": {
+      "id": "rosca_bayesiana_cabo",
+      "name": "Rosca bayesiana na polia",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador individual"
+      ]
+    },
+    "rosca_martelo_alternada": {
+      "id": "rosca_martelo_alternada",
+      "name": "Rosca martelo alternada",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "secondary_muscles": [
+        "bíceps braquial"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "rosca_reversa_barra_ez": {
+      "id": "rosca_reversa_barra_ez",
+      "name": "Rosca reversa com barra EZ",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "secondary_muscles": [
+        "extensores do antebraço",
+        "bíceps braquial"
+      ],
+      "equipment": [
+        "barra EZ",
+        "anilhas"
+      ]
+    },
+    "rosca_reversa_cabo": {
+      "id": "rosca_reversa_cabo",
+      "name": "Rosca reversa na polia",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "secondary_muscles": [
+        "extensores do antebraço"
+      ],
+      "equipment": [
+        "polia baixa",
+        "barra reta"
+      ]
+    },
+    "rosca_biceps_maquina": {
+      "id": "rosca_biceps_maquina",
+      "name": "Rosca de bíceps na máquina",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "máquina de rosca para bíceps"
+      ]
+    },
+    "rosca_scott_maquina": {
+      "id": "rosca_scott_maquina",
+      "name": "Rosca Scott na máquina",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "máquina Scott"
+      ]
+    },
+    "rosca_drag": {
+      "id": "rosca_drag",
+      "name": "Rosca drag com barra",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "barra reta ou barra EZ"
+      ]
+    },
+    "rosca_21": {
+      "id": "rosca_21",
+      "name": "Rosca 21",
+      "group": "biceps",
+      "source": "04_biceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "bíceps braquial"
+      ],
+      "secondary_muscles": [
+        "braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "barra EZ ou halteres"
+      ]
+    },
+    "triceps_pulley_barra_reta": {
+      "id": "triceps_pulley_barra_reta",
+      "name": "Tríceps pulley com barra reta",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo",
+        "antebraços"
+      ],
+      "equipment": [
+        "polia alta",
+        "barra reta"
+      ]
+    },
+    "triceps_pulley_corda": {
+      "id": "triceps_pulley_corda",
+      "name": "Tríceps pulley com corda",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo",
+        "antebraços"
+      ],
+      "equipment": [
+        "polia alta",
+        "corda"
+      ]
+    },
+    "triceps_pulley_barra_v": {
+      "id": "triceps_pulley_barra_v",
+      "name": "Tríceps pulley com barra V",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo",
+        "antebraços"
+      ],
+      "equipment": [
+        "polia alta",
+        "barra V"
+      ]
+    },
+    "triceps_testa_barra_ez": {
+      "id": "triceps_testa_barra_ez",
+      "name": "Tríceps testa com barra EZ",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "banco reto",
+        "barra EZ",
+        "anilhas"
+      ]
+    },
+    "triceps_testa_halteres": {
+      "id": "triceps_testa_halteres",
+      "name": "Tríceps testa com halteres",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "banco reto",
+        "halteres"
+      ]
+    },
+    "triceps_frances_halter": {
+      "id": "triceps_frances_halter",
+      "name": "Tríceps francês unilateral com halter",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "halter"
+      ]
+    },
+    "triceps_frances_dois_halteres": {
+      "id": "triceps_frances_dois_halteres",
+      "name": "Tríceps francês com dois halteres",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "triceps_coice_halter": {
+      "id": "triceps_coice_halter",
+      "name": "Tríceps coice com halter",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "halter",
+        "banco opcional"
+      ]
+    },
+    "triceps_extensao_cabo_acima_cabeca": {
+      "id": "triceps_extensao_cabo_acima_cabeca",
+      "name": "Extensão de tríceps acima da cabeça na polia",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "polia baixa",
+        "corda"
+      ]
+    },
+    "triceps_extensao_cabo_unilateral_acima_cabeca": {
+      "id": "triceps_extensao_cabo_unilateral_acima_cabeca",
+      "name": "Extensão unilateral de tríceps acima da cabeça na polia",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador individual"
+      ]
+    },
+    "triceps_testa_cabo": {
+      "id": "triceps_testa_cabo",
+      "name": "Tríceps testa na polia",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "polia baixa ou média",
+        "barra reta ou corda",
+        "banco"
+      ]
+    },
+    "triceps_mergulho_banco": {
+      "id": "triceps_mergulho_banco",
+      "name": "Mergulho no banco para tríceps",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "deltoide anterior",
+        "peitoral maior"
+      ],
+      "equipment": [
+        "banco firme"
+      ]
+    },
+    "paralelas_assistidas": {
+      "id": "paralelas_assistidas",
+      "name": "Mergulho nas paralelas assistido",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "peitoral maior",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "máquina de paralelas assistidas ou elástico adequado"
+      ]
+    },
+    "paralelas_livres": {
+      "id": "paralelas_livres",
+      "name": "Mergulho nas paralelas com peso corporal",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "peitoral maior",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "barras paralelas"
+      ]
+    },
+    "supino_fechado": {
+      "id": "supino_fechado",
+      "name": "Supino com pegada fechada",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "peitoral maior",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "banco reto",
+        "barra",
+        "anilhas",
+        "suporte para barra"
+      ]
+    },
+    "supino_fechado_halteres": {
+      "id": "supino_fechado_halteres",
+      "name": "Supino fechado com halteres",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "peitoral maior",
+        "deltoide anterior"
+      ],
+      "equipment": [
+        "banco reto",
+        "halteres"
+      ]
+    },
+    "triceps_coice_cabo": {
+      "id": "triceps_coice_cabo",
+      "name": "Tríceps coice na polia",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador individual"
+      ]
+    },
+    "triceps_extensao_unilateral_polia": {
+      "id": "triceps_extensao_unilateral_polia",
+      "name": "Extensão unilateral de tríceps na polia",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "polia alta",
+        "pegador individual"
+      ]
+    },
+    "triceps_extensao_maquina": {
+      "id": "triceps_extensao_maquina",
+      "name": "Extensão de tríceps na máquina",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "máquina de extensão de tríceps"
+      ]
+    },
+    "flexao_bracos_pegada_fechada": {
+      "id": "flexao_bracos_pegada_fechada",
+      "name": "Flexão de braços com pegada fechada",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "peitoral maior",
+        "deltoide anterior",
+        "core"
+      ],
+      "equipment": [
+        "peso corporal",
+        "colchonete opcional"
+      ]
+    },
+    "triceps_extensao_elastico": {
+      "id": "triceps_extensao_elastico",
+      "name": "Extensão de tríceps com elástico",
+      "group": "triceps",
+      "source": "05_triceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tríceps braquial"
+      ],
+      "secondary_muscles": [
+        "ancôneo"
+      ],
+      "equipment": [
+        "elástico de resistência",
+        "ponto de ancoragem seguro"
+      ]
+    },
+    "rosca_punho_barra": {
+      "id": "rosca_punho_barra",
+      "name": "Flexão de punho com barra",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "flexores_do_punho"
+      ],
+      "secondary_muscles": [
+        "flexores_dos_dedos",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "barra",
+        "banco"
+      ]
+    },
+    "rosca_punho_halteres": {
+      "id": "rosca_punho_halteres",
+      "name": "Flexão de punho com halteres",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "flexores_do_punho"
+      ],
+      "secondary_muscles": [
+        "flexores_dos_dedos"
+      ],
+      "equipment": [
+        "halteres",
+        "banco"
+      ]
+    },
+    "rosca_punho_cabo": {
+      "id": "rosca_punho_cabo",
+      "name": "Flexão de punho na polia",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "flexores_do_punho"
+      ],
+      "secondary_muscles": [
+        "flexores_dos_dedos"
+      ],
+      "equipment": [
+        "polia baixa",
+        "barra curta"
+      ]
+    },
+    "extensao_punho_halteres": {
+      "id": "extensao_punho_halteres",
+      "name": "Extensão de punho com halteres",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "extensores_do_punho"
+      ],
+      "secondary_muscles": [
+        "extensores_dos_dedos",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "halteres",
+        "banco"
+      ]
+    },
+    "extensao_punho_barra": {
+      "id": "extensao_punho_barra",
+      "name": "Extensão de punho com barra",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "extensores_do_punho"
+      ],
+      "secondary_muscles": [
+        "extensores_dos_dedos"
+      ],
+      "equipment": [
+        "barra leve",
+        "banco"
+      ]
+    },
+    "extensao_punho_cabo": {
+      "id": "extensao_punho_cabo",
+      "name": "Extensão de punho na polia",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "extensores_do_punho"
+      ],
+      "secondary_muscles": [
+        "extensores_dos_dedos"
+      ],
+      "equipment": [
+        "polia baixa",
+        "pegador ou barra curta"
+      ]
+    },
+    "antebracos_rosca_reversa_barra_ez": {
+      "id": "antebracos_rosca_reversa_barra_ez",
+      "name": "Rosca reversa com barra EZ",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "secondary_muscles": [
+        "extensores_do_antebraco",
+        "biceps_braquial"
+      ],
+      "equipment": [
+        "barra EZ",
+        "anilhas"
+      ]
+    },
+    "rosca_reversa_halteres": {
+      "id": "rosca_reversa_halteres",
+      "name": "Rosca reversa com halteres",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "secondary_muscles": [
+        "extensores_do_antebraco"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "antebracos_rosca_reversa_cabo": {
+      "id": "antebracos_rosca_reversa_cabo",
+      "name": "Rosca reversa na polia",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "secondary_muscles": [
+        "extensores_do_antebraco"
+      ],
+      "equipment": [
+        "polia baixa",
+        "barra reta"
+      ]
+    },
+    "antebracos_rosca_martelo_halteres": {
+      "id": "antebracos_rosca_martelo_halteres",
+      "name": "Rosca martelo com halteres",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "secondary_muscles": [
+        "biceps_braquial"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "antebracos_rosca_martelo_corda": {
+      "id": "antebracos_rosca_martelo_corda",
+      "name": "Rosca martelo na polia com corda",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "braquiorradial",
+        "braquial"
+      ],
+      "secondary_muscles": [
+        "biceps_braquial"
+      ],
+      "equipment": [
+        "polia baixa",
+        "corda"
+      ]
+    },
+    "pronacao_antebraco_halter": {
+      "id": "pronacao_antebraco_halter",
+      "name": "Pronação do antebraço com halter",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "pronador_redondo",
+        "pronador_quadrado"
+      ],
+      "secondary_muscles": [
+        "flexores_do_punho"
+      ],
+      "equipment": [
+        "halter leve",
+        "banco"
+      ]
+    },
+    "supinacao_antebraco_halter": {
+      "id": "supinacao_antebraco_halter",
+      "name": "Supinação do antebraço com halter",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "supinador",
+        "biceps_braquial"
+      ],
+      "secondary_muscles": [
+        "braquiorradial"
+      ],
+      "equipment": [
+        "halter leve",
+        "banco"
+      ]
+    },
+    "pronacao_supinacao_martelo": {
+      "id": "pronacao_supinacao_martelo",
+      "name": "Pronação e supinação com martelo",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "pronador_redondo",
+        "pronador_quadrado",
+        "supinador"
+      ],
+      "secondary_muscles": [
+        "biceps_braquial",
+        "braquiorradial"
+      ],
+      "equipment": [
+        "martelo leve ou implemento com alavanca"
+      ]
+    },
+    "farmer_walk": {
+      "id": "farmer_walk",
+      "name": "Caminhada do fazendeiro",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "secondary_muscles": [
+        "trapezio",
+        "core",
+        "deltoides",
+        "quadriceps",
+        "gluteos"
+      ],
+      "equipment": [
+        "halteres pesados ou kettlebells"
+      ]
+    },
+    "suitcase_carry": {
+      "id": "suitcase_carry",
+      "name": "Caminhada unilateral com carga",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "secondary_muscles": [
+        "obliquos_abdominais",
+        "quadrado_lombar",
+        "trapezio",
+        "core"
+      ],
+      "equipment": [
+        "halter ou kettlebell"
+      ]
+    },
+    "farmer_hold": {
+      "id": "farmer_hold",
+      "name": "Sustentação estática de carga",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "secondary_muscles": [
+        "trapezio",
+        "core",
+        "deltoides"
+      ],
+      "equipment": [
+        "halteres pesados ou kettlebells"
+      ]
+    },
+    "dead_hang": {
+      "id": "dead_hang",
+      "name": "Suspensão na barra",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "secondary_muscles": [
+        "latissimo_do_dorso",
+        "trapezio",
+        "deltoides"
+      ],
+      "equipment": [
+        "barra fixa resistente"
+      ]
+    },
+    "dead_hang_assistido": {
+      "id": "dead_hang_assistido",
+      "name": "Suspensão assistida na barra",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "secondary_muscles": [
+        "latissimo_do_dorso",
+        "trapezio",
+        "deltoides"
+      ],
+      "equipment": [
+        "barra fixa",
+        "caixa ou apoio firme"
+      ]
+    },
+    "pinch_grip_hold": {
+      "id": "pinch_grip_hold",
+      "name": "Sustentação de pegada em pinça",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "musculos_da_pegada",
+        "flexores_dos_dedos"
+      ],
+      "secondary_muscles": [
+        "musculos_intrinsecos_da_mao",
+        "extensores_do_punho"
+      ],
+      "equipment": [
+        "anilhas lisas ou implemento próprio para pinça"
+      ]
+    },
+    "hand_gripper": {
+      "id": "hand_gripper",
+      "name": "Fechamento de hand gripper",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "flexores_dos_dedos",
+        "musculos_da_pegada"
+      ],
+      "secondary_muscles": [
+        "musculos_intrinsecos_da_mao"
+      ],
+      "equipment": [
+        "hand gripper ajustável"
+      ]
+    },
+    "finger_extension_elastico": {
+      "id": "finger_extension_elastico",
+      "name": "Extensão dos dedos com elástico",
+      "group": "antebracos",
+      "source": "06_antebracos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "extensores_dos_dedos"
+      ],
+      "secondary_muscles": [
+        "musculos_intrinsecos_da_mao",
+        "extensores_do_punho"
+      ],
+      "equipment": [
+        "elástico leve para dedos"
+      ]
+    },
+    "quadriceps_agachamento_livre": {
+      "id": "quadriceps_agachamento_livre",
+      "name": "Agachamento livre com barra",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "adutores",
+        "isquiotibiais",
+        "eretores da coluna",
+        "abdômen"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas",
+        "rack"
+      ]
+    },
+    "quadriceps_agachamento_frontal": {
+      "id": "quadriceps_agachamento_frontal",
+      "name": "Agachamento frontal",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps"
+      ],
+      "secondary_muscles": [
+        "glúteo máximo",
+        "adutores",
+        "eretores da coluna",
+        "abdômen"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas",
+        "rack"
+      ]
+    },
+    "quadriceps_leg_press": {
+      "id": "quadriceps_leg_press",
+      "name": "Leg press 45 graus",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores"
+      ],
+      "equipment": [
+        "máquina leg press"
+      ]
+    },
+    "quadriceps_cadeira_extensora": {
+      "id": "quadriceps_cadeira_extensora",
+      "name": "Cadeira extensora",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps"
+      ],
+      "secondary_muscles": [],
+      "equipment": [
+        "máquina cadeira extensora"
+      ]
+    },
+    "quadriceps_agachamento_goblet": {
+      "id": "quadriceps_agachamento_goblet",
+      "name": "Agachamento goblet",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "adutores",
+        "eretores da coluna",
+        "abdômen"
+      ],
+      "equipment": [
+        "halter",
+        "kettlebell"
+      ]
+    },
+    "quadriceps_agachamento_smith": {
+      "id": "quadriceps_agachamento_smith",
+      "name": "Agachamento no Smith",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "adutores",
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipment": [
+        "máquina Smith"
+      ]
+    },
+    "quadriceps_afundo": {
+      "id": "quadriceps_afundo",
+      "name": "Afundo",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "halteres"
+      ]
+    },
+    "quadriceps_afundo_reverso": {
+      "id": "quadriceps_afundo_reverso",
+      "name": "Afundo reverso",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "halteres"
+      ]
+    },
+    "quadriceps_agachamento_bulgaro": {
+      "id": "quadriceps_agachamento_bulgaro",
+      "name": "Agachamento búlgaro",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipment": [
+        "banco",
+        "peso corporal",
+        "halteres"
+      ]
+    },
+    "quadriceps_step_up": {
+      "id": "quadriceps_step_up",
+      "name": "Subida no banco",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "panturrilhas",
+        "abdômen"
+      ],
+      "equipment": [
+        "caixa estável",
+        "banco",
+        "halteres"
+      ]
+    },
+    "quadriceps_agachamento_sissy_assistido": {
+      "id": "quadriceps_agachamento_sissy_assistido",
+      "name": "Agachamento sissy assistido",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps"
+      ],
+      "secondary_muscles": [
+        "glúteo máximo",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "apoio estável"
+      ]
+    },
+    "quadriceps_hack_machine": {
+      "id": "quadriceps_hack_machine",
+      "name": "Agachamento na máquina hack",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "adutores",
+        "isquiotibiais"
+      ],
+      "equipment": [
+        "máquina hack"
+      ]
+    },
+    "quadriceps_agachamento_com_halteres": {
+      "id": "quadriceps_agachamento_com_halteres",
+      "name": "Agachamento com halteres",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "adutores",
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "quadriceps_agachamento_com_calcanhares_elevados": {
+      "id": "quadriceps_agachamento_com_calcanhares_elevados",
+      "name": "Agachamento com calcanhares elevados",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps"
+      ],
+      "secondary_muscles": [
+        "glúteo máximo",
+        "adutores",
+        "abdômen"
+      ],
+      "equipment": [
+        "halter",
+        "anilhas estáveis",
+        "cunha de agachamento"
+      ]
+    },
+    "quadriceps_leg_press_unilateral": {
+      "id": "quadriceps_leg_press_unilateral",
+      "name": "Leg press unilateral",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores"
+      ],
+      "equipment": [
+        "máquina leg press"
+      ]
+    },
+    "quadriceps_cadeira_extensora_unilateral": {
+      "id": "quadriceps_cadeira_extensora_unilateral",
+      "name": "Cadeira extensora unilateral",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps"
+      ],
+      "secondary_muscles": [],
+      "equipment": [
+        "máquina cadeira extensora"
+      ]
+    },
+    "quadriceps_agachamento_com_peso_corporal": {
+      "id": "quadriceps_agachamento_com_peso_corporal",
+      "name": "Agachamento com peso corporal",
+      "group": "quadriceps",
+      "source": "07_quadriceps.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadríceps",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "adutores",
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal"
+      ]
+    },
+    "posteriores_mesa_flexora": {
+      "id": "posteriores_mesa_flexora",
+      "name": "Mesa flexora",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "gastrocnêmio"
+      ],
+      "equipment": [
+        "máquina mesa flexora"
+      ]
+    },
+    "posteriores_cadeira_flexora": {
+      "id": "posteriores_cadeira_flexora",
+      "name": "Cadeira flexora",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "gastrocnêmio"
+      ],
+      "equipment": [
+        "máquina cadeira flexora"
+      ]
+    },
+    "posteriores_flexora_unilateral": {
+      "id": "posteriores_flexora_unilateral",
+      "name": "Flexora unilateral",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "gastrocnêmio"
+      ],
+      "equipment": [
+        "máquina flexora"
+      ]
+    },
+    "posteriores_stiff_barra": {
+      "id": "posteriores_stiff_barra",
+      "name": "Stiff com barra",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "adutores",
+        "antebraços"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "posteriores_stiff_halteres": {
+      "id": "posteriores_stiff_halteres",
+      "name": "Stiff com halteres",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "adutores",
+        "antebraços"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "posteriores_levantamento_romeno": {
+      "id": "posteriores_levantamento_romeno",
+      "name": "Levantamento terra romeno",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "adutores",
+        "antebraços"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "posteriores_levantamento_romeno_halteres": {
+      "id": "posteriores_levantamento_romeno_halteres",
+      "name": "Levantamento terra romeno com halteres",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "adutores",
+        "antebraços"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "posteriores_levantamento_terra": {
+      "id": "posteriores_levantamento_terra",
+      "name": "Levantamento terra convencional",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "isquiotibiais",
+        "quadríceps"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "trapézio",
+        "antebraços",
+        "abdômen"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "posteriores_levantamento_terra_trap_bar": {
+      "id": "posteriores_levantamento_terra_trap_bar",
+      "name": "Levantamento terra com barra hexagonal",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "quadríceps",
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "trapézio",
+        "antebraços",
+        "abdômen"
+      ],
+      "equipment": [
+        "barra hexagonal",
+        "anilhas"
+      ]
+    },
+    "posteriores_puxada_cabo_entre_pernas": {
+      "id": "posteriores_puxada_cabo_entre_pernas",
+      "name": "Pull-through no cabo",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "abdômen"
+      ],
+      "equipment": [
+        "polia baixa",
+        "corda"
+      ]
+    },
+    "posteriores_hiperextensao_45": {
+      "id": "posteriores_hiperextensao_45",
+      "name": "Extensão de quadril no banco a 45 graus",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "adutores"
+      ],
+      "equipment": [
+        "banco de hiperextensão a 45 graus"
+      ]
+    },
+    "posteriores_hiperextensao_com_carga": {
+      "id": "posteriores_hiperextensao_com_carga",
+      "name": "Extensão de quadril no banco a 45 graus com carga",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "adutores"
+      ],
+      "equipment": [
+        "banco de hiperextensão a 45 graus",
+        "anilha"
+      ]
+    },
+    "posteriores_nordic_curl": {
+      "id": "posteriores_nordic_curl",
+      "name": "Nordic curl",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "gastrocnêmio"
+      ],
+      "equipment": [
+        "apoio para tornozelos",
+        "colchonete"
+      ]
+    },
+    "posteriores_nordic_assistido": {
+      "id": "posteriores_nordic_assistido",
+      "name": "Nordic curl assistido",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "gastrocnêmio"
+      ],
+      "equipment": [
+        "apoio para tornozelos",
+        "elástico de resistência",
+        "colchonete"
+      ]
+    },
+    "posteriores_flexao_de_joelho_no_cabo": {
+      "id": "posteriores_flexao_de_joelho_no_cabo",
+      "name": "Flexão de joelho no cabo",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "gastrocnêmio"
+      ],
+      "equipment": [
+        "polia baixa",
+        "tornozeleira para cabo"
+      ]
+    },
+    "posteriores_bom_dia": {
+      "id": "posteriores_bom_dia",
+      "name": "Bom dia com barra",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais",
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "adutores",
+        "abdômen"
+      ],
+      "equipment": [
+        "barra",
+        "rack"
+      ]
+    },
+    "posteriores_ponte_gluteos": {
+      "id": "posteriores_ponte_gluteos",
+      "name": "Ponte de glúteos com pés no chão",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "colchonete"
+      ]
+    },
+    "posteriores_hip_thrust": {
+      "id": "posteriores_hip_thrust",
+      "name": "Hip thrust",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "quadríceps",
+        "abdômen"
+      ],
+      "equipment": [
+        "banco",
+        "barra",
+        "anilhas",
+        "protetor de barra"
+      ]
+    },
+    "posteriores_ponte_unilateral": {
+      "id": "posteriores_ponte_unilateral",
+      "name": "Ponte de glúteos unilateral",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "colchonete"
+      ]
+    },
+    "posteriores_hip_thrust_unilateral": {
+      "id": "posteriores_hip_thrust_unilateral",
+      "name": "Hip thrust unilateral",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "quadríceps",
+        "abdômen"
+      ],
+      "equipment": [
+        "banco",
+        "peso corporal",
+        "halter"
+      ]
+    },
+    "posteriores_agachamento_bulgaro": {
+      "id": "posteriores_agachamento_bulgaro",
+      "name": "Agachamento búlgaro com ênfase no quadril",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "quadríceps",
+        "adutores",
+        "abdômen"
+      ],
+      "equipment": [
+        "banco",
+        "peso corporal",
+        "halteres"
+      ]
+    },
+    "posteriores_pull_in_no_slider": {
+      "id": "posteriores_pull_in_no_slider",
+      "name": "Flexão de joelhos com sliders",
+      "group": "posteriores",
+      "source": "08_posteriores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "glúteo máximo",
+        "abdômen"
+      ],
+      "equipment": [
+        "sliders",
+        "toalhas deslizantes",
+        "colchonete"
+      ]
+    },
+    "gluteos_hip_thrust_barra": {
+      "id": "gluteos_hip_thrust_barra",
+      "name": "Hip thrust com barra",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "quadríceps",
+        "abdômen"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas",
+        "banco",
+        "protetor de barra"
+      ]
+    },
+    "gluteos_hip_thrust_maquina": {
+      "id": "gluteos_hip_thrust_maquina",
+      "name": "Hip thrust na máquina",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "quadríceps",
+        "abdômen"
+      ],
+      "equipment": [
+        "máquina hip thrust"
+      ]
+    },
+    "gluteos_ponte_gluteos": {
+      "id": "gluteos_ponte_gluteos",
+      "name": "Ponte de glúteos",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "colchonete"
+      ]
+    },
+    "gluteos_hip_thrust_unilateral": {
+      "id": "gluteos_hip_thrust_unilateral",
+      "name": "Hip thrust unilateral",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "quadríceps",
+        "abdômen"
+      ],
+      "equipment": [
+        "banco",
+        "peso corporal",
+        "halter"
+      ]
+    },
+    "gluteos_abducao_maquina": {
+      "id": "gluteos_abducao_maquina",
+      "name": "Abdução de quadril na máquina",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "secondary_muscles": [
+        "tensor da fáscia lata",
+        "glúteo máximo"
+      ],
+      "equipment": [
+        "máquina abdutora"
+      ]
+    },
+    "gluteos_abducao_cabo": {
+      "id": "gluteos_abducao_cabo",
+      "name": "Abdução de quadril no cabo",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "secondary_muscles": [
+        "tensor da fáscia lata",
+        "glúteo máximo"
+      ],
+      "equipment": [
+        "polia baixa",
+        "tornozeleira para cabo"
+      ]
+    },
+    "gluteos_abducao_deitado": {
+      "id": "gluteos_abducao_deitado",
+      "name": "Abdução de quadril deitado de lado",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "secondary_muscles": [
+        "tensor da fáscia lata"
+      ],
+      "equipment": [
+        "peso corporal",
+        "colchonete",
+        "mini band"
+      ]
+    },
+    "gluteos_coice_cabo": {
+      "id": "gluteos_coice_cabo",
+      "name": "Coice de glúteo no cabo",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "glúteo médio",
+        "abdômen"
+      ],
+      "equipment": [
+        "polia baixa",
+        "tornozeleira para cabo"
+      ]
+    },
+    "gluteos_coice_maquina": {
+      "id": "gluteos_coice_maquina",
+      "name": "Coice de glúteo na máquina",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "glúteo médio"
+      ],
+      "equipment": [
+        "máquina de coice de glúteo"
+      ]
+    },
+    "gluteos_extensao_quadril_quatro_apoios": {
+      "id": "gluteos_extensao_quadril_quatro_apoios",
+      "name": "Extensão de quadril em quatro apoios",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "colchonete",
+        "mini band"
+      ]
+    },
+    "gluteos_agachamento_sumo": {
+      "id": "gluteos_agachamento_sumo",
+      "name": "Agachamento sumô",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "quadríceps",
+        "adutores"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "halter",
+        "kettlebell"
+      ]
+    },
+    "gluteos_agachamento_bulgaro": {
+      "id": "gluteos_agachamento_bulgaro",
+      "name": "Agachamento búlgaro",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "quadríceps"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipment": [
+        "banco",
+        "peso corporal",
+        "halteres"
+      ]
+    },
+    "gluteos_step_up": {
+      "id": "gluteos_step_up",
+      "name": "Subida no banco",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "quadríceps"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "panturrilhas",
+        "abdômen"
+      ],
+      "equipment": [
+        "caixa estável",
+        "banco",
+        "halteres"
+      ]
+    },
+    "gluteos_avanco_reverso": {
+      "id": "gluteos_avanco_reverso",
+      "name": "Avanço reverso",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "quadríceps"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "halteres"
+      ]
+    },
+    "gluteos_abducao_mini_band": {
+      "id": "gluteos_abducao_mini_band",
+      "name": "Abdução de quadril com mini band",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "secondary_muscles": [
+        "tensor da fáscia lata",
+        "glúteo máximo"
+      ],
+      "equipment": [
+        "mini band"
+      ]
+    },
+    "gluteos_agachamento_goblet": {
+      "id": "gluteos_agachamento_goblet",
+      "name": "Agachamento goblet",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "quadríceps"
+      ],
+      "secondary_muscles": [
+        "adutores",
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipment": [
+        "halter",
+        "kettlebell"
+      ]
+    },
+    "gluteos_abducao_em_pe": {
+      "id": "gluteos_abducao_em_pe",
+      "name": "Abdução de quadril em pé sem carga",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "secondary_muscles": [
+        "tensor da fáscia lata",
+        "abdômen"
+      ],
+      "equipment": [
+        "peso corporal",
+        "apoio estável"
+      ]
+    },
+    "gluteos_levantamento_romeno": {
+      "id": "gluteos_levantamento_romeno",
+      "name": "Levantamento terra romeno",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "adutores",
+        "antebraços"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "gluteos_levantamento_romeno_halteres": {
+      "id": "gluteos_levantamento_romeno_halteres",
+      "name": "Levantamento terra romeno com halteres",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo",
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "eretores da coluna",
+        "adutores",
+        "antebraços"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "gluteos_pull_through": {
+      "id": "gluteos_pull_through",
+      "name": "Pull-through no cabo",
+      "group": "gluteos",
+      "source": "09_gluteos.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "glúteo máximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "eretores da coluna",
+        "abdômen"
+      ],
+      "equipment": [
+        "polia baixa",
+        "corda"
+      ]
+    },
+    "panturrilha_em_pe_maquina": {
+      "id": "panturrilha_em_pe_maquina",
+      "name": "Panturrilha em pé na máquina",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "maquina_de_panturrilha_em_pe"
+      ]
+    },
+    "panturrilha_sentado_maquina": {
+      "id": "panturrilha_sentado_maquina",
+      "name": "Panturrilha sentada na máquina",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "gastrocnemio",
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "maquina_de_panturrilha_sentado"
+      ]
+    },
+    "panturrilha_no_leg_press": {
+      "id": "panturrilha_no_leg_press",
+      "name": "Panturrilha no leg press",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "leg_press"
+      ]
+    },
+    "panturrilha_em_pe_unilateral": {
+      "id": "panturrilha_em_pe_unilateral",
+      "name": "Panturrilha em pé unilateral",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "degrau",
+        "peso_corporal",
+        "apoio_estavel"
+      ]
+    },
+    "panturrilha_no_smith": {
+      "id": "panturrilha_no_smith",
+      "name": "Panturrilha em pé no Smith",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "maquina_smith",
+        "degrau"
+      ]
+    },
+    "panturrilha_com_halteres": {
+      "id": "panturrilha_com_halteres",
+      "name": "Panturrilha em pé com halteres",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "halteres",
+        "peso_corporal"
+      ]
+    },
+    "panturrilha_no_degrau_peso_corporal": {
+      "id": "panturrilha_no_degrau_peso_corporal",
+      "name": "Panturrilha no degrau com peso corporal",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "degrau",
+        "peso_corporal",
+        "apoio_estavel"
+      ]
+    },
+    "panturrilha_sentado_com_halter": {
+      "id": "panturrilha_sentado_com_halter",
+      "name": "Panturrilha sentada com halter",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "gastrocnemio",
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "banco",
+        "halter",
+        "degrau_opcional"
+      ]
+    },
+    "panturrilha_unilateral_com_halter": {
+      "id": "panturrilha_unilateral_com_halter",
+      "name": "Panturrilha unilateral com halter",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "halter",
+        "degrau",
+        "apoio_estavel"
+      ]
+    },
+    "panturrilha_no_leg_press_unilateral": {
+      "id": "panturrilha_no_leg_press_unilateral",
+      "name": "Panturrilha unilateral no leg press",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "leg_press"
+      ]
+    },
+    "panturrilha_donkey": {
+      "id": "panturrilha_donkey",
+      "name": "Panturrilha donkey",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gastrocnemio",
+        "soleo"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tornozelo"
+      ],
+      "equipment": [
+        "maquina_donkey",
+        "degrau",
+        "apoio_estavel"
+      ]
+    },
+    "elevacao_tibial": {
+      "id": "elevacao_tibial",
+      "name": "Elevação de ponta dos pés",
+      "group": "panturrilhas",
+      "source": "10_panturrilhas.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "tibial_anterior"
+      ],
+      "secondary_muscles": [
+        "extensores_dos_dedos"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "parede"
+      ]
+    },
+    "abdominal_crunch": {
+      "id": "abdominal_crunch",
+      "name": "Abdominal crunch",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "obliquos"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "abdominal_reverso": {
+      "id": "abdominal_reverso",
+      "name": "Abdominal reverso",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "obliquos",
+        "flexores_do_quadril"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "abdominal_bicicleta": {
+      "id": "abdominal_bicicleta",
+      "name": "Abdominal bicicleta",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal",
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "abdominal_obliquo": {
+      "id": "abdominal_obliquo",
+      "name": "Abdominal oblíquo",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "secondary_muscles": [
+        "reto_abdominal"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "prancha_abdominal": {
+      "id": "prancha_abdominal",
+      "name": "Prancha abdominal",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "transverso_do_abdomen",
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "obliquos",
+        "gluteos",
+        "deltoide_anterior"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "prancha_lateral": {
+      "id": "prancha_lateral",
+      "name": "Prancha lateral",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "obliquo_externo",
+        "obliquo_interno",
+        "transverso_do_abdomen"
+      ],
+      "secondary_muscles": [
+        "quadrado_lombar",
+        "gluteo_medio",
+        "deltoide"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "prancha_com_joelhos_apoiados": {
+      "id": "prancha_com_joelhos_apoiados",
+      "name": "Prancha com joelhos apoiados",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "transverso_do_abdomen",
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "obliquos",
+        "gluteos"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "abdominal_crunch_com_carga": {
+      "id": "abdominal_crunch_com_carga",
+      "name": "Abdominal crunch com carga",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "obliquos"
+      ],
+      "equipment": [
+        "anilha",
+        "halter",
+        "colchonete"
+      ]
+    },
+    "abdominal_crunch_na_polia": {
+      "id": "abdominal_crunch_na_polia",
+      "name": "Abdominal na polia",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "obliquos"
+      ],
+      "equipment": [
+        "polia_alta",
+        "corda"
+      ]
+    },
+    "elevacao_de_joelhos_deitado": {
+      "id": "elevacao_de_joelhos_deitado",
+      "name": "Elevação de joelhos deitado",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "elevacao_de_pernas_deitado": {
+      "id": "elevacao_de_pernas_deitado",
+      "name": "Elevação de pernas deitado",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "abdominal_na_cadeira_romana": {
+      "id": "abdominal_na_cadeira_romana",
+      "name": "Elevação de joelhos na cadeira romana",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipment": [
+        "cadeira_romana"
+      ]
+    },
+    "elevacao_de_pernas_na_cadeira_romana": {
+      "id": "elevacao_de_pernas_na_cadeira_romana",
+      "name": "Elevação de pernas na cadeira romana",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipment": [
+        "cadeira_romana"
+      ]
+    },
+    "abdominal_na_cadeira_romana_obliquo": {
+      "id": "abdominal_na_cadeira_romana_obliquo",
+      "name": "Elevação oblíqua de joelhos na cadeira romana",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "secondary_muscles": [
+        "reto_abdominal",
+        "flexores_do_quadril"
+      ],
+      "equipment": [
+        "cadeira_romana"
+      ]
+    },
+    "abdominal_roda": {
+      "id": "abdominal_roda",
+      "name": "Abdominal com roda",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal",
+        "transverso_do_abdomen"
+      ],
+      "secondary_muscles": [
+        "obliquos",
+        "latissimo_do_dorso",
+        "deltoide_anterior"
+      ],
+      "equipment": [
+        "roda_abdominal",
+        "colchonete"
+      ]
+    },
+    "abdominal_v_up": {
+      "id": "abdominal_v_up",
+      "name": "Abdominal V-up",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "abdominal_mountain_climber": {
+      "id": "abdominal_mountain_climber",
+      "name": "Mountain climber",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal",
+        "transverso_do_abdomen"
+      ],
+      "secondary_muscles": [
+        "obliquos",
+        "flexores_do_quadril",
+        "deltoides",
+        "quadriceps"
+      ],
+      "equipment": [
+        "peso_corporal"
+      ]
+    },
+    "dead_bug": {
+      "id": "dead_bug",
+      "name": "Dead bug",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "transverso_do_abdomen",
+        "reto_abdominal"
+      ],
+      "secondary_muscles": [
+        "obliquos",
+        "flexores_do_quadril"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "pallof_press": {
+      "id": "pallof_press",
+      "name": "Pallof press",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "obliquo_externo",
+        "obliquo_interno",
+        "transverso_do_abdomen"
+      ],
+      "secondary_muscles": [
+        "reto_abdominal",
+        "gluteos",
+        "estabilizadores_da_coluna"
+      ],
+      "equipment": [
+        "polia",
+        "elastico_de_resistencia"
+      ]
+    },
+    "abdominal_rotacao_russa": {
+      "id": "abdominal_rotacao_russa",
+      "name": "Rotação russa",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "secondary_muscles": [
+        "reto_abdominal",
+        "flexores_do_quadril"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "anilha_opcional",
+        "halter_opcional"
+      ]
+    },
+    "abdominal_prancha_com_toque_ombro": {
+      "id": "abdominal_prancha_com_toque_ombro",
+      "name": "Prancha alta com toque no ombro",
+      "group": "abdomen",
+      "source": "11_abdomen.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "transverso_do_abdomen",
+        "reto_abdominal",
+        "obliquos"
+      ],
+      "secondary_muscles": [
+        "deltoides",
+        "triceps",
+        "gluteos"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete_opcional"
+      ]
+    },
+    "extensao_lombar_banco_45": {
+      "id": "extensao_lombar_banco_45",
+      "name": "Extensão lombar no banco 45 graus",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "eretores_da_coluna",
+        "multifidos"
+      ],
+      "secondary_muscles": [
+        "gluteo_maximo",
+        "isquiotibiais"
+      ],
+      "equipment": [
+        "banco_romano_45_graus"
+      ]
+    },
+    "extensao_lombar_com_carga": {
+      "id": "extensao_lombar_com_carga",
+      "name": "Extensão lombar com carga",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "eretores_da_coluna",
+        "multifidos"
+      ],
+      "secondary_muscles": [
+        "gluteo_maximo",
+        "isquiotibiais"
+      ],
+      "equipment": [
+        "banco_romano_45_graus",
+        "anilha"
+      ]
+    },
+    "extensao_lombar_no_chao": {
+      "id": "extensao_lombar_no_chao",
+      "name": "Extensão de tronco no chão",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "eretores_da_coluna",
+        "multifidos"
+      ],
+      "secondary_muscles": [
+        "gluteo_maximo"
+      ],
+      "equipment": [
+        "colchonete",
+        "peso_corporal"
+      ]
+    },
+    "bird_dog": {
+      "id": "bird_dog",
+      "name": "Bird dog",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "multifidos",
+        "eretores_da_coluna"
+      ],
+      "secondary_muscles": [
+        "transverso_do_abdomen",
+        "gluteo_maximo",
+        "deltoides"
+      ],
+      "equipment": [
+        "colchonete",
+        "peso_corporal"
+      ]
+    },
+    "superman": {
+      "id": "superman",
+      "name": "Superman",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "eretores_da_coluna",
+        "multifidos"
+      ],
+      "secondary_muscles": [
+        "gluteo_maximo",
+        "deltoide_posterior"
+      ],
+      "equipment": [
+        "colchonete",
+        "peso_corporal"
+      ]
+    },
+    "good_morning": {
+      "id": "good_morning",
+      "name": "Good morning",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "eretores_da_coluna",
+        "isquiotibiais",
+        "gluteo_maximo"
+      ],
+      "secondary_muscles": [
+        "adutor_magno",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "barra",
+        "rack"
+      ]
+    },
+    "levantamento_terra_romeno": {
+      "id": "levantamento_terra_romeno",
+      "name": "Levantamento terra romeno",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "isquiotibiais",
+        "gluteo_maximo",
+        "eretores_da_coluna"
+      ],
+      "secondary_muscles": [
+        "adutor_magno",
+        "antebracos",
+        "trapezio"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "levantamento_terra_com_barra": {
+      "id": "levantamento_terra_com_barra",
+      "name": "Levantamento terra com barra",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gluteo_maximo",
+        "quadriceps",
+        "eretores_da_coluna"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "trapezio",
+        "antebracos",
+        "adutor_magno"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "lombar_prancha_lateral": {
+      "id": "lombar_prancha_lateral",
+      "name": "Prancha lateral",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadrado_lombar",
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "secondary_muscles": [
+        "transverso_do_abdomen",
+        "gluteo_medio"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "colchonete"
+      ]
+    },
+    "pull_through_polia": {
+      "id": "pull_through_polia",
+      "name": "Pull-through na polia",
+      "group": "lombar",
+      "source": "12_lombar.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gluteo_maximo",
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "eretores_da_coluna",
+        "adutor_magno"
+      ],
+      "equipment": [
+        "polia_baixa",
+        "corda"
+      ]
+    },
+    "encolhimento_com_halteres": {
+      "id": "encolhimento_com_halteres",
+      "name": "Encolhimento com halteres",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_superior"
+      ],
+      "secondary_muscles": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "encolhimento_com_barra": {
+      "id": "encolhimento_com_barra",
+      "name": "Encolhimento com barra",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_superior"
+      ],
+      "secondary_muscles": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "encolhimento_no_smith": {
+      "id": "encolhimento_no_smith",
+      "name": "Encolhimento no Smith",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_superior"
+      ],
+      "secondary_muscles": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipment": [
+        "maquina_smith"
+      ]
+    },
+    "encolhimento_na_maquina": {
+      "id": "encolhimento_na_maquina",
+      "name": "Encolhimento na máquina",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_superior"
+      ],
+      "secondary_muscles": [
+        "levantador_da_escapula"
+      ],
+      "equipment": [
+        "maquina_de_encolhimento"
+      ]
+    },
+    "remada_alta_com_corda": {
+      "id": "remada_alta_com_corda",
+      "name": "Remada alta com corda na polia",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_superior",
+        "deltoide_lateral"
+      ],
+      "secondary_muscles": [
+        "biceps",
+        "antebracos"
+      ],
+      "equipment": [
+        "polia_baixa",
+        "corda"
+      ]
+    },
+    "remada_alta_com_halteres": {
+      "id": "remada_alta_com_halteres",
+      "name": "Remada alta com halteres",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_superior",
+        "deltoide_lateral"
+      ],
+      "secondary_muscles": [
+        "biceps",
+        "antebracos"
+      ],
+      "equipment": [
+        "halteres"
+      ]
+    },
+    "face_pull": {
+      "id": "face_pull",
+      "name": "Face pull",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_medio",
+        "trapezio_inferior",
+        "deltoide_posterior"
+      ],
+      "secondary_muscles": [
+        "romboides",
+        "rotadores_externos_do_ombro"
+      ],
+      "equipment": [
+        "polia_alta",
+        "corda"
+      ]
+    },
+    "encolhimento_com_barra_atras": {
+      "id": "encolhimento_com_barra_atras",
+      "name": "Encolhimento com barra atrás do corpo",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_superior"
+      ],
+      "secondary_muscles": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipment": [
+        "barra",
+        "anilhas"
+      ]
+    },
+    "crucifixo_invertido": {
+      "id": "crucifixo_invertido",
+      "name": "Crucifixo invertido",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoide_posterior",
+        "trapezio_medio",
+        "romboides"
+      ],
+      "secondary_muscles": [
+        "trapezio_inferior",
+        "infraespinal"
+      ],
+      "equipment": [
+        "halteres",
+        "banco_inclinado_opcional"
+      ]
+    },
+    "remada_alta_com_barra": {
+      "id": "remada_alta_com_barra",
+      "name": "Remada alta com barra",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_superior",
+        "deltoide_lateral"
+      ],
+      "secondary_muscles": [
+        "biceps",
+        "antebracos"
+      ],
+      "equipment": [
+        "barra"
+      ]
+    },
+    "y_raise": {
+      "id": "y_raise",
+      "name": "Elevação em Y",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_inferior"
+      ],
+      "secondary_muscles": [
+        "trapezio_medio",
+        "deltoide_posterior",
+        "serratr_anterior"
+      ],
+      "equipment": [
+        "halteres_leves",
+        "banco_inclinado_opcional",
+        "peso_corporal"
+      ]
+    },
+    "encolhimento_com_kettlebell": {
+      "id": "encolhimento_com_kettlebell",
+      "name": "Encolhimento com kettlebells",
+      "group": "trapezio",
+      "source": "13_trapezio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "trapezio_superior"
+      ],
+      "secondary_muscles": [
+        "levantador_da_escapula",
+        "antebracos"
+      ],
+      "equipment": [
+        "kettlebells"
+      ]
+    },
+    "aducao_na_maquina": {
+      "id": "aducao_na_maquina",
+      "name": "Adução de quadril na máquina",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "adutor_longo",
+        "adutor_curto",
+        "adutor_magno",
+        "gracil",
+        "pectineo"
+      ],
+      "secondary_muscles": [
+        "obturador_externo"
+      ],
+      "equipment": [
+        "maquina_adutora"
+      ]
+    },
+    "abducao_na_maquina": {
+      "id": "abducao_na_maquina",
+      "name": "Abdução de quadril na máquina",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "secondary_muscles": [
+        "tensor_da_fascia_lata",
+        "gluteo_maximo"
+      ],
+      "equipment": [
+        "maquina_abdutora"
+      ]
+    },
+    "abducao_de_quadril_na_polia": {
+      "id": "abducao_de_quadril_na_polia",
+      "name": "Abdução de quadril na polia",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "secondary_muscles": [
+        "tensor_da_fascia_lata",
+        "gluteo_maximo"
+      ],
+      "equipment": [
+        "polia_baixa",
+        "tornozeleira"
+      ]
+    },
+    "aducao_de_quadril_na_polia": {
+      "id": "aducao_de_quadril_na_polia",
+      "name": "Adução de quadril na polia",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "adutor_longo",
+        "adutor_curto",
+        "adutor_magno",
+        "gracil"
+      ],
+      "secondary_muscles": [
+        "pectineo"
+      ],
+      "equipment": [
+        "polia_baixa",
+        "tornozeleira"
+      ]
+    },
+    "abducao_deitado_de_lado": {
+      "id": "abducao_deitado_de_lado",
+      "name": "Abdução de quadril deitado de lado",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "secondary_muscles": [
+        "tensor_da_fascia_lata"
+      ],
+      "equipment": [
+        "colchonete",
+        "peso_corporal"
+      ]
+    },
+    "aducao_deitado": {
+      "id": "aducao_deitado",
+      "name": "Adução de quadril deitado de lado",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "adutor_longo",
+        "adutor_curto",
+        "adutor_magno",
+        "gracil"
+      ],
+      "secondary_muscles": [
+        "pectineo"
+      ],
+      "equipment": [
+        "colchonete",
+        "peso_corporal"
+      ]
+    },
+    "caminhada_lateral_miniband": {
+      "id": "caminhada_lateral_miniband",
+      "name": "Caminhada lateral com miniband",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "secondary_muscles": [
+        "gluteo_maximo",
+        "tensor_da_fascia_lata"
+      ],
+      "equipment": [
+        "miniband"
+      ]
+    },
+    "clam_shell": {
+      "id": "clam_shell",
+      "name": "Clam shell",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gluteo_medio",
+        "gluteo_minimo"
+      ],
+      "secondary_muscles": [
+        "rotadores_externos_do_quadril"
+      ],
+      "equipment": [
+        "colchonete",
+        "miniband_opcional"
+      ]
+    },
+    "agachamento_sumo": {
+      "id": "agachamento_sumo",
+      "name": "Agachamento sumô",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "adutor_magno",
+        "gluteo_maximo",
+        "quadriceps"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores_do_quadril"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "halter_opcional",
+        "kettlebell_opcional"
+      ]
+    },
+    "agachamento_sumo_com_halter": {
+      "id": "agachamento_sumo_com_halter",
+      "name": "Agachamento sumô com halter",
+      "group": "adutores_abdutores",
+      "source": "14_adutores_abdutores.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "adutor_magno",
+        "gluteo_maximo",
+        "quadriceps"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores_do_quadril"
+      ],
+      "equipment": [
+        "halter"
+      ]
+    },
+    "caminhada_esteira": {
+      "id": "caminhada_esteira",
+      "name": "Caminhada na esteira",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "esteira"
+      ]
+    },
+    "caminhada_inclinada_esteira": {
+      "id": "caminhada_inclinada_esteira",
+      "name": "Caminhada inclinada na esteira",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gluteo_maximo",
+        "quadriceps",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "esteira"
+      ]
+    },
+    "corrida_esteira": {
+      "id": "corrida_esteira",
+      "name": "Corrida na esteira",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "secondary_muscles": [
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "esteira"
+      ]
+    },
+    "bicicleta_ergometrica": {
+      "id": "bicicleta_ergometrica",
+      "name": "Bicicleta ergométrica",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril"
+      ],
+      "equipment": [
+        "bicicleta_ergometrica"
+      ]
+    },
+    "bicicleta_intervalada": {
+      "id": "bicicleta_intervalada",
+      "name": "Bicicleta ergométrica intervalada",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril"
+      ],
+      "equipment": [
+        "bicicleta_ergometrica"
+      ]
+    },
+    "eliptico": {
+      "id": "eliptico",
+      "name": "Transport elíptico",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "secondary_muscles": [
+        "deltoides",
+        "biceps",
+        "triceps"
+      ],
+      "equipment": [
+        "eliptico"
+      ]
+    },
+    "remador_ergometrico": {
+      "id": "remador_ergometrico",
+      "name": "Remo ergométrico",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "latissimo_do_dorso"
+      ],
+      "secondary_muscles": [
+        "biceps",
+        "eretores_da_coluna",
+        "trapezio"
+      ],
+      "equipment": [
+        "remador_ergometrico"
+      ]
+    },
+    "pular_corda": {
+      "id": "pular_corda",
+      "name": "Pular corda",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "panturrilhas",
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "secondary_muscles": [
+        "antebracos",
+        "deltoides",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "corda_de_pular"
+      ]
+    },
+    "polichinelo": {
+      "id": "polichinelo",
+      "name": "Polichinelo",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "deltoides",
+        "quadriceps",
+        "gluteo_medio",
+        "panturrilhas"
+      ],
+      "secondary_muscles": [
+        "abdutores_do_quadril",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "peso_corporal"
+      ]
+    },
+    "corrida_parada": {
+      "id": "corrida_parada",
+      "name": "Corrida parada",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "peso_corporal"
+      ]
+    },
+    "agachamento_com_peso_corporal": {
+      "id": "agachamento_com_peso_corporal",
+      "name": "Agachamento com peso corporal",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "adutores",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "peso_corporal"
+      ]
+    },
+    "avanco_alternado": {
+      "id": "avanco_alternado",
+      "name": "Avanço alternado",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "gluteo_medio",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "halteres_opcionais"
+      ]
+    },
+    "avanco_reverso": {
+      "id": "avanco_reverso",
+      "name": "Avanço reverso",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "gluteo_medio",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "peso_corporal",
+        "halteres_opcionais"
+      ]
+    },
+    "burpee": {
+      "id": "burpee",
+      "name": "Burpee",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo",
+        "peitoral",
+        "triceps"
+      ],
+      "secondary_muscles": [
+        "deltoides",
+        "abdomen",
+        "panturrilhas"
+      ],
+      "equipment": [
+        "peso_corporal"
+      ]
+    },
+    "mountain_climber": {
+      "id": "mountain_climber",
+      "name": "Mountain climber",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "reto_abdominal",
+        "transverso_do_abdomen",
+        "flexores_do_quadril"
+      ],
+      "secondary_muscles": [
+        "deltoides",
+        "quadriceps",
+        "obliquos"
+      ],
+      "equipment": [
+        "peso_corporal"
+      ]
+    },
+    "kettlebell_swing": {
+      "id": "kettlebell_swing",
+      "name": "Kettlebell swing",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "gluteo_maximo",
+        "isquiotibiais"
+      ],
+      "secondary_muscles": [
+        "eretores_da_coluna",
+        "abdomen",
+        "antebracos",
+        "trapezio"
+      ],
+      "equipment": [
+        "kettlebell"
+      ]
+    },
+    "corrida_intervalada": {
+      "id": "corrida_intervalada",
+      "name": "Corrida intervalada",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo",
+        "isquiotibiais",
+        "panturrilhas"
+      ],
+      "secondary_muscles": [
+        "flexores_do_quadril",
+        "musculos_estabilizadores_do_tronco"
+      ],
+      "equipment": [
+        "esteira_opcional",
+        "pista_opcional"
+      ]
+    },
+    "step_up": {
+      "id": "step_up",
+      "name": "Subida no banco",
+      "group": "funcionais_e_cardio",
+      "source": "15_funcionais_e_cardio.json",
+      "status": "pending",
+      "atlas": null,
+      "primary_muscles": [
+        "quadriceps",
+        "gluteo_maximo"
+      ],
+      "secondary_muscles": [
+        "isquiotibiais",
+        "gluteo_medio",
+        "panturrilhas"
+      ],
+      "equipment": [
+        "caixa_pliometrica_estavel",
+        "banco_baixo"
+      ]
+    }
+  }
+}
