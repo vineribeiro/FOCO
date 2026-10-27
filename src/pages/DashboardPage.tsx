@@ -84,11 +84,11 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
         <div>
           <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-neutral-500">Seu espaço de evolução</p>
           <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
-            {activePlan ? activePlan.name : 'Olá, ' + firstName}
+            {'Olá, ' + firstName}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-400">
             {activePlan
-              ? 'Seu plano atual, pronto para acompanhar cada sessão e cada evolução.'
+              ? 'Sua evolução começa no próximo treino. Confira sua ficha e registre cada série.'
               : 'Vamos configurar seu perfil para criar uma ficha de treino feita para sua rotina e seus objetivos.'}
           </p>
         </div>
@@ -98,6 +98,21 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
           </button>
         )}
       </header>
+
+      {activePlan && (
+        <section aria-labelledby="foco-workout-today" className="overflow-hidden rounded-3xl border border-white/15 bg-[#171717] p-5 shadow-lg sm:p-7">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+            <div className="space-y-2">
+              <p className="foco-eyebrow">Seu treino disponível</p>
+              <h2 id="foco-workout-today" className="text-2xl font-extrabold tracking-tight sm:text-3xl">{activePlan.name}</h2>
+              <p className="text-sm text-neutral-300">{exercises.length} exercícios · {activePlan.weekly_frequency} treinos por semana</p>
+            </div>
+            <button type="button" onClick={() => setActiveTab('sessao')} className="foco-action w-full shrink-0 sm:w-auto">
+              <Play className="h-5 w-5 fill-current" aria-hidden="true" /> Iniciar treino <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+        </section>
+      )}
 
       {pendingRec && (
         <section className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-[#141414] p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -207,9 +222,9 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
               <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                 {exercises.map((exercise, index) => (
                   <article key={exercise.id || exercise.exercise_name + index} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-[#141414] p-4 transition hover:border-white/25">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black text-[11px] font-bold text-neutral-300">{index + 1}</div>
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black text-sm font-bold text-neutral-300">{index + 1}</div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-sm font-black">{exercise.exercise_name}</h3>
+                      <h3 className="text-base font-bold">{exercise.exercise_name}</h3>
                       <p className="mt-1 text-[11px] text-neutral-500">{exercise.muscle_group}</p>
                       <p className="mt-2 text-xs text-neutral-300">
                         <strong>{exercise.sets} séries</strong> · {exercise.reps_min}–{exercise.reps_max} repetições · {exercise.rest_seconds}s descanso
@@ -223,9 +238,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
             )}
           </section>
 
-          <button type="button" onClick={() => setActiveTab('sessao')} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white py-4 text-sm font-black uppercase tracking-wide text-black shadow-lg transition hover:bg-neutral-200 active:scale-[0.99]">
-            <Play className="h-4 w-4 fill-current" /> Iniciar treino de hoje
-          </button>
+
         </>
       )}
 
