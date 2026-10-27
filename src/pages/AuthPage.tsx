@@ -45,7 +45,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
     const params = new URLSearchParams(hash);
     const authError = params.get('error_description') || params.get('error') || params.get('error_code');
     if (authError) {
-      try { sessionStorage.setItem('foco_password_recovery_pending', '1'); } catch { /* continue to show a recoverable error */ }
       window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
       setErrorMsg(/expired|otp_expired/i.test(authError)
         ? 'Este link de recuperação expirou ou já foi utilizado. Solicite um novo link.'
@@ -54,7 +53,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
     }
     const accessToken = params.get('access_token');
     if (params.get('type') === 'recovery' && accessToken) {
-      try { sessionStorage.setItem('foco_password_recovery_pending', '1'); } catch { /* state below still holds the one-time token */ }
       setRecoveryAccessToken(accessToken);
       setMode('reset');
       setSuccessMsg('Link validado. Defina uma nova senha para recuperar o acesso.');
@@ -440,7 +438,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
               </form>
 
               {(isForgot || isReset) && (
-                <button type="button" onClick={() => { if (isReset) { removeStoredToken(); setRecoveryAccessToken(null); try { sessionStorage.removeItem('foco_password_recovery_pending'); } catch { /* ignore unavailable session storage */ } } changeMode('login'); }} className="mt-5 flex w-full items-center justify-center gap-2 text-xs font-bold text-neutral-400 transition hover:text-white">
+                <button type="button" onClick={() => { if (isReset) { removeStoredToken(); setRecoveryAccessToken(null); } changeMode('login'); }} className="mt-5 flex w-full items-center justify-center gap-2 text-xs font-bold text-neutral-400 transition hover:text-white">
                   Voltar para entrar
                 </button>
               )}
