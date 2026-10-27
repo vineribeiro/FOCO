@@ -1,0 +1,1243 @@
+{
+  "arquivo": "11_abdomen.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "abdomen",
+  "descricao": "Biblioteca de exercícios para reto abdominal, oblíquos, transverso do abdômen e estabilizadores do tronco.",
+  "exercicios": [
+    {
+      "id": "abdominal_crunch",
+      "nome": "Abdominal crunch",
+      "aliases": [
+        "Abdominal curto",
+        "Crunch tradicional"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "obliquos"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "flexao_de_tronco",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de costas em um colchonete, com os joelhos flexionados e os pés apoiados no chão.",
+        "Coloque as mãos cruzadas sobre o peito ou ao lado da cabeça, sem puxar o pescoço.",
+        "Contraia o abdômen e eleve a parte superior das costas do chão.",
+        "Mantenha a região lombar próxima ao colchonete e evite projetar a cabeça para a frente.",
+        "Desça lentamente até a posição inicial, mantendo o controle muscular."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar o tronco.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Puxar a cabeça com as mãos.",
+        "Usar impulso para subir.",
+        "Transformar o movimento em uma elevação completa do tronco.",
+        "Prender a respiração."
+      ],
+      "cuidados": [
+        "Mantenha o pescoço em posição confortável.",
+        "Reduza a amplitude se sentir desconforto lombar.",
+        "Interrompa se houver dor aguda."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "abdominal_crunch_com_carga",
+        "abdominal_crunch_na_polia"
+      ],
+      "imagens_execucao": [
+        "Crunches/0.jpg",
+        "Crunches/1.jpg"
+      ]
+    },
+    {
+      "id": "abdominal_reverso",
+      "nome": "Abdominal reverso",
+      "aliases": [
+        "Reverse crunch"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "obliquos",
+        "flexores_do_quadril"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "flexao_de_tronco_e_pelve",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de costas com os braços ao lado do corpo e os joelhos flexionados.",
+        "Eleve as pernas até que os joelhos fiquem aproximadamente sobre os quadris.",
+        "Contraia o abdômen e aproxime os joelhos do tronco, elevando suavemente a pelve do chão.",
+        "Evite balançar as pernas para gerar impulso.",
+        "Retorne lentamente até a posição inicial, mantendo o controle da lombar."
+      ],
+      "respiracao": {
+        "subida": "Expire ao aproximar os joelhos do tronco.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar o balanço das pernas.",
+        "Elevar a pelve de forma exagerada.",
+        "Descer as pernas sem controle.",
+        "Arquear excessivamente a região lombar."
+      ],
+      "cuidados": [
+        "Comece com uma amplitude pequena.",
+        "Mantenha o movimento controlado.",
+        "Interrompa se houver dor lombar."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "elevacao_de_joelhos_deitado",
+        "elevacao_de_pernas_deitado"
+      ],
+      "imagens_execucao": [
+        "Reverse_Crunch/0.jpg",
+        "Reverse_Crunch/1.jpg"
+      ]
+    },
+    {
+      "id": "abdominal_bicicleta",
+      "nome": "Abdominal bicicleta",
+      "aliases": [
+        "Bicycle crunch"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal",
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "flexao_e_rotacao_de_tronco",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se de costas e coloque as mãos levemente ao lado da cabeça.",
+        "Eleve as pernas com os joelhos flexionados.",
+        "Aproxime o ombro direito do joelho esquerdo enquanto estende a outra perna.",
+        "Alterne os lados de maneira controlada, realizando uma rotação do tronco.",
+        "Evite puxar a cabeça e mantenha a região lombar controlada."
+      ],
+      "respiracao": {
+        "execucao": "Expire durante a aproximação e rotação; inspire ao alternar os lados."
+      },
+      "erros_comuns": [
+        "Puxar o pescoço com as mãos.",
+        "Mover as pernas muito rapidamente.",
+        "Apenas movimentar os cotovelos sem girar o tronco.",
+        "Arquear a lombar ao estender as pernas."
+      ],
+      "cuidados": [
+        "Faça rotações confortáveis, sem forçar o pescoço.",
+        "Reduza a extensão das pernas se perder o controle lombar."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        24
+      ],
+      "unidade_repeticoes": "total",
+      "variacoes": [
+        "abdominal_crunch",
+        "abdominal_obliquo"
+      ],
+      "imagens_execucao": [
+        "Air_Bike/0.jpg",
+        "Air_Bike/1.jpg"
+      ]
+    },
+    {
+      "id": "abdominal_obliquo",
+      "nome": "Abdominal oblíquo",
+      "aliases": [
+        "Crunch oblíquo"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "musculos_secundarios": [
+        "reto_abdominal"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "flexao_e_rotacao_de_tronco",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de costas com os joelhos flexionados e os pés apoiados no chão.",
+        "Coloque as mãos sobre o peito ou ao lado da cabeça.",
+        "Contraia o abdômen e eleve a parte superior das costas com uma pequena rotação.",
+        "Direcione o ombro em direção ao lado oposto do tronco, sem puxar a cabeça.",
+        "Retorne lentamente e complete as repetições de um lado antes de trocar."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar e girar o tronco.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Puxar a cabeça.",
+        "Girar apenas os cotovelos.",
+        "Usar impulso.",
+        "Realizar uma rotação excessiva."
+      ],
+      "cuidados": [
+        "Use uma amplitude confortável.",
+        "Evite movimentos bruscos de rotação."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "abdominal_bicicleta",
+        "abdominal_crunch"
+      ],
+      "imagens_execucao": [
+        "Cross-Body_Crunch/0.jpg",
+        "Cross-Body_Crunch/1.jpg"
+      ]
+    },
+    {
+      "id": "prancha_abdominal",
+      "nome": "Prancha abdominal",
+      "aliases": [
+        "Prancha frontal",
+        "Front plank"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "transverso_do_abdomen",
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "obliquos",
+        "gluteos",
+        "deltoide_anterior"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "estabilizacao_isometrica",
+      "nivel": "iniciante",
+      "execucao": [
+        "Apoie os antebraços no chão, com os cotovelos aproximadamente abaixo dos ombros.",
+        "Estenda as pernas e apoie as pontas dos pés no chão.",
+        "Alinhe cabeça, tronco e pernas, sem deixar a pelve cair ou subir excessivamente.",
+        "Contraia o abdômen e os glúteos enquanto respira normalmente.",
+        "Mantenha a posição pelo tempo planejado e encerre quando perder o alinhamento."
+      ],
+      "respiracao": {
+        "execucao": "Respire de forma contínua e controlada durante toda a isometria."
+      },
+      "erros_comuns": [
+        "Deixar a lombar afundar.",
+        "Elevar demais o quadril.",
+        "Prender a respiração.",
+        "Posicionar os cotovelos muito à frente dos ombros."
+      ],
+      "cuidados": [
+        "Priorize a qualidade da postura em vez da duração.",
+        "Apoie os joelhos no chão para facilitar, se necessário.",
+        "Interrompa se surgir dor lombar."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        15,
+        60
+      ],
+      "unidade_repeticoes": "segundos",
+      "variacoes": [
+        "prancha_com_joelhos_apoiados",
+        "prancha_lateral"
+      ],
+      "imagens_execucao": [
+        "Plank/0.jpg",
+        "Plank/1.jpg"
+      ]
+    },
+    {
+      "id": "prancha_lateral",
+      "nome": "Prancha lateral",
+      "aliases": [
+        "Side plank"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "obliquo_externo",
+        "obliquo_interno",
+        "transverso_do_abdomen"
+      ],
+      "musculos_secundarios": [
+        "quadrado_lombar",
+        "gluteo_medio",
+        "deltoide"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "estabilizacao_lateral_isometrica",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se de lado e posicione o cotovelo diretamente abaixo do ombro.",
+        "Estenda as pernas e coloque os pés um sobre o outro, ou apoie os joelhos para facilitar.",
+        "Eleve o quadril até alinhar ombros, pelve e pernas.",
+        "Mantenha o abdômen contraído e evite girar o tronco para a frente ou para trás.",
+        "Sustente a posição pelo tempo planejado e repita do outro lado."
+      ],
+      "respiracao": {
+        "execucao": "Respire normalmente, mantendo a contração do tronco."
+      },
+      "erros_comuns": [
+        "Deixar o quadril cair.",
+        "Girar o peito em direção ao chão.",
+        "Apoiar o cotovelo longe do ombro.",
+        "Prender a respiração."
+      ],
+      "cuidados": [
+        "Use a versão com joelhos apoiados se necessário.",
+        "Evite pressionar o ombro em uma posição dolorosa."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        15,
+        45
+      ],
+      "unidade_repeticoes": "segundos_por_lado",
+      "variacoes": [
+        "prancha_abdominal",
+        "prancha_lateral_com_joelhos_apoiados"
+      ],
+      "imagens_execucao": [
+        "Side_Bridge/0.jpg",
+        "Side_Bridge/1.jpg"
+      ]
+    },
+    {
+      "id": "prancha_com_joelhos_apoiados",
+      "nome": "Prancha com joelhos apoiados",
+      "aliases": [
+        "Prancha frontal modificada"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "transverso_do_abdomen",
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "obliquos",
+        "gluteos"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "estabilizacao_isometrica",
+      "nivel": "iniciante",
+      "execucao": [
+        "Apoie os antebraços no chão com os cotovelos abaixo dos ombros.",
+        "Mantenha os joelhos apoiados no colchonete e alinhe ombros, quadris e joelhos.",
+        "Contraia o abdômen e os glúteos sem arredondar ou arquear excessivamente a coluna.",
+        "Respire normalmente durante a sustentação.",
+        "Finalize quando perder a postura."
+      ],
+      "respiracao": {
+        "execucao": "Mantenha respiração contínua e controlada."
+      },
+      "erros_comuns": [
+        "Deixar a pelve cair.",
+        "Elevar demais o quadril.",
+        "Prender a respiração.",
+        "Deslocar os ombros para trás dos cotovelos."
+      ],
+      "cuidados": [
+        "Aumente o tempo gradualmente.",
+        "Não mantenha a posição se provocar dor."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        15,
+        45
+      ],
+      "unidade_repeticoes": "segundos",
+      "variacoes": [
+        "prancha_abdominal"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "abdominal_crunch_com_carga",
+      "nome": "Abdominal crunch com carga",
+      "aliases": [
+        "Crunch com anilha",
+        "Abdominal com peso"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "obliquos"
+      ],
+      "equipamentos": [
+        "anilha",
+        "halter",
+        "colchonete"
+      ],
+      "padrao_movimento": "flexao_de_tronco",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se com os joelhos flexionados e os pés apoiados no chão.",
+        "Segure uma anilha ou halter junto ao peito, usando uma carga que consiga controlar.",
+        "Contraia o abdômen e eleve a parte superior das costas do chão.",
+        "Evite puxar a cabeça ou realizar um movimento brusco.",
+        "Desça lentamente, mantendo a tensão muscular."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar o tronco.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar carga excessiva.",
+        "Segurar o peso longe do corpo sem necessidade.",
+        "Puxar o pescoço.",
+        "Usar impulso para completar as repetições."
+      ],
+      "cuidados": [
+        "Comece com carga leve.",
+        "Segure o peso com firmeza.",
+        "Interrompa se houver dor no pescoço ou na lombar."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "abdominal_crunch",
+        "abdominal_crunch_na_polia"
+      ],
+      "imagens_execucao": [
+        "Weighted_Crunches/0.jpg",
+        "Weighted_Crunches/1.jpg"
+      ]
+    },
+    {
+      "id": "abdominal_crunch_na_polia",
+      "nome": "Abdominal na polia",
+      "aliases": [
+        "Cable crunch",
+        "Abdominal ajoelhado na corda"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "obliquos"
+      ],
+      "equipamentos": [
+        "polia_alta",
+        "corda"
+      ],
+      "padrao_movimento": "flexao_de_tronco_com_resistencia",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda uma corda na polia alta e ajoelhe-se diante do equipamento.",
+        "Segure as extremidades da corda próximas à cabeça, sem pressionar o pescoço.",
+        "Mantenha os quadris relativamente estáveis e contraia o abdômen.",
+        "Flexione o tronco aproximando as costelas da pelve.",
+        "Retorne lentamente à posição inicial, sem deixar a carga puxar o corpo de forma brusca."
+      ],
+      "respiracao": {
+        "descida": "Expire ao flexionar o tronco.",
+        "retorno": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Puxar o movimento principalmente com os braços.",
+        "Sentar sobre os calcanhares para movimentar a carga.",
+        "Usar carga excessiva.",
+        "Realizar o movimento com impulso."
+      ],
+      "cuidados": [
+        "Ajuste a carga para controlar as duas fases.",
+        "Evite forçar o pescoço.",
+        "Não transforme o exercício em uma dobradiça de quadril."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "abdominal_crunch_com_carga",
+        "abdominal_crunch"
+      ],
+      "imagens_execucao": [
+        "Cable_Crunch/0.jpg",
+        "Cable_Crunch/1.jpg"
+      ]
+    },
+    {
+      "id": "elevacao_de_joelhos_deitado",
+      "nome": "Elevação de joelhos deitado",
+      "aliases": [
+        "Knee raise no chão"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "flexao_de_quadril_e_controle_pelvico",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de costas com os braços ao lado do corpo.",
+        "Flexione os quadris e os joelhos, mantendo as pernas suspensas.",
+        "Aproxime os joelhos do tronco sem usar balanço.",
+        "Mantenha o abdômen contraído e evite arquear a lombar.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao aproximar os joelhos.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Balançar as pernas.",
+        "Arquear a lombar.",
+        "Descer as pernas rapidamente.",
+        "Confundir o movimento com uma elevação completa da pelve."
+      ],
+      "cuidados": [
+        "Mantenha a amplitude compatível com o controle da lombar.",
+        "Comece com poucas repetições se estiver aprendendo."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "abdominal_reverso",
+        "elevacao_de_pernas_deitado"
+      ],
+      "imagens_execucao": [
+        "Bent-Knee_Hip_Raise/0.jpg",
+        "Bent-Knee_Hip_Raise/1.jpg"
+      ]
+    },
+    {
+      "id": "elevacao_de_pernas_deitado",
+      "nome": "Elevação de pernas deitado",
+      "aliases": [
+        "Leg raise no chão"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "flexao_de_quadril_e_estabilizacao_lombar",
+      "nivel": "intermediario",
+      "execucao": [
+        "Deite-se de costas com as pernas estendidas e os braços ao lado do corpo.",
+        "Mantenha o abdômen contraído e a região lombar controlada.",
+        "Eleve as pernas juntas sem balançar o tronco.",
+        "Desça lentamente apenas até o ponto em que consiga manter a lombar estável.",
+        "Retorne à posição inicial sem deixar as pernas caírem."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar as pernas.",
+        "descida": "Inspire durante a descida controlada."
+      },
+      "erros_comuns": [
+        "Arquear a lombar ao baixar as pernas.",
+        "Usar impulso.",
+        "Descer além da amplitude controlável.",
+        "Dobrar os joelhos involuntariamente para compensar."
+      ],
+      "cuidados": [
+        "Flexione os joelhos para facilitar se necessário.",
+        "Reduza a amplitude se perder o controle da lombar.",
+        "Interrompa se houver dor lombar."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "elevacao_de_joelhos_deitado",
+        "abdominal_reverso"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "abdominal_na_cadeira_romana",
+      "nome": "Elevação de joelhos na cadeira romana",
+      "aliases": [
+        "Captain's chair knee raise"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipamentos": [
+        "cadeira_romana"
+      ],
+      "padrao_movimento": "flexao_de_quadril_e_controle_pelvico",
+      "nivel": "intermediario",
+      "execucao": [
+        "Apoie os antebraços nos suportes e mantenha as costas encostadas no encosto.",
+        "Segure as alças e mantenha os ombros estáveis.",
+        "Eleve os joelhos em direção ao tronco, contraindo o abdômen.",
+        "Evite balançar o corpo ou arquear a lombar.",
+        "Desça as pernas lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os joelhos.",
+        "descida": "Inspire ao descer."
+      },
+      "erros_comuns": [
+        "Usar balanço para elevar as pernas.",
+        "Afastar as costas do encosto.",
+        "Elevar os ombros em direção às orelhas.",
+        "Descer sem controle."
+      ],
+      "cuidados": [
+        "Verifique se o equipamento está estável.",
+        "Comece com elevação de joelhos antes de tentar manter as pernas estendidas."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "elevacao_de_pernas_na_cadeira_romana",
+        "abdominal_na_cadeira_romana_obliquo"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "elevacao_de_pernas_na_cadeira_romana",
+      "nome": "Elevação de pernas na cadeira romana",
+      "aliases": [
+        "Captain's chair leg raise"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipamentos": [
+        "cadeira_romana"
+      ],
+      "padrao_movimento": "flexao_de_quadril_e_controle_pelvico",
+      "nivel": "avancado",
+      "execucao": [
+        "Apoie os antebraços nos suportes e mantenha as costas apoiadas.",
+        "Estenda as pernas à frente, mantendo os joelhos tão estendidos quanto conseguir sem perder o controle.",
+        "Eleve as pernas até uma altura confortável, sem balançar o corpo.",
+        "Mantenha o abdômen contraído e evite arquear a lombar.",
+        "Desça lentamente até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar as pernas.",
+        "descida": "Inspire ao descer."
+      },
+      "erros_comuns": [
+        "Usar impulso.",
+        "Elevar as pernas com movimentos bruscos.",
+        "Perder o apoio das costas.",
+        "Tentar amplitude completa sem força ou controle suficientes."
+      ],
+      "cuidados": [
+        "Domine a versão com joelhos flexionados antes de avançar.",
+        "Não force a extensão dos joelhos.",
+        "Interrompa se houver dor lombar ou no quadril."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        12
+      ],
+      "variacoes": [
+        "abdominal_na_cadeira_romana"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "abdominal_na_cadeira_romana_obliquo",
+      "nome": "Elevação oblíqua de joelhos na cadeira romana",
+      "aliases": [
+        "Oblique knee raise"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "musculos_secundarios": [
+        "reto_abdominal",
+        "flexores_do_quadril"
+      ],
+      "equipamentos": [
+        "cadeira_romana"
+      ],
+      "padrao_movimento": "flexao_de_quadril_com_rotacao_controlada",
+      "nivel": "avancado",
+      "execucao": [
+        "Posicione-se na cadeira romana com antebraços apoiados e costas estáveis.",
+        "Eleve os joelhos em direção a um dos lados do tronco, usando uma rotação pequena e controlada.",
+        "Evite girar bruscamente a coluna ou balançar o corpo.",
+        "Desça lentamente até a posição inicial.",
+        "Alterne os lados com controle."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar os joelhos.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Girar o tronco de forma brusca.",
+        "Usar balanço.",
+        "Elevar os ombros.",
+        "Realizar repetições assimétricas sem controle."
+      ],
+      "cuidados": [
+        "Use amplitude de rotação confortável.",
+        "Aprenda primeiro a versão frontal.",
+        "Evite o exercício se a rotação provocar dor."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_lado",
+      "variacoes": [
+        "abdominal_na_cadeira_romana"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "abdominal_roda",
+      "nome": "Abdominal com roda",
+      "aliases": [
+        "Ab wheel rollout",
+        "Roda abdominal"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal",
+        "transverso_do_abdomen"
+      ],
+      "musculos_secundarios": [
+        "obliquos",
+        "latissimo_do_dorso",
+        "deltoide_anterior"
+      ],
+      "equipamentos": [
+        "roda_abdominal",
+        "colchonete"
+      ],
+      "padrao_movimento": "anti_extensao",
+      "nivel": "avancado",
+      "execucao": [
+        "Ajoelhe-se sobre um colchonete e segure a roda abdominal com as duas mãos.",
+        "Contraia o abdômen e mantenha a pelve controlada.",
+        "Role a roda lentamente para a frente, estendendo os braços sem deixar a lombar arquear.",
+        "Avance somente até a distância em que consiga manter o tronco estável.",
+        "Puxe a roda de volta usando o controle do tronco e dos ombros."
+      ],
+      "respiracao": {
+        "extensao": "Inspire de forma controlada enquanto avança.",
+        "retorno": "Expire ao retornar."
+      },
+      "erros_comuns": [
+        "Arquear a lombar durante a extensão.",
+        "Avançar além da capacidade de controle.",
+        "Puxar o movimento apenas com os braços.",
+        "Retornar com impulso."
+      ],
+      "cuidados": [
+        "Comece com uma amplitude curta e os joelhos apoiados.",
+        "Evite o exercício se não conseguir manter a lombar estável.",
+        "Interrompa se houver dor lombar ou nos ombros."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        5,
+        12
+      ],
+      "variacoes": [
+        "prancha_abdominal"
+      ],
+      "imagens_execucao": [
+        "Ab_Roller/0.jpg",
+        "Ab_Roller/1.jpg"
+      ]
+    },
+    {
+      "id": "abdominal_v_up",
+      "nome": "Abdominal V-up",
+      "aliases": [
+        "Canivete abdominal",
+        "V-up"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "flexores_do_quadril",
+        "obliquos"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "flexao_simultanea_de_tronco_e_quadril",
+      "nivel": "avancado",
+      "execucao": [
+        "Deite-se de costas com os braços estendidos acima da cabeça e as pernas estendidas.",
+        "Contraia o abdômen e eleve simultaneamente o tronco e as pernas.",
+        "Aproxime as mãos dos pés, formando um V com o corpo, sem puxar o pescoço.",
+        "Desça lentamente até retornar à posição inicial.",
+        "Mantenha o movimento controlado e evite usar impulso."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar tronco e pernas.",
+        "descida": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Usar balanço para subir.",
+        "Deixar as pernas caírem na descida.",
+        "Forçar o pescoço.",
+        "Arquear excessivamente a lombar."
+      ],
+      "cuidados": [
+        "Comece com a versão alternada ou com joelhos flexionados se necessário.",
+        "Reduza a amplitude se perder o controle lombar."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        12
+      ],
+      "variacoes": [
+        "abdominal_crunch",
+        "elevacao_de_pernas_deitado"
+      ],
+      "imagens_execucao": [
+        "Jackknife_Sit-Up/0.jpg",
+        "Jackknife_Sit-Up/1.jpg"
+      ]
+    },
+    {
+      "id": "abdominal_mountain_climber",
+      "nome": "Mountain climber",
+      "aliases": [
+        "Escalador",
+        "Corrida na prancha"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "reto_abdominal",
+        "transverso_do_abdomen"
+      ],
+      "musculos_secundarios": [
+        "obliquos",
+        "flexores_do_quadril",
+        "deltoides",
+        "quadriceps"
+      ],
+      "equipamentos": [
+        "peso_corporal"
+      ],
+      "padrao_movimento": "estabilizacao_do_tronco_com_flexao_alternada_de_quadril",
+      "nivel": "intermediario",
+      "execucao": [
+        "Comece em posição de prancha alta, com as mãos abaixo dos ombros.",
+        "Mantenha o tronco alinhado e contraia o abdômen.",
+        "Leve um joelho em direção ao peito sem elevar excessivamente o quadril.",
+        "Retorne o pé à posição inicial e alterne as pernas.",
+        "Mantenha um ritmo compatível com o controle da postura."
+      ],
+      "respiracao": {
+        "execucao": "Respire continuamente durante as alternâncias, evitando prender o ar."
+      },
+      "erros_comuns": [
+        "Elevar demais o quadril.",
+        "Deixar a lombar afundar.",
+        "Deslocar as mãos para a frente dos ombros.",
+        "Aumentar a velocidade e perder a técnica."
+      ],
+      "cuidados": [
+        "Comece lentamente antes de aumentar o ritmo.",
+        "Use uma superfície antiderrapante.",
+        "Adapte o exercício se houver desconforto nos punhos."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        20,
+        40
+      ],
+      "unidade_repeticoes": "total",
+      "variacoes": [
+        "prancha_abdominal"
+      ],
+      "imagens_execucao": [
+        "Mountain_Climbers/0.jpg",
+        "Mountain_Climbers/1.jpg"
+      ]
+    },
+    {
+      "id": "dead_bug",
+      "nome": "Dead bug",
+      "aliases": [
+        "Inseto morto",
+        "Dead bug abdominal"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "transverso_do_abdomen",
+        "reto_abdominal"
+      ],
+      "musculos_secundarios": [
+        "obliquos",
+        "flexores_do_quadril"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "anti_extensao_com_movimento_contralateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de costas e eleve os braços em direção ao teto.",
+        "Flexione quadris e joelhos aproximadamente a 90 graus.",
+        "Mantenha o abdômen contraído e a região lombar estável.",
+        "Estenda lentamente um braço para trás e a perna oposta para a frente.",
+        "Retorne ao centro e alterne os lados sem perder o controle do tronco."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao estender braço e perna.",
+        "retorno": "Inspire ao retornar à posição inicial."
+      },
+      "erros_comuns": [
+        "Arquear a lombar.",
+        "Estender a perna além da amplitude controlável.",
+        "Executar rapidamente.",
+        "Prender a respiração."
+      ],
+      "cuidados": [
+        "Comece movimentando apenas uma perna ou um braço por vez.",
+        "Mantenha a amplitude reduzida se a lombar perder estabilidade."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_lado",
+      "variacoes": [
+        "prancha_abdominal"
+      ],
+      "imagens_execucao": [
+        "Dead_Bug/0.jpg",
+        "Dead_Bug/1.jpg"
+      ]
+    },
+    {
+      "id": "pallof_press",
+      "nome": "Pallof press",
+      "aliases": [
+        "Press anti-rotação na polia"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "obliquo_externo",
+        "obliquo_interno",
+        "transverso_do_abdomen"
+      ],
+      "musculos_secundarios": [
+        "reto_abdominal",
+        "gluteos",
+        "estabilizadores_da_coluna"
+      ],
+      "equipamentos": [
+        "polia",
+        "elastico_de_resistencia"
+      ],
+      "padrao_movimento": "anti_rotacao",
+      "nivel": "intermediario",
+      "execucao": [
+        "Prenda um cabo ou elástico na altura do peito e fique de lado em relação ao ponto de fixação.",
+        "Segure a alça com as duas mãos junto ao centro do peito.",
+        "Afaste-se até sentir uma resistência moderada e posicione os pés de forma estável.",
+        "Estenda os braços à frente sem permitir que o tronco gire em direção à resistência.",
+        "Retorne as mãos ao peito e complete as repetições antes de trocar de lado."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao estender os braços.",
+        "retorno": "Inspire ao retornar."
+      },
+      "erros_comuns": [
+        "Girar o tronco durante a extensão.",
+        "Usar carga excessiva.",
+        "Inclinar o corpo para compensar.",
+        "Posicionar os pés de forma instável."
+      ],
+      "cuidados": [
+        "Ajuste a resistência para conseguir manter o tronco imóvel.",
+        "Confira a fixação do cabo ou elástico antes de iniciar."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "unidade_repeticoes": "por_lado",
+      "variacoes": [
+        "prancha_lateral",
+        "prancha_abdominal"
+      ],
+      "imagens_execucao": [
+        "Pallof_Press/0.jpg",
+        "Pallof_Press/1.jpg"
+      ]
+    },
+    {
+      "id": "abdominal_rotacao_russa",
+      "nome": "Rotação russa",
+      "aliases": [
+        "Russian twist"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "obliquo_externo",
+        "obliquo_interno"
+      ],
+      "musculos_secundarios": [
+        "reto_abdominal",
+        "flexores_do_quadril"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "anilha_opcional",
+        "halter_opcional"
+      ],
+      "padrao_movimento": "rotacao_de_tronco",
+      "nivel": "intermediario",
+      "execucao": [
+        "Sente-se no colchonete com os joelhos flexionados e os pés apoiados no chão.",
+        "Incline levemente o tronco mantendo a coluna em posição confortável.",
+        "Junte as mãos ou segure uma carga leve à frente do corpo.",
+        "Gire o tronco de maneira controlada para um lado e depois para o outro.",
+        "Evite movimentar apenas os braços ou realizar rotações bruscas."
+      ],
+      "respiracao": {
+        "execucao": "Respire de forma contínua, expirando durante o esforço de rotação."
+      },
+      "erros_comuns": [
+        "Arredondar excessivamente a coluna.",
+        "Usar carga elevada antes de dominar a técnica.",
+        "Girar bruscamente a lombar.",
+        "Balançar os braços sem movimentar o tronco."
+      ],
+      "cuidados": [
+        "Use uma amplitude confortável.",
+        "Mantenha os pés apoiados para facilitar o controle.",
+        "Evite o exercício se a rotação provocar dor lombar."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "unidade_repeticoes": "total",
+      "variacoes": [
+        "abdominal_obliquo",
+        "pallof_press"
+      ],
+      "imagens_execucao": [
+        "Russian_Twist/0.jpg",
+        "Russian_Twist/1.jpg"
+      ]
+    },
+    {
+      "id": "abdominal_prancha_com_toque_ombro",
+      "nome": "Prancha alta com toque no ombro",
+      "aliases": [
+        "Plank shoulder taps"
+      ],
+      "grupo_principal": "abdomen",
+      "musculos_primarios": [
+        "transverso_do_abdomen",
+        "reto_abdominal",
+        "obliquos"
+      ],
+      "musculos_secundarios": [
+        "deltoides",
+        "triceps",
+        "gluteos"
+      ],
+      "equipamentos": [
+        "peso_corporal",
+        "colchonete_opcional"
+      ],
+      "padrao_movimento": "anti_rotacao_em_apoio",
+      "nivel": "intermediario",
+      "execucao": [
+        "Comece em posição de prancha alta, com as mãos abaixo dos ombros e os pés afastados para estabilidade.",
+        "Contraia o abdômen e mantenha a pelve alinhada.",
+        "Retire uma mão do chão e toque o ombro oposto.",
+        "Apoie a mão novamente e repita com o outro braço.",
+        "Evite balançar os quadris durante as alternâncias."
+      ],
+      "respiracao": {
+        "execucao": "Respire continuamente durante os toques, sem prender o ar."
+      },
+      "erros_comuns": [
+        "Girar excessivamente a pelve.",
+        "Deixar a lombar afundar.",
+        "Colocar as mãos muito à frente dos ombros.",
+        "Aumentar a velocidade e perder o equilíbrio."
+      ],
+      "cuidados": [
+        "Afaste mais os pés para facilitar a estabilidade.",
+        "Faça o exercício em uma superfície firme.",
+        "Adapte a posição se houver desconforto nos punhos."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "unidade_repeticoes": "total",
+      "variacoes": [
+        "prancha_abdominal",
+        "dead_bug"
+      ],
+      "imagens_execucao": []
+    }
+  ],
+  "observacao_imagens": "As imagens associadas são referências do catálogo visual do FOCO para movimentos correspondentes. Exercícios sem correspondência visual específica permanecem sem imagem."
+}
