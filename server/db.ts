@@ -277,14 +277,23 @@ class FocoDatabase {
     return `${SUPABASE_URL}/rest/v1/${SUPABASE_STATE_TABLE}${query}`;
   }
 
+  private remoteApiHeaders(extra: Record<string, string> = {}): Record<string, string> {
+    const headers: Record<string, string> = {
+      apikey: SUPABASE_SERVICE_KEY,
+      ...extra,
+    };
+    // New Supabase secret keys (sb_secret_...) are opaque API keys, not JWTs.
+    // Legacy service_role keys are JWTs and also require the Bearer header.
+    if (!SUPABASE_SERVICE_KEY.startsWith('sb_secret_')) {
+      headers.Authorization = `Bearer ${SUPABASE_SERVICE_KEY}`;
+    }
+    return headers;
+  }
+
   private async readRemoteSnapshot(): Promise<DatabaseSchema | null> {
     const response = await fetch(this.remoteEndpoint('?key=eq.global&select=payload'), {
       method: 'GET',
-      headers: {
-        apikey: SUPABASE_SERVICE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-        Accept: 'application/json',
-      },
+      headers: this.remoteApiHeaders({ Accept: 'application/json' }),
     });
     if (!response.ok) {
       const detail = (await response.text()).slice(0, 500);
@@ -299,12 +308,10 @@ class FocoDatabase {
   private async writeRemoteSnapshot(snapshot: DatabaseSchema): Promise<void> {
     const response = await fetch(this.remoteEndpoint('?on_conflict=key'), {
       method: 'POST',
-      headers: {
-        apikey: SUPABASE_SERVICE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+      headers: this.remoteApiHeaders({
         'Content-Type': 'application/json',
         Prefer: 'resolution=merge-duplicates,return=minimal',
-      },
+      }),
       body: JSON.stringify({
         key: 'global',
         payload: snapshot,
