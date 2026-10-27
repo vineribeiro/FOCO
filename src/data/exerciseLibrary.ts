@@ -218,7 +218,7 @@ const HIPERTROFIA_ALLOWED_EXERCISES = new Set([
   'Smith Machine Squat', 'Leg Press', 'Leg Extension', 'Lying Leg Curls', 'Seated Leg Curl',
   'Romanian Deadlift', 'Barbell Hip Thrust', 'Standing Calf Raises', 'Dumbbell Shoulder Press',
   'Seated Dumbbell Press', 'Dumbbell Front Raise', 'Dumbbell Lateral Raise', 'Cable Lateral Raise',
-  'Crunches', 'Air Bike', '3/4 Sit-Up', 'Alternate Heel Touchers', 'Wrist Curls',
+  'Crunches', 'Wrist Curls',
   'Barbell Full Squat', 'Standing Leg Curl', 'Triceps Pushdown'
 ]);
 
