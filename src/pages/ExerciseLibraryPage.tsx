@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  ArrowUpRight, Check, CheckCircle2, ChevronDown, Dumbbell, Filter,
+  ArrowUpRight, CheckCircle2, ChevronDown, Dumbbell, Filter,
   LoaderCircle, Plus, Search, X
 } from 'lucide-react';
 import { api } from '../services/api';
@@ -31,15 +31,19 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
 
   useEffect(() => {
     let active = true;
-    Promise.all([loadExerciseCatalog(), api.getWorkouts()])
-      .then(([exercises, workoutPlans]) => {
+    Promise.allSettled([loadExerciseCatalog(), api.getWorkouts()])
+      .then(([exerciseResult, plansResult]) => {
         if (!active) return;
-        setCatalog(exercises);
-        setPlans(workoutPlans);
-      })
-      .catch((error: unknown) => {
-        if (!active) return;
-        setLoadError(error instanceof Error ? error.message : 'Não foi possível carregar a biblioteca.');
+        if (exerciseResult.status === 'fulfilled') {
+          setCatalog(exerciseResult.value);
+        } else {
+          setLoadError(exerciseResult.reason instanceof Error ? exerciseResult.reason.message : 'Não foi possível carregar a biblioteca.');
+        }
+        if (plansResult.status === 'fulfilled') {
+          setPlans(plansResult.value);
+        } else {
+          setActionMessage({ type: 'error', text: 'Não foi possível carregar suas fichas. Tente atualizar a página antes de adicionar exercícios.' });
+        }
       })
       .finally(() => { if (active) setIsLoading(false); });
     return () => { active = false; };
