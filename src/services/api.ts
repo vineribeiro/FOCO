@@ -563,8 +563,11 @@ export const api = {
       const plan = db.workouts.find((item) => item.id === planId);
       if (!plan) throw new Error('Ficha não encontrada.');
       const existing = plan.exercises || [];
-      if (existing.some((item) => item.exercise_name.toLowerCase() === exercise.exercise_name.toLowerCase())) {
-        throw new Error('Esse exercício já está na ficha selecionada.');
+      if (existing.some((item) =>
+        item.exercise_name.toLowerCase() === exercise.exercise_name.toLowerCase() &&
+        (item.training_day || null) === (exercise.training_day || null)
+      )) {
+        throw new Error('Esse exercício já está na ficha selecionada para esse dia.');
       }
       const saved = { ...exercise, id: 'exercise_' + Date.now(), plan_id: planId, position: existing.length } as WorkoutExercise;
       plan.exercises = [...existing, saved];
