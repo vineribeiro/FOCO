@@ -1,0 +1,1245 @@
+{
+  "arquivo": "09_gluteos.json",
+  "projeto": "FOCO",
+  "versao_schema": "1.0.0",
+  "grupo_muscular": "gluteos",
+  "descricao": "Biblioteca de exercícios para desenvolvimento de força, hipertrofia e resistência dos glúteos, incluindo extensão, abdução e estabilização do quadril.",
+  "observacao_imagens": "Imagens associadas somente quando existe uma referência compatível com o movimento no catálogo atual; exercícios sem referência específica ficam sem imagem.",
+  "exercicios": [
+    {
+      "id": "gluteos_hip_thrust_barra",
+      "nome": "Hip thrust com barra",
+      "aliases": [
+        "elevação pélvica com barra",
+        "barbell hip thrust"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "quadríceps",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas",
+        "banco",
+        "protetor de barra"
+      ],
+      "padrao_movimento": "extensão de quadril",
+      "nivel": "intermediario",
+      "execucao": [
+        "Apoie a parte inferior das escápulas em um banco firme e estável.",
+        "Posicione a barra sobre a região do quadril usando um protetor apropriado.",
+        "Mantenha os pés apoiados no chão, aproximadamente na largura do quadril.",
+        "Ative o abdômen e mantenha o queixo levemente recolhido.",
+        "Empurre o chão com os pés e eleve a pelve.",
+        "Suba até alinhar tronco e coxas, contraindo os glúteos sem arquear excessivamente a lombar.",
+        "Desça a pelve de forma controlada até a posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a extensão do quadril.",
+        "descida": "Inspire durante o retorno controlado."
+      },
+      "erros_comuns": [
+        "Hiperestender a lombar no topo.",
+        "Posicionar o banco de forma instável.",
+        "Deixar os joelhos colapsarem para dentro.",
+        "Utilizar carga excessiva e reduzir a amplitude.",
+        "Posicionar os pés muito longe ou muito perto sem considerar a mecânica individual."
+      ],
+      "cuidados": [
+        "Verifique a estabilidade do banco e o posicionamento da barra.",
+        "Use proteção adequada entre a barra e o quadril.",
+        "Comece com carga leve e aumente gradualmente.",
+        "Interrompa se houver dor aguda."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "gluteos_hip_thrust_maquina",
+        "gluteos_ponte_gluteos",
+        "gluteos_hip_thrust_unilateral"
+      ],
+      "imagens_execucao": [
+        "Barbell_Hip_Thrust/0.jpg",
+        "Barbell_Hip_Thrust/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_hip_thrust_maquina",
+      "nome": "Hip thrust na máquina",
+      "aliases": [
+        "máquina de elevação pélvica",
+        "machine hip thrust"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "quadríceps",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "máquina hip thrust"
+      ],
+      "padrao_movimento": "extensão de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste o banco e o apoio da máquina conforme sua estatura.",
+        "Posicione a região do quadril sob a almofada de resistência.",
+        "Mantenha os pés apoiados e os joelhos alinhados com os pés.",
+        "Ative o abdômen e empurre com os pés para elevar o quadril.",
+        "Suba até alinhar tronco e coxas, sem arquear a lombar.",
+        "Contraia os glúteos brevemente no topo e retorne lentamente."
+      ],
+      "respiracao": {
+        "subida": "Expire durante o esforço.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Ajustar incorretamente a máquina.",
+        "Elevar o quadril usando principalmente a lombar.",
+        "Usar impulso.",
+        "Deixar os joelhos desviarem para dentro."
+      ],
+      "cuidados": [
+        "Confira o travamento e os ajustes da máquina.",
+        "Mantenha a almofada posicionada de maneira confortável.",
+        "Não force uma amplitude que provoque dor."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "gluteos_hip_thrust_barra",
+        "gluteos_ponte_gluteos"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "gluteos_ponte_gluteos",
+      "nome": "Ponte de glúteos",
+      "aliases": [
+        "glute bridge",
+        "ponte de quadril"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "colchonete"
+      ],
+      "padrao_movimento": "extensão de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de costas em um colchonete.",
+        "Flexione os joelhos e apoie os pés no chão, na largura do quadril.",
+        "Ative o abdômen e mantenha a coluna em posição confortável.",
+        "Empurre o chão com os pés e eleve a pelve.",
+        "Suba até alinhar tronco e coxas, sem arquear excessivamente a lombar.",
+        "Contraia os glúteos e retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a pelve.",
+        "descida": "Inspire durante a descida controlada."
+      },
+      "erros_comuns": [
+        "Arquear excessivamente a lombar.",
+        "Empurrar principalmente com as pontas dos pés.",
+        "Deixar os joelhos colapsarem para dentro.",
+        "Utilizar balanço para elevar a pelve."
+      ],
+      "cuidados": [
+        "Ajuste a distância dos pés para encontrar uma posição confortável.",
+        "Não force a extensão do quadril.",
+        "Pode ser utilizada como exercício inicial ou regressão do hip thrust."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        20
+      ],
+      "variacoes": [
+        "gluteos_ponte_unilateral",
+        "gluteos_hip_thrust_barra"
+      ],
+      "imagens_execucao": [
+        "Barbell_Glute_Bridge/0.jpg",
+        "Barbell_Glute_Bridge/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_hip_thrust_unilateral",
+      "nome": "Hip thrust unilateral",
+      "aliases": [
+        "single-leg hip thrust",
+        "elevação pélvica unilateral"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "quadríceps",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "banco",
+        "peso corporal",
+        "halter"
+      ],
+      "padrao_movimento": "extensão de quadril unilateral",
+      "nivel": "avancado",
+      "execucao": [
+        "Apoie a parte inferior das escápulas em um banco firme.",
+        "Apoie um pé no chão e mantenha a outra perna elevada.",
+        "Estabilize a pelve e ative o abdômen.",
+        "Empurre o chão com o pé apoiado e eleve o quadril.",
+        "Mantenha a pelve nivelada e evite arquear a lombar.",
+        "Retorne lentamente à posição inicial e complete o outro lado."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a elevação.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Girar a pelve.",
+        "Usar impulso.",
+        "Arquear a lombar no topo.",
+        "Acrescentar carga antes de dominar a estabilidade."
+      ],
+      "cuidados": [
+        "Domine primeiro a versão bilateral.",
+        "Verifique a estabilidade do banco.",
+        "Comece sem carga e reduza a amplitude se perder o controle."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_hip_thrust_barra",
+        "gluteos_ponte_unilateral"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "gluteos_abducao_maquina",
+      "nome": "Abdução de quadril na máquina",
+      "aliases": [
+        "cadeira abdutora",
+        "hip abduction machine"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "musculos_secundarios": [
+        "tensor da fáscia lata",
+        "glúteo máximo"
+      ],
+      "equipamentos": [
+        "máquina abdutora"
+      ],
+      "padrao_movimento": "abdução de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Sente-se na máquina e ajuste o encosto para manter o tronco estável.",
+        "Posicione as pernas contra os apoios laterais.",
+        "Segure os apoios da máquina.",
+        "Afaste as pernas contra a resistência sem realizar movimentos bruscos.",
+        "Faça uma breve contração dos músculos laterais do quadril.",
+        "Retorne lentamente sem deixar as placas baterem e mantenha o quadril apoiado."
+      ],
+      "respiracao": {
+        "abducao": "Expire ao afastar as pernas.",
+        "retorno": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Usar impulso do tronco.",
+        "Selecionar carga excessiva.",
+        "Realizar movimentos muito rápidos.",
+        "Deixar a carga bater no retorno."
+      ],
+      "cuidados": [
+        "Ajuste a máquina para evitar pressão desconfortável nas articulações.",
+        "Utilize uma amplitude confortável.",
+        "Não é necessário inclinar excessivamente o tronco."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "variacoes": [
+        "gluteos_abducao_cabo",
+        "gluteos_abducao_deitado"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "gluteos_abducao_cabo",
+      "nome": "Abdução de quadril no cabo",
+      "aliases": [
+        "cable hip abduction",
+        "abdução em pé na polia"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "musculos_secundarios": [
+        "tensor da fáscia lata",
+        "glúteo máximo"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "tornozeleira para cabo"
+      ],
+      "padrao_movimento": "abdução de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma tornozeleira à polia baixa e coloque-a na perna de trabalho.",
+        "Fique de lado para a máquina e segure um apoio estável.",
+        "Mantenha o tronco ereto e a pelve nivelada.",
+        "Afaste a perna lateralmente sem inclinar o tronco.",
+        "Evite girar o pé ou a pelve para aumentar a amplitude.",
+        "Retorne lentamente e complete as repetições do outro lado."
+      ],
+      "respiracao": {
+        "abducao": "Expire ao afastar a perna.",
+        "retorno": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Inclinar o tronco.",
+        "Girar a pelve.",
+        "Usar carga excessiva.",
+        "Deixar o cabo puxar a perna de volta rapidamente."
+      ],
+      "cuidados": [
+        "Confira a fixação da tornozeleira.",
+        "Use carga baixa o suficiente para manter o equilíbrio.",
+        "Evite amplitudes desconfortáveis para o quadril."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_abducao_maquina",
+        "gluteos_abducao_deitado"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "gluteos_abducao_deitado",
+      "nome": "Abdução de quadril deitado de lado",
+      "aliases": [
+        "side-lying hip abduction",
+        "elevação lateral da perna"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "musculos_secundarios": [
+        "tensor da fáscia lata"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "colchonete",
+        "mini band"
+      ],
+      "padrao_movimento": "abdução de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Deite-se de lado sobre um colchonete e alinhe o tronco.",
+        "Flexione a perna de baixo se isso ajudar na estabilidade.",
+        "Estenda a perna de cima e mantenha a pelve empilhada.",
+        "Eleve a perna superior lateralmente de forma controlada.",
+        "Evite girar a ponta do pé para cima ou elevar a perna além da amplitude confortável.",
+        "Desça lentamente e repita do outro lado."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a perna.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Girar a pelve para trás.",
+        "Balançar a perna.",
+        "Elevar a perna excessivamente.",
+        "Inclinar o tronco para compensar."
+      ],
+      "cuidados": [
+        "Comece sem resistência externa.",
+        "Adicione mini band apenas quando mantiver a técnica.",
+        "Interrompa se houver dor no quadril."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_abducao_cabo",
+        "gluteos_abducao_maquina"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "gluteos_coice_cabo",
+      "nome": "Coice de glúteo no cabo",
+      "aliases": [
+        "cable kickback",
+        "extensão de quadril na polia"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "glúteo médio",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "tornozeleira para cabo"
+      ],
+      "padrao_movimento": "extensão de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda a tornozeleira à polia baixa e fixe-a no tornozelo.",
+        "Fique de frente para a máquina e segure os apoios.",
+        "Mantenha o tronco firme e a pelve nivelada.",
+        "Leve a perna para trás por meio da extensão do quadril.",
+        "Evite arquear a lombar ou girar a pelve.",
+        "Retorne lentamente e repita com a outra perna."
+      ],
+      "respiracao": {
+        "extensao": "Expire ao levar a perna para trás.",
+        "retorno": "Inspire durante a volta controlada."
+      },
+      "erros_comuns": [
+        "Arquear a lombar.",
+        "Usar balanço do tronco.",
+        "Girar a pelve.",
+        "Utilizar carga excessiva."
+      ],
+      "cuidados": [
+        "Confira a fixação da tornozeleira.",
+        "Use amplitude sem compensações.",
+        "Mantenha apoio firme."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_coice_maquina",
+        "gluteos_extensao_quadril_quatro_apoios"
+      ],
+      "imagens_execucao": [
+        "One-Legged_Cable_Kickback/0.jpg",
+        "One-Legged_Cable_Kickback/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_coice_maquina",
+      "nome": "Coice de glúteo na máquina",
+      "aliases": [
+        "glute kickback machine",
+        "máquina de extensão de quadril"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "glúteo médio"
+      ],
+      "equipamentos": [
+        "máquina de coice de glúteo"
+      ],
+      "padrao_movimento": "extensão de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Ajuste os apoios conforme as instruções da máquina.",
+        "Posicione o tronco e a pelve de maneira estável.",
+        "Coloque o pé ou a perna de trabalho no apoio de resistência.",
+        "Estenda o quadril, levando a perna para trás sem arquear a lombar.",
+        "Contraia os glúteos e retorne lentamente.",
+        "Complete as repetições e troque de perna quando aplicável."
+      ],
+      "respiracao": {
+        "extensao": "Expire durante o coice.",
+        "retorno": "Inspire durante a volta."
+      },
+      "erros_comuns": [
+        "Perder o contato com os apoios.",
+        "Arquear a lombar.",
+        "Usar impulso.",
+        "Escolher carga excessiva."
+      ],
+      "cuidados": [
+        "Siga as instruções da máquina.",
+        "Ajuste os apoios à sua estatura.",
+        "Evite amplitude dolorosa."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_coice_cabo",
+        "gluteos_extensao_quadril_quatro_apoios"
+      ],
+      "imagens_execucao": [
+        "Glute_Kickback/0.jpg",
+        "Glute_Kickback/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_extensao_quadril_quatro_apoios",
+      "nome": "Extensão de quadril em quatro apoios",
+      "aliases": [
+        "donkey kick",
+        "quadruped hip extension"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "colchonete",
+        "mini band"
+      ],
+      "padrao_movimento": "extensão de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em quatro apoios, com as mãos abaixo dos ombros e os joelhos abaixo dos quadris.",
+        "Mantenha a coluna estável e o abdômen ativado.",
+        "Com o joelho flexionado, eleve uma coxa para trás e para cima.",
+        "Evite girar a pelve ou arquear a lombar.",
+        "Pare na amplitude que consegue controlar.",
+        "Retorne lentamente e troque de lado."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a coxa.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Arquear a lombar.",
+        "Girar a pelve.",
+        "Elevar a perna usando impulso.",
+        "Deslocar excessivamente o peso para os braços."
+      ],
+      "cuidados": [
+        "Use colchonete para os joelhos.",
+        "Comece sem resistência externa.",
+        "Adicione mini band só se preservar a técnica."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_coice_cabo",
+        "gluteos_coice_maquina"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "gluteos_agachamento_sumo",
+      "nome": "Agachamento sumô",
+      "aliases": [
+        "sumo squat",
+        "agachamento com base ampla"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo",
+        "quadríceps",
+        "adutores"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "halter",
+        "kettlebell"
+      ],
+      "padrao_movimento": "agachamento",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione os pés em base mais ampla que os ombros, com as pontas ligeiramente para fora.",
+        "Segure um halter ou kettlebell à frente do corpo se desejar carga.",
+        "Mantenha o tronco firme e os pés apoiados.",
+        "Flexione quadris e joelhos, descendo entre as pernas.",
+        "Mantenha os joelhos acompanhando a direção dos pés.",
+        "Desça até uma amplitude controlada e retorne empurrando o chão."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida.",
+        "subida": "Expire durante a subida."
+      },
+      "erros_comuns": [
+        "Abrir os pés além da mobilidade disponível.",
+        "Deixar os joelhos colapsarem para dentro.",
+        "Arredondar excessivamente o tronco.",
+        "Usar carga que prejudique o equilíbrio."
+      ],
+      "cuidados": [
+        "Ajuste a abertura dos pés à sua anatomia.",
+        "Não force a rotação externa dos quadris.",
+        "O exercício também recruta quadríceps e adutores; não isola os glúteos."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "gluteos_agachamento_goblet",
+        "gluteos_agachamento_bulgaro"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "gluteos_agachamento_bulgaro",
+      "nome": "Agachamento búlgaro",
+      "aliases": [
+        "bulgarian split squat",
+        "afundo búlgaro"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo",
+        "quadríceps"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "banco",
+        "peso corporal",
+        "halteres"
+      ],
+      "padrao_movimento": "agachamento unilateral",
+      "nivel": "intermediario",
+      "execucao": [
+        "Apoie o peito do pé de trás em um banco firme.",
+        "Posicione o pé da frente a uma distância que permita descer com estabilidade.",
+        "Mantenha o tronco firme; incline-o ligeiramente se isso for confortável.",
+        "Flexione os joelhos e desça de maneira controlada.",
+        "Mantenha o joelho da frente acompanhando a direção dos dedos.",
+        "Empurre o chão com o pé da frente e retorne; depois troque de lado."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida.",
+        "subida": "Expire durante a subida."
+      },
+      "erros_comuns": [
+        "Usar banco alto demais.",
+        "Perder o equilíbrio.",
+        "Deixar o joelho da frente colapsar para dentro.",
+        "Aumentar carga antes de dominar a execução."
+      ],
+      "cuidados": [
+        "Comece sem carga e use apoio se necessário.",
+        "Verifique a estabilidade do banco.",
+        "Adapte a amplitude ao conforto articular."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_agachamento_sumо",
+        "gluteos_step_up"
+      ],
+      "imagens_execucao": [
+        "Split_Squat_with_Dumbbells/0.jpg",
+        "Split_Squat_with_Dumbbells/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_step_up",
+      "nome": "Subida no banco",
+      "aliases": [
+        "step-up",
+        "subida na caixa"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo",
+        "quadríceps"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "panturrilhas",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "caixa estável",
+        "banco",
+        "halteres"
+      ],
+      "padrao_movimento": "subida unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione-se diante de uma caixa ou banco firme e antiderrapante.",
+        "Coloque um pé completamente sobre a superfície.",
+        "Mantenha o tronco estável e transfira o peso para a perna apoiada.",
+        "Empurre a superfície com essa perna até subir.",
+        "Evite impulsionar excessivamente com o pé que permanece no chão.",
+        "Desça de forma controlada e repita com a outra perna."
+      ],
+      "respiracao": {
+        "subida": "Expire durante a subida.",
+        "descida": "Inspire durante a descida."
+      },
+      "erros_comuns": [
+        "Usar caixa alta demais.",
+        "Impulsionar com a perna de baixo.",
+        "Deixar o joelho desviar para dentro.",
+        "Descer abruptamente."
+      ],
+      "cuidados": [
+        "Verifique a estabilidade da superfície.",
+        "Comece com altura baixa e sem carga.",
+        "Não use altura que comprometa o equilíbrio."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_agachamento_bulgaro",
+        "gluteos_avanco_reverso"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Step_Ups/0.jpg",
+        "Dumbbell_Step_Ups/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_avanco_reverso",
+      "nome": "Avanço reverso",
+      "aliases": [
+        "reverse lunge",
+        "afundo para trás"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo",
+        "quadríceps"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "adutores",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "halteres"
+      ],
+      "padrao_movimento": "afundo unilateral",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé com os pés na largura do quadril.",
+        "Dê um passo para trás com uma perna.",
+        "Flexione os joelhos e desça mantendo o tronco firme.",
+        "Mantenha o pé da frente apoiado e o joelho alinhado com os dedos.",
+        "Empurre o chão com o pé da frente para retornar.",
+        "Alterne as pernas ou conclua as repetições de um lado antes de trocar."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante o passo para trás e a descida.",
+        "subida": "Expire ao retornar."
+      },
+      "erros_comuns": [
+        "Dar passo muito curto.",
+        "Perder o equilíbrio.",
+        "Deixar o joelho da frente colapsar.",
+        "Impulsionar excessivamente com a perna de trás."
+      ],
+      "cuidados": [
+        "Comece sem carga.",
+        "Use apoio estável se necessário.",
+        "Adapte a amplitude se houver desconforto."
+      ],
+      "series_sugeridas": [
+        2,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_agachamento_bulgaro",
+        "gluteos_step_up"
+      ],
+      "imagens_execucao": [
+        "Dumbbell_Rear_Lunge/0.jpg",
+        "Dumbbell_Rear_Lunge/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_abducao_mini_band",
+      "nome": "Abdução de quadril com mini band",
+      "aliases": [
+        "banded hip abduction",
+        "abdução com faixa elástica"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "musculos_secundarios": [
+        "tensor da fáscia lata",
+        "glúteo máximo"
+      ],
+      "equipamentos": [
+        "mini band"
+      ],
+      "padrao_movimento": "abdução de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Posicione uma mini band acima dos joelhos ou ao redor dos tornozelos, conforme a variação.",
+        "Fique em pé com os pés na largura do quadril e joelhos levemente flexionados.",
+        "Mantenha o tronco firme e a pelve estável.",
+        "Afaste uma perna lateralmente contra a resistência.",
+        "Evite inclinar o tronco ou girar a pelve.",
+        "Retorne lentamente e complete o outro lado, mantendo a tensão da faixa."
+      ],
+      "respiracao": {
+        "abducao": "Expire durante o afastamento.",
+        "retorno": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Usar faixa com resistência inadequada.",
+        "Inclinar o tronco.",
+        "Girar a pelve.",
+        "Deixar a faixa perder tensão abruptamente."
+      ],
+      "cuidados": [
+        "Verifique se a faixa está íntegra.",
+        "Comece com resistência leve.",
+        "Mantenha o equilíbrio e use apoio se necessário."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_abducao_cabo",
+        "gluteos_abducao_maquina"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "gluteos_agachamento_goblet",
+      "nome": "Agachamento goblet",
+      "aliases": [
+        "goblet squat",
+        "agachamento com halter no peito"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo",
+        "quadríceps"
+      ],
+      "musculos_secundarios": [
+        "adutores",
+        "isquiotibiais",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "halter",
+        "kettlebell"
+      ],
+      "padrao_movimento": "agachamento",
+      "nivel": "iniciante",
+      "execucao": [
+        "Segure um halter ou kettlebell junto ao peito.",
+        "Afaste os pés em posição confortável e mantenha o tronco firme.",
+        "Flexione quadris e joelhos para descer controladamente.",
+        "Mantenha os pés apoiados e os joelhos acompanhando a direção dos pés.",
+        "Desça até uma amplitude confortável.",
+        "Empurre o chão e retorne à posição inicial."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a descida.",
+        "subida": "Expire durante a subida."
+      },
+      "erros_comuns": [
+        "Afastar o peso do corpo.",
+        "Perder a estabilidade do tronco.",
+        "Levantar os calcanhares sem controle.",
+        "Usar carga excessiva."
+      ],
+      "cuidados": [
+        "Comece com carga leve.",
+        "Adapte a abertura dos pés à sua anatomia.",
+        "O exercício trabalha também quadríceps e adutores."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        15
+      ],
+      "variacoes": [
+        "gluteos_agachamento_sumо",
+        "gluteos_agachamento_bulgaro"
+      ],
+      "imagens_execucao": [
+        "Goblet_Squat/0.jpg",
+        "Goblet_Squat/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_abducao_em_pe",
+      "nome": "Abdução de quadril em pé sem carga",
+      "aliases": [
+        "standing hip abduction",
+        "elevação lateral da perna em pé"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo médio",
+        "glúteo mínimo"
+      ],
+      "musculos_secundarios": [
+        "tensor da fáscia lata",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "peso corporal",
+        "apoio estável"
+      ],
+      "padrao_movimento": "abdução de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Fique em pé ao lado de um apoio firme.",
+        "Segure o apoio para manter o equilíbrio.",
+        "Mantenha o tronco ereto e a pelve nivelada.",
+        "Eleve uma perna lateralmente sem inclinar o corpo.",
+        "Evite girar o pé ou a pelve para aumentar a amplitude.",
+        "Retorne lentamente e repita do outro lado."
+      ],
+      "respiracao": {
+        "subida": "Expire ao elevar a perna.",
+        "descida": "Inspire durante o retorno."
+      },
+      "erros_comuns": [
+        "Inclinar o tronco para o lado.",
+        "Girar a pelve.",
+        "Balançar a perna.",
+        "Elevar além da amplitude controlada."
+      ],
+      "cuidados": [
+        "Use apoio firme.",
+        "Comece com amplitude pequena, se necessário.",
+        "Pode servir para aprendizagem motora ou como exercício acessório."
+      ],
+      "series_sugeridas": [
+        2,
+        3
+      ],
+      "repeticoes_sugeridas": [
+        12,
+        20
+      ],
+      "unidade_repeticoes": "por_perna",
+      "variacoes": [
+        "gluteos_abducao_cabo",
+        "gluteos_abducao_mini_band"
+      ],
+      "imagens_execucao": []
+    },
+    {
+      "id": "gluteos_levantamento_romeno",
+      "nome": "Levantamento terra romeno",
+      "aliases": [
+        "romanian deadlift",
+        "RDL"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo",
+        "isquiotibiais"
+      ],
+      "musculos_secundarios": [
+        "eretores da coluna",
+        "adutores",
+        "antebraços"
+      ],
+      "equipamentos": [
+        "barra",
+        "anilhas"
+      ],
+      "padrao_movimento": "dobradiça de quadril",
+      "nivel": "intermediario",
+      "execucao": [
+        "Fique em pé segurando a barra à frente das coxas.",
+        "Mantenha os pés na largura do quadril e os joelhos levemente flexionados.",
+        "Ative o abdômen e mantenha a coluna estável.",
+        "Leve os quadris para trás enquanto a barra desce próxima às pernas.",
+        "Desça até sentir alongamento nos glúteos e posteriores sem perder o controle.",
+        "Empurre os quadris para frente e retorne sem hiperestender a lombar."
+      ],
+      "respiracao": {
+        "descida": "Inspire e estabilize o tronco.",
+        "subida": "Expire durante a extensão do quadril."
+      },
+      "erros_comuns": [
+        "Arredondar as costas.",
+        "Afastar a barra das pernas.",
+        "Flexionar excessivamente os joelhos.",
+        "Descer além da mobilidade."
+      ],
+      "cuidados": [
+        "Aprenda a dobradiça de quadril com carga leve.",
+        "Não é necessário levar a barra ao chão.",
+        "Interrompa se houver dor."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        6,
+        12
+      ],
+      "variacoes": [
+        "gluteos_levantamento_romeno_halteres",
+        "gluteos_pull_through"
+      ],
+      "imagens_execucao": [
+        "Romanian_Deadlift/0.jpg",
+        "Romanian_Deadlift/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_levantamento_romeno_halteres",
+      "nome": "Levantamento terra romeno com halteres",
+      "aliases": [
+        "dumbbell Romanian deadlift",
+        "RDL com halteres"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo",
+        "isquiotibiais"
+      ],
+      "musculos_secundarios": [
+        "eretores da coluna",
+        "adutores",
+        "antebraços"
+      ],
+      "equipamentos": [
+        "halteres"
+      ],
+      "padrao_movimento": "dobradiça de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Segure um halter em cada mão à frente das coxas.",
+        "Mantenha os pés na largura do quadril e os joelhos levemente flexionados.",
+        "Leve os quadris para trás, descendo os halteres próximos às pernas.",
+        "Mantenha a coluna estável e o abdômen ativado.",
+        "Desça até a amplitude que consiga controlar.",
+        "Empurre os quadris para frente e retorne à posição inicial."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a dobradiça de quadril.",
+        "subida": "Expire durante o retorno."
+      },
+      "erros_comuns": [
+        "Transformar o movimento em agachamento.",
+        "Arredondar a coluna.",
+        "Afastar os halteres das pernas.",
+        "Usar carga excessiva."
+      ],
+      "cuidados": [
+        "Comece com halteres leves.",
+        "Respeite sua mobilidade.",
+        "Interrompa se houver dor."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        8,
+        12
+      ],
+      "variacoes": [
+        "gluteos_levantamento_romeno",
+        "gluteos_pull_through"
+      ],
+      "imagens_execucao": [
+        "Stiff-Legged_Dumbbell_Deadlift/0.jpg",
+        "Stiff-Legged_Dumbbell_Deadlift/1.jpg"
+      ]
+    },
+    {
+      "id": "gluteos_pull_through",
+      "nome": "Pull-through no cabo",
+      "aliases": [
+        "cable pull-through",
+        "puxada entre as pernas"
+      ],
+      "grupo_principal": "gluteos",
+      "musculos_primarios": [
+        "glúteo máximo"
+      ],
+      "musculos_secundarios": [
+        "isquiotibiais",
+        "eretores da coluna",
+        "abdômen"
+      ],
+      "equipamentos": [
+        "polia baixa",
+        "corda"
+      ],
+      "padrao_movimento": "dobradiça de quadril",
+      "nivel": "iniciante",
+      "execucao": [
+        "Prenda uma corda à polia baixa e fique de costas para a máquina.",
+        "Passe a corda entre as pernas e segure as extremidades.",
+        "Afaste-se o suficiente para manter a tensão no cabo.",
+        "Leve os quadris para trás, mantendo os joelhos levemente flexionados.",
+        "Mantenha a coluna estável e a corda próxima ao corpo.",
+        "Empurre os quadris para frente e contraia os glúteos para ficar em pé.",
+        "Retorne lentamente à posição inicial."
+      ],
+      "respiracao": {
+        "descida": "Inspire durante a dobradiça de quadril.",
+        "subida": "Expire durante a extensão."
+      },
+      "erros_comuns": [
+        "Transformar o movimento em agachamento.",
+        "Puxar com os braços.",
+        "Arredondar a coluna.",
+        "Inclinar o tronco para trás no final."
+      ],
+      "cuidados": [
+        "Confira o acessório e o cabo antes de iniciar.",
+        "Mantenha distância suficiente da polia.",
+        "Use carga que permita controle completo."
+      ],
+      "series_sugeridas": [
+        3,
+        4
+      ],
+      "repeticoes_sugeridas": [
+        10,
+        15
+      ],
+      "variacoes": [
+        "gluteos_levantamento_romeno",
+        "gluteos_levantamento_romeno_halteres"
+      ],
+      "imagens_execucao": [
+        "Pull_Through/0.jpg",
+        "Pull_Through/1.jpg"
+      ]
+    }
+  ]
+}
