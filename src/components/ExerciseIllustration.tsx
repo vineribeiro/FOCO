@@ -36,7 +36,7 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
     setAtlasUrl(null);
     setLegacyPaths(supplied);
     findApprovedAnatomyAtlas(exerciseId, exerciseName)
-      .then(url => { if (active) setAtlasUrl(url); })
+      .then(url => { if (active) { setAtlasUrl(url); if (url) setPhase(0); } })
       .catch(() => { if (active) setAtlasUrl(null); });
     if (!supplied.length) {
       loadExerciseCatalog().then(catalog => {
