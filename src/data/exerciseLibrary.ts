@@ -223,7 +223,7 @@ export function findMatchingExercise(
     }
   }
 
-  const tokens = exerciseName.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').split(/[^a-z0-9]+/).filter((token) => token.length > 2);
+  const tokens = exerciseName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[^a-z0-9]+/).filter((token) => token.length > 2);
   const candidates = catalog.map((exercise) => {
     const name = normalizeExerciseText(exercise.name);
     const matchCount = tokens.filter((token) => name.includes(token)).length;
