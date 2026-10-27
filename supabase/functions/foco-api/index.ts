@@ -315,7 +315,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     const trainingDay = input.training_day == null || input.training_day === "" ? null : text(input.training_day, 20);
     if (trainingDay && !validDays.includes(trainingDay)) throw new ApiError(400, "Dia da semana inválido.");
     let duplicateQuery = db.from("workout_exercises").select("id").eq("plan_id", planId).ilike("exercise_name", exerciseName);
-    duplicateQuery = trainingDay ? duplicateQuery.eq("training_day", trainingDay) : duplicateQuery.is("training_day", null);
+    if (trainingDay) duplicateQuery = duplicateQuery.or(`training_day.eq.${trainingDay},training_day.is.null`);
     const duplicate = await duplicateQuery.limit(1).maybeSingle();
     fail(duplicate.error, "Não foi possível verificar os exercícios existentes.");
     if (duplicate.data) throw new ApiError(409, "Esse exercício já está na ficha selecionada.");
@@ -351,6 +351,24 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     const plan = await db.from("workout_plans").select("id").eq("id", planId).eq("user_id", user.id).maybeSingle();
     fail(plan.error, "Não foi possível verificar a ficha.");
     if (!plan.data) throw new ApiError(404, "Ficha não encontrada.");
+
+    const existingExercise = await db.from("workout_exercises")
+      .select("id,exercise_name")
+      .eq("id", exerciseId)
+      .eq("plan_id", planId)
+      .maybeSingle();
+    fail(existingExercise.error, "Não foi possível carregar o exercício.");
+    if (!existingExercise.data) throw new ApiError(404, "Exercício não encontrado nesta ficha.");
+
+    let duplicateQuery = db.from("workout_exercises")
+      .select("id")
+      .eq("plan_id", planId)
+      .ilike("exercise_name", existingExercise.data.exercise_name);
+    duplicateQuery = duplicateQuery.neq("id", exerciseId);
+    if (trainingDay) duplicateQuery = duplicateQuery.or(`training_day.eq.${trainingDay},training_day.is.null`);
+    const duplicate = await duplicateQuery.limit(1).maybeSingle();
+    fail(duplicate.error, "Não foi possível verificar os exercícios existentes.");
+    if (duplicate.data) throw new ApiError(409, "Já existe um exercício com esse nome neste dia.");
 
     const updated = await db.from("workout_exercises")
       .update({ training_day: trainingDay })
