@@ -14,6 +14,10 @@ import {
 const TOKEN_KEY = 'foco_auth_token';
 const LOCAL_DB_KEY = 'foco_local_db_v1';
 
+// Public publishable key: safe in the browser. Gemini and Supabase secret keys stay server-side.
+const SUPABASE_FUNCTION_URL = 'https://buoefcnkpdrhevzbakze.supabase.co/functions/v1/foco-api';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_0oYKLSj8WxQMV2A9TtNGew_zduFYPVI';
+
 export function getStoredToken(): string | null {
   try {
     return localStorage.getItem(TOKEN_KEY);
@@ -266,12 +270,13 @@ function saveLocalDb(db: LocalDatabase): void {
 }
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const apiBaseUrl = isStaticHost ? 'https://foco-api-xuj2.onrender.com' : '';
+  const apiBaseUrl = SUPABASE_FUNCTION_URL;
   const requestUrl = endpoint.startsWith('http') ? endpoint : apiBaseUrl + endpoint;
 
   const token = getStoredToken();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
+    'apikey': SUPABASE_PUBLISHABLE_KEY,
     ...(options.headers as Record<string, string>),
   };
 
@@ -305,7 +310,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
       throw new Error('O servidor do FOCO demorou para responder. Tente novamente; sua sessão foi preservada.');
     }
     if (err instanceof TypeError) {
-      throw new Error('Não foi possível conectar ao servidor do FOCO. Verifique a internet ou tente novamente em instantes.');
+      throw new Error('Não foi possível conectar à API do FOCO no Supabase. Verifique a internet ou tente novamente em instantes.');
     }
     throw err;
   } finally {
