@@ -8,6 +8,7 @@ class SoundEngine {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = false;
   private volume: number = 0.7;
+  private hapticsEnabled = true;
 
   constructor() {
     // Carregar preferência salva no localStorage
@@ -16,6 +17,7 @@ class SoundEngine {
       if (savedMute !== null) {
         this.isMuted = savedMute === 'true';
       }
+      this.hapticsEnabled = localStorage.getItem('foco_haptics_enabled') !== 'false';
     } catch {
       // Ignore localStorage exceptions in restricted contexts
     }
@@ -59,11 +61,20 @@ class SoundEngine {
     return this.isMuted;
   }
 
+  public getHapticsEnabled(): boolean {
+    return this.hapticsEnabled;
+  }
+
+  public setHapticsEnabled(enabled: boolean): void {
+    this.hapticsEnabled = enabled;
+    try { localStorage.setItem('foco_haptics_enabled', String(enabled)); } catch { /* storage unavailable */ }
+  }
+
   /**
-   * Dispara feedback de vibração tátil nativa em dispositivos móveis.
+   * Feedback de vibração, independente do áudio e opcional.
    */
   public vibrate(pattern: number | number[] = [80, 50, 100]): void {
-    if (typeof window !== 'undefined' && 'navigator' in window && 'vibrate' in navigator) {
+    if (this.hapticsEnabled && typeof window !== 'undefined' && 'navigator' in window && 'vibrate' in navigator) {
       try {
         navigator.vibrate(pattern);
       } catch {
