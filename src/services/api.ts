@@ -392,11 +392,20 @@ export const api = {
     });
   },
 
-  async resetPassword(payload: { new_password: string }) {
-    return await request<{ message: string }>('/api/auth/reset-password', {
+  async resetPassword(payload: { new_password: string; access_token: string }) {
+    if (!payload.access_token) throw new Error('O link de recuperação não é válido. Solicite um novo e-mail.');
+    const response = await fetch(SUPABASE_FUNCTION_URL + '/api/auth/reset-password', {
       method: 'POST',
-      body: JSON.stringify(payload),
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        Authorization: 'Bearer ' + payload.access_token,
+      },
+      body: JSON.stringify({ new_password: payload.new_password }),
     });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'Não foi possível atualizar a senha.');
+    return data as { message: string };
   },
 
   async deleteAccount() {
