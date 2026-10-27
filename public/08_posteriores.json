@@ -742,10 +742,7 @@
       "variacoes": [
         "posteriores_hiperextensao_45"
       ],
-      "imagens_execucao": [
-        "Weighted_Ball_Hyperextension/0.jpg",
-        "Weighted_Ball_Hyperextension/1.jpg"
-      ]
+      "imagens_execucao": []
     },
     {
       "id": "posteriores_nordic_curl",
@@ -1041,10 +1038,7 @@
         "posteriores_hip_thrust",
         "posteriores_ponte_unilateral"
       ],
-      "imagens_execucao": [
-        "Barbell_Glute_Bridge/0.jpg",
-        "Barbell_Glute_Bridge/1.jpg"
-      ]
+      "imagens_execucao": []
     },
     {
       "id": "posteriores_hip_thrust",
