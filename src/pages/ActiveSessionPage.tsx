@@ -22,6 +22,7 @@ import {
   Zap,
   Timer,
   ChevronRight,
+  Dumbbell,
 } from 'lucide-react';
 
 interface ActiveSessionProps {
