@@ -285,8 +285,8 @@ export function getExerciseImageUrl(imagePath: string): string {
 
 function mapDedicatedExercise(
   exercise: DedicatedExerciseSource,
-  sourceGroup: 'Peito' | 'Costas' | 'Ombros' | 'Bíceps' | 'Tríceps' | 'Antebraços',
-  primaryGroup: 'chest' | 'back' | 'shoulders' | 'biceps' | 'triceps' | 'forearms',
+  sourceGroup: 'Peito' | 'Costas' | 'Ombros' | 'Bíceps' | 'Tríceps' | 'Antebraços' | 'Quadríceps',
+  primaryGroup: 'chest' | 'back' | 'shoulders' | 'biceps' | 'triceps' | 'forearms' | 'quadriceps',
 ): ExerciseCatalogItem {
   const equipmentText = exercise.equipamentos.join(', ').toLocaleLowerCase('pt-BR');
   const equipment = !exercise.equipamentos.length ? 'body only'
@@ -300,7 +300,7 @@ function mapDedicatedExercise(
                   : 'body only';
 
   const muscleText = [...exercise.musculos_primarios, ...exercise.musculos_secundarios]
-    .join(' ').toLocaleLowerCase('pt-BR');
+    .join(' ').replace(/_/g, ' ').toLocaleLowerCase('pt-BR');
   const secondaryMuscles = Array.from(new Set([
     ...(/bíceps|biceps|braquial|braquiorradial/i.test(muscleText) ? ['biceps'] : []),
     ...(/tríceps|triceps/i.test(muscleText) ? ['triceps'] : []),
@@ -325,6 +325,7 @@ function mapDedicatedExercise(
     if (primaryGroup === 'biceps') return muscle !== 'biceps';
     if (primaryGroup === 'triceps') return muscle !== 'triceps';
     if (primaryGroup === 'forearms') return muscle !== 'forearms';
+    if (primaryGroup === 'quadriceps') return muscle !== 'quadriceps';
     return muscle !== 'shoulders';
   });
 
@@ -333,7 +334,8 @@ function mapDedicatedExercise(
       : primaryGroup === 'shoulders' ? ['shoulders']
         : primaryGroup === 'biceps' ? ['biceps']
           : primaryGroup === 'triceps' ? ['triceps']
-            : ['forearms'];
+            : primaryGroup === 'forearms' ? ['forearms']
+              : ['quadriceps'];
 
   return {
     id: exercise.id,
@@ -375,7 +377,7 @@ export async function loadExerciseCatalog(): Promise<ExerciseCatalogItem[]> {
   if (!catalogPromise) {
     catalogPromise = (async () => {
       const baseUrl = import.meta.env.BASE_URL;
-      const [catalogResponse, chestResponse, backResponse, shoulderResponse, bicepsResponse, tricepsResponse, forearmsResponse] = await Promise.all([
+      const [catalogResponse, chestResponse, backResponse, shoulderResponse, bicepsResponse, tricepsResponse, forearmsResponse, quadricepsResponse] = await Promise.all([
         fetch(`${baseUrl}exercise-catalog.json`),
         fetch(`${baseUrl}01_peito.json`),
         fetch(`${baseUrl}02_costas.json`),
@@ -383,24 +385,27 @@ export async function loadExerciseCatalog(): Promise<ExerciseCatalogItem[]> {
         fetch(`${baseUrl}04_biceps.json`),
         fetch(`${baseUrl}05_triceps.json`),
         fetch(`${baseUrl}06_antebracos.json`),
+        fetch(`${baseUrl}07_quadriceps.json`),
       ]);
       if (!catalogResponse.ok) throw new Error('Não foi possível carregar a biblioteca de exercícios.');
-      if (!chestResponse.ok || !backResponse.ok || !shoulderResponse.ok || !bicepsResponse.ok || !tricepsResponse.ok || !forearmsResponse.ok) {
+      if (!chestResponse.ok || !backResponse.ok || !shoulderResponse.ok || !bicepsResponse.ok || !tricepsResponse.ok || !forearmsResponse.ok || !quadricepsResponse.ok) {
         throw new Error('Não foi possível carregar uma das bibliotecas musculares do FOCO.');
       }
       const raw = await catalogResponse.json();
-      const [chestData, backData, shoulderData, bicepsData, tricepsData, forearmsData] = await Promise.all([
+      const [chestData, backData, shoulderData, bicepsData, tricepsData, forearmsData, quadricepsData] = await Promise.all([
         chestResponse.json() as Promise<DedicatedExerciseFile>,
         backResponse.json() as Promise<DedicatedExerciseFile>,
         shoulderResponse.json() as Promise<DedicatedExerciseFile>,
         bicepsResponse.json() as Promise<DedicatedExerciseFile>,
         tricepsResponse.json() as Promise<DedicatedExerciseFile>,
         forearmsResponse.json() as Promise<DedicatedExerciseFile>,
+        quadricepsResponse.json() as Promise<DedicatedExerciseFile>,
       ]);
       if (!Array.isArray(raw)) throw new Error('O catálogo de exercícios está em um formato inválido.');
       for (const [name, dataset] of [
         ['peito', chestData], ['costas', backData], ['ombros', shoulderData],
         ['bíceps', bicepsData], ['tríceps', tricepsData], ['antebraços', forearmsData],
+        ['quadríceps', quadricepsData],
       ] as const) {
         if (!Array.isArray(dataset.exercicios)) throw new Error(`O catálogo de ${name} está em um formato inválido.`);
       }
@@ -412,10 +417,12 @@ export async function loadExerciseCatalog(): Promise<ExerciseCatalogItem[]> {
         ...bicepsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Bíceps', 'biceps')),
         ...tricepsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Tríceps', 'triceps')),
         ...forearmsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Antebraços', 'forearms')),
+        ...quadricepsData.exercicios.map((exercise) => mapDedicatedExercise(exercise, 'Quadríceps', 'quadriceps')),
       ];
       const allSourceExercises = [
         ...chestData.exercicios, ...backData.exercicios, ...shoulderData.exercicios,
         ...bicepsData.exercicios, ...tricepsData.exercicios, ...forearmsData.exercicios,
+        ...quadricepsData.exercicios,
       ];
       const dedicatedImageIds = new Set(
         allSourceExercises.flatMap((exercise) => exercise.imagens_execucao.map((image) => image.split('/')[0]))
