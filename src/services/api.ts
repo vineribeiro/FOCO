@@ -326,7 +326,8 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const timeoutId = controller ? window.setTimeout(() => controller.abort(), 12_000) : null;
 
   try {
-    const token = endpoint === '/api/auth/refresh' ? null : await getValidAccessToken();
+    const publicAuthEndpoint = ['/api/auth/register', '/api/auth/login', '/api/auth/forgot-password', '/api/auth/refresh'].includes(endpoint);
+    const token = publicAuthEndpoint ? null : await getValidAccessToken();
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'apikey': SUPABASE_PUBLISHABLE_KEY,
