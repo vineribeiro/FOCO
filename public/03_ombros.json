@@ -394,10 +394,7 @@
         "Elevação frontal no cabo",
         "Elevação frontal unilateral"
       ],
-      "imagens_execucao": [
-        "Dumbbell_Front_Raise/0.jpg",
-        "Dumbbell_Front_Raise/1.jpg"
-      ]
+      "imagens_execucao": []
     },
     {
       "id": "ombros_elevacao_frontal_cabo",
