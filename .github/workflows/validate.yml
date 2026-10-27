@@ -28,3 +28,7 @@ jobs:
         run: npm run build
       - name: Exercise image catalog audit
         run: npm run audit:images
+      - name: Anatomy atlas manifest integrity
+        run: npm run audit:anatomy
+      - name: Validate prompts for entire exercise catalog (non-billable)
+        run: npm run anatomy:generate -- --max-images=254
