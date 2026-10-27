@@ -58,7 +58,18 @@ function fail(error: any, fallback: string): void { if (error) throw new ApiErro
 async function profile(db: SupabaseClient, user: User): Promise<any> {
   const r = await db.from("profiles").select("*").eq("id", user.id).maybeSingle();
   fail(r.error, "Não foi possível carregar o perfil.");
-  return r.data || { id: user.id, full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "Atleta", experience_level: "iniciante" };
+  if (r.data) return r.data;
+  const metadata = user.user_metadata || {};
+  const seed = await db.from("profiles").upsert({
+    id: user.id,
+    full_name: text(metadata.full_name || user.email?.split("@")[0] || "Atleta", 160),
+    experience_level: ["iniciante", "intermediario", "avancado"].includes(metadata.experience_level) ? metadata.experience_level : "iniciante",
+    current_weight_kg: Number(metadata.current_weight_kg) || null,
+    height_cm: Number(metadata.height_cm) || null,
+    updated_at: new Date().toISOString(),
+  }).select("*").single();
+  fail(seed.error, "Não foi possível inicializar o perfil.");
+  return seed.data;
 }
 async function saveProfile(db: SupabaseClient, user: User, input: any): Promise<any> {
   const current = await profile(db, user);
@@ -170,7 +181,12 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     const name = text(b.full_name, 160);
     if (!email.includes("@") || password.length < 6 || !name) throw new ApiError(400, "Informe nome, e-mail válido e senha de pelo menos 6 caracteres.");
     const a = client();
-    const r = await a.auth.signUp({ email, password, options: { data: { full_name: name } } });
+    const r = await a.auth.signUp({ email, password, options: { data: {
+      full_name: name,
+      experience_level: ["iniciante", "intermediario", "avancado"].includes(b.experience_level) ? b.experience_level : "iniciante",
+      current_weight_kg: Number(b.current_weight_kg) || 75,
+      height_cm: Number(b.height_cm) || 175,
+    } } });
     if (r.error) throw new ApiError(400, r.error.message);
     if (!r.data.user) throw new ApiError(400, "Não foi possível criar a conta.");
     if (!r.data.session?.access_token) throw new ApiError(409, "Conta criada. Confirme o e-mail enviado pelo Supabase e depois entre no FOCO.");
