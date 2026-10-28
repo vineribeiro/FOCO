@@ -208,3 +208,97 @@ dialog::backdrop { background: rgba(0,0,0,.88); backdrop-filter: blur(8px); }
 .foco-page-title { font-size: clamp(1.75rem, 2.4vw, 2.5rem); font-weight: 800; line-height: 1.16; letter-spacing: -.025em; }
 .foco-section-title { font-size: 1.125rem; font-weight: 700; line-height: 1.35; }
 .foco-muted { color: var(--foco-muted); font-size: .875rem; line-height: 1.6; }
+
+
+/* ================================================================
+   FOCO V4 — UI pixels & responsive rhythm derived from mockups
+   Keep structural styles separate from existing functional pages.
+   ================================================================ */
+:root {
+  --foco-v4-bg: #080808;
+  --foco-v4-panel: #171717;
+  --foco-v4-raised: #222;
+  --foco-v4-stroke: rgba(255,255,255,.12);
+  --foco-v4-fg: #f6f6f6;
+  --foco-v4-subdued: #aaa;
+  --foco-v4-radius: 24px;
+}
+.foco-v4-shell {
+  background: radial-gradient(ellipse 85% 22% at 50% -10%,rgba(255,255,255,.045),transparent 65%),var(--foco-v4-bg);
+  min-height:100dvh;
+}
+.foco-v4-page { width:100%; max-width:1100px; margin-inline:auto; color:var(--foco-v4-fg); padding-bottom:56px; }
+.foco-v4-heading {font-size:clamp(1.85rem,4.6vw,2.65rem);font-weight:800;letter-spacing:-.055em;line-height:1.13;}
+.foco-v4-section-title {font-size:clamp(1.05rem,2.3vw,1.28rem);font-weight:800;letter-spacing:-.035em;line-height:1.3;}
+.foco-v4-eyebrow {font-size:10px;text-transform:uppercase;letter-spacing:.19em;font-weight:750;color:#9c9c9c;}
+.foco-v4-muted {font-size:13px;line-height:1.55;color:#a5a5a5;}
+.foco-v4-panel {
+  border:1px solid var(--foco-v4-stroke);
+  border-radius:var(--foco-v4-radius);
+  background:linear-gradient(145deg,#202020 0%,#171717 40%,#111 100%);
+  box-shadow:0 14px 32px rgba(0,0,0,.27),inset 0 1px rgba(255,255,255,.035);
+}
+.foco-v4-panel-soft {border:1px solid rgba(255,255,255,.09);border-radius:20px;background:linear-gradient(155deg,#1c1c1c,#131313);}
+.foco-v4-action {
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;
+  min-height:50px;padding:12px 19px;border-radius:999px;
+  background:#f4f4f4;color:#0a0a0a;font-weight:800;font-size:13px;
+  box-shadow:inset 0 1px rgba(255,255,255,.7);transition:background .16s,transform .16s;
+}
+.foco-v4-action:hover {background:#fff;}
+.foco-v4-action:active {transform:scale(.985);}
+.foco-v4-secondary {
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:10px 16px;
+  border:1px solid rgba(255,255,255,.23);border-radius:16px;background:rgba(255,255,255,.045);
+  font-weight:700;color:#eee;transition:background .16s,border-color .16s;
+}
+.foco-v4-secondary:hover {background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.4);}
+.foco-v4-cta-arrow {display:grid;place-items:center;width:36px;height:36px;flex-shrink:0;border-radius:999px;background:#101010;color:#fff;}
+.foco-v4-stat-value {font-size:clamp(23px,4vw,30px);line-height:1.15;font-weight:800;letter-spacing:-.06em;font-variant-numeric:tabular-nums;}
+.foco-v4-stat {min-width:0;min-height:128px;border:1px solid rgba(255,255,255,.1);border-radius:21px;background:linear-gradient(135deg,#222,#151515 72%);padding:17px;}
+.foco-v4-stat-icon {display:inline-flex;width:25px;height:25px;align-items:center;justify-content:center;color:#aaa;margin-bottom:10px;}
+.foco-v4-hero {
+  min-height:235px;isolation:isolate;position:relative;display:flex;align-items:flex-end;
+  border-radius:25px;overflow:hidden;border:1px solid rgba(255,255,255,.13);
+  background:#191919;box-shadow:0 18px 35px rgba(0,0,0,.28);
+}
+.foco-v4-hero:before {
+  content:"";position:absolute;z-index:-2;inset:0;
+  background-image:url("https://images.unsplash.com/photo-1704223523449-ca3925f89dcc?auto=format&fit=crop&w=1000&q=82");
+  background-position:center 38%;background-size:cover;filter:grayscale(1) brightness(.69) contrast(1.12);
+}
+.foco-v4-hero:after {
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(90deg,rgba(8,8,8,.96) 0%,rgba(8,8,8,.83) 39%,rgba(8,8,8,.27) 76%,rgba(8,8,8,.20)),linear-gradient(0deg,rgba(0,0,0,.53),transparent 70%);
+}
+.foco-v4-hero-content {padding:24px 22px 25px;max-width:570px;}
+.foco-v4-info-row {display:flex;align-items:center;gap:11px;min-width:0;}
+.foco-v4-info-icon {display:grid;place-items:center;flex-shrink:0;width:50px;height:50px;border-radius:15px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.06);}
+.foco-v4-week {display:grid;grid-template-columns:repeat(7,minmax(92px,1fr));gap:7px;overflow-x:auto;padding-bottom:3px;scrollbar-width:thin;}
+.foco-v4-day {border:1px solid rgba(255,255,255,.09);border-radius:13px;background:linear-gradient(#222,#151515);min-height:121px;padding:12px 9px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:9px;}
+.foco-v4-day-today {border-color:rgba(255,255,255,.75);background:linear-gradient(#272727,#1a1a1a);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);}
+.foco-v4-quick {min-height:87px;width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:1px solid rgba(255,255,255,.11);border-radius:18px;background:linear-gradient(155deg,#222,#151515);padding:15px;transition:border-color .16s,transform .16s;}
+.foco-v4-quick:hover {border-color:rgba(255,255,255,.35);transform:translateY(-1px);}
+.foco-v4-tabbar {position:fixed;bottom:0;inset-inline:0;z-index:40;border-top:1px solid rgba(255,255,255,.12);background:rgba(10,10,10,.96);backdrop-filter:blur(22px);padding-bottom:env(safe-area-inset-bottom,0px);}
+.foco-v4-tab {display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;min-height:70px;min-width:0;font-size:11px;color:#999;font-weight:550;position:relative;}
+.foco-v4-tab-active {color:#fff;font-weight:800;}
+.foco-v4-tab-active:after {content:"";position:absolute;bottom:1px;width:5px;height:5px;border-radius:100%;background:#fff;}
+.foco-v4-tab svg {height:22px;width:22px;}
+.foco-v4-field {min-height:48px;border:1px solid rgba(255,255,255,.15);border-radius:14px;background:#0d0d0d;color:white;padding:12px 14px;font-size:14px;outline:none;}
+.foco-v4-field:focus-visible {border-color:rgba(255,255,255,.56);outline:2px solid rgba(255,255,255,.25);outline-offset:2px;}
+.foco-v4-label {display:block;margin-bottom:9px;font-size:11px;color:#bdbdbd;font-weight:750;}
+.foco-v4-progress-track {height:6px;background:#3c3c3c;border-radius:999px;overflow:hidden;}
+.foco-v4-progress-fill {height:100%;background:#f5f5f5;border-radius:999px;transition:width .2s ease;}
+.foco-v4-surface-photo {
+  background-image:linear-gradient(90deg,rgba(15,15,15,.93),rgba(15,15,15,.53)),url("https://images.unsplash.com/photo-1733517301178-312a6f694f2d?auto=format&fit=crop&w=1100&q=80");
+  background-position:center,right 40%;background-size:cover;filter:none;
+}
+.foco-v4-evaluation-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.foco-v4-data-tile {min-height:113px;border-radius:17px;border:1px solid rgba(255,255,255,.12);padding:14px;background:linear-gradient(140deg,#232323,#141414);}
+.foco-v4-data-tile strong {font-weight:800;font-size:24px;letter-spacing:-.05em;}
+.foco-v4-steps {counter-reset:foco-step;list-style:none;padding:0;margin:0;display:grid;gap:12px;}
+.foco-v4-steps>li {counter-increment:foco-step;display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;align-items:start;font-size:13px;line-height:1.6;color:#d0d0d0;}
+.foco-v4-steps>li:before {content:counter(foco-step);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#3a3a3a;color:white;font-weight:800;font-size:12px;}
+@media(min-width:640px) {.foco-v4-hero{min-height:280px}.foco-v4-hero-content{padding:32px}.foco-v4-evaluation-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+@media(max-width:420px) {.foco-v4-stat{padding:12px;min-height:117px}.foco-v4-stat-value{font-size:24px}.foco-v4-week{grid-template-columns:repeat(7,minmax(84px,1fr))}.foco-v4-hero-content{padding:20px 16px}.foco-v4-hero{min-height:242px}.foco-v4-quick{padding:12px;gap:9px}}
+@media(prefers-reduced-motion:reduce) {.foco-v4-action,.foco-v4-secondary,.foco-v4-quick,.foco-v4-progress-fill{transition:none}}
