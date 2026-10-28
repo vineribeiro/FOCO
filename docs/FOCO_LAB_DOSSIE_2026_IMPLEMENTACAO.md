@@ -2,7 +2,7 @@
 
 **Fonte primária:** `FOCO LAB | Ciência do Treinamento — Estudo Completo 2026`, edição de 28/10/2026, PDF de 16 páginas fornecido pelo responsável pelo FOCO. Identificador: `FOCO-LAB-DOSSIE-2026-10-28`.
 
-**Natureza:** síntese técnico-científica **narrativa**, não revisão sistemática original (p. 2). Artigos citados no PDF têm suas próprias limitações; o motor não considera a mera menção uma validação independente. O arquivo PDF foi usado como fonte de análise, não enviado para o prompt de cada aluno nem importado para o banco de dados.
+**Natureza:** síntese técnico-científica **narrativa**, não revisão sistemática original (p. 2). **Revisão técnica do dossiê: concluída, segundo informação do responsável pelo FOCO**, que relata ter analisado e corrigido o conteúdo em conjunto com um profissional de Educação Física. A identidade, o registro profissional, a data específica e o escopo documental da revisão ainda não constam deste repositório; portanto, não se apresenta isso como certificação ou parecer formal independente. Artigos citados no PDF têm suas próprias limitações; o motor não considera a mera menção uma validação independente. O PDF foi usado como fonte de análise, não enviado para o prompt de cada aluno nem importado para o banco de dados.
 
 **Arquitetura aplicada:** base de conhecimento versionada → instrução contextual → proposta Gemini → normalização e auditoria determinística → justificativa/aviso → revisão humana. Isso é *engenharia de conhecimento*, **não** fine-tuning nem treinamento dos pesos do Gemini.
 
@@ -47,6 +47,12 @@
 - `supabase/functions/foco-api/trainingScience.mjs`: injeta regras contextualizadas nas propostas e audita tempo, volume, cobertura e sessões.
 - `src/pages/NewWorkoutPage.tsx`: mostra referência do dossiê e estimativas das sessões.
 - `scripts/test-training-science.mjs`: testes regressivos e invariantes da integração.
+
+## Status da validação técnica
+
+- **Conteúdo do dossiê:** revisão colaborativa com profissional de Educação Física **informada como concluída pelo responsável**. Não tratar como pendência.
+- **Implementação do motor:** testes automatizados de regras e segurança existem; não equivalem à validação humana de todas as fichas possíveis.
+- **Fichas individuais geradas:** ainda dependem de avaliação do contexto e, nos casos aplicáveis, de revisão profissional; o aval ao material de referência não é um aval automático a cada treino.
 
 ## Limites e próximos incrementos
 
