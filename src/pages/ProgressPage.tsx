@@ -109,7 +109,6 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
   const volumeData = sessions
     .filter((s) => s.status === 'completed' && s.sets && s.sets.length > 0)
     .sort((a, b) => new Date(a.started_at).getTime() - new Date(b.started_at).getTime())
-    .slice(-10)
     .map((s) => {
       const totalTonnage = s.sets!.reduce((acc, cur) => acc + (cur.completed ? cur.load_kg * cur.repetitions : 0), 0);
       return {
@@ -122,7 +121,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
 
   const cutoff = period === 'all' ? 0 : Date.now() - Number(period) * 86400000;
   const visibleWeightData = weightData.filter(point => point.timestamp >= cutoff);
-  const visibleVolumeData = volumeData.filter(point => point.timestamp >= cutoff);
+  const visibleVolumeData = volumeData.filter(point => point.timestamp >= cutoff).slice(-20);
   const completedSessions = sessions.filter(s => s.status === 'completed');
   const weekStart = new Date();
   weekStart.setHours(0, 0, 0, 0);
@@ -169,15 +168,15 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
       {weightDelta !== null && !isLoading && <p className="text-xs text-neutral-400">Variação do peso manual no período: <strong className="text-white">{weightDelta > 0 ? '+' : ''}{weightDelta.toLocaleString('pt-BR', {maximumFractionDigits: 2})} kg</strong>. Compare medidas feitas em condições semelhantes.</p>}
 
       {actionMsg && (
-        <div
-          className={`p-3 rounded-xl text-xs flex items-center justify-between border ${
+        <div role={actionMsg.type === 'error' ? 'alert' : 'status'}
+          className={`p-3 rounded-xl text-sm flex items-center justify-between border ${
             actionMsg.type === 'success'
               ? 'bg-white/10 border-white/30 text-white'
               : 'bg-white/5 border-white/20 text-neutral-300'
           }`}
         >
           <span>{actionMsg.text}</span>
-          <button onClick={() => setActionMsg(null)} className="font-bold ml-2">✕</button>
+          <button type="button" onClick={() => setActionMsg(null)} aria-label="Fechar aviso" className="foco-touch ml-2 rounded-lg font-bold">✕</button>
         </div>
       )}
 
@@ -198,7 +197,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
           )}
         </div>
 
-        <div className="h-56 w-full">
+        <div className="h-56 min-w-0 w-full">
           {visibleWeightData.length >= 2 ? (
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={visibleWeightData}>
@@ -237,7 +236,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full flex items-center justify-center text-xs text-neutral-500 text-center">
+            <div className="h-full flex items-center justify-center rounded-xl border border-dashed border-white/10 px-4 text-center text-sm text-neutral-300">
               São necessários dois registros manuais de peso no período. As avaliações OKOK aparecem na seção acima.
             </div>
           )}
@@ -245,7 +244,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
       </div>
 
       {/* Training Tonnage per Session (Monochrome Bar) */}
-      <div className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3">
+      <div className="foco-v4-panel space-y-3 p-4 sm:p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-white" />
@@ -258,7 +257,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
           </span>
         </div>
 
-        <div className="h-56 w-full">
+        <div className="h-56 min-w-0 w-full">
           {visibleVolumeData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={visibleVolumeData}>
@@ -283,7 +282,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full flex items-center justify-center text-xs text-neutral-500 text-center">
+            <div className="h-full flex items-center justify-center rounded-xl border border-dashed border-white/10 px-4 text-center text-sm text-neutral-300">
               Nenhum treino com séries concluídas no período selecionado.
             </div>
           )}
@@ -294,23 +293,24 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
       {/* Record Measurement Form & List */}
       <form
         onSubmit={handleAddMeasurement}
-        className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3"
+        className="foco-v4-panel space-y-3 p-4 sm:p-5"
       >
         <div className="flex items-center gap-2 text-xs font-black text-white uppercase tracking-wider">
           <Plus className="w-4 h-4 text-white" />
           <span>Registrar medida manual</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
-            <label className="block text-[10px] text-neutral-400 mb-1">Tipo de Medida</label>
+            <label htmlFor="foco-measurement-kind" className="mb-2 block text-xs font-semibold text-neutral-300">Tipo de medida</label>
             <select
+              id="foco-measurement-kind"
               value={measurementType}
               onChange={(e) => {
                 setMeasurementType(e.target.value);
                 setMeasurementUnit(e.target.value === 'peso' ? 'kg' : 'cm');
               }}
-              className="foco-v4-field w-full"
+              className="foco-v4-field w-full !text-base sm:!text-sm"
             >
               <option value="peso">Peso (kg)</option>
               <option value="braco_direito">Braço Dir. (cm)</option>
@@ -323,9 +323,10 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
           </div>
 
           <div>
-            <label className="block text-[10px] text-neutral-400 mb-1">Valor</label>
+            <label htmlFor="foco-measurement-value" className="mb-2 block text-xs font-semibold text-neutral-300">Valor</label>
             <div className="flex gap-1.5">
               <input
+                id="foco-measurement-value"
                 type="number"
                 step="0.1"
                 required
@@ -335,7 +336,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                 min="0.1"
                 inputMode="decimal"
                 aria-label="Valor da medida"
-                className="foco-v4-field min-w-0 flex-1 font-mono tabular-nums"
+                className="foco-v4-field min-w-0 flex-1 font-mono tabular-nums !text-base"
               />
               <span className="px-2.5 py-2 rounded-xl bg-[#000000] border border-white/10 text-xs font-bold text-neutral-400 flex items-center">
                 {measurementUnit}
@@ -354,8 +355,8 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
       </form>
 
       {/* History Table */}
-      <div className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3">
-        <h3 className="text-xs font-black text-white uppercase tracking-wider">
+      <div className="foco-v4-panel space-y-3 p-4 sm:p-5">
+        <h3 className="text-sm font-extrabold text-white">
           Histórico de medidas manuais ({measurements.length})
         </h3>
 
@@ -365,7 +366,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
           ) : (
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="text-neutral-500 font-semibold border-b border-white/5 text-[10px]">
+                <tr className="border-b border-white/10 text-xs font-semibold text-neutral-300">
                   <th className="py-2 px-1">DATA</th>
                   <th className="py-2 px-1">TIPO</th>
                   <th className="py-2 px-1 font-mono">VALOR</th>
