@@ -302,3 +302,14 @@ dialog::backdrop { background: rgba(0,0,0,.88); backdrop-filter: blur(8px); }
 @media(min-width:640px) {.foco-v4-hero{min-height:280px}.foco-v4-hero-content{padding:32px}.foco-v4-evaluation-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
 @media(max-width:420px) {.foco-v4-stat{padding:12px;min-height:117px}.foco-v4-stat-value{font-size:24px}.foco-v4-week{grid-template-columns:repeat(7,minmax(84px,1fr))}.foco-v4-hero-content{padding:20px 16px}.foco-v4-hero{min-height:242px}.foco-v4-quick{padding:12px;gap:9px}}
 @media(prefers-reduced-motion:reduce) {.foco-v4-action,.foco-v4-secondary,.foco-v4-quick,.foco-v4-progress-fill{transition:none}}
+
+
+/* FOCO V4.1 — navegação tátil, contraste e leitura durante o treino */
+.foco-v4-stat {transition:border-color .18s ease,background .18s ease}
+button.foco-v4-stat:hover,button.foco-v4-stat:focus-visible {border-color:rgba(255,255,255,.42);background:linear-gradient(145deg,#303030,#181818 78%)}
+.foco-v4-day:focus-visible,.foco-v4-quick:focus-visible,.foco-v4-action:focus-visible {outline:2px solid #fff;outline-offset:3px}
+.foco-v4-day:active,.foco-v4-quick:active {transform:scale(.985)}
+.foco-v4-tab:focus-visible {outline:2px solid white;outline-offset:-3px;border-radius:8px}
+.foco-v4-tabbar {padding-bottom:max(env(safe-area-inset-bottom,0px),4px)}
+@media(max-width:374px){.foco-v4-stat-value{font-size:clamp(20px,6vw,26px)}.foco-v4-tab{font-size:10px}.foco-v4-heading{font-size:clamp(27px,8vw,35px)}}
+@media(prefers-reduced-motion:reduce){.foco-v4-stat,.foco-v4-day{transition:none}}
