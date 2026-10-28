@@ -114,7 +114,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
     <div className="foco-v4-page space-y-[17px] sm:space-y-6">
       <header className="pb-1">
         <h1 className="foco-v4-heading">{greeting}, <span className="font-extrabold">{firstName}</span></h1>
-        <p className="mt-2 text-[13px] text-neutral-400">Disciplina hoje, resultado sempre.</p>
+        <p className="mt-2 text-sm text-neutral-300">Disciplina hoje, resultado sempre.</p>
       </header>
 
       {planUnavailable && <div role="alert" className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-4">
@@ -176,23 +176,23 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
         <button type="button" onClick={() => setActiveTab('historico')} className="foco-v4-stat text-left">
           <BarChart3 className="foco-v4-stat-icon" aria-hidden="true" />
           <p className="foco-v4-stat-value">{sessionsUnavailable ? '—' : recentSessions.length}/{targetPerWeek || '—'}</p>
-          <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">Treinos na semana</p>
+          <p className="mt-1.5 text-xs leading-snug text-neutral-300">Treinos na semana</p>
           <div className="mt-3 flex gap-1">{Array.from({length: Math.min(targetPerWeek || 4, 6)},(_,i)=><span key={i} className={'h-1.5 min-w-0 flex-1 rounded-full ' + (!sessionsUnavailable && i<recentSessions.length?'bg-white':'bg-[#414141]')} />)}</div>
         </button>
         <button type="button" onClick={openAssessment} className="foco-v4-stat text-left">
           <ScanLine className="foco-v4-stat-icon" aria-hidden="true" />
           <p className="foco-v4-stat-value break-words">{displayWeight}</p>
-          <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">{weightMetric ? 'Avaliação atual' : 'Peso do perfil'}</p>
+          <p className="mt-1.5 text-xs leading-snug text-neutral-300">{weightMetric ? 'Avaliação atual' : 'Peso do perfil'}</p>
         </button>
         <button type="button" onClick={() => setActiveTab('progresso')} className="foco-v4-stat text-left">
           <TrendingUp className="foco-v4-stat-icon" aria-hidden="true" />
           <p className="foco-v4-stat-value">{sessionsUnavailable ? '—' : totalCompleted}</p>
-          <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">Sessões concluídas</p>
+          <p className="mt-1.5 text-xs leading-snug text-neutral-300">Sessões concluídas</p>
         </button>
         <button type="button" onClick={() => setActiveTab("historico")} className="foco-v4-stat text-left">
           <Clock3 className="foco-v4-stat-icon" aria-hidden="true" />
           <p className="foco-v4-stat-value">{sessionsUnavailable ? "—" : weeklyMinutes} <span className="text-sm tracking-normal">min</span></p>
-          <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">Tempo nesta semana</p>
+          <p className="mt-1.5 text-xs leading-snug text-neutral-300">Tempo nesta semana</p>
         </button>
       </div>
 
@@ -200,7 +200,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
         <section className="foco-v4-panel px-3.5 py-4 sm:p-5">
           <div className="mb-4 flex items-center justify-between gap-3 px-1">
             <div><h2 className="foco-v4-section-title">Seu plano</h2><p className="mt-1 text-xs text-neutral-400">Toque em um dia para abrir a sessão correspondente.</p></div>
-            <button type="button" onClick={() => setActiveTab('treinos')} className="inline-flex min-h-9 items-center gap-1 text-xs text-neutral-300 hover:text-white">
+            <button type="button" onClick={() => setActiveTab('treinos')} className="inline-flex min-h-11 shrink-0 items-center gap-1 text-xs font-semibold text-neutral-200 hover:text-white">
               Ver plano completo <ChevronRight className="h-4 w-4" />
             </button>
           </div>
@@ -213,7 +213,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
                 className={'foco-v4-day transition hover:border-white/35 ' + (todayIndex === idx ? 'foco-v4-day-today' : '')}
                 aria-label={day.short + ': ' + (daily.length ? (muscles.join(', ') || 'Treino') + '. Abrir sessão desse dia' : 'Dia sem treino. Ver plano')}>
                 <span className="text-xs text-neutral-300">{day.short}</span>
-                <span className="line-clamp-2 min-h-[31px] text-[10px] font-semibold leading-snug">
+                <span className="line-clamp-2 min-h-[33px] text-xs font-semibold leading-snug">
                   {isDailyPlan ? (daily.length ? muscles.slice(0,2).join(' + ') || 'Treino' : 'Descanso') : 'Flexível'}
                 </span>
                 <Dumbbell className="mt-auto h-4 w-4 text-neutral-400" />
@@ -237,7 +237,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
             {label:'Progresso',description:'Acompanhe sua evolução',icon:Activity, action:() => setActiveTab('progresso')},
           ].map(item => <button type="button" key={item.label} onClick={item.action} className="foco-v4-quick">
             <span className="foco-v4-info-icon"><item.icon className="h-5 w-5" /></span>
-            <span className="min-w-0 flex-1"><strong className="block text-[13px]">{item.label}</strong><span className="mt-1 block text-[11px] text-neutral-400">{item.description}</span></span>
+            <span className="min-w-0 flex-1"><strong className="block text-[13px]">{item.label}</strong><span className="mt-1 block text-xs text-neutral-300">{item.description}</span></span>
             <ChevronRight className="h-4 w-4 shrink-0 text-neutral-400" />
           </button>)}
         </div>
