@@ -7,6 +7,14 @@ import { AccessibleDialog } from '../components/AccessibleDialog';
 interface AtlasPageProps {
   setActiveTab: (tab: string) => void;
 }
+interface PublicReviewSample {
+  id: string;
+  title: string;
+  status: 'rejected' | 'needs_review';
+  image: string | null;
+  note: string;
+  resolution?: string | null;
+}
 type StatusFilter = 'all' | AnatomyEntry['status'];
 interface AtlasItem extends AnatomyEntry {
   source?: string;
@@ -41,6 +49,8 @@ export const AnatomyStudioPage: React.FC<AtlasPageProps> = ({ setActiveTab }) =>
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [visibleCount, setVisibleCount] = useState(36);
   const [samples, setSamples] = useState<ReviewSample[]>([]);
+  const [publishedSamples, setPublishedSamples] = useState<PublicReviewSample[]>([]);
+  const [publishedError, setPublishedError] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
   const [preview, setPreview] = useState<ReviewSample | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -63,6 +73,31 @@ export const AnatomyStudioPage: React.FC<AtlasPageProps> = ({ setActiveTab }) =>
       uploadedUrls.current = [];
     };
   }, []);
+
+  useEffect(() => {
+    let alive = true;
+    fetch(import.meta.env.BASE_URL + 'anatomy/review/previews.json')
+      .then(async response => {
+        if (!response.ok) throw new Error('Não foi possível carregar as pranchas publicadas.');
+        const manifest = await response.json();
+        if (manifest.schema_version !== 1 || !Array.isArray(manifest.previews)) throw new Error('Formato do catálogo de prévias inválido.');
+        return manifest.previews as PublicReviewSample[];
+      })
+      .then(previews => { if (alive) setPublishedSamples(previews); })
+      .catch(err => { if (alive) setPublishedError(err instanceof Error ? err.message : 'Prévias indisponíveis.'); });
+    return () => { alive = false; };
+  }, []);
+
+  const openPublishedSample = (sample: PublicReviewSample) => {
+    if (!sample.image || !/^anatomy\/review\/[a-z0-9_.-]+\.(?:avif|webp|png|jpg)$/.test(sample.image)) return;
+    setPreview({
+      filename: sample.id,
+      url: import.meta.env.BASE_URL + sample.image,
+      status: sample.status,
+      subject: sample.title,
+      note: sample.note + (sample.resolution ? ' · Prévia publicada: ' + sample.resolution : ''),
+    });
+  };
 
   const counts = useMemo(() => {
     const result = { pending: 0, needs_review: 0, approved: 0, rejected: 0 };
@@ -166,14 +201,61 @@ export const AnatomyStudioPage: React.FC<AtlasPageProps> = ({ setActiveTab }) =>
         </div>
       </section>
 
+      <section className="space-y-4" aria-labelledby="foco-public-review-heading">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="foco-eyebrow">Acervo publicado · Apenas revisão visual</p>
+            <h2 id="foco-public-review-heading" className="foco-section-title mt-2">Estudos visuais do FOCO</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-400">
+              Os estudos aqui são públicos, mas não foram aprovados para ensinar a execução.
+              Não entram nas fichas e não substituem as fotografias de referência.
+            </p>
+          </div>
+          <span className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold text-neutral-300">
+            {publishedSamples.filter(item => Boolean(item.image)).length} de {publishedSamples.length || 3} prévias online
+          </span>
+        </div>
+        {publishedError && <p role="alert" className="text-sm text-neutral-400">{publishedError}</p>}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {publishedSamples.map(item => (
+            <article key={item.id} className="overflow-hidden rounded-2xl border border-white/20 bg-[#161616]">
+              <button type="button" disabled={!item.image} onClick={() => openPublishedSample(item)}
+                className="relative block aspect-[3/2] w-full overflow-hidden bg-[#F1F1F1] text-center disabled:cursor-default"
+                aria-label={item.image ? 'Ampliar estudo não aprovado: ' + item.title : 'Imagem completa disponível pelo pacote de revisão'}>
+                {item.image ? (
+                  <img loading="lazy" src={import.meta.env.BASE_URL + item.image}
+                    alt={'Estudo anatômico não validado: ' + item.title} className="h-full w-full object-contain" />
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-neutral-500">
+                    <ImageOff className="h-8 w-8" aria-hidden="true" />
+                    <span className="text-sm font-semibold">Somente no pacote original</span>
+                  </div>
+                )}
+                <span className="absolute bottom-3 left-3 rounded-lg bg-black/90 px-3 py-2 text-xs font-bold text-white">
+                  {item.status === 'rejected' ? 'REPROVADA' : 'NÃO VALIDADA'}
+                </span>
+              </button>
+              <div className="space-y-2 p-4">
+                <h3 className="text-base font-bold">{item.title}</h3>
+                <p className="text-sm leading-6 text-neutral-400">{item.note}</p>
+                {item.image && <button type="button" onClick={() => openPublishedSample(item)}
+                  className="min-h-11 rounded-xl border border-white/20 px-3 text-sm font-semibold hover:bg-white/10">
+                  Ampliar prévia publicada
+                </button>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="space-y-4" aria-labelledby="foco-review-samples-heading">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="foco-eyebrow">Importação local · sem servidor</p>
             <h2 id="foco-review-samples-heading" className="foco-section-title mt-2">Artes do pacote de revisão</h2>
             <p className="mt-2 max-w-2xl text-sm text-neutral-400">
-              Visualize as três amostras do pacote que produzimos nesta conversa, com seus status reais.
-              As imagens ficam apenas nesta aba do navegador: não são enviadas, salvas ou publicadas.
+              Abra as três imagens originais em resolução integral no teu navegador.
+              Essa importação é local e não altera o acervo público nem aprova os exercícios.
             </p>
           </div>
           <label className="foco-action relative cursor-pointer">
