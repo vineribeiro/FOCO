@@ -3,8 +3,10 @@ import {
   SCIENCE_ENGINE_VERSION,
   buildScientificWorkoutGuidance, assessTrainingSafety, normalizeScienceExercises,
   minimumRestSeconds, classifyMovement, auditScientificWorkout as auditStrictWorkout, sciencePlanSummary,
-  sessionExerciseRange,
+  sessionExerciseRange, estimateTrainingSessionMinutes,
 } from "../supabase/functions/foco-api/trainingScience.mjs";
+import { FOCO_LAB_SOURCE, FOCO_LAB_KNOWLEDGE, focoLabGuidance, focoLabEvidenceRefs }
+  from "../supabase/functions/foco-api/focoLabKnowledge.mjs";
 
 // Legacy scientific audit scenarios focus on volume and taxonomy, independently
 // of the product's preferred exercise-count bands.
@@ -22,7 +24,22 @@ const exercise = (name, group, day, sets = 3, rest = 120) => ({
   sets, reps_min: 8, reps_max: 12, rest_seconds: rest, suggested_load_kg: 110,
   notes: "Controle a amplitude.", rir_target: 2,
 });
-assert.match(SCIENCE_ENGINE_VERSION, /2026/);
+assert.match(SCIENCE_ENGINE_VERSION, /2026\.3$/);
+assert.equal(FOCO_LAB_SOURCE.pages, 16);
+assert.equal(FOCO_LAB_SOURCE.methodology, "revisao-narrativa-tecnica");
+assert.ok(FOCO_LAB_KNOWLEDGE.length >= 14, "O dossiê foi convertido em regras rastreáveis");
+assert.equal(new Set(FOCO_LAB_KNOWLEDGE.map(item => item.id)).size, FOCO_LAB_KNOWLEDGE.length,
+  "Identificadores das regras não se repetem");
+for (const entry of FOCO_LAB_KNOWLEDGE) {
+  assert.ok(entry.page >= 1 && entry.page <= 16);
+  assert.ok(["EVIDÊNCIA", "HEURÍSTICA", "CONDIÇÃO / LIMITE"].includes(entry.type));
+}
+assert.match(focoLabGuidance({goal:"Emagrecimento"}), /LAB07/);
+assert.match(focoLabGuidance({goal:"Hipertrofia"}), /LAB04/);
+assert.match(focoLabGuidance({goal:"Treino de core"}), /LAB09/);
+assert.equal(focoLabEvidenceRefs().source_id, FOCO_LAB_SOURCE.id);
+assert.match(buildScientificWorkoutGuidance({goal:"Emagrecimento"}), /LAB12/);
+assert.match(buildScientificWorkoutGuidance({goal:"Hipertrofia"}), /FOCO-LAB-DOSSIE-2026-10-28/);
 for (const [freq, fragment] of [[2, "Full Body"],[3,"Full Body"],[4,"Upper/Lower"],[5,"Híbrida"],[6,"Push/Pull/Legs"],[7,"Sete dias"]]) {
   const context = buildScientificWorkoutGuidance({ frequency: freq,experience:"intermediario" });
   assert.ok(context.includes(fragment), "Divisão esperada para " + freq);
@@ -116,6 +133,21 @@ const fourExercises = [
 ];
 const countOptions = { experience: "intermediario", days: ["segunda"], sessionMinutes: 45 };
 assert.equal(auditStrictWorkout(fourExercises, countOptions).ok, true, "4 exercícios em 45 minutos são aceitos");
+const auditedFour = auditStrictWorkout(fourExercises, countOptions);
+assert.deepEqual(auditedFour.uncoveredMajorGroups, [], "Sem grandes grupos ausentes");
+assert.equal(auditedFour.coreExposureDays, 0, "Não inventar sessão de core");
+assert.equal(auditedFour.sessionTimeByDay.segunda, estimateTrainingSessionMinutes(fourExercises));
+assert.ok(auditedFour.sessionTimeByDay.segunda > 6, "Estimativa inclui aquecimento e transições");
+const explained = sciencePlanSummary({frequency:3,experience:"intermediario"},auditedFour);
+assert.equal(explained.evidence.source_id, FOCO_LAB_SOURCE.id);
+assert.equal(explained.session_time_minutes_by_day.segunda, auditedFour.sessionTimeByDay.segunda);
+assert.equal(explained.core_exposure_days, 0);
+const incompleteWeekly = auditStrictWorkout([fourExercises[0]], {
+  ...countOptions, enforceExerciseRange: false,
+});
+assert.equal(incompleteWeekly.ok, true, "Cobertura não é bloqueio clínico automático");
+assert.ok(incompleteWeekly.uncoveredMajorGroups.includes("Costas"));
+assert.match(incompleteWeekly.warnings.join(" "), /cobertura semanal/);
 const underfilled = auditStrictWorkout(fourExercises.slice(0, 3), countOptions);
 assert.equal(underfilled.ok, false, "3 exercícios em 45 minutos devem ser rejeitados");
 assert.match(underfilled.issue, /4-5/);
