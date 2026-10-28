@@ -46,6 +46,9 @@ function MainApp() {
     window.history.pushState({ focoView: tab }, '', url.pathname + url.search + url.hash);
   }, []);
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
+  useEffect(() => {
     const onPopState = () => {
       const view = new URLSearchParams(window.location.search).get('view');
       setActiveTabState(view && validViews.includes(view) ? view : 'dashboard');
@@ -160,6 +163,7 @@ function MainApp() {
 
   return (
     <div className="foco-v4-shell min-h-screen text-white antialiased flex justify-center">
+      <a href="#foco-main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-50 focus:rounded-xl focus:bg-white focus:px-4 focus:py-3 focus:text-sm focus:font-bold focus:text-black">Pular para o conteúdo</a>
       
       {/* Mobile Ergonomic Container Shell (Zero-Overlap Guarantee) */}
       <div className="w-full min-h-screen flex flex-col relative">
@@ -187,7 +191,7 @@ function MainApp() {
         </header>
 
         {/* Viewport Content Area with Protected Bottom Space (pb-32) */}
-        <main id="foco-main-content" className="flex-1 min-w-0 px-4 pb-28 pt-3 sm:px-6 sm:pt-4 lg:px-9 lg:pt-6 md:pb-10">
+        <main id="foco-main-content" tabIndex={-1} className="flex-1 min-w-0 px-4 pb-28 pt-3 sm:px-6 sm:pt-4 lg:px-9 lg:pt-6 md:pb-10">
           {renderActiveView()}
         </main>
 
