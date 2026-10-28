@@ -1,4 +1,4 @@
-# FOCO · Motor de Treinamento Científico (2026.1)
+# FOCO · Motor de Treinamento Científico (2026.2)
 
 ## Finalidade
 Gerar e revisar fichas de musculação individualizadas com o Gemini **sob regras determinísticas baseadas no Estudo Profissional de Musculação 2026** fornecido pelo proprietário do FOCO. Nenhuma regra numérica substitui avaliação presencial ou julgamento clínico.
@@ -30,21 +30,30 @@ Esses tetos **são mecanismos de contenção de propostas automáticas**, não a
 
 Descansos: compostos a partir de 2 min; isolamentos a partir de 1 min; cardio/core podem ter outros esquemas. Cargas iniciais em kg nunca são inventadas. Progressão dupla ocorre somente quando desempenho, técnica e recuperação sustentam a mudança.
 
-### 4. Segurança e casos clínicos
+### 4. Preferência de exercícios por duração (configuração FOCO)
+- 20–29 min: 2–3 exercícios.
+- 30–45 min: **4–5 exercícios**.
+- 46–60 min: **5–6 exercícios**.
+- 61–75 min: **6–7 exercícios**.
+- 76–180 min: **7–8 exercícios**.
+
+Essas faixas são preferências de produto, **não prescrições científicas de quantidade**. Em novos treinos de força e revisões geradas por IA, o auditor rejeita dias fora da faixa e informa o motivo para regeneração. Não há expansão automática de fichas já salvas. O validador mantém limites de volume, descanso, duração e recuperação. Sessões exclusivamente aeróbicas/de recuperação ativa e condições clínicas de alto risco não são obrigadas a atingir a contagem. Em caso de conflito, a segurança prevalece; a IA não deve acrescentar exercícios redundantes.
+
+### 5. Segurança e casos clínicos
 Sinais de alerta agudos informados bloqueiam geração e orientam avaliação clínica. Histórico de rabdomiólise ou condição muscular de risco solicita confirmação explícita de liberação médica para uma proposta **conservadora** e revisão com profissional habilitado; não autoriza treino até a falha ou carga máxima. A liberação declarada não equivale a diagnóstico ou garantia de segurança.
 
-### 5. Revisão aos 15/30 dias
+### 6. Revisão aos 15/30 dias
 A revisão analisa histórico de sessões e feedback (quando enviados), mantém exercícios eficazes quando possível, evita aumentar volume automaticamente e submete a nova proposta ao mesmo processo de validação. Sem histórico suficiente, não inventar progresso.
 
-### 6. Limites do sistema atual
+### 7. Limites do sistema atual
 - RIR prescrito é um **alvo educativo**, salvo em `notes`; o usuário ainda não registra RIR de cada série na tabela do banco.
 - A auditoria de músculos auxiliares é uma aproximação e não mede esforço real.
 - A plataforma não mede automaticamente mobilidade, amplitude, dor, prontidão ou técnica. Não afirmar que a IA os detectou por fotografia da OKOK.
 - Um usuário de teste precisa executar fluxos ponta a ponta com autenticação para verificar uma chamada real ao Gemini e gravação de ficha. Testes automatizados de CI não substituem isso.
 - Não há treinamento/fine-tuning do Gemini com dados privados do usuário. O sistema melhora a personalização por **contexto recuperado + regras + feedback**, não por ajuste contínuo dos pesos do modelo.
 
-### 7. Testes e implantação
-- `npm run test:training-science`: regras de volume, esforço, divisão, taxonomia, descanso e sinais de alerta.
+### 8. Testes e implantação
+- `npm run test:training-science`: regras de volume, esforço, divisão, contagem por duração, taxonomia, descanso e sinais de alerta.
 - `npm run lint` e `npm run build`: tipos e frontend.
 - Deploy do backend via Supabase Edge Function `foco-api`, com os arquivos `index.ts`, `trainingScience.mjs`, `trainingCatalog.mjs`; manter a validação JWT interna original.
 - O endpoint público `GET /api/system/status` anuncia `science_engine` para identificar a versão que está rodando sem expor informações pessoais.
