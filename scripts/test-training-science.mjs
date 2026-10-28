@@ -125,7 +125,7 @@ assert.equal(auditStrictWorkout(fiveExercises, { ...countOptions, sessionMinutes
 const underfilled60 = auditStrictWorkout(fourExercises, { ...countOptions, sessionMinutes: 60 });
 assert.equal(underfilled60.ok, false, "4 exercícios em 60 minutos devem ser rejeitados");
 assert.match(underfilled60.issue, /5-6/);
-assert.equal(auditStrictWorkout(fourExercises.slice(0, 2), { ...countOptions, highRisk: true }).ok, true,
+assert.equal(auditStrictWorkout(normalizeScienceExercises(fourExercises.slice(0, 2), { experience: "intermediario", highRisk: true }), { ...countOptions, highRisk: true }).ok, true,
   "Condições de alto risco não forçam adição de exercícios");
 const onlyCardio = [exercise("Bicicleta ergométrica", "Cardio", "segunda", 1, 45)];
 assert.equal(auditStrictWorkout(onlyCardio, countOptions).ok, true,
