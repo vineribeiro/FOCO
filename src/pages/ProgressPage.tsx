@@ -29,6 +29,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
   const [measurements, setMeasurements] = useState<BodyMeasurement[]>([]);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [dataUnavailable, setDataUnavailable] = useState(false);
   const [period, setPeriod] = useState<'30' | '90' | 'all'>('90');
 
   // New measurement form
@@ -40,6 +41,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
 
   const loadData = async () => {
     setIsLoading(true);
+    setDataUnavailable(false);
     try {
       const [m, s] = await Promise.all([
         api.getMeasurements(),
@@ -48,6 +50,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
       setMeasurements(m);
       setSessions(s);
     } catch (e: any) {
+      setDataUnavailable(true);
       console.error('Error fetching progress data:', e);
       setActionMsg({ type: 'error', text: 'Não foi possível consultar a evolução. Verifique sua conexão e tente novamente.' });
     } finally {
@@ -153,7 +156,11 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
       <OkokEvolutionSection period={period} onOpenAssessment={openOkok} />
 
       {isLoading && <div role="status" className="foco-v4-panel p-4 text-sm text-neutral-300">Atualizando seus registros...</div>}
-      {!isLoading && <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4" aria-label="Resumo da evolução">
+      {dataUnavailable && !isLoading && <div className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-4" role="alert">
+        <p className="text-sm text-neutral-200">Os dados de treinos e medidas manuais não puderam ser carregados. Nenhum valor foi presumido.</p>
+        <button type="button" onClick={() => void loadData()} className="foco-v4-secondary">Tentar novamente</button>
+      </div>}
+      {!isLoading && !dataUnavailable && <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4" aria-label="Resumo da evolução">
         {[
           { label: 'Treinos concluídos', value: String(completedSessions.length), hint: 'Desde o início' },
           { label: 'Nesta semana', value: String(weeklyCompleted), hint: 'Sessões concluídas' },
@@ -165,7 +172,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
           <p className="mt-2 text-xs text-neutral-400">{item.hint}</p>
         </div>)}
       </div>}
-      {weightDelta !== null && !isLoading && <p className="text-xs text-neutral-400">Variação do peso manual no período: <strong className="text-white">{weightDelta > 0 ? '+' : ''}{weightDelta.toLocaleString('pt-BR', {maximumFractionDigits: 2})} kg</strong>. Compare medidas feitas em condições semelhantes.</p>}
+      {weightDelta !== null && !isLoading && !dataUnavailable && <p className="text-xs text-neutral-400">Variação do peso manual no período: <strong className="text-white">{weightDelta > 0 ? '+' : ''}{weightDelta.toLocaleString('pt-BR', {maximumFractionDigits: 2})} kg</strong>. Compare medidas feitas em condições semelhantes.</p>}
 
       {actionMsg && (
         <div role={actionMsg.type === 'error' ? 'alert' : 'status'}
@@ -180,7 +187,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         </div>
       )}
 
-      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
+      {!dataUnavailable && <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
       {/* Weight Evolution Chart (Monochrome Area) */}
       <div className="foco-v4-panel space-y-3 p-5">
         <div className="flex items-center justify-between">
@@ -289,7 +296,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         </div>
       </div>
 
-      </div>
+      </div>}
       {/* Record Measurement Form & List */}
       <form
         onSubmit={handleAddMeasurement}
@@ -355,7 +362,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
       </form>
 
       {/* History Table */}
-      <div className="foco-v4-panel space-y-3 p-4 sm:p-5">
+      {!dataUnavailable && <div className="foco-v4-panel space-y-3 p-4 sm:p-5">
         <h3 className="text-sm font-extrabold text-white">
           Histórico de medidas manuais ({measurements.length})
         </h3>
@@ -400,7 +407,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
             </table>
           )}
         </div>
-      </div>
+      </div>}
     </div>
   );
 };
