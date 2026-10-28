@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Expand, ImageOff, X } from 'lucide-react';
 import { findApprovedAnatomyAtlas } from '../data/anatomyAssets';
+import { getRepDBIllustrations } from '../data/repdbAssets';
 import { findMatchingExercise, getExerciseDisplayName, getExerciseImageUrl, getMuscleLabel, loadExerciseCatalog } from '../data/exerciseLibrary';
 
 interface ExerciseIllustrationProps {
@@ -24,6 +25,7 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
   const [phase, setPhase] = useState(0);
   const [legacyPaths, setLegacyPaths] = useState<string[]>([]);
   const [atlasUrl, setAtlasUrl] = useState<string | null>(null);
+  const [repdbPaths, setRepdbPaths] = useState<string[]>([]);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const compact = /\bh-(14|16|20)\b/.test(className);
@@ -34,7 +36,11 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
     setPhase(0);
     setFailedUrl(null);
     setAtlasUrl(null);
+    setRepdbPaths([]);
     setLegacyPaths(supplied);
+    getRepDBIllustrations(exerciseName)
+      .then(paths => { if (active && paths.length) { setRepdbPaths(paths); setPhase(0); } })
+      .catch(() => { if (active) setRepdbPaths([]); });
     findApprovedAnatomyAtlas(exerciseId, exerciseName)
       .then(url => { if (active) { setAtlasUrl(url); if (url) setPhase(0); } })
       .catch(() => { if (active) setAtlasUrl(null); });
@@ -52,8 +58,13 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
   }, [exerciseId, exerciseName, muscleGroup, supplied.join('|')]);
 
   const isAtlas = Boolean(atlasUrl && failedUrl !== atlasUrl);
-  const sources = isAtlas ? [atlasUrl!] : legacyPaths.map(getExerciseImageUrl);
+  const isRepDB = !isAtlas && repdbPaths.length > 0;
+  const sources = isAtlas ? [atlasUrl!] : isRepDB ? repdbPaths : legacyPaths.map(getExerciseImageUrl);
   const visible = sources[phase] && failedUrl !== sources[phase];
+  const onImageError = () => {
+    if (isRepDB) { setRepdbPaths([]); setPhase(0); setFailedUrl(null); }
+    else setFailedUrl(sources[phase]);
+  };
   const target = muscleGroup ? (muscleTargets[muscleGroup.toLowerCase()] || getMuscleLabel(muscleGroup)) : 'Músculos trabalhados';
   const changePhase = (index: number) => {
     setFailedUrl(null);
@@ -66,22 +77,22 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
   return (
     <div className={'relative isolate overflow-hidden rounded-2xl border border-black/10 bg-[#F5F5F5] ' + className}>
       {!compact && <div className="absolute left-3 top-3 z-10 rounded-full border border-black/10 bg-white/95 px-3 py-2 text-[11px] font-bold text-neutral-900 shadow-sm">
-        {isAtlas ? 'FOCO · Atlas anatômico' : 'Foto de referência'}
+        {isAtlas ? 'FOCO · Atlas anatômico' : isRepDB ? 'RepDB · Execução ilustrada' : 'Foto de referência'}
       </div>}
       {visible ? (
         <div className={'absolute inset-0 flex items-center justify-center ' + (compact ? 'p-1' : 'px-2 pb-12 pt-12 sm:px-4')}>
           {compact ? (
             <img src={sources[phase]} loading="lazy" alt={exerciseName + (isAtlas ? ' — atlas anatômico' : ' — referência fotográfica')}
-              className="h-full w-full object-contain" style={isAtlas ? undefined : {filter:'grayscale(1)'}}
-              onError={() => setFailedUrl(sources[phase])} />
+              className="h-full w-full object-contain" style={isAtlas || isRepDB ? undefined : {filter:'grayscale(1)'}}
+              onError={onImageError} />
           ) : (
             <button type="button" onClick={toggleZoom}
               aria-label={'Ampliar ' + (isAtlas ? 'atlas' : 'foto') + ' de ' + exerciseName}
               className="group relative flex h-full w-full items-center justify-center outline-offset-2">
               <img src={sources[phase]} loading="lazy" alt={exerciseName + (isAtlas ? ' — duas fases e mapas musculares' : ' — posição ' + (phase+1))}
                 className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.02]"
-                style={isAtlas ? undefined : {filter:'grayscale(1)'}}
-                onError={() => setFailedUrl(sources[phase])} />
+                style={isAtlas || isRepDB ? undefined : {filter:'grayscale(1)'}}
+                onError={onImageError} />
               <span className="absolute right-0 top-0 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-neutral-900 shadow-sm" aria-hidden="true">
                 <Expand className="h-5 w-5" />
               </span>
@@ -109,19 +120,20 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
       {!compact && (
         <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 border-t border-black/10 bg-white/95 px-3 py-3 text-xs text-neutral-900">
           <strong className="truncate">{target}</strong>
-          {showCaption && <span className="shrink-0 text-neutral-500">{isAtlas ? '3D · Anatomia' : 'Arquivo legado'}</span>}
+          {showCaption && <span className="shrink-0 text-neutral-500">{isAtlas ? '3D · Anatomia' : isRepDB ? 'RepDB · Ilustração' : 'Arquivo legado'}</span>}
         </div>
       )}
+      {isRepDB && !compact && <a href="https://repdb.co" target="_blank" rel="nofollow noreferrer" className="absolute bottom-12 left-3 z-10 rounded-md bg-white/95 px-2 py-1 text-[10px] font-medium text-neutral-700 underline">Exercise data by RepDB (repdb.co)</a>}
       {!compact && (
         <dialog ref={dialogRef} aria-label={'Visualização ampliada de ' + exerciseName}
           className="m-auto max-h-[95dvh] w-[min(96vw,1000px)] max-w-none rounded-2xl border border-white/15 bg-[#101010] p-3 text-white shadow-2xl backdrop:bg-black/90 sm:p-5">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <div><p className="text-xs text-neutral-400">{isAtlas ? 'FOCO Anatomy v3' : 'Referência fotográfica'}</p><h2 className="text-lg font-bold">{exerciseName}</h2></div>
+            <div><p className="text-xs text-neutral-400">{isAtlas ? 'FOCO Anatomy v3' : isRepDB ? 'RepDB · Ilustrações do movimento' : 'Referência fotográfica'}</p><h2 className="text-lg font-bold">{exerciseName}</h2></div>
             <button type="button" onClick={toggleZoom} aria-label="Fechar visualização" className="foco-touch rounded-xl bg-white/10 hover:bg-white/20">
               <X className="h-5 w-5" /></button>
           </div>
           {visible && <img src={sources[phase]} alt={exerciseName + ' ampliado'}
-            style={isAtlas ? undefined : {filter:'grayscale(1)'}}
+            style={isAtlas || isRepDB ? undefined : {filter:'grayscale(1)'}}
             className="mx-auto max-h-[70dvh] w-full rounded-xl bg-[#F5F5F5] object-contain" />}
           {!isAtlas && sources.length > 1 && (
             <div className="mt-3 flex justify-end gap-2">
@@ -132,7 +144,8 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
               </button>)}
             </div>
           )}
-          <p className="mt-3 text-xs text-neutral-400">{isAtlas ? 'Atlas de referência educativa, aprovado para a biblioteca FOCO.' : 'Foto antiga de referência: a substituição por atlas anatômico está pendente de revisão.'}</p>
+          {isRepDB && <a href="https://repdb.co" target="_blank" rel="nofollow noreferrer" className="mt-3 inline-block text-xs text-neutral-300 underline">Exercise data by RepDB (repdb.co)</a>}
+          <p className="mt-3 text-xs text-neutral-400">{isAtlas ? 'Atlas de referência educativa, aprovado para a biblioteca FOCO.' : isRepDB ? 'Ilustração educativa de execução. Observe as duas posições; confira também as instruções escritas.' : 'Foto antiga de referência: a substituição por atlas anatômico está pendente de revisão.'}</p>
         </dialog>
       )}
     </div>
