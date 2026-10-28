@@ -55,6 +55,8 @@ export interface WorkoutExercise {
   reps_max: number;
   rest_seconds: number;
   suggested_load_kg: number;
+  /** Repetições em reserva propostas pelo motor, antes da revisão individual. */
+  rir_target?: number;
   notes?: string;
   /** Optional weekday assignment; null means this legacy/general exercise can appear on any workout day. */
   training_day?: 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo' | null;
@@ -128,4 +130,18 @@ export interface AIRecommendation {
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
   proposed_plan?: Partial<WorkoutPlan> & { exercises?: Partial<WorkoutExercise>[] };
+}
+
+/** Justificativa educativa do motor FOCO. Séries ponderadas indiretas são estimativas, não dose medida. */
+export interface TrainingScienceReport {
+  source: string;
+  split_rationale: string;
+  dose: string;
+  direct_sets_by_group: Record<string, number>;
+  estimated_effective_sets_by_group: Record<string, number>;
+  total_sets_by_day: Record<string, number>;
+  recovery: string;
+  progression: string;
+  monitoring: string;
+  alerts: string[];
 }
