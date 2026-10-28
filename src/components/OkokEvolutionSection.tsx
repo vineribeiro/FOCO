@@ -11,6 +11,26 @@ interface Props {
 const categories: OkokMetric['category'][] = ['Composição corporal', 'Metabolismo', 'Circunferências', 'Outros indicadores'];
 const displayNumber = (value: number): string => value.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
 const displayDate = (iso: string): string => new Date(iso).toLocaleDateString('pt-BR');
+const priorityKeys = ['peso', 'gordura_corporal', 'musculo_esqueletico', 'massa_muscular', 'gordura_visceral', 'imc'];
+
+/** Keep the four most relevant OKOK indicators visible; preserve all others
+ * in an accessible expandable section so no extracted data is discarded.
+ */
+function prioritizedMetrics(metrics: OkokMetric[]): OkokMetric[] {
+  const used = new Set<number>();
+  const selected: OkokMetric[] = [];
+  for (const key of priorityKeys) {
+    const index = metrics.findIndex((metric, idx) => !used.has(idx) && metric.key.startsWith(key + ':'));
+    if (index < 0) continue;
+    selected.push(metrics[index]);
+    used.add(index);
+    if (selected.length === 4) break;
+  }
+  for (let index = 0; index < metrics.length && selected.length < 4; index++) {
+    if (!used.has(index)) { selected.push(metrics[index]); used.add(index); }
+  }
+  return selected;
+}
 
 export const OkokEvolutionSection: React.FC<Props> = ({ period, onOpenAssessment }) => {
   const [assessments, setAssessments] = useState<OkokAssessment[]>([]);
@@ -55,6 +75,9 @@ export const OkokEvolutionSection: React.FC<Props> = ({ period, onOpenAssessment
   const chartData = getOkokTrend(assessments, activeKey).filter(point => point.timestamp >= cutoff);
 
   const previous = assessments.length > 1 ? assessments[assessments.length - 2] : undefined;
+  const featured = latest ? prioritizedMetrics(latest.metrics) : [];
+  const featuredIndices = new Set(featured.map(metric => latest?.metrics.indexOf(metric) ?? -1));
+  const otherMetrics = latest?.metrics.filter((_, index) => !featuredIndices.has(index)) || [];
   const metricDelta = (metric: OkokMetric): number | null => {
     if (metric.numericValue === null) return null;
     // Compare only against another independent upload with the same metric AND unit.
@@ -112,28 +135,59 @@ export const OkokEvolutionSection: React.FC<Props> = ({ period, onOpenAssessment
       </header>
 
       {latest.metrics.length > 0 ? (
-        <div className="space-y-5">
-          {categories.map(category => {
-            const group = latest.metrics.filter(item => item.category === category);
-            if (group.length === 0) return null;
-            return <section key={category} aria-label={category}>
-              <h3 className="mb-3 text-xs font-bold tracking-wide text-neutral-300">{category}</h3>
-              <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-3">
-                {group.map((metric, index) => {
-                  const delta = metricDelta(metric);
-                  return <article key={metric.key + ':' + index} className="foco-v4-data-tile !min-h-[132px]">
-                    <p className="min-h-[30px] text-[11px] font-semibold leading-snug text-neutral-300">{metric.name}</p>
-                    <strong className="mt-1 block break-words text-[clamp(18px,4vw,25px)] leading-tight tracking-tight text-white">{metric.value}</strong>
-                    {delta !== null && <p className="mt-2 text-[11px] text-neutral-300">
-                      <TrendingUp className="mr-1 inline h-3 w-3" />
-                      {delta > 0 ? '+' : ''}{displayNumber(delta)} {metric.unit} vs. anterior
-                    </p>}
-                    {metric.interpretation && <p className="mt-2 line-clamp-3 text-[11px] leading-relaxed text-neutral-400" title={metric.interpretation}>{metric.interpretation}</p>}
-                  </article>;
-                })}
-              </div>
-            </section>;
-          })}
+        <div className="space-y-4">
+          <section aria-label="Principais indicadores OKOK" className="space-y-3">
+            <div>
+              <h3 className="text-sm font-bold tracking-tight text-white">Principais indicadores</h3>
+              <p className="mt-1 text-xs text-neutral-300">Valores extraídos do último relatório, sem estimativas adicionais.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {featured.map((metric, index) => {
+                const delta = metricDelta(metric);
+                return <article key={metric.key + ':' + index} className="foco-v4-data-tile !min-h-[140px]">
+                  <p className="text-xs font-semibold leading-snug text-neutral-200">{metric.name}</p>
+                  <strong className="mt-3 block break-words !text-[clamp(19px,4vw,26px)] leading-tight tracking-tight text-white">{metric.value}</strong>
+                  {delta !== null && <p className="mt-2 text-xs text-neutral-300">
+                    <TrendingUp className="mr-1 inline h-3.5 w-3.5" />
+                    {delta > 0 ? '+' : ''}{displayNumber(delta)} {metric.unit} vs. anterior
+                  </p>}
+                  {metric.interpretation && <details className="mt-3 text-xs leading-relaxed text-neutral-300">
+                    <summary className="min-h-8 cursor-pointer py-1 font-semibold text-neutral-200">Sobre o indicador</summary>
+                    <p className="mt-1 whitespace-pre-line">{metric.interpretation}</p>
+                  </details>}
+                </article>;
+              })}
+            </div>
+          </section>
+          {otherMetrics.length > 0 && <details className="rounded-2xl border border-white/15 bg-white/[.025] p-4 sm:p-5">
+            <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-sm font-bold text-white">
+              <span>Ver todos os indicadores ({latest.metrics.length})</span>
+              <ChevronDown className="h-4 w-4 shrink-0 text-neutral-300" aria-hidden="true" />
+            </summary>
+            <p className="mt-2 text-xs text-neutral-300">Mais {otherMetrics.length} indicadores disponíveis no arquivo OKOK.</p>
+            <div className="mt-4 space-y-5">
+              {categories.map(category => {
+                const group = otherMetrics.filter(item => item.category === category);
+                if (!group.length) return null;
+                return <section key={category} aria-label={category}>
+                  <h4 className="mb-3 text-xs font-bold text-neutral-200">{category}</h4>
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+                    {group.map((metric, index) => {
+                      const delta = metricDelta(metric);
+                      return <article key={metric.key + ':' + index} className="foco-v4-data-tile !min-h-0">
+                        <p className="text-xs font-semibold text-neutral-200">{metric.name}</p>
+                        <strong className="mt-2 block break-words !text-xl text-white">{metric.value}</strong>
+                        {delta !== null && <p className="mt-2 text-xs text-neutral-300">
+                          {delta > 0 ? '+' : ''}{displayNumber(delta)} {metric.unit} vs. anterior
+                        </p>}
+                        {metric.interpretation && <p className="mt-2 whitespace-pre-line text-xs leading-relaxed text-neutral-300">{metric.interpretation}</p>}
+                      </article>;
+                    })}
+                  </div>
+                </section>;
+              })}
+            </div>
+          </details>}
         </div>
       ) : (
         <p className="rounded-2xl border border-white/10 p-4 text-sm text-neutral-300">O relatório foi analisado, mas não contém valores estruturados legíveis. Abra a avaliação para conferir a leitura ou envie um arquivo mais nítido.</p>
