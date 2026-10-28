@@ -10,7 +10,7 @@
  */
 import { catalogExercise } from "./trainingCatalog.mjs";
 
-export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.1";
+export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.2";
 const WEEKDAYS = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
 const NORMALIZE = (value) => String(value || "").normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -21,6 +21,20 @@ const EXPERIENCE = {
   avancado: { weeklyHint: [10, 20], weeklyCeiling: 24, dailyCeiling: 32, rir: [1, 3] },
 };
 const RANGE = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+
+/**
+ * FOCO session-size preference (product heuristic, NOT a scientific dose rule).
+ * Adjust sets/rest/exercise choices to the available time rather than increasing
+ * total volume to reach a cosmetic exercise count.
+ */
+export function sessionExerciseRange(sessionMinutes = 60) {
+  const minutes = RANGE(Number(sessionMinutes) || 60, 20, 180);
+  if (minutes < 30) return { min: 2, max: 3 };
+  if (minutes <= 45) return { min: 4, max: 5 };
+  if (minutes <= 60) return { min: 5, max: 6 };
+  if (minutes <= 75) return { min: 6, max: 7 };
+  return { min: 7, max: 8 };
+}
 
 export function classifyMovement(name, muscle = "") {
   const n = NORMALIZE(name);
@@ -80,6 +94,7 @@ export function buildScientificWorkoutGuidance({
 } = {}) {
   const level = EXPERIENCE[experience] || EXPERIENCE.iniciante;
   const priority = Array.isArray(priorityMuscles) ? priorityMuscles.filter(Boolean).join(", ") : String(priorityMuscles || "");
+  const exerciseRange = sessionExerciseRange(sessionMinutes);
   return [
     "MÉTODO FOCO 2026 (estudo técnico fornecido pelo responsável do app; faixas são heurísticas, não leis):",
     "1. Organize por padrões: empurrar horizontal/vertical, puxar horizontal/vertical, joelho, dobradiça de quadril, locomover-se e estabilidade do tronco. Peito/tríceps/ombros e costas/bíceps são sinergias, mas não divisões obrigatórias.",
@@ -87,6 +102,7 @@ export function buildScientificWorkoutGuidance({
     "3. Volume direto por músculo, ponto de partida para " + experience + ": " + level.weeklyHint[0] + "-" + level.weeklyHint[1] +
       " séries/semana; considere trabalho indireto de compostos; teto técnico conservador de " + level.weeklyCeiling + " séries diretas por grupo/semana para esta geração. Não trate mínimos como obrigação para músculos acessórios.",
     "4. Respeite até " + level.dailyCeiling + " séries por dia e duração realista de aproximadamente " + sessionMinutes + " minutos incluindo aquecimento e transições. Evite dezenas de exercícios por dia.",
+    "4a. Para " + sessionMinutes + " minutos, a preferência FOCO é de " + exerciseRange.min + "-" + exerciseRange.max + " exercícios DIFERENTES por dia. Faixas: 30-45 min = 4-5; 46-60 min = 5-6; 61-75 min = 6-7; 76+ min = 7-8. Para menos de 30 min, 2-3. Esta é uma preferência do produto, NÃO uma recomendação científica de dose: distribua os exercícios com 1-3 séries quando necessário, respeite a duração, a recuperação, o volume semanal, as restrições e o catálogo. Não adicione isolamentos redundantes apenas para preencher números. Exceção para condição de alto risco e dia exclusivamente dedicado à recuperação ativa.",
     "5. " + goalRules(goal, experience),
     "6. RIR alvo inicial de " + level.rir[0] + "-" + level.rir[1] + " (repetições em reserva). Não exigir falha muscular em todas as séries; jamais inventar cargas em kg sem histórico.",
     "7. Pausas: multiarticulares pesados 120-240 s (força muito pesada pode precisar 180-300 s); remadas/puxadas/desenvolvimento 120-180 s; isolamentos 60-120 s. Ajuste a execução e a recuperação do indivíduo.",
@@ -148,6 +164,7 @@ function muscleKey(group) {
 
 export function auditScientificWorkout(exercises, {
   days = WEEKDAYS.slice(0, 3), experience = "iniciante", sessionMinutes = 60, highRisk = false,
+  enforceExerciseRange = false,
 } = {}) {
   const config = EXPERIENCE[experience] || EXPERIENCE.iniciante;
   const volume = new Map();
@@ -181,6 +198,20 @@ export function auditScientificWorkout(exercises, {
       for (const secondary of new Set(catalog.secondary)) {
         if (secondary === group || catalog.primary.includes(secondary) && catalog.primary.length > 1) continue;
         indirect.set(secondary, (indirect.get(secondary) || 0) + sets);
+      }
+    }
+  }
+  if (enforceExerciseRange && !highRisk) {
+    const range = sessionExerciseRange(sessionMinutes);
+    for (const day of days) {
+      const daily = exercises.filter(ex => ex.training_day === day);
+      // A dedicated active-recovery / aerobic day isn't a standard lifting session.
+      const activeRecoveryDay = daily.length > 0 && daily.every(ex => classifyMovement(ex.exercise_name, ex.muscle_group) === "cardio");
+      if (activeRecoveryDay) continue;
+      if (daily.length < range.min || daily.length > range.max) {
+        return { ok: false, issue: day + " tem " + daily.length + " exercícios; preferência de "
+          + range.min + "-" + range.max + " para " + sessionMinutes
+          + " minutos. Redistribua os padrões e séries sem ultrapassar duração ou volume." };
       }
     }
   }
