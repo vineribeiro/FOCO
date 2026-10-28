@@ -25,6 +25,8 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Verify public layouts at five viewports
         run: node scripts/test-visual-public.mjs
+      - name: Inspect authenticated-layout designs with isolated mock data
+        run: node scripts/test-visual-internal.mjs
       - name: Upload screenshots and JSON report
         if: always()
         uses: actions/upload-artifact@v4
