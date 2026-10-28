@@ -1,290 +1,228 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { ExerciseIllustration } from '../components/ExerciseIllustration';
-import { WorkoutPlan, WorkoutSession, Goal, AIRecommendation } from '../types';
+import type { AIRecommendation, UploadedFile, WorkoutPlan, WorkoutSession } from '../types';
 import {
-  Play,
-  Dumbbell,
-  Sparkles,
-  TrendingUp,
-  Clock3,
-  ArrowRight,
-  Activity,
-  CheckCircle2,
-  ClipboardList,
-  FileUp,
-  Target,
-  BellRing,
+  Activity, ArrowRight, BarChart3, BellRing, BookOpen, CalendarDays,
+  CheckCircle2, ChevronRight, ClipboardList, Clock3, Dumbbell, FilePlus2,
+  FileUp, ScanLine, Sparkles, TrendingUp,
 } from 'lucide-react';
 
-interface DashboardProps {
-  setActiveTab: (tab: string) => void;
+interface DashboardProps { setActiveTab: (tab: string) => void }
+const DAYS = [
+  { id: 'segunda', short: 'Seg' }, { id: 'terca', short: 'Ter' },
+  { id: 'quarta', short: 'Qua' }, { id: 'quinta', short: 'Qui' },
+  { id: 'sexta', short: 'Sex' }, { id: 'sabado', short: 'Sáb' },
+  { id: 'domingo', short: 'Dom' },
+] as const;
+const weekdayIndex = (date: Date) => (date.getDay() + 6) % 7;
+const normalize = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+const isBodyAssessment = (file: UploadedFile) =>
+  file.processing_status === 'processed' && !!file.extracted_data
+  && typeof file.extracted_data.summary === 'string'
+  && Array.isArray(file.extracted_data.metrics);
+
+function findMetric(file: UploadedFile | undefined, pattern: RegExp): string | null {
+  if (!file) return null;
+  const entries = file.extracted_data?.metrics;
+  if (!Array.isArray(entries)) return null;
+  const matching = entries.find((metric: { name?: unknown; value?: unknown }) =>
+    typeof metric?.name === 'string' && pattern.test(normalize(metric.name)));
+  return matching && typeof matching.value === 'string' ? matching.value : null;
 }
 
 export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
   const { user, profile } = useAuth();
   const [activePlan, setActivePlan] = useState<WorkoutPlan | null>(null);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
-  const [goals, setGoals] = useState<Goal[]>([]);
+  const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [filesUnavailable, setFilesUnavailable] = useState(false);
   const [recommendations, setRecommendations] = useState<AIRecommendation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [okokReminder, setOkokReminder] = useState<{daysElapsed: number; lastUpload: string} | null>(null);
 
   useEffect(() => {
-    let active = true;
-    async function loadData() {
-      try {
-        const [plan, userSessions, userGoals, userRecs, uploadedFiles] = await Promise.all([
-          api.getActiveWorkout(),
-          api.getSessions(),
-          api.getGoals(),
-          api.getRecommendations(),
-          api.getFiles().catch(() => null),
-        ]);
-        if (!active) return;
-        setActivePlan(plan);
-        setSessions(userSessions);
-        setGoals(userGoals);
-        setRecommendations(userRecs);
-        if (uploadedFiles) {
-          const latest = uploadedFiles.find(file => file.processing_status === 'processed' && file.extracted_data && typeof file.extracted_data.summary === 'string' && Array.isArray(file.extracted_data.metrics));
-          if (latest) {
-            const created = new Date(latest.created_at);
-            const elapsed = Math.floor((Date.now() - created.getTime()) / 86400000);
-            setOkokReminder(Number.isFinite(elapsed) && elapsed >= 15 ? {daysElapsed: elapsed, lastUpload: created.toLocaleDateString('pt-BR')} : null);
-          } else setOkokReminder(null);
-        }
-      } catch (error) {
-        console.error('Não foi possível carregar o painel FOCO:', error);
-      } finally {
-        if (active) setIsLoading(false);
-      }
-    }
-    loadData();
-    return () => { active = false; };
+    let mounted = true;
+    void Promise.all([
+      api.getActiveWorkout().catch(() => null),
+      api.getSessions().catch(() => [] as WorkoutSession[]),
+      api.getFiles().catch(() => null),
+      api.getRecommendations().catch(() => [] as AIRecommendation[]),
+    ]).then(([plan, allSessions, uploadedFiles, allRecommendations]) => {
+      if (!mounted) return;
+      setActivePlan(plan);
+      setSessions(allSessions);
+      setFiles(uploadedFiles || []);
+      setFilesUnavailable(uploadedFiles === null);
+      setRecommendations(allRecommendations);
+    }).finally(() => { if (mounted) setIsLoading(false); });
+    return () => { mounted = false; };
   }, []);
 
-  const completedSessions = sessions.filter((session) => session.status === 'completed');
-  const pendingRec = recommendations.find((recommendation) => recommendation.status === 'pending');
-  const exercises = activePlan?.exercises || [];
-  const muscleChips = Array.from(new Set(exercises.map((exercise) => exercise.muscle_group)))
-    .slice(0, 5)
-    .map((name) => ({
-      name,
-      count: exercises.filter((exercise) => exercise.muscle_group === name).length,
-    }));
+  const now = new Date();
+  const todayIndex = weekdayIndex(now);
+  const todayKey = DAYS[todayIndex].id;
   const firstName = user?.full_name?.trim().split(/\s+/)[0] || 'atleta';
-  const openOkokUpload = () => {
-    try { sessionStorage.setItem('foco_upload_mode', 'body'); } catch { /* still opens files */ }
+  const exercises = activePlan?.exercises || [];
+  const isDailyPlan = exercises.some(item => !!item.training_day);
+  const todayExercises = isDailyPlan ? exercises.filter(item => item.training_day === todayKey) : exercises;
+  const todayMuscles = [...new Set(todayExercises.map(item => item.muscle_group).filter(Boolean))];
+  const heroTitle = todayMuscles.length ? todayMuscles.slice(0,2).join(' + ')
+    : activePlan?.name || 'Treino feito para você';
+
+  const recentSessions = useMemo(() => {
+    const weekStart = new Date();
+    weekStart.setHours(0,0,0,0);
+    weekStart.setDate(weekStart.getDate() - weekdayIndex(weekStart));
+    return sessions.filter(s => s.status === 'completed' && new Date(s.started_at) >= weekStart);
+  }, [sessions]);
+  const totalCompleted = sessions.filter(s => s.status === 'completed').length;
+  const completedDays = new Set(recentSessions.map(s => weekdayIndex(new Date(s.started_at))));
+  const targetPerWeek = activePlan?.weekly_frequency || 0;
+  const bodyFiles = files.filter(isBodyAssessment).sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  const latestAssessment = bodyFiles[0];
+  const lastDate = latestAssessment ? new Date(latestAssessment.created_at) : null;
+  const daysSinceAssessment = lastDate ? Math.floor((Date.now() - lastDate.getTime()) / 86400000) : null;
+  const isOkokDue = daysSinceAssessment !== null && daysSinceAssessment >= 15;
+  const weightMetric = findMetric(latestAssessment, /^(peso|weight)(\s|$)/);
+  const displayWeight = weightMetric || (profile?.current_weight_kg ? String(profile.current_weight_kg).replace('.', ',') + ' kg' : '—');
+  const openAssessment = () => {
+    try { sessionStorage.setItem('foco_upload_mode', 'body'); } catch { /* navigate anyway */ }
     setActiveTab('arquivos');
   };
+  const pendingReview = recommendations.find(r => r.status === 'pending');
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto w-full max-w-5xl space-y-5 pb-32">
-        <div className="h-28 animate-pulse rounded-2xl border border-white/10 bg-[#141414]" />
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <div className="h-24 animate-pulse rounded-2xl border border-white/10 bg-[#141414]" />
-          <div className="h-24 animate-pulse rounded-2xl border border-white/10 bg-[#141414]" />
-          <div className="hidden h-24 animate-pulse rounded-2xl border border-white/10 bg-[#141414] sm:block" />
-        </div>
-      </div>
-    );
-  }
+  if (isLoading) return <div className="foco-v4-page space-y-4" role="status" aria-label="Carregando painel">
+    <div className="h-20 animate-pulse rounded-2xl bg-[#171717]" />
+    <div className="h-64 animate-pulse rounded-3xl bg-[#171717]" />
+    <div className="grid grid-cols-3 gap-2">{[1,2,3].map(n => <div key={n} className="h-32 animate-pulse rounded-2xl bg-[#171717]" />)}</div>
+  </div>;
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6 pb-32 text-white">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-neutral-500">Seu espaço de evolução</p>
-          <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
-            {'Olá, ' + firstName}
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-400">
-            {activePlan
-              ? 'Sua evolução começa no próximo treino. Confira sua ficha e registre cada série.'
-              : 'Vamos configurar seu perfil para criar uma ficha de treino feita para sua rotina e seus objetivos.'}
-          </p>
-        </div>
-        {activePlan && (
-          <button type="button" onClick={() => setActiveTab('treinos')} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-xs font-black transition hover:bg-white/10">
-            <Dumbbell className="h-4 w-4" /> Minhas fichas
-          </button>
-        )}
+    <div className="foco-v4-page space-y-[17px] sm:space-y-6">
+      <header className="pb-1">
+        <h1 className="foco-v4-heading">Bom dia, <span className="font-extrabold">{firstName}</span></h1>
+        <p className="mt-2 text-[13px] text-neutral-400">Disciplina hoje, resultado sempre.</p>
       </header>
 
-      {okokReminder && (
-        <section role="status" aria-label="Lembrete de avaliação OKOK" className="flex flex-col gap-3 rounded-2xl border border-white/25 bg-[#191919] p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl border border-white/20 bg-white/10 p-2"><BellRing className="h-5 w-5" aria-hidden="true" /></div>
-            <div>
-              <h2 className="text-sm font-black">Hora de atualizar sua avaliação OKOK</h2>
-              <p className="mt-1 text-xs leading-relaxed text-neutral-300">
-                Já se passaram {okokReminder.daysElapsed} dias desde o último relatório ({okokReminder.lastUpload}). Envie uma nova avaliação da OKOK para acompanhar sua evolução e ajudar a personalizar a próxima ficha de treino.
-              </p>
+      {activePlan ? (
+        <section className="foco-v4-hero" aria-labelledby="foco-workout-hero">
+          <div className="foco-v4-hero-content relative z-10 space-y-3">
+            <p className="foco-v4-eyebrow !text-neutral-300">Treino de hoje</p>
+            <h2 id="foco-workout-hero" className="max-w-[430px] text-[29px] font-extrabold leading-[1.13] tracking-[-.055em] sm:text-[37px]">{heroTitle}</h2>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-neutral-200">
+              <span className="inline-flex items-center gap-1.5"><Dumbbell className="h-3.5 w-3.5" />{todayExercises.length} exercícios</span>
+              <span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{activePlan.weekly_frequency} dias por semana</span>
             </div>
+            <button type="button" onClick={() => setActiveTab('sessao')} className="foco-v4-action !mt-4 w-fit">
+              <span>Iniciar treino</span><span className="foco-v4-cta-arrow"><ChevronRight className="h-5 w-5" /></span>
+            </button>
           </div>
-          <button type="button" onClick={openOkokUpload} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-black text-black hover:bg-neutral-200">
-            <FileUp className="h-4 w-4" /> Enviar avaliação OKOK <ArrowRight className="h-4 w-4" />
-          </button>
         </section>
-      )}
-
-      {activePlan && (
-        <section aria-labelledby="foco-workout-today" className="overflow-hidden rounded-3xl border border-white/15 bg-[#171717] p-5 shadow-lg sm:p-7">
-          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
-            <div className="space-y-2">
-              <p className="foco-eyebrow">Seu treino disponível</p>
-              <h2 id="foco-workout-today" className="text-2xl font-extrabold tracking-tight sm:text-3xl">{activePlan.name}</h2>
-              <p className="text-sm text-neutral-300">{exercises.length} exercícios · {activePlan.weekly_frequency} treinos por semana</p>
-            </div>
-            <button type="button" onClick={() => setActiveTab('sessao')} className="foco-action w-full shrink-0 sm:w-auto">
-              <Play className="h-5 w-5 fill-current" aria-hidden="true" /> Iniciar treino <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      ) : (
+        <section className="foco-v4-hero" aria-labelledby="foco-onboarding">
+          <div className="foco-v4-hero-content relative z-10 space-y-3">
+            <p className="foco-v4-eyebrow !text-neutral-300">Comece com FOCO IA</p>
+            <h2 id="foco-onboarding" className="text-[29px] font-extrabold tracking-tight sm:text-[37px]">Seu plano começa aqui.</h2>
+            <p className="max-w-[360px] text-xs leading-relaxed text-neutral-200">Informe seus objetivos, escolha os grupos prioritários e gere uma ficha personalizada.</p>
+            <button type="button" onClick={() => setActiveTab('anamnese')} className="foco-v4-action !mt-4">
+              <span>Configurar meu treino</span><span className="foco-v4-cta-arrow"><ChevronRight className="h-5 w-5" /></span>
             </button>
           </div>
         </section>
       )}
 
-      {pendingRec && (
-        <section className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-[#141414] p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-white p-2 text-black"><Sparkles className="h-5 w-5" /></div>
-            <div>
-              <h2 className="text-sm font-black">Sua revisão de treino está pronta</h2>
-              <p className="mt-1 text-xs leading-relaxed text-neutral-400">{pendingRec.explanation}</p>
-            </div>
+      <button type="button" onClick={openAssessment}
+        className="foco-v4-panel flex min-h-[102px] w-full items-center gap-3.5 px-4 py-4 text-left transition hover:border-white/35 sm:px-6">
+        <span className="foco-v4-info-icon !h-16 !w-16 shrink-0"><ScanLine className="h-7 w-7 text-neutral-300" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-extrabold sm:text-base">
+            {filesUnavailable ? 'Consultar avaliação OKOK' : isOkokDue ? 'Atualize sua avaliação OKOK' : latestAssessment ? 'Sua avaliação OKOK' : 'Envie sua avaliação OKOK'}
+          </span>
+          <span className="mt-1 block text-xs leading-relaxed text-neutral-400">
+            {isOkokDue ? 'Último relatório há ' + daysSinceAssessment + ' dias. Atualize para ajudar a IA na próxima ficha.' :
+              latestAssessment ? 'Última avaliação em ' + lastDate?.toLocaleDateString('pt-BR') + '. Veja seus indicadores.' :
+              'Faça o upload do relatório para melhorar a personalização do treino.'}
+          </span>
+        </span>
+        {isOkokDue ? <BellRing className="h-5 w-5 shrink-0 text-white" /> : <ChevronRight className="h-5 w-5 shrink-0 text-neutral-400" />}
+      </button>
+
+      {pendingReview && <button type="button" onClick={() => setActiveTab('revisao')}
+        className="foco-v4-panel flex w-full items-start gap-3 px-4 py-3 text-left hover:border-white/30">
+        <Sparkles className="mt-0.5 h-5 w-5 shrink-0" />
+        <span className="flex-1"><strong className="text-sm">Sua revisão de treino está pronta</strong><span className="mt-1 block text-xs text-neutral-400">{pendingReview.explanation}</span></span>
+        <ArrowRight className="mt-1 h-4 w-4 shrink-0" />
+      </button>}
+
+      <div className="grid grid-cols-3 gap-2.5 sm:gap-3" aria-label="Seus indicadores">
+        <button type="button" onClick={() => setActiveTab('historico')} className="foco-v4-stat text-left">
+          <BarChart3 className="foco-v4-stat-icon" aria-hidden="true" />
+          <p className="foco-v4-stat-value">{recentSessions.length}/{targetPerWeek || '—'}</p>
+          <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">Treinos na semana</p>
+          <div className="mt-3 flex gap-1">{Array.from({length: Math.min(targetPerWeek || 4, 6)},(_,i)=><span key={i} className={'h-1.5 min-w-0 flex-1 rounded-full ' + (i<recentSessions.length?'bg-white':'bg-[#414141]')} />)}</div>
+        </button>
+        <button type="button" onClick={openAssessment} className="foco-v4-stat text-left">
+          <ScanLine className="foco-v4-stat-icon" aria-hidden="true" />
+          <p className="foco-v4-stat-value break-words">{displayWeight}</p>
+          <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">{weightMetric ? 'Avaliação atual' : 'Peso do perfil'}</p>
+        </button>
+        <button type="button" onClick={() => setActiveTab('progresso')} className="foco-v4-stat text-left">
+          <TrendingUp className="foco-v4-stat-icon" aria-hidden="true" />
+          <p className="foco-v4-stat-value">{totalCompleted}</p>
+          <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">Sessões concluídas</p>
+        </button>
+      </div>
+
+      {activePlan && (
+        <section className="foco-v4-panel px-3.5 py-4 sm:p-5">
+          <div className="mb-4 flex items-center justify-between gap-3 px-1">
+            <h2 className="foco-v4-section-title">Seu plano</h2>
+            <button type="button" onClick={() => setActiveTab('treinos')} className="inline-flex min-h-9 items-center gap-1 text-xs text-neutral-300 hover:text-white">
+              Ver plano completo <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
-          <button type="button" onClick={() => setActiveTab('revisao')} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-black text-black hover:bg-neutral-200">
-            Revisar proposta <ArrowRight className="h-4 w-4" />
-          </button>
+          <div className="foco-v4-week">
+            {DAYS.map((day,idx) => {
+              const daily = isDailyPlan ? exercises.filter(e => e.training_day === day.id) : exercises;
+              const muscles = [...new Set(daily.map(e=>e.muscle_group).filter(Boolean))];
+              const done = completedDays.has(idx);
+              return <button type="button" key={day.id} onClick={() => setActiveTab('sessao')}
+                className={'foco-v4-day transition hover:border-white/35 ' + (todayIndex === idx ? 'foco-v4-day-today' : '')}
+                aria-label={day.short + ': ' + (daily.length ? muscles.join(', ') : 'Sem treino programado')}>
+                <span className="text-xs text-neutral-300">{day.short}</span>
+                <span className="line-clamp-2 min-h-[31px] text-[10px] font-semibold leading-snug">
+                  {isDailyPlan ? (daily.length ? muscles.slice(0,2).join(' + ') || 'Treino' : 'Descanso') : 'Flexível'}
+                </span>
+                <Dumbbell className="mt-auto h-4 w-4 text-neutral-400" />
+                <span className={'mt-1 flex h-5 w-5 items-center justify-center rounded-full border ' +
+                  (done ? 'border-white bg-white text-black' : todayIndex === idx ? 'border-white bg-white text-white' : 'border-[#777] text-transparent')}>
+                  {done ? <CheckCircle2 className="h-4 w-4" /> : todayIndex === idx ? <span className="h-1.5 w-1.5 rounded-full bg-black" /> : null}
+                </span>
+              </button>;
+            })}
+          </div>
         </section>
       )}
 
-      {!activePlan ? (
-        <section className="overflow-hidden rounded-3xl border border-white/10 bg-[#111]">
-          <div className="grid gap-0 md:grid-cols-[1.2fr_0.8fr]">
-            <div className="p-6 sm:p-9">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-black">
-                <Target className="h-6 w-6" />
-              </div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">Primeiro passo</p>
-              <h2 className="mt-2 max-w-xl text-2xl font-black tracking-tight sm:text-3xl">Seu treino começa com você.</h2>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-neutral-400">
-                Conte ao FOCO seus objetivos, sua experiência, os grupos musculares que quer priorizar e quanto tempo tem disponível. A IA usa essas respostas como contexto para sugerir a primeira ficha.
-              </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <button type="button" onClick={() => setActiveTab('anamnese')} className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-xs font-black uppercase tracking-wide text-black transition hover:bg-neutral-200">
-                  <ClipboardList className="h-4 w-4" /> Preencher anamnese
-                </button>
-                <button type="button" onClick={() => setActiveTab('arquivos')} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3.5 text-xs font-bold text-white transition hover:bg-white/10">
-                  <FileUp className="h-4 w-4" /> Importar ficha existente
-                </button>
-              </div>
-            </div>
-            <div className="flex flex-col justify-center gap-4 border-t border-white/10 bg-white/[0.025] p-6 sm:p-8 md:border-l md:border-t-0">
-              <div className="flex items-start gap-3">
-                <div className="rounded-lg border border-white/10 bg-black p-2"><Target className="h-4 w-4" /></div>
-                <div><h3 className="text-sm font-bold">Objetivos reais</h3><p className="mt-1 text-xs leading-relaxed text-neutral-500">Defina o que quer alcançar e o que importa mais para você.</p></div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="rounded-lg border border-white/10 bg-black p-2"><Activity className="h-4 w-4" /></div>
-                <div><h3 className="text-sm font-bold">Treino que cabe na sua rotina</h3><p className="mt-1 text-xs leading-relaxed text-neutral-500">Use seus dias, tempo disponível e equipamentos.</p></div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="rounded-lg border border-white/10 bg-black p-2"><Sparkles className="h-4 w-4" /></div>
-                <div><h3 className="text-sm font-bold">Sugestão personalizada</h3><p className="mt-1 text-xs leading-relaxed text-neutral-500">Revise a ficha antes de ativá-la e comece a registrar seus treinos.</p></div>
-              </div>
-            </div>
-          </div>
-        </section>
-      ) : (
-        <>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="rounded-2xl border border-white/10 bg-[#141414] p-4">
-              <Dumbbell className="mb-3 h-4 w-4 text-neutral-400" />
-              <p className="text-2xl font-black tabular-nums">{exercises.length}</p>
-              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-neutral-500">Exercícios na ficha</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-[#141414] p-4">
-              <Activity className="mb-3 h-4 w-4 text-neutral-400" />
-              <p className="text-2xl font-black tabular-nums">{activePlan.weekly_frequency}x</p>
-              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-neutral-500">Por semana</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-[#141414] p-4">
-              <CheckCircle2 className="mb-3 h-4 w-4 text-neutral-400" />
-              <p className="text-2xl font-black tabular-nums">{completedSessions.length}</p>
-              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-neutral-500">Sessões concluídas</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-[#141414] p-4">
-              <Clock3 className="mb-3 h-4 w-4 text-neutral-400" />
-              <p className="text-2xl font-black tabular-nums">{goals.length}</p>
-              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-neutral-500">Metas ativas</p>
-            </div>
-          </div>
-
-          {muscleChips.length > 0 && (
-            <section className="space-y-3">
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="text-xs font-black uppercase tracking-wider text-neutral-400">Grupos musculares da ficha</h2>
-                <button type="button" onClick={() => setActiveTab('biblioteca')} className="text-[11px] font-bold text-white hover:underline">Biblioteca de exercícios</button>
-              </div>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-                {muscleChips.map((muscle) => (
-                  <button key={muscle.name} type="button" onClick={() => setActiveTab('biblioteca')} className="flex items-center gap-3 rounded-xl border border-white/10 bg-[#141414] p-3 text-left transition hover:border-white/30">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10"><Activity className="h-4 w-4" /></div>
-                    <div className="min-w-0"><p className="truncate text-xs font-bold">{muscle.name}</p><p className="mt-1 text-[10px] text-neutral-500">{muscle.count} {muscle.count === 1 ? 'exercício' : 'exercícios'}</p></div>
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <section className="space-y-3">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="text-xs font-black uppercase tracking-wider text-neutral-300">Sua ficha</h2>
-              <button type="button" onClick={() => setActiveTab('treinos')} className="text-[11px] font-bold text-white hover:underline">Ver todas as fichas</button>
-            </div>
-            {exercises.length === 0 ? (
-              <div className="rounded-2xl border border-white/10 bg-[#141414] p-5 text-sm text-neutral-400">
-                Esta ficha ainda não tem exercícios cadastrados.
-                <button type="button" onClick={() => setActiveTab('novo-treino')} className="mt-3 block font-bold text-white hover:underline">Editar ou gerar ficha</button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-                {exercises.map((exercise, index) => (
-                  <article key={exercise.id || exercise.exercise_name + index} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-[#141414] p-4 transition hover:border-white/25">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black text-sm font-bold text-neutral-300">{index + 1}</div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-base font-bold">{exercise.exercise_name}</h3>
-                      <p className="mt-1 text-[11px] text-neutral-500">{exercise.muscle_group}</p>
-                      <p className="mt-2 text-xs text-neutral-300">
-                        <strong>{exercise.sets} séries</strong> · {exercise.reps_min}–{exercise.reps_max} repetições · {exercise.rest_seconds}s descanso
-                      </p>
-                      {exercise.notes && <p className="mt-2 text-xs leading-relaxed text-neutral-500">{exercise.notes}</p>}
-                    </div>
-                    <ExerciseIllustration exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} className="h-16 w-16 shrink-0" />
-                  </article>
-                ))}
-              </div>
-            )}
-          </section>
-
-
-        </>
-      )}
-
-      <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <button type="button" onClick={() => setActiveTab('anamnese')} className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#141414] p-4 text-left transition hover:border-white/30">
-          <span><span className="block text-sm font-bold">Anamnese</span><span className="mt-1 block text-xs text-neutral-500">Atualize prioridades e rotina</span></span><ClipboardList className="h-5 w-5 shrink-0 text-neutral-400" />
-        </button>
-        <button type="button" onClick={() => setActiveTab('arquivos')} className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#141414] p-4 text-left transition hover:border-white/30">
-          <span><span className="block text-sm font-bold">Arquivos e avaliações</span><span className="mt-1 block text-xs text-neutral-500">Importe uma ficha ou avaliação corporal</span></span><FileUp className="h-5 w-5 shrink-0 text-neutral-400" />
-        </button>
-        <button type="button" onClick={() => setActiveTab('progresso')} className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#141414] p-4 text-left transition hover:border-white/30">
-          <span><span className="block text-sm font-bold">Minha evolução</span><span className="mt-1 block text-xs text-neutral-500">Acompanhe seus registros</span></span><TrendingUp className="h-5 w-5 shrink-0 text-neutral-400" />
-        </button>
+      <section className="foco-v4-panel p-3.5 sm:p-5">
+        <h2 className="foco-v4-section-title mb-3 px-1">Ações rápidas</h2>
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+          {[
+            {label:'Nova ficha',description:'Crie um treino personalizado',icon:FilePlus2, action:() => setActiveTab('novo-treino')},
+            {label:'Enviar avaliação',description:'Atualize seu físico (OKOK)',icon:ScanLine, action:openAssessment},
+            {label:'Biblioteca',description:'Explore os exercícios',icon:BookOpen, action:() => setActiveTab('biblioteca')},
+            {label:'Progresso',description:'Acompanhe sua evolução',icon:Activity, action:() => setActiveTab('progresso')},
+          ].map(item => <button type="button" key={item.label} onClick={item.action} className="foco-v4-quick">
+            <span className="foco-v4-info-icon"><item.icon className="h-5 w-5" /></span>
+            <span className="min-w-0 flex-1"><strong className="block text-[13px]">{item.label}</strong><span className="mt-1 block text-[11px] text-neutral-400">{item.description}</span></span>
+            <ChevronRight className="h-4 w-4 shrink-0 text-neutral-400" />
+          </button>)}
+        </div>
       </section>
+      {!activePlan && <button type="button" onClick={() => setActiveTab('anamnese')} className="foco-v4-secondary w-full">
+        <ClipboardList className="h-4 w-4" /> Preencher minha anamnese <ArrowRight className="h-4 w-4" />
+      </button>}
     </div>
   );
 };
