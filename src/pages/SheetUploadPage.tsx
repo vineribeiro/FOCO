@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   AlertCircle,
   ScanLine,
+  Activity,
   ChevronRight,
   CalendarDays,
 } from 'lucide-react';
