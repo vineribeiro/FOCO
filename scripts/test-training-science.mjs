@@ -41,6 +41,24 @@ assert.ok(normalized[1].notes.length <=500);
 const valid = auditScientificWorkout(normalized, {experience:"iniciante",days:["segunda"],sessionMinutes:60});
 assert.equal(valid.ok,true,valid.issue);
 assert.equal(valid.directSetsByGroup["Quadríceps"],3);
+assert.equal(valid.estimatedEffectiveSetsByGroup["Quadríceps"],3);
+const compound = auditScientificWorkout([
+  exercise("Supino reto com barra","Peitoral","segunda",3,130),
+],{experience:"iniciante",days:["segunda"],sessionMinutes:60});
+assert.equal(compound.ok,true,compound.issue);
+assert.equal(compound.directSetsByGroup["Peitoral"],3);
+assert.equal(compound.estimatedEffectiveSetsByGroup["Tríceps"],1.5);
+assert.equal(compound.estimatedEffectiveSetsByGroup["Ombros"],1.5);
+const wrongMuscle = auditScientificWorkout([
+  exercise("Supino reto com barra","Quadríceps","segunda",3,140),
+],{experience:"iniciante",days:["segunda"],sessionMinutes:60});
+assert.equal(wrongMuscle.ok,false);
+assert.match(wrongMuscle.issue,/classificado/);
+const unknownExercise = auditScientificWorkout([
+  exercise("Exercício Inventado 123","Peitoral","segunda",3,140),
+],{experience:"iniciante",days:["segunda"],sessionMinutes:60});
+assert.equal(unknownExercise.ok,false);
+assert.match(unknownExercise.issue,/catálogo/);
 const summary = sciencePlanSummary({frequency:2,experience:"iniciante"},valid);
 assert.match(summary.progression,/Progressão dupla/);
 assert.deepEqual(summary.total_sets_by_day,{segunda:5});
@@ -78,4 +96,4 @@ const conservative = normalizeScienceExercises([exercise("Supino reto com barra"
 assert.equal(conservative[0].sets,2);
 assert.equal(conservative[0].rir_target,3);
 assert.equal(auditScientificWorkout(conservative,{experience:"intermediario",days:["segunda"],highRisk:true}).ok,true);
-console.log("FOCO study 2026: 24 scientific rules / boundary assertions OK.");
+console.log("FOCO study 2026: divisions, progression, safety, official catalog and indirect-volume assertions OK.");
