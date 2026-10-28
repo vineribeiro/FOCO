@@ -351,24 +351,24 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
       {/* Controller: progress, pause/resume and rest status remain fully functional. */}
       <section className="foco-v4-panel space-y-3 p-4 sm:p-5">
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-white animate-ping' : 'bg-neutral-600'}`} />
-              <span className="text-[10px] uppercase font-black tracking-widest text-white">
+              <span className="text-xs uppercase font-extrabold tracking-wider text-white">
                 {sessionStarted ? 'Treino em Andamento' : 'Sessão Pronta'}
               </span>
             </div>
-            <h2 className="max-w-[200px] truncate text-base font-extrabold text-white sm:max-w-[340px]">
+            <h2 className="mt-1 line-clamp-2 text-lg font-extrabold leading-tight text-white sm:max-w-[420px]">
               {activePlan?.name || 'Treino Livre'}
             </h2>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
             {!sessionStarted ? (
               <button
                 onClick={handleStartWorkout}
-                className="foco-v4-action !min-h-11 !rounded-xl !px-4 !py-2.5 !text-xs"
+                className="foco-v4-action w-full !min-h-12 !rounded-xl !px-5 !py-3 !text-sm sm:w-auto"
               >
                 <Play className="w-3.5 h-3.5 fill-current text-black" />
                 <span>Iniciar</span>
@@ -377,7 +377,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
               <button
                 onClick={handleFinishWorkout}
                 disabled={isSaving}
-                className="foco-v4-action !min-h-11 !rounded-xl !px-4 !py-2.5 !text-xs disabled:opacity-50"
+                className="foco-v4-action w-full !min-h-12 !rounded-xl !px-5 !py-3 !text-sm disabled:opacity-50 sm:w-auto"
               >
                 <CheckCircle2 className="w-3.5 h-3.5 text-black" />
                 <span>{isSaving ? 'Gravando...' : 'Concluir'}</span>
@@ -394,10 +394,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           </div>
           <div className="flex items-center gap-3 border-l border-white/10 pl-3">
             <Timer className="h-5 w-5 text-neutral-400" />
-            <div><span className="block text-[10px] text-neutral-500">Descanso</span>
+            <div><span className="block text-xs text-neutral-300">Descanso</span>
               <strong className="font-mono text-base tabular-nums">{restTimerActive ? formatTime(restSecondsRemaining) : '—'}</strong></div>
             {restTimerActive && <button type="button" onClick={restIsPaused ? resumeTimer : pauseTimer}
-              className="foco-v4-secondary !min-h-10 !rounded-xl !px-3" aria-label={restIsPaused ? 'Retomar descanso' : 'Pausar descanso'}>
+              className="foco-v4-secondary !min-h-11 !min-w-11 !rounded-xl !px-3" aria-label={restIsPaused ? 'Retomar descanso' : 'Pausar descanso'}>
               {restIsPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
             </button>}
           </div>
@@ -405,52 +405,54 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
         <div className="flex flex-col gap-2 border-t border-white/5 pt-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <label htmlFor="foco-training-day" className="block text-[10px] font-black uppercase tracking-widest text-neutral-400">Dia do treino</label>
-            <p className="mt-1 text-[10px] text-neutral-600">{sessionStarted ? 'Dia bloqueado durante a sessão' : 'A sessão mostra os exercícios atribuídos a este dia.'}</p>
+            <label htmlFor="foco-training-day" className="block text-xs font-bold uppercase tracking-wider text-neutral-300">Dia do treino</label>
+            <p className="mt-1 text-xs text-neutral-300">{sessionStarted ? 'Dia bloqueado durante a sessão' : 'A sessão mostra os exercícios atribuídos a este dia.'}</p>
           </div>
           <select
             id="foco-training-day"
             value={selectedTrainingDay}
             disabled={sessionStarted}
             onChange={(event) => { setSelectedTrainingDay(event.target.value); savePreferredTrainingDay(event.target.value); }}
-            className="w-full rounded-xl border border-white/10 bg-[#141414] px-3 py-2.5 text-xs font-bold text-white outline-none focus:border-white/30 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            className="w-full min-h-12 rounded-xl border border-white/20 bg-[#141414] px-3 py-2.5 text-base font-bold text-white outline-none focus:border-white/50 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:text-sm"
           >
             {TRAINING_DAYS.map((day) => <option key={day.value} value={day.value}>{day.label}</option>)}
           </select>
         </div>
 
         {/* Real-time stats bar (Duração, Séries Feitas, Carga Total) */}
-        <div className="grid grid-cols-3 gap-2 pt-1 border-t border-white/5">
-          <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-[#141414] border border-white/10">
-            <Clock className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+        <div className="grid grid-cols-3 gap-1.5 border-t border-white/10 pt-3 sm:gap-2">
+          <div className="flex min-w-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-[#141414] px-1.5 py-3 sm:justify-start sm:px-3">
+            <Clock className="hidden h-4 w-4 shrink-0 text-neutral-300 sm:block" />
             <div className="font-mono tabular-nums leading-tight min-w-0">
-              <span className="text-[9px] text-neutral-500 block uppercase font-bold">Tempo</span>
-              <span className="text-xs font-black text-white">{formatTime(elapsedSeconds)}</span>
+              <span className="block text-[11px] font-bold uppercase text-neutral-300">Tempo</span>
+              <span className="text-sm font-black text-white">{formatTime(elapsedSeconds)}</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-[#141414] border border-white/10">
-            <Flame className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+          <div className="flex min-w-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-[#141414] px-1.5 py-3 sm:justify-start sm:px-3">
+            <Flame className="hidden h-4 w-4 shrink-0 text-neutral-300 sm:block" />
             <div className="font-mono tabular-nums leading-tight min-w-0">
-              <span className="text-[9px] text-neutral-500 block uppercase font-bold">Volume</span>
-              <span className="text-xs font-black text-white truncate">{Math.round(currentTotalTonnage)} kg</span>
+              <span className="block text-[11px] font-bold uppercase text-neutral-300">Volume</span>
+              <span className="block max-w-full truncate text-sm font-black text-white">{Math.round(currentTotalTonnage)} kg</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-[#141414] border border-white/10">
-            <Zap className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+          <div className="flex min-w-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-[#141414] px-1.5 py-3 sm:justify-start sm:px-3">
+            <Zap className="hidden h-4 w-4 shrink-0 text-neutral-300 sm:block" />
             <div className="font-mono tabular-nums leading-tight min-w-0">
-              <span className="text-[9px] text-neutral-500 block uppercase font-bold">Séries</span>
-              <span className="text-xs font-black text-white">{currentTotalSetsDone}/{currentTotalSets}</span>
+              <span className="block text-[11px] font-bold uppercase text-neutral-300">Séries</span>
+              <span className="text-sm font-black text-white">{currentTotalSetsDone}/{currentTotalSets}</span>
             </div>
           </div>
         </div>
 
         {/* Sound & Auto-Rest Settings bar */}
-        <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[11px] font-mono">
+        <details className="border-t border-white/10 pt-3">
+          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-neutral-200">Preferências de descanso e som</summary>
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-1 pt-2 text-xs">
           <button
             onClick={() => setAutoRestEnabled(!autoRestEnabled)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+            className={`flex min-h-11 items-center gap-1.5 rounded-lg border px-3 py-2 transition-all cursor-pointer ${
               autoRestEnabled
                 ? 'bg-white/10 text-white border-white/20'
                 : 'bg-black text-neutral-500 border-white/5'
@@ -464,7 +466,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           <div className="flex items-center gap-1.5">
             <button
               onClick={toggleMute}
-              className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
+              className={`foco-touch rounded-lg border transition-all cursor-pointer ${
                 isMuted
                   ? 'bg-black text-neutral-500 border-white/5'
                   : 'bg-white/10 text-white border-white/20'
@@ -475,13 +477,14 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             </button>
             <button
               onClick={testSound}
-              className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white border border-white/10 text-[10px] font-bold cursor-pointer transition-colors"
+              className="min-h-11 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-bold text-neutral-200 transition-colors hover:bg-white/10 hover:text-white"
               title="Testar som do cronômetro no fone/alto-falante"
             >
               Testar Beep
             </button>
           </div>
-        </div>
+          </div>
+        </details>
 
         {errorAlert && (
           <div role="alert" className="p-2.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs flex items-center justify-between">
@@ -528,12 +531,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
               {/* Exercise Header */}
               <div className="flex items-start justify-between pb-3 border-b border-white/10 gap-2">
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 text-[10px] text-neutral-400 font-bold uppercase tracking-wider">
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-300">
                     <span>{exIdx === focusedExerciseIndex ? 'Exercício atual' : exercise.muscle_group}</span>
                     <span>·</span>
                     <span className="font-mono">{completedCount}/{exercise.sets.length} séries feitas</span>
                   </div>
-                  <h3 className="mt-1 text-[23px] font-extrabold leading-tight tracking-[-.04em] text-white">
+                  <h3 className="mt-1 text-[clamp(21px,5vw,27px)] font-extrabold leading-tight tracking-[-.04em] text-white">
                     {exercise.exercise_name}
                   </h3>
                 </div>
@@ -566,10 +569,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
               )}
 
               {/* Sets Table */}
-              <div className="mt-2.5 overflow-x-auto">
+              <div className="mt-3 overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="text-neutral-500 font-semibold border-b border-white/5 text-[10px]">
+                    <tr className="border-b border-white/10 text-xs font-semibold text-neutral-300">
                       <th className="py-2 px-1 w-12">SÉRIE</th>
                       <th className="py-2 px-1">CARGA</th>
                       <th className="py-2 px-1">REPS</th>
