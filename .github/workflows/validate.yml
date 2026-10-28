@@ -26,6 +26,8 @@ jobs:
         run: npm run lint
       - name: Production frontend build
         run: npm run build
+      - name: Scientific workout generation rules and safety regression
+        run: npm run test:training-science
       - name: Exercise image catalog audit
         run: npm run audit:images
       - name: Anatomy atlas manifest integrity

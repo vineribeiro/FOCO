@@ -15,6 +15,7 @@
     "anatomy:generate": "node scripts/generate-anatomy.mjs",
     "audit:anatomy": "node scripts/audit-anatomy-v3.mjs",
     "test:anatomy-review": "tsx scripts/test-anatomy-review.mjs",
+    "test:training-science": "node scripts/test-training-science.mjs",
     "audit:anatomy-review-public": "node scripts/audit-anatomy-review-public.mjs"
   },
   "dependencies": {

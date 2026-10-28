@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { useAuth } from '../context/AuthContext';
-import { WorkoutExercise } from '../types';
+import { WorkoutExercise, TrainingScienceReport } from '../types';
 import {
   Sparkles,
   Dumbbell,
@@ -16,6 +16,10 @@ import {
   CalendarDays,
   Activity,
   Target,
+  ShieldCheck,
+  HeartPulse,
+  BrainCircuit,
+  Clock3,
 } from 'lucide-react';
 
 interface NewWorkoutProps {
@@ -43,6 +47,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   const [aiEquipment, setAiEquipment] = useState('Academia Completa com Polias e Barras');
   const [aiRestrictions, setAiRestrictions] = useState('');
   const [includeBodyMetrics, setIncludeBodyMetrics] = useState(false);
+  const [medicalClearanceConfirmed, setMedicalClearanceConfirmed] = useState(false);
+  const requiresClinicalReview = /rabdomi[oó]l|rhabdomyol|miopatia/i.test(aiRestrictions);
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Generated Plan State
@@ -52,6 +58,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
     weekly_frequency: number;
     explanation: string;
     exercises: WorkoutExercise[];
+    training_science?: TrainingScienceReport;
   } | null>(null);
 
   // Manual Builder state
@@ -121,6 +128,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         equipment_available: aiEquipment,
         restrictions: aiRestrictions,
         include_body_metrics: includeBodyMetrics,
+        medical_clearance_confirmed: requiresClinicalReview && medicalClearanceConfirmed,
       });
       setGeneratedPlan(result);
     } catch (err: any) {
@@ -409,10 +417,28 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 </span>
               </span>
             </label>
+            {requiresClinicalReview && (
+              <div className="rounded-2xl border border-white/30 bg-white/[.05] p-4">
+                <div className="flex items-start gap-3">
+                  <HeartPulse className="mt-0.5 h-5 w-5 shrink-0 text-white" />
+                  <div>
+                    <strong className="text-sm">Revisão médica e profissional necessária</strong>
+                    <p className="mt-1 text-xs leading-relaxed text-neutral-300">
+                      O relato inclui uma possível condição muscular relevante. O FOCO só pode preparar uma proposta educativa conservadora; ela não substitui sua liberação individual e a revisão por profissional habilitado.
+                    </p>
+                    <label className="mt-3 flex cursor-pointer items-start gap-2.5 text-xs leading-relaxed">
+                      <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 accent-white"
+                        checked={medicalClearanceConfirmed} onChange={(event) => setMedicalClearanceConfirmed(event.target.checked)} />
+                      <span>Confirmo que recebi liberação médica para iniciar ou retomar treinamento e que a proposta será revisada antes de praticá-la.</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="pt-2">
               <button
                 type="submit"
-                disabled={isGenerating}
+                disabled={isGenerating || (requiresClinicalReview && !medicalClearanceConfirmed)}
                 className="foco-v4-action !w-full disabled:opacity-50"
               >
                 <Sparkles className="w-4 h-4" />
@@ -449,6 +475,47 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
 
               <p className="text-xs leading-relaxed text-neutral-400">Revise a divisão semanal e cada exercício antes de ativar. Cargas iniciais ficam em aberto até serem ajustadas individualmente.</p>
+              {generatedPlan.training_science && (
+                <section className="foco-v4-panel-soft space-y-4 p-4 sm:p-5" aria-labelledby="foco-science">
+                  <div className="flex items-center gap-3">
+                    <div className="foco-v4-info-icon !h-11 !w-11"><BrainCircuit className="h-5 w-5" /></div>
+                    <div>
+                      <p className="foco-v4-eyebrow">Motor FOCO · Base científica 2026</p>
+                      <h4 id="foco-science" className="foco-v4-section-title mt-1">Por que este treino?</h4>
+                    </div>
+                  </div>
+                  <p className="text-[13px] leading-relaxed text-neutral-200">{generatedPlan.training_science.split_rationale}</p>
+                  <p className="text-xs leading-relaxed text-neutral-400">{generatedPlan.training_science.dose}</p>
+                  {Object.keys(generatedPlan.training_science.direct_sets_by_group || {}).length > 0 && (
+                    <div>
+                      <p className="mb-2 text-xs font-bold text-neutral-300">Séries diretas por grupo/semana</p>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {Object.entries(generatedPlan.training_science.direct_sets_by_group).map(([group, sets]) => (
+                          <div key={group} className="rounded-xl border border-white/10 bg-[#111] px-3 py-2">
+                            <span className="block text-[11px] text-neutral-400">{group}</span>
+                            <strong className="mt-1 block text-xl tabular-nums">{sets} <small className="text-[10px] font-normal text-neutral-500">séries</small></strong>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <details className="rounded-xl border border-white/10 bg-[#111] p-3">
+                    <summary className="cursor-pointer text-xs font-bold text-white">Entender volume indireto, descanso e progressão</summary>
+                    <div className="mt-3 space-y-2 text-xs leading-relaxed text-neutral-400">
+                      <p>O volume indireto é estimado pela participação de músculos auxiliares nos exercícios compostos; não equivale a séries diretas medidas.</p>
+                      <p>{generatedPlan.training_science.progression}</p>
+                      <p>{generatedPlan.training_science.recovery}</p>
+                      <p>{generatedPlan.training_science.monitoring}</p>
+                    </div>
+                  </details>
+                  {generatedPlan.training_science.alerts?.map((alert, index) => (
+                    <p key={index} className="flex items-start gap-2 text-xs leading-relaxed text-neutral-300">
+                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-neutral-300" />{alert}
+                    </p>
+                  ))}
+                  <p className="text-[10px] text-neutral-500">Referência: Estudo Profissional de Musculação 2026. A IA propõe e o motor valida parâmetros educacionais; validação presencial continua importante.</p>
+                </section>
+              )}
               <section className="foco-v4-panel-soft p-3 sm:p-4" aria-labelledby="foco-generated-week">
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <h4 id="foco-generated-week" className="foco-v4-section-title">Divisão semanal</h4>
