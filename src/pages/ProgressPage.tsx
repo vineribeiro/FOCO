@@ -24,6 +24,7 @@ export const ProgressPage: React.FC = () => {
   const [measurements, setMeasurements] = useState<BodyMeasurement[]>([]);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [period, setPeriod] = useState<'30' | '90' | 'all'>('90');
 
   // New measurement form
   const [measurementType, setMeasurementType] = useState('peso');
@@ -43,6 +44,7 @@ export const ProgressPage: React.FC = () => {
       setSessions(s);
     } catch (e: any) {
       console.error('Error fetching progress data:', e);
+      setActionMsg({ type: 'error', text: 'Não foi possível consultar a evolução. Verifique sua conexão e tente novamente.' });
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +56,7 @@ export const ProgressPage: React.FC = () => {
 
   const handleAddMeasurement = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!measurementValue || isNaN(Number(measurementValue))) {
+    if (!measurementValue || !Number.isFinite(Number(measurementValue)) || Number(measurementValue) <= 0) {
       setActionMsg({ type: 'error', text: 'Informe um valor numérico válido.' });
       return;
     }
@@ -96,6 +98,7 @@ export const ProgressPage: React.FC = () => {
     .map((m) => ({
       date: new Date(m.measured_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
       peso: Number(m.value),
+      timestamp: new Date(m.measured_at).getTime(),
     }));
 
   const volumeData = sessions
@@ -108,19 +111,55 @@ export const ProgressPage: React.FC = () => {
         sessionName: s.plan_name ? s.plan_name.split('-')[0].trim() : 'Treino',
         date: new Date(s.started_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
         tonelagem: Math.round(totalTonnage),
+        timestamp: new Date(s.started_at).getTime(),
       };
     });
+
+  const cutoff = period === 'all' ? 0 : Date.now() - Number(period) * 86400000;
+  const visibleWeightData = weightData.filter(point => point.timestamp >= cutoff);
+  const visibleVolumeData = volumeData.filter(point => point.timestamp >= cutoff);
+  const completedSessions = sessions.filter(s => s.status === 'completed');
+  const weekStart = new Date();
+  weekStart.setHours(0, 0, 0, 0);
+  weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
+  const weeklyCompleted = completedSessions.filter(s => new Date(s.started_at) >= weekStart).length;
+  const lifetimeMinutes = Math.round(completedSessions.reduce((sum, session) => sum + Math.max(0, Number(session.duration_seconds) || 0), 0) / 60);
+  const latestWeight = weightData.length ? weightData[weightData.length - 1].peso : null;
+  const weightDelta = visibleWeightData.length >= 2 ? visibleWeightData[visibleWeightData.length - 1].peso - visibleWeightData[0].peso : null;
 
   return (
     <div className="foco-v4-page space-y-5">
       
       {/* Header */}
-      <div>
-        <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
-          Métricas Reais
-        </span>
-        <h2 className="foco-v4-heading">Minha evolução</h2>
-      </div>
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <span className="foco-v4-eyebrow">Métricas registradas</span>
+          <h1 className="foco-v4-heading">Minha evolução</h1>
+          <p className="mt-2 text-sm text-neutral-400">Seus treinos e medidas, com dados reais.</p>
+        </div>
+        <label className="flex flex-col gap-1.5 text-xs font-semibold text-neutral-300">
+          Período dos gráficos
+          <select aria-label="Período dos gráficos" className="foco-v4-field !min-h-11 !py-2" value={period} onChange={event => setPeriod(event.target.value as '30' | '90' | 'all')}>
+            <option value="30">Últimos 30 dias</option>
+            <option value="90">Últimos 90 dias</option>
+            <option value="all">Todo o histórico</option>
+          </select>
+        </label>
+      </header>
+      {isLoading && <div role="status" className="foco-v4-panel p-4 text-sm text-neutral-300">Atualizando seus registros...</div>}
+      {!isLoading && <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4" aria-label="Resumo da evolução">
+        {[
+          { label: 'Treinos concluídos', value: String(completedSessions.length), hint: 'Desde o início' },
+          { label: 'Nesta semana', value: String(weeklyCompleted), hint: 'Sessões concluídas' },
+          { label: 'Tempo de treino', value: lifetimeMinutes + ' min', hint: 'Tempo acumulado' },
+          { label: 'Peso registrado', value: latestWeight === null ? '—' : latestWeight.toLocaleString('pt-BR') + ' kg', hint: 'Última medição' },
+        ].map(item => <div className="foco-v4-stat" key={item.label}>
+          <span className="foco-v4-eyebrow">{item.label}</span>
+          <p className="foco-v4-stat-value mt-3">{item.value}</p>
+          <p className="mt-2 text-xs text-neutral-400">{item.hint}</p>
+        </div>)}
+      </div>}
+      {weightDelta !== null && !isLoading && <p className="text-xs text-neutral-400">Variação de peso no período: <strong className="text-white">{weightDelta > 0 ? '+' : ''}{weightDelta.toLocaleString('pt-BR', {maximumFractionDigits: 2})} kg</strong>. Compare medidas feitas em condições semelhantes.</p>
 
       {actionMsg && (
         <div
@@ -145,17 +184,17 @@ export const ProgressPage: React.FC = () => {
               Peso Corporal (kg)
             </h3>
           </div>
-          {weightData.length > 0 && (
+          {visibleWeightData.length > 0 && (
             <span className="text-xs font-mono font-bold text-white">
-              {weightData[weightData.length - 1].peso} kg
+              {visibleWeightData[visibleWeightData.length - 1].peso} kg
             </span>
           )}
         </div>
 
         <div className="h-56 w-full">
-          {weightData.length >= 2 ? (
+          {visibleWeightData.length >= 2 ? (
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={weightData}>
+              <AreaChart data={visibleWeightData}>
                 <defs>
                   <linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.25} />
@@ -192,7 +231,7 @@ export const ProgressPage: React.FC = () => {
             </ResponsiveContainer>
           ) : (
             <div className="h-full flex items-center justify-center text-xs text-neutral-500 text-center">
-              Cadastre pelo menos 2 pesagens para plotar o gráfico.
+              São necessárias duas pesagens no período selecionado.
             </div>
           )}
         </div>
@@ -213,9 +252,9 @@ export const ProgressPage: React.FC = () => {
         </div>
 
         <div className="h-56 w-full">
-          {volumeData.length > 0 ? (
+          {visibleVolumeData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={volumeData}>
+              <BarChart data={visibleVolumeData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#303030" />
                 <XAxis dataKey="date" stroke="#A3A3A3" fontSize={10} />
                 <YAxis stroke="#A3A3A3" fontSize={10} />
@@ -238,7 +277,7 @@ export const ProgressPage: React.FC = () => {
             </ResponsiveContainer>
           ) : (
             <div className="h-full flex items-center justify-center text-xs text-neutral-500 text-center">
-              Complete treinos para registrar o volume levantado.
+              Nenhum treino com séries concluídas no período selecionado.
             </div>
           )}
         </div>
@@ -264,7 +303,7 @@ export const ProgressPage: React.FC = () => {
                 setMeasurementType(e.target.value);
                 setMeasurementUnit(e.target.value === 'peso' ? 'kg' : 'cm');
               }}
-              className="w-full px-2.5 py-2 rounded-xl bg-[#000000] border border-white/10 text-white text-xs focus:outline-none focus:border-white"
+              className="foco-v4-field w-full"
             >
               <option value="peso">Peso (kg)</option>
               <option value="braco_direito">Braço Dir. (cm)</option>
@@ -286,7 +325,10 @@ export const ProgressPage: React.FC = () => {
                 value={measurementValue}
                 onChange={(e) => setMeasurementValue(e.target.value)}
                 placeholder="Ex: 82.5"
-                className="flex-1 px-2.5 py-2 rounded-xl bg-[#000000] border border-white/10 text-white font-mono tabular-nums text-xs focus:outline-none focus:border-white"
+                min="0.1"
+                inputMode="decimal"
+                aria-label="Valor da medida"
+                className="foco-v4-field min-w-0 flex-1 font-mono tabular-nums"
               />
               <span className="px-2.5 py-2 rounded-xl bg-[#000000] border border-white/10 text-xs font-bold text-neutral-400 flex items-center">
                 {measurementUnit}
@@ -298,7 +340,7 @@ export const ProgressPage: React.FC = () => {
         <button
           type="submit"
           disabled={isSaving}
-          className="w-full py-3 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md"
+          className="foco-v4-action w-full"
         >
           {isSaving ? 'Salvando...' : 'Adicionar Medida'}
         </button>
@@ -310,7 +352,7 @@ export const ProgressPage: React.FC = () => {
           Histórico de Medições ({measurements.length})
         </h3>
 
-        <div className="max-h-56 overflow-y-auto">
+        <div className="max-h-64 overflow-auto">
           {measurements.length === 0 ? (
             <p className="text-xs text-neutral-500 py-4 text-center">Nenhuma medição registrada.</p>
           ) : (
@@ -338,7 +380,8 @@ export const ProgressPage: React.FC = () => {
                     <td className="py-2 px-1 text-right">
                       <button
                         onClick={() => handleDeleteMeasurement(m.id)}
-                        className="p-1 text-neutral-500 hover:text-white rounded transition-colors"
+                        className="foco-touch rounded-lg text-neutral-400 hover:bg-white/10 hover:text-white transition-colors"
+                        aria-label={"Excluir medição de " + m.measurement_type.replaceAll("_", " ") + " de " + new Date(m.measured_at).toLocaleDateString("pt-BR")}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
