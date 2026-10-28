@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { ShieldAlert, CheckCircle2, AlertCircle, Save, Trash2, X } from 'lucide-react';
+import { ShieldAlert, CheckCircle2, AlertCircle, Save, Trash2, X, Settings2 } from 'lucide-react';
 
-export const ProfilePage: React.FC = () => {
+interface ProfilePageProps { setActiveTab: (tab: string) => void; }
+export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
   const { user, profile, refreshProfile, deleteAccount } = useAuth();
 
   const [fullName, setFullName] = useState(profile?.full_name || user?.full_name || '');
@@ -70,13 +71,17 @@ export const ProfilePage: React.FC = () => {
   return (
     <div className="foco-v4-page max-w-3xl space-y-5 text-white">
       
-      {/* Header */}
-      <div>
-        <><p className="foco-v4-eyebrow mb-2">FOCO / SUA CONTA</p><h1 className="foco-v4-heading">Meu perfil</h1></>
-        <p className="text-xs text-neutral-400 mt-0.5">
-          Gerencie suas informações para personalizar a experiência de treino.
-        </p>
-      </div>
+      <header className="flex items-start justify-between gap-3">
+        <div>
+          <p className="foco-v4-eyebrow mb-2">FOCO / SUA CONTA</p>
+          <h1 className="foco-v4-heading">Meu perfil</h1>
+          <p className="mt-2 text-xs text-neutral-400">Gerencie suas informações para personalizar a experiência de treino.</p>
+        </div>
+        <button type="button" onClick={() => setActiveTab('configuracoes')}
+          aria-label="Configurações" className="foco-v4-secondary !px-3">
+          <Settings2 className="h-5 w-5" />
+        </button>
+      </header>
 
       {msg && (
         <div
