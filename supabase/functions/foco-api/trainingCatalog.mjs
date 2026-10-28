@@ -7,5 +7,17 @@ const normalize = v => String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g
 const map = new Map(records.map(([name,primary,secondary]) => [
   normalize(name), { name, primary:primary.split(",").filter(Boolean), secondary:secondary.split(",").filter(Boolean) },
 ]));
+// Functional-category cross-listings still have an anatomical primary group.
+const corrections = [
+  ["Agachamento sumô com halter", ["Quadríceps","Glúteos"]],
+  ["Avanço alternado", ["Quadríceps","Glúteos"]],
+  ["Agachamento com peso corporal", ["Quadríceps"]],
+  ["Subida no banco", ["Quadríceps","Glúteos"]],
+  ["Kettlebell swing", ["Glúteos","Posteriores"]],
+];
+for (const [name, primary] of corrections) {
+  const record = map.get(normalize(name));
+  if (record) record.primary = [...new Set([...record.primary.filter(group => group !== "Cardio"), ...primary])];
+}
 export function catalogExercise(name) { return map.get(normalize(name)) || null; }
 export function catalogExerciseCount() { return records.length; }
