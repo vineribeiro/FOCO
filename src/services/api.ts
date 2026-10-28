@@ -9,6 +9,7 @@ import {
   UploadedFile,
   AIRecommendation,
   Anamnesis,
+  TrainingScienceReport,
 } from '../types';
 
 const TOKEN_KEY = 'foco_auth_token';
@@ -778,6 +779,7 @@ export const api = {
     equipment_available?: string;
     restrictions?: string;
     include_body_metrics?: boolean;
+    medical_clearance_confirmed?: boolean;
   }) {
     return await request<{
       name: string;
@@ -785,6 +787,7 @@ export const api = {
       weekly_frequency: number;
       explanation: string;
       exercises: WorkoutExercise[];
+      training_science?: TrainingScienceReport;
     }>('/api/ai/generate-workout', {
       method: 'POST',
       body: JSON.stringify(payload),
