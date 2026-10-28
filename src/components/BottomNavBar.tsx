@@ -1,31 +1,43 @@
 import React from 'react';
-import { BookOpen, ChartNoAxesColumnIncreasing, Dumbbell, House } from 'lucide-react';
+import { BookOpen, Dumbbell, House, ScanLine, UserRound } from 'lucide-react';
 
 interface BottomNavBarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onStartSession: () => void;
 }
+
+/** Five-section navigation matching the approved FOCO premium mockups. */
 export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, setActiveTab, onStartSession }) => {
   const tabs = [
     { id: 'dashboard', label: 'Início', icon: House },
-    { id: 'sessao', label: 'Treinar', icon: Dumbbell },
-    { id: 'biblioteca', label: 'Exercícios', icon: BookOpen },
-    { id: 'progresso', label: 'Evolução', icon: ChartNoAxesColumnIncreasing },
-  ];
+    { id: 'sessao', label: 'Treino', icon: Dumbbell },
+    { id: 'arquivos', label: 'Avaliação', icon: ScanLine },
+    { id: 'biblioteca', label: 'Biblioteca', icon: BookOpen },
+    { id: 'perfil', label: 'Perfil', icon: UserRound },
+  ] as const;
+
+  const navigate = (id: typeof tabs[number]['id']) => {
+    if (id === 'sessao') { onStartSession(); return; }
+    if (id === 'arquivos') {
+      try { sessionStorage.setItem('foco_upload_mode', 'body'); } catch { /* navigate even without storage */ }
+    }
+    setActiveTab(id);
+  };
+
   return (
-    <nav aria-label="Navegação principal" className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0A0A0A]/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom,0px)] md:hidden">
-      <div className="mx-auto grid h-[72px] max-w-xl grid-cols-4 gap-1 px-2">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const selected = activeTab === tab.id || (tab.id === 'sessao' && activeTab === 'treinos');
+    <nav aria-label="Navegação principal" className="foco-v4-tabbar md:hidden">
+      <div className="mx-auto grid h-[73px] max-w-xl grid-cols-5 gap-0.5 px-2">
+        {tabs.map(({ id, label, icon: Icon }) => {
+          const selected = activeTab === id
+            || (id === 'sessao' && ['treinos','novo-treino','revisao'].includes(activeTab))
+            || (id === 'arquivos' && activeTab === 'progresso');
           return (
-            <button type="button" key={tab.id} aria-current={selected ? 'page' : undefined}
-              aria-label={tab.label} onClick={() => tab.id === 'sessao' ? onStartSession() : setActiveTab(tab.id)}
-              className={'flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl transition active:scale-[0.97] ' +
-                (selected ? 'bg-white/10 text-white' : 'text-neutral-400 hover:bg-white/5 hover:text-white')}>
-              <Icon className="h-5 w-5" strokeWidth={selected ? 2.5 : 1.8} aria-hidden="true" />
-              <span className={'text-xs ' + (selected ? 'font-bold' : 'font-medium')}>{tab.label}</span>
+            <button type="button" key={id} aria-current={selected ? 'page' : undefined}
+              aria-label={label} onClick={() => navigate(id)}
+              className={'foco-v4-tab transition active:scale-[.97] ' + (selected ? 'foco-v4-tab-active' : 'hover:text-white')}>
+              <Icon strokeWidth={selected ? 2.5 : 1.7} aria-hidden="true" />
+              <span>{label}</span>
             </button>
           );
         })}
