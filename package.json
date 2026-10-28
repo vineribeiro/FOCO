@@ -16,6 +16,7 @@
     "audit:anatomy": "node scripts/audit-anatomy-v3.mjs",
     "test:anatomy-review": "tsx scripts/test-anatomy-review.mjs",
     "test:training-science": "node scripts/test-training-science.mjs",
+    "test:okok": "tsx scripts/test-okok-metrics.ts",
     "audit:anatomy-review-public": "node scripts/audit-anatomy-review-public.mjs"
   },
   "dependencies": {
