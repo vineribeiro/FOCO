@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  ArrowUpRight, CheckCircle2, ChevronDown, Dumbbell, Filter, Layers3,
+  CheckCircle2, ChevronDown, Dumbbell, Filter,
   LoaderCircle, Plus, Search, X
 } from 'lucide-react';
 import { api } from '../services/api';
@@ -118,14 +118,14 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
   };
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-6 pb-32 text-white">
+    <div className="foco-v4-page space-y-5 text-white">
       <header className="space-y-3">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="mb-1 text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">Catálogo de exercícios</p>
-            <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Biblioteca FOCO</h1>
+            <p className="foco-v4-eyebrow">FOCO / Exercícios</p>
+            <h1 className="foco-v4-heading mt-2">Biblioteca</h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-400">
-              Explore exercícios de todos os grupos musculares, veja a execução ilustrada e adicione movimentos às suas fichas como quem monta uma playlist.
+              Explore os exercícios por grupo muscular, consulte a execução ilustrada e adicione movimentos à sua ficha.
             </p>
           </div>
           <span className="shrink-0 rounded-xl border border-white/10 bg-[#141414] px-3 py-2 text-right">
@@ -141,22 +141,20 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Buscar exercício, músculo ou equipamento..."
-            className="w-full rounded-xl border border-white/10 bg-[#141414] py-3.5 pl-10 pr-10 text-sm text-white outline-none placeholder:text-neutral-600 focus:border-white/30"
+            className="foco-v4-field !w-full !pl-10 !pr-10 placeholder:text-neutral-500"
             aria-label="Buscar exercícios"
           />
           {search && <button type="button" onClick={() => setSearch('')} aria-label="Limpar busca" className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-neutral-400 hover:text-white"><X className="h-4 w-4" /></button>}
         </div>
       </header>
 
-      <button type="button" onClick={() => setActiveTab('atlas')}
-        className="flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl border border-white/15 bg-[#171717] px-4 py-3 text-left transition hover:border-white/40">
-        <span className="flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10"><Layers3 className="h-5 w-5" /></span>
-          <span><strong className="block text-sm font-bold">Atlas anatômico 3D</strong>
-          <span className="mt-1 block text-xs text-neutral-400">Acompanhe as pranchas e o processo de revisão</span></span>
-        </span>
-        <ArrowUpRight className="h-5 w-5 shrink-0 text-neutral-400" aria-hidden="true" />
-      </button>
+      <section className="foco-v4-panel flex min-h-20 items-center gap-3 p-4" aria-label="Guia de execução">
+        <span className="foco-v4-info-icon"><Dumbbell className="h-5 w-5" /></span>
+        <div>
+          <h2 className="text-sm font-extrabold">Guia de execução</h2>
+          <p className="mt-1 text-xs leading-relaxed text-neutral-400">Abra um exercício para ver imagens, músculos envolvidos e orientações quando disponíveis.</p>
+        </div>
+      </section>
 
       {actionMessage && (
         <div className={`flex items-start justify-between gap-3 rounded-xl border p-3 text-sm ${actionMessage.type === 'success' ? 'border-white/15 bg-white/10 text-white' : 'border-white/30 bg-white/5 text-neutral-100'}`} role="status">
