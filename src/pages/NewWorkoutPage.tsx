@@ -449,6 +449,36 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
 
               <p className="text-xs leading-relaxed text-neutral-400">Revise a divisão semanal e cada exercício antes de ativar. Cargas iniciais ficam em aberto até serem ajustadas individualmente.</p>
+              <section className="foco-v4-panel-soft p-3 sm:p-4" aria-labelledby="foco-generated-week">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <h4 id="foco-generated-week" className="foco-v4-section-title">Divisão semanal</h4>
+                  <span className="text-[11px] text-neutral-400">{generatedPlan.weekly_frequency} dias de treino</span>
+                </div>
+                {generatedPlan.exercises.some(ex => !!ex.training_day) ? (
+                  <div className="foco-v4-week">
+                    {[
+                      {day:'segunda',short:'Seg'}, {day:'terca',short:'Ter'}, {day:'quarta',short:'Qua'},
+                      {day:'quinta',short:'Qui'}, {day:'sexta',short:'Sex'}, {day:'sabado',short:'Sáb'}, {day:'domingo',short:'Dom'},
+                    ].map(({day,short}) => {
+                      const planned = generatedPlan.exercises.filter(ex => ex.training_day === day);
+                      const groups = [...new Set(planned.map(ex => ex.muscle_group).filter(Boolean))];
+                      return <div key={day} className="foco-v4-day">
+                        <span className="text-xs text-neutral-300">{short}</span>
+                        <Dumbbell className="h-6 w-6 text-neutral-400" />
+                        <strong className="line-clamp-2 min-h-[30px] text-[11px] leading-tight">{groups.length ? groups.slice(0,2).join(' + ') : 'Descanso'}</strong>
+                        <span className="mt-auto text-[10px] text-neutral-400">{planned.length ? planned.length + ' exercícios' : '—'}</span>
+                      </div>;
+                    })}
+                  </div>
+                ) : <p className="text-xs text-neutral-400">A IA não atribuiu dias específicos a esta proposta. Revise os exercícios abaixo antes de ativar.</p>}
+              </section>
+              {includeBodyMetrics && <div className="foco-v4-panel-soft flex items-start gap-3 p-4">
+                <Target className="h-5 w-5 shrink-0 text-neutral-300" />
+                <div>
+                  <h4 className="text-sm font-extrabold">Avaliação OKOK na personalização</h4>
+                  <p className="mt-1 text-xs leading-relaxed text-neutral-400">Você autorizou o uso das métricas existentes nesta geração. A proposta continua sujeita à sua revisão.</p>
+                </div>
+              </div>}
               {/* Exercises Table */}
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
