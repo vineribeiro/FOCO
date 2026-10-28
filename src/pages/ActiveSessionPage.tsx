@@ -328,6 +328,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   }, 0);
 
   const currentTotalSets = exerciseLogs.reduce((acc, ex) => acc + ex.sets.length, 0);
+  const completionRate = currentTotalSets ? Math.round(100 * currentTotalSetsDone / currentTotalSets) : 0;
   const completedExercisesCount = exerciseLogs.filter(ex => ex.sets.length > 0 && ex.sets.every(s => s.completed)).length;
   const focusedExerciseIndex = exerciseLogs.findIndex(ex => ex.sets.some(s => !s.completed));
 
@@ -367,7 +368,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             {!sessionStarted ? (
               <button
                 onClick={handleStartWorkout}
-                className="px-4 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-lg active:scale-95 transition-all"
+                className="foco-v4-action !min-h-11 !rounded-xl !px-4 !py-2.5 !text-xs"
               >
                 <Play className="w-3.5 h-3.5 fill-current text-black" />
                 <span>Iniciar</span>
@@ -376,7 +377,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
               <button
                 onClick={handleFinishWorkout}
                 disabled={isSaving}
-                className="px-4 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-lg disabled:opacity-50 active:scale-95 transition-all"
+                className="foco-v4-action !min-h-11 !rounded-xl !px-4 !py-2.5 !text-xs disabled:opacity-50"
               >
                 <CheckCircle2 className="w-3.5 h-3.5 text-black" />
                 <span>{isSaving ? 'Gravando...' : 'Concluir'}</span>
@@ -387,9 +388,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
         <div className="grid grid-cols-[1fr_auto] gap-4 rounded-2xl border border-white/10 bg-white/[.035] p-3 sm:p-4">
           <div className="min-w-0">
-            <p className="text-xs text-neutral-300">Exercício {Math.min(completedExercisesCount + 1, exerciseLogs.length)} de {exerciseLogs.length}</p>
-            <div className="foco-v4-progress-track mt-3"><div className="foco-v4-progress-fill"
-              style={{ width: (exerciseLogs.length ? 100 * completedExercisesCount / exerciseLogs.length : 0) + '%' }} /></div>
+            <p className="text-xs text-neutral-300">Séries concluídas: {currentTotalSetsDone} de {currentTotalSets} <span className="float-right font-mono">{completionRate}%</span></p>
+            <div className="foco-v4-progress-track mt-3" role="progressbar" aria-label="Progresso de séries concluídas" aria-valuemin={0} aria-valuemax={Math.max(1, currentTotalSets)} aria-valuenow={currentTotalSetsDone}><div className="foco-v4-progress-fill"
+              style={{ width: completionRate + '%' }} /></div>
           </div>
           <div className="flex items-center gap-3 border-l border-white/10 pl-3">
             <Timer className="h-5 w-5 text-neutral-400" />
@@ -496,6 +497,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         </p>
       )}
 
+      {sessionStarted && focusedExerciseIndex >= 0 && <a href={"#foco-exercise-card-" + focusedExerciseIndex} className="foco-v4-quick !min-h-[76px]">
+        <span className="foco-v4-info-icon"><Dumbbell className="h-5 w-5" /></span>
+        <span className="min-w-0 flex-1"><strong className="block text-sm">Continuar: {exerciseLogs[focusedExerciseIndex].exercise_name}</strong><span className="mt-1 block text-xs text-neutral-400">Ir para a próxima série pendente</span></span>
+        <ChevronRight className="h-5 w-5 text-neutral-400" />
+      </a>}
+
       {/* Exercises Log Cards */}
       {exerciseLogs.length === 0 && activePlan && (
         <div className="rounded-2xl border border-dashed border-white/15 bg-[#141414] p-6 text-center">
@@ -516,7 +523,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             <section
               id={'foco-exercise-card-' + exIdx}
               key={exIdx}
-              className={'foco-v4-panel p-4 transition-all sm:p-5 ' + (isAllDone ? 'border-white/30' : exIdx === focusedExerciseIndex ? 'border-white/25' : '')}
+              className={'foco-v4-panel scroll-mt-24 p-4 transition-all sm:p-5 ' + (isAllDone ? 'border-white/30' : exIdx === focusedExerciseIndex ? 'border-white/25' : '')}
             >
               {/* Exercise Header */}
               <div className="flex items-start justify-between pb-3 border-b border-white/10 gap-2">
