@@ -112,14 +112,14 @@ export const ProgressPage: React.FC = () => {
     });
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 pb-32">
+    <div className="foco-v4-page space-y-5">
       
       {/* Header */}
       <div>
         <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
           Métricas Reais
         </span>
-        <h2 className="text-2xl font-black text-white tracking-tight">Evolução & Gráficos</h2>
+        <h2 className="foco-v4-heading">Minha evolução</h2>
       </div>
 
       {actionMsg && (
@@ -137,7 +137,7 @@ export const ProgressPage: React.FC = () => {
 
       <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
       {/* Weight Evolution Chart (Monochrome Area) */}
-      <div className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3">
+      <div className="foco-v4-panel space-y-3 p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Weight className="w-4 h-4 text-white" />

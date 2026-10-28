@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { InstallAppButton } from '../components/InstallAppButton';
 import { soundEngine } from '../utils/soundEngine';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -13,7 +14,6 @@ import {
   ChevronRight,
   ShieldCheck,
   Vibrate,
-  Layers3,
 } from 'lucide-react';
 
 interface SettingsPageProps {
@@ -28,19 +28,18 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
   const settings = [
     { title: 'Anamnese de treino', description: 'Objetivos, rotina e grupos musculares prioritários.', icon: ClipboardList, tab: 'anamnese' },
     { title: 'Perfil do atleta', description: 'Atualize seus dados pessoais e medidas.', icon: UserRound, tab: 'perfil' },
-    { title: 'Fichas e avaliações', description: 'Importe uma ficha ou analise sua avaliação corporal.', icon: FileUp, tab: 'arquivos' },
+    { title: 'Avaliação OKOK', description: 'Envie seu relatório corporal e consulte a análise por IA.', icon: FileUp, tab: 'arquivos' },
     { title: 'Meus treinos', description: 'Consulte, ajuste ou altere sua ficha ativa.', icon: Dumbbell, tab: 'treinos' },
     { title: 'Biblioteca de exercícios', description: 'Pesquise movimentos e adicione-os às suas fichas.', icon: BookOpen, tab: 'biblioteca' },
-    { title: 'Atlas anatômico · revisão', description: 'Acompanhe a criação das imagens 3D e visualize as amostras do pacote.', icon: Layers3, tab: 'atlas' },
     { title: 'Metas pessoais', description: 'Acompanhe os objetivos que você definiu.', icon: Target, tab: 'objetivos' },
     { title: 'Evolução', description: 'Revise seus registros e seu histórico de treino.', icon: TrendingUp, tab: 'progresso' },
   ];
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-6 pb-32 text-white">
+    <div className="foco-v4-page max-w-3xl space-y-5 text-white">
       <header>
         <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">Sua conta FOCO</p>
-        <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Preferências</h1>
+        <h1 className="foco-v4-heading">Preferências</h1>
         <p className="mt-2 text-sm leading-relaxed text-neutral-400">Gerencie seu perfil, seus treinos e os dados usados para personalizar sua experiência.</p>
       </header>
 
@@ -48,13 +47,18 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
         {settings.map((item, index) => {
           const Icon = item.icon;
           return (
-            <button key={item.tab} type="button" onClick={() => setActiveTab(item.tab)} className={'flex w-full items-center gap-3.5 p-4 text-left transition hover:bg-white/[0.04] sm:p-5 ' + (index > 0 ? 'border-t border-white/10' : '')}>
+            <button key={item.tab} type="button" onClick={() => { if (item.tab === 'arquivos') { try { sessionStorage.setItem('foco_upload_mode', 'body'); } catch { /* navigate */ } } setActiveTab(item.tab); }} className={'flex w-full items-center gap-3.5 p-4 text-left transition hover:bg-white/[0.04] sm:p-5 ' + (index > 0 ? 'border-t border-white/10' : '')}>
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black"><Icon className="h-5 w-5 text-neutral-300" /></span>
               <span className="min-w-0 flex-1"><span className="block text-sm font-bold">{item.title}</span><span className="mt-1 block text-xs leading-relaxed text-neutral-500">{item.description}</span></span>
               <ChevronRight className="h-4 w-4 shrink-0 text-neutral-500" />
             </button>
           );
         })}
+      </section>
+
+      <section className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-5">
+        <div><h2 className="text-sm font-extrabold">Instalar FOCO</h2><p className="mt-1 text-xs text-neutral-400">Acesse pela tela inicial do celular, como um aplicativo.</p></div>
+        <InstallAppButton />
       </section>
 
       <section aria-labelledby="foco-haptics-label" className="rounded-2xl border border-white/10 bg-[#141414] p-5 sm:p-6">

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { ShieldAlert, CheckCircle2, AlertCircle, Save, Trash2, X } from 'lucide-react';
+import { ShieldAlert, CheckCircle2, AlertCircle, Save, Trash2, X, Settings2 } from 'lucide-react';
 
-export const ProfilePage: React.FC = () => {
+interface ProfilePageProps { setActiveTab: (tab: string) => void; }
+export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
   const { user, profile, refreshProfile, deleteAccount } = useAuth();
 
   const [fullName, setFullName] = useState(profile?.full_name || user?.full_name || '');
   const [birthDate, setBirthDate] = useState(profile?.birth_date || '');
-  const [heightCm, setHeightCm] = useState(profile?.height_cm?.toString() || '178');
-  const [weightKg, setWeightKg] = useState(profile?.current_weight_kg?.toString() || '80');
+  const [heightCm, setHeightCm] = useState(profile?.height_cm?.toString() || '');
+  const [weightKg, setWeightKg] = useState(profile?.current_weight_kg?.toString() || '');
   const [experienceLevel, setExperienceLevel] = useState(profile?.experience_level || 'intermediario');
 
   const [isSaving, setIsSaving] = useState(false);
@@ -68,15 +69,19 @@ export const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto pb-32 text-white">
+    <div className="foco-v4-page max-w-3xl space-y-5 text-white">
       
-      {/* Header */}
-      <div>
-        <h2 className="text-xl font-black uppercase tracking-tight text-white">Perfil do Atleta</h2>
-        <p className="text-xs text-neutral-400 mt-0.5">
-          Gerencie seus dados antropométricos e parâmetros que alimentam o motor de treino.
-        </p>
-      </div>
+      <header className="flex items-start justify-between gap-3">
+        <div>
+          <p className="foco-v4-eyebrow mb-2">FOCO / SUA CONTA</p>
+          <h1 className="foco-v4-heading">Meu perfil</h1>
+          <p className="mt-2 text-xs text-neutral-400">Gerencie suas informações para personalizar a experiência de treino.</p>
+        </div>
+        <button type="button" onClick={() => setActiveTab('configuracoes')}
+          aria-label="Configurações" className="foco-v4-secondary !px-3">
+          <Settings2 className="h-5 w-5" />
+        </button>
+      </header>
 
       {msg && (
         <div
@@ -92,11 +97,11 @@ export const ProfilePage: React.FC = () => {
       )}
 
       {/* Profile Form */}
-      <form onSubmit={handleUpdateProfile} className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/10 space-y-5">
+      <form onSubmit={handleUpdateProfile} className="foco-v4-panel space-y-5 p-5 sm:p-6">
         
         {/* User Identity Header */}
         <div className="flex items-center gap-4 pb-4 border-b border-white/10">
-          <div className="w-14 h-14 rounded-2xl bg-[#0A0A0A] border border-white/20 flex items-center justify-center text-white text-xl font-black">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/20 bg-gradient-to-br from-[#333] to-[#111] text-xl font-black text-white">
             {fullName.charAt(0).toUpperCase() || 'A'}
           </div>
           <div>

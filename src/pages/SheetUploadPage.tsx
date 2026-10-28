@@ -10,6 +10,10 @@ import {
   Sparkles,
   CheckCircle2,
   AlertCircle,
+  ScanLine,
+  Activity,
+  ChevronRight,
+  CalendarDays,
 } from 'lucide-react';
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -52,6 +56,8 @@ function readAsNormalizedDataUrl(file: File, mimeType: string): Promise<string> 
   });
 }
 
+type BodyReport = { summary: string; metrics: { name: string; value: string; interpretation: string }[]; strengths: string[]; attention_points: string[]; training_recommendations: string[]; nutrition_discussion: string[]; questions_for_professional: string[]; limitations: string };
+
 interface SheetUploadProps {
   setActiveTab: (tab: string) => void;
 }
@@ -68,9 +74,10 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
     }
   });
   const [bodyContext, setBodyContext] = useState('');
-  const [bodyReport, setBodyReport] = useState<{ summary: string; metrics: { name: string; value: string; interpretation: string }[]; strengths: string[]; attention_points: string[]; training_recommendations: string[]; nutrition_discussion: string[]; questions_for_professional: string[]; limitations: string } | null>(null);
+  const [bodyReport, setBodyReport] = useState<BodyReport | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showNewUpload, setShowNewUpload] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
@@ -89,6 +96,11 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
   } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const latestBodyFile = files.find(file => file.processing_status === 'processed' && file.extracted_data && typeof file.extracted_data.summary === 'string' && Array.isArray(file.extracted_data.metrics));
+  const savedBodyReport = latestBodyFile?.extracted_data as BodyReport | undefined;
+  const displayedBodyReport = bodyReport || savedBodyReport || null;
+  const lastBodyDate = latestBodyFile ? new Date(latestBodyFile.created_at) : null;
+  const daysSinceBody = lastBodyDate ? Math.floor((Date.now() - lastBodyDate.getTime()) / 86400000) : null;
 
   const loadFiles = async () => {
     setIsLoading(true);
@@ -195,6 +207,9 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       const { base64, mimeType } = await readSelectedFile(selectedFile);
       const result = await api.analyzeBioimpedanceReport({ base64, mime_type: mimeType, filename: selectedFile.name, context: bodyContext });
       setBodyReport(result);
+      setSelectedFile(null);
+      setFilePreviewUrl(null);
+      setShowNewUpload(false);
       void loadFiles();
       setSuccessMsg('Relatório analisado e armazenado. Na geração de treino, você poderá escolher se quer usar essas métricas.');
     } catch (err: any) {
@@ -255,22 +270,23 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
   };
 
   return (
-    <div className="space-y-6 w-full max-w-5xl mx-auto pb-32 text-white">
+    <div className="foco-v4-page space-y-5 text-white">
       
       {/* Top Header */}
-      <div>
-        <h2 className="text-xl font-black uppercase tracking-tight text-white">{uploadMode === 'body' ? 'Análise do Perfil Corporal' : 'Digitalização de Fichas com IA'}</h2>
-        <p className="text-xs text-neutral-400 mt-0.5">
-          {uploadMode === 'body' ? 'Envie o PDF ou uma imagem do relatório da balança para extrair e explicar as métricas de composição corporal.' : 'Envie uma foto ou PDF da ficha para extrair exercícios e revisar antes de salvar.'}
-        </p>
+      <div className="space-y-2">
+        <p className="foco-v4-eyebrow">FOCO · {uploadMode === 'body' ? 'Seu perfil corporal' : 'Importação inteligente'}</p>
+        <h1 className="foco-v4-heading">{uploadMode === 'body' ? <>Avaliação <span className="font-normal text-neutral-400">corporal</span></> : <>Importar <span className="font-normal text-neutral-400">ficha</span></>}</h1>
+        <p className="foco-v4-muted">{uploadMode === 'body'
+          ? 'Baseada no relatório OKOK. A IA explica as medições e apoia a personalização dos seus treinos.'
+          : 'Digitalize uma ficha existente por PDF ou imagem e revise cada exercício antes de salvar.'}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-[#141414] border border-white/10">
+      <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-[#141414] p-1">
         <button type="button" onClick={() => { setUploadMode('workout'); setBodyReport(null); setErrorMsg(null); }} className={`rounded-xl px-3 py-3 text-left transition-colors ${uploadMode === 'workout' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}>
-          <span className="block text-xs font-black uppercase">Ficha de treino</span><span className="block text-[10px] mt-1 opacity-75">Importar exercícios</span>
+          <span className="block text-xs font-extrabold">Ficha de treino</span><span className="block text-[10px] mt-1 opacity-75">Importar exercícios</span>
         </button>
         <button type="button" onClick={() => { setUploadMode('body'); setExtractedResult(null); setErrorMsg(null); }} className={`rounded-xl px-3 py-3 text-left transition-colors ${uploadMode === 'body' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}>
-          <span className="block text-xs font-black uppercase">Perfil corporal</span><span className="block text-[10px] mt-1 opacity-75">Bioimpedância e metabolismo</span>
+          <span className="block text-xs font-extrabold">Avaliação OKOK</span><span className="block text-[10px] mt-1 opacity-75">Bioimpedância e metabolismo</span>
         </button>
       </div>
       {/* Alerts */}
@@ -288,19 +304,36 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
         </div>
       )}
 
-      {/* Upload Zone */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/10 space-y-4">
-        <div
-          onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-white/15 hover:border-white/50 rounded-2xl p-6 sm:p-8 text-center cursor-pointer transition-all bg-[#0A0A0A]"
-        >
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="image/jpeg,image/png,image/webp,application/pdf"
-            className="hidden"
-          />
+      {/* Existing OKOK assessments open with a compact upload action; first assessments show upload immediately. */}
+      {uploadMode === 'body' && displayedBodyReport && !showNewUpload && (
+        <button type="button" onClick={() => setShowNewUpload(true)}
+          className="foco-v4-panel flex min-h-[98px] w-full items-center gap-3 p-4 text-left transition hover:border-white/35">
+          <span className="foco-v4-info-icon !h-14 !w-14"><FileUp className="h-6 w-6" /></span>
+          <span className="min-w-0 flex-1">
+            <strong className="block text-[14px]">Enviar avaliação OKOK</strong>
+            <span className="mt-1 block text-xs text-neutral-400">Atualize suas medições com um novo PDF ou imagem.</span>
+          </span>
+          <ChevronRight className="h-5 w-5 text-neutral-400" />
+        </button>
+      )}
+      {/* Upload OKOK or workout sheet; remain the same secure file flow. */}
+      {(uploadMode === 'workout' || !displayedBodyReport || showNewUpload) && (
+      <section className="foco-v4-panel space-y-4 p-4 sm:p-6">
+        <div className="flex items-center gap-3">
+          <span className="foco-v4-info-icon"><FileUp className="h-5 w-5" /></span>
+          <div className="min-w-0 flex-1">
+            <h2 className="foco-v4-section-title">{uploadMode === 'body' ? 'Enviar avaliação OKOK' : 'Enviar ficha existente'}</h2>
+            <p className="mt-1 text-xs text-neutral-400">PDF, imagem ou captura de tela · até 10 MB.</p>
+          </div>
+          <ChevronRight className="h-5 w-5 text-neutral-400" />
+        </div>
+        <div className="relative rounded-2xl border border-dashed border-white/25 bg-[#101010] p-5 text-center transition hover:border-white/50 sm:p-6">
+          <input type="file" ref={fileInputRef} onChange={handleFileChange}
+            accept="image/jpeg,image/png,image/webp,application/pdf" className="sr-only"
+            id="foco-body-file" aria-label={uploadMode === 'body' ? 'Selecionar avaliação OKOK' : 'Selecionar ficha de treino'} />
+          <button type="button" onClick={() => fileInputRef.current?.click()}
+            className="flex w-full flex-col items-center justify-center" aria-label="Selecionar PDF ou imagem">
+
 
           <div className="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center mx-auto mb-3">
             <FileUp className="w-6 h-6" />
@@ -319,6 +352,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
               <span>Arquivo: {(selectedFile.size / 1024).toFixed(1)} KB</span>
             </div>
           )}
+          </button>
         </div>
 
         {/* Image Preview if available */}
@@ -326,20 +360,20 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
           <div className="p-3 rounded-xl bg-[#0A0A0A] border border-white/10 flex items-center gap-3">
             <img
               src={filePreviewUrl}
-              alt="Prévia da ficha"
+              alt={uploadMode === 'body' ? 'Prévia da avaliação' : 'Prévia da ficha'}
               className="w-16 h-16 object-cover rounded-lg border border-white/15 shrink-0"
             />
             <div className="text-xs">
               <p className="font-bold text-white uppercase">Prévia do Arquivo</p>
               <p className="text-neutral-400 text-[11px]">
-                A IA vai extrair os exercícios para você revisar antes de salvar.
+                {uploadMode === 'body' ? 'A IA vai analisar as métricas do relatório OKOK.' : 'A IA vai extrair os exercícios para você revisar antes de salvar.'}
               </p>
             </div>
           </div>
         )}
 
-        {/* Optional Context Notes */}
-        <div>
+        {/* Optional notes are only relevant for workout-sheet extraction. */}
+        {uploadMode === 'workout' && <div>
           <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">
             Observações Adicionais para a IA (Opcional)
           </label>
@@ -350,7 +384,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
             placeholder="Ex: 'Esta é minha ficha de Treino B (Costas e Bíceps)'"
             className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-white"
           />
-        </div>
+        </div>}
 
         {/* Process Button */}
         {uploadMode === 'body' && (
@@ -364,40 +398,57 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
         <button
           onClick={uploadMode === 'body' ? handleAnalyzeBodyReport : handleProcessSheet}
           disabled={!selectedFile || isProcessing}
-          className="w-full py-3.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all disabled:opacity-50"
+          className="foco-v4-action !w-full !rounded-2xl disabled:opacity-50"
         >
           <Sparkles className="w-4 h-4" />
           <span>{isProcessing ? 'Analisando arquivo...' : uploadMode === 'body' ? 'Gerar relatório do perfil corporal' : 'Extrair exercícios com IA'}</span>
         </button>
-      </div>
+      </section>
+      )}
 
-      {bodyReport && uploadMode === 'body' && (
+      {displayedBodyReport && uploadMode === 'body' && (
         <div className="space-y-4 animate-in fade-in">
-          <section className="rounded-2xl border border-white/15 bg-[#141414] p-5 sm:p-6">
-            <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-neutral-400">Relatório FOCO · leitura assistida por IA</p>
-            <h3 className="mt-2 text-lg font-black uppercase">Resumo do perfil corporal</h3>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-300">{bodyReport.summary}</p>
-          </section>
-          <section className="rounded-2xl border border-white/10 bg-[#141414] p-5">
-            <h4 className="text-xs font-black uppercase tracking-wider">Métricas identificadas</h4>
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {bodyReport.metrics.map((metric, index) => <article key={metric.name + index} className="rounded-xl bg-[#0A0A0A] border border-white/10 p-3">
-                <div className="flex items-start justify-between gap-3"><span className="text-xs font-bold text-neutral-300">{metric.name}</span><span className="text-sm font-black text-white text-right">{metric.value}</span></div>
-                <p className="mt-2 text-xs leading-relaxed text-neutral-400">{metric.interpretation}</p>
+          <section className="foco-v4-panel p-4 sm:p-6">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h2 className="foco-v4-section-title">Seus principais indicadores</h2>
+              <span className="text-[11px] text-neutral-400">{displayedBodyReport.metrics.length} métricas</span>
+            </div>
+            <div className="foco-v4-evaluation-grid">
+              {displayedBodyReport.metrics.map((metric,index) => <article key={metric.name + index} className="foco-v4-data-tile">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <span className="text-[11px] font-semibold text-neutral-300">{metric.name}</span>
+                  <Activity className="h-4 w-4 shrink-0 text-neutral-400" />
+                </div>
+                <strong className="block break-words">{metric.value}</strong>
+                <p className="mt-1.5 text-[10px] leading-relaxed text-neutral-400">{metric.interpretation}</p>
               </article>)}
             </div>
           </section>
-          {([['Pontos positivos', bodyReport.strengths], ['Pontos de atenção', bodyReport.attention_points], ['Orientações para o treino', bodyReport.training_recommendations], ['Temas para discutir com nutricionista', bodyReport.nutrition_discussion], ['Perguntas para o profissional', bodyReport.questions_for_professional]] as [string, string[]][]).map(([title, items]) => <section key={title} className="rounded-2xl border border-white/10 bg-[#141414] p-5">
+          <section className="foco-v4-panel p-5 sm:p-6">
+            <div className="flex items-center gap-2"><Sparkles className="h-5 w-5" /><h2 className="foco-v4-section-title">Análise inteligente FOCO</h2></div>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-300">{displayedBodyReport.summary}</p>
+          </section>
+          {([['Pontos positivos', displayedBodyReport.strengths], ['Pontos de atenção', displayedBodyReport.attention_points], ['Orientações para o treino', displayedBodyReport.training_recommendations], ['Temas para discutir com nutricionista', displayedBodyReport.nutrition_discussion], ['Perguntas para o profissional', displayedBodyReport.questions_for_professional]] as [string, string[]][]).map(([title, items]) => <section key={title} className="rounded-2xl border border-white/10 bg-[#141414] p-5">
             <h4 className="text-xs font-black uppercase tracking-wider">{title}</h4><ul className="mt-3 space-y-2">{items.map((item, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-neutral-500">•</span><span>{item}</span></li>)}</ul>
           </section>)}
-          <p className="rounded-xl border border-white/10 p-4 text-[11px] leading-relaxed text-neutral-400">Limitações: {bodyReport.limitations} A bioimpedância é uma estimativa, não um diagnóstico; confirme interpretações com profissional de saúde.</p>
+          <p className="rounded-xl border border-white/10 p-4 text-[11px] leading-relaxed text-neutral-400">Limitações: {displayedBodyReport.limitations} A bioimpedância é uma estimativa, não um diagnóstico; confirme interpretações com profissional de saúde.</p>
         </div>
       )}
-      {bodyReport && uploadMode === 'body' && (
-        <button type="button" onClick={() => setActiveTab('novo-treino')}
-          className="min-h-11 w-full rounded-xl bg-white px-4 py-3 text-sm font-black text-black">
-          Criar treino usando minha avaliação (ativar uso no próximo passo)
-        </button>
+      {displayedBodyReport && uploadMode === 'body' && (
+        <>
+          <div className="foco-v4-panel flex items-center gap-3 p-4">
+            <CalendarDays className="h-6 w-6 shrink-0 text-neutral-300" />
+            <div className="flex-1">
+              <h3 className="text-sm font-extrabold">Última avaliação</h3>
+              <p className="mt-1 text-xs text-neutral-400">{lastBodyDate ? lastBodyDate.toLocaleDateString('pt-BR') : 'Analisada agora'}{daysSinceBody !== null ? ' · há ' + daysSinceBody + ' dias' : ''}. Recomendamos atualizar a cada 15 dias.</p>
+            </div>
+          </div>
+          <button type="button" onClick={() => setActiveTab('novo-treino')}
+            className="foco-v4-action w-full">
+            Usar na criação da ficha <ChevronRight className="h-4 w-4" />
+          </button>
+          <p className="text-center text-[11px] text-neutral-400">O uso dos indicadores na criação da ficha exige sua autorização na próxima etapa.</p>
+        </>
       )}
       {/* Extracted Data Confirmation Box */}
       {extractedResult && (

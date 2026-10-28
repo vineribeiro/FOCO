@@ -97,14 +97,14 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="space-y-6 pb-32 text-white">
+    <div className="foco-v4-page space-y-5 text-white">
       
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black uppercase tracking-tight text-white">Fichas & Planos de Treino</h2>
+          <><p className="foco-v4-eyebrow mb-2">FOCO / SEU PLANEJAMENTO</p><h1 className="foco-v4-heading">Minhas fichas</h1></>
           <p className="text-xs text-neutral-400 mt-0.5">
-            Gerencie suas divisões de treino, planos gerados por IA e importações de fichas físicas.
+            Consulte seus planos, escolha a ficha ativa e inicie o próximo treino.
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
           </button>
           <button
             onClick={() => setActiveTab('novo-treino')}
-            className="px-4 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-md transition-all"
+            className="foco-v4-action !rounded-2xl"
           >
             <Plus className="w-4 h-4" />
             <span>Criar Nova Ficha</span>
