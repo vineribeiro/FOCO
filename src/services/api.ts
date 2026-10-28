@@ -777,6 +777,7 @@ export const api = {
     focus_muscles?: string;
     equipment_available?: string;
     restrictions?: string;
+    include_body_metrics?: boolean;
   }) {
     return await request<{
       name: string;
