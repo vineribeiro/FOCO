@@ -12,6 +12,10 @@ import {
   AlertCircle,
   Sliders,
   ClipboardList,
+  ChevronRight,
+  CalendarDays,
+  Activity,
+  Target,
 } from 'lucide-react';
 
 interface NewWorkoutProps {
@@ -214,24 +218,48 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="space-y-6 w-full max-w-5xl mx-auto pb-32 text-white">
-      
-      {/* Top Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h2 className="text-xl font-black uppercase tracking-tight text-white">Criador de Fichas de Treino</h2>
-          <p className="text-xs text-neutral-400 mt-1">
-            Gere uma ficha individualizada com base na sua anamnese ou monte sua divisão manualmente.
-          </p>
+    <div className="foco-v4-page space-y-5 text-white">
+      <header className="space-y-2">
+        <p className="foco-v4-eyebrow">FOCO IA · PERSONALIZAÇÃO</p>
+        <h1 className="foco-v4-heading"><span className="font-normal text-neutral-400">Nova</span> ficha</h1>
+        <p className="foco-v4-muted max-w-2xl">
+          Seu plano é personalizado com base no objetivo, nível, dias disponíveis e, quando autorizado, nos dados da avaliação OKOK.
+        </p>
+      </header>
+
+      <section className="foco-v4-panel foco-v4-surface-photo relative overflow-hidden p-6 sm:p-8" aria-labelledby="foco-ai-intro">
+        <div className="relative z-10 max-w-[460px] space-y-3">
+          <div className="flex items-center gap-2 text-[10px] font-bold tracking-[.2em] text-neutral-300"><Sparkles className="h-4 w-4" /> FOCO IA</div>
+          <h2 id="foco-ai-intro" className="text-[25px] font-semibold leading-tight tracking-[-.04em] sm:text-[32px]">
+            Treino recomendado para <strong className="font-extrabold">{aiGoal.toLowerCase()}</strong>
+            {includeBodyMetrics ? <> com apoio da <strong className="font-extrabold">avaliação OKOK.</strong></> : '.'}
+          </h2>
+          <p className="max-w-sm text-[12px] leading-relaxed text-neutral-300">A IA propõe o treino com base no seu perfil. Você revisa tudo antes de salvar.</p>
         </div>
-        <button type="button" onClick={() => setActiveTab('anamnese')} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-xs font-black transition hover:bg-white/10">
-          <ClipboardList className="h-4 w-4" />
-          <span>Preencher / editar anamnese</span>
-        </button>
+      </section>
+
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+        {[
+          {label:'Objetivo',value:aiGoal,icon:Target,target:'foco-ai-goal'},
+          {label:'Nível',value:aiExperience,icon:Activity,target:'foco-ai-experience'},
+          {label:'Dias',value:aiFrequency+'x por semana',icon:CalendarDays,target:'foco-ai-frequency'},
+          {label:'Equipamentos',value:aiEquipment,icon:Dumbbell,target:'foco-ai-equipment'},
+        ].map(item => <button type="button" key={item.label} onClick={() => document.getElementById(item.target)?.focus()}
+          className="foco-v4-panel flex min-h-[90px] items-center gap-3 overflow-hidden p-3 text-left transition hover:border-white/35">
+          <item.icon className="h-5 w-5 shrink-0 text-neutral-400" />
+          <span className="min-w-0 flex-1">
+            <span className="block text-[11px] text-neutral-400">{item.label}</span>
+            <span className="mt-1 block line-clamp-2 text-xs font-extrabold capitalize">{item.value}</span>
+          </span>
+          <ChevronRight className="h-4 w-4 shrink-0 text-neutral-500" />
+        </button>)}
       </div>
+      <button type="button" onClick={() => setActiveTab('anamnese')} className="foco-v4-secondary w-full sm:w-auto">
+        <ClipboardList className="h-4 w-4" /> Atualizar anamnese <ChevronRight className="h-4 w-4" />
+      </button>
 
       {/* Selector Tabs */}
-      <div className="flex p-1 rounded-xl bg-[#141414] border border-white/10 w-fit">
+      <div className="flex w-full rounded-2xl border border-white/10 bg-[#171717] p-1 sm:w-fit">
         <button
           onClick={() => { setTab('ai'); setErrorMsg(null); }}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
@@ -267,14 +295,21 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       {/* TAB 1: AI GENERATOR */}
       {tab === 'ai' && (
         <div className="space-y-6">
-          <form onSubmit={handleGenerateAi} className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/10 space-y-4">
+          <form onSubmit={handleGenerateAi} className="foco-v4-panel space-y-5 p-4 sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="foco-v4-eyebrow">Preferências e objetivos</p>
+                <h2 className="foco-v4-section-title mt-1">Ajustes para sua ficha</h2>
+              </div>
+              <Sliders className="h-5 w-5 text-neutral-400" />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               
               <div>
                 <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
                   Objetivo Principal
                 </label>
-                <select
+                <select id="foco-ai-goal"
                   value={aiGoal}
                   onChange={(e) => setAiGoal(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
@@ -292,7 +327,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
                   Frequência Semanal (Dias)
                 </label>
-                <select
+                <select id="foco-ai-frequency"
                   value={aiFrequency}
                   onChange={(e) => setAiFrequency(Number(e.target.value))}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
@@ -309,7 +344,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
                   Nível de Experiência
                 </label>
-                <select
+                <select id="foco-ai-experience"
                   value={aiExperience}
                   onChange={(e) => setAiExperience(e.target.value as any)}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
@@ -340,7 +375,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
                   Equipamentos Disponíveis
                 </label>
-                <input
+                <input id="foco-ai-equipment"
                   type="text"
                   value={aiEquipment}
                   onChange={(e) => setAiEquipment(e.target.value)}
@@ -378,7 +413,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               <button
                 type="submit"
                 disabled={isGenerating}
-                className="w-full py-3.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all disabled:opacity-50"
+                className="foco-v4-action !w-full disabled:opacity-50"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>{isGenerating ? 'Montando sua ficha...' : 'Gerar ficha personalizada'}</span>
@@ -388,7 +423,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
           {/* Generated Plan Review */}
           {generatedPlan && (
-            <div className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/20 space-y-5 animate-in fade-in">
+            <div className="foco-v4-panel space-y-5 p-4 animate-in fade-in sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
                 <div>
                   <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-widest">
@@ -399,9 +434,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                   <h3 className="text-xl font-black text-white uppercase mt-1">
                     {generatedPlan.name}
                   </h3>
-                  <p className="text-xs text-neutral-400 mt-0.5">
-                    {generatedPlan.explanation}
-                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-neutral-400">{generatedPlan.explanation}</p>
                 </div>
 
                 <button
