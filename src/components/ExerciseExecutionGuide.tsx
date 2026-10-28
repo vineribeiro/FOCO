@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ExerciseIllustration } from './ExerciseIllustration';
 import {
-  findMatchingExercise, getExerciseDisplayName, getMuscleLabel,
+  getExerciseDisplayName, getMuscleLabel,
   loadExerciseCatalog, normalizeExerciseText, type ExerciseCatalogItem,
 } from '../data/exerciseLibrary';
 
@@ -23,10 +23,14 @@ export const ExerciseExecutionGuide: React.FC<Props> = ({ exerciseName, muscleGr
     setExercise(null);
     loadExerciseCatalog().then(catalog => {
       if (!active) return;
-      const match = findMatchingExercise(catalog, exerciseName, muscleGroup);
       const key = normalizeExerciseText(exerciseName);
-      const names = match ? [match.name, getExerciseDisplayName(match.name), ...(match.aliases || [])] : [];
-      setExercise(match && names.some(name => normalizeExerciseText(name) === key) ? match : null);
+      const exact = catalog.filter(item => [item.name, getExerciseDisplayName(item.name), ...(item.aliases || [])]
+        .some(name => normalizeExerciseText(name) === key));
+      const group = normalizeExerciseText(muscleGroup);
+      const grouped = exact.filter(item => normalizeExerciseText(item.sourceGroup || '') === group);
+      // Same movement can appear in multiple muscle groups; never show an arbitrary variant.
+      const match = grouped.length === 1 ? grouped[0] : exact.length === 1 ? exact[0] : null;
+      setExercise(match);
     }).catch(() => { if (active) setLoadError(true); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
