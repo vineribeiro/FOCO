@@ -15,6 +15,7 @@ import {
   ClipboardList,
   FileUp,
   Target,
+  BellRing,
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -28,22 +29,32 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [recommendations, setRecommendations] = useState<AIRecommendation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [okokReminder, setOkokReminder] = useState<{daysElapsed: number; lastUpload: string} | null>(null);
 
   useEffect(() => {
     let active = true;
     async function loadData() {
       try {
-        const [plan, userSessions, userGoals, userRecs] = await Promise.all([
+        const [plan, userSessions, userGoals, userRecs, uploadedFiles] = await Promise.all([
           api.getActiveWorkout(),
           api.getSessions(),
           api.getGoals(),
           api.getRecommendations(),
+          api.getFiles().catch(() => null),
         ]);
         if (!active) return;
         setActivePlan(plan);
         setSessions(userSessions);
         setGoals(userGoals);
         setRecommendations(userRecs);
+        if (uploadedFiles) {
+          const latest = uploadedFiles.find(file => file.processing_status === 'processed' && file.extracted_data && typeof file.extracted_data.summary === 'string' && Array.isArray(file.extracted_data.metrics));
+          if (latest) {
+            const created = new Date(latest.created_at);
+            const elapsed = Math.floor((Date.now() - created.getTime()) / 86400000);
+            setOkokReminder(Number.isFinite(elapsed) && elapsed >= 15 ? {daysElapsed: elapsed, lastUpload: created.toLocaleDateString('pt-BR')} : null);
+          } else setOkokReminder(null);
+        }
       } catch (error) {
         console.error('Não foi possível carregar o painel FOCO:', error);
       } finally {
@@ -64,6 +75,10 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
       count: exercises.filter((exercise) => exercise.muscle_group === name).length,
     }));
   const firstName = user?.full_name?.trim().split(/\s+/)[0] || 'atleta';
+  const openOkokUpload = () => {
+    try { sessionStorage.setItem('foco_upload_mode', 'body'); } catch { /* still opens files */ }
+    setActiveTab('arquivos');
+  };
 
   if (isLoading) {
     return (
@@ -98,6 +113,23 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
           </button>
         )}
       </header>
+
+      {okokReminder && (
+        <section role="status" aria-label="Lembrete de avaliação OKOK" className="flex flex-col gap-3 rounded-2xl border border-white/25 bg-[#191919] p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <div className="rounded-xl border border-white/20 bg-white/10 p-2"><BellRing className="h-5 w-5" aria-hidden="true" /></div>
+            <div>
+              <h2 className="text-sm font-black">Hora de atualizar sua avaliação OKOK</h2>
+              <p className="mt-1 text-xs leading-relaxed text-neutral-300">
+                Já se passaram {okokReminder.daysElapsed} dias desde o último relatório ({okokReminder.lastUpload}). Envie uma nova avaliação da OKOK para acompanhar sua evolução e ajudar a personalizar a próxima ficha de treino.
+              </p>
+            </div>
+          </div>
+          <button type="button" onClick={openOkokUpload} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-black text-black hover:bg-neutral-200">
+            <FileUp className="h-4 w-4" /> Enviar avaliação OKOK <ArrowRight className="h-4 w-4" />
+          </button>
+        </section>
+      )}
 
       {activePlan && (
         <section aria-labelledby="foco-workout-today" className="overflow-hidden rounded-3xl border border-white/15 bg-[#171717] p-5 shadow-lg sm:p-7">
