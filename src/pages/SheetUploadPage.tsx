@@ -77,6 +77,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
   const [bodyReport, setBodyReport] = useState<BodyReport | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showNewUpload, setShowNewUpload] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
@@ -206,6 +207,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       const { base64, mimeType } = await readSelectedFile(selectedFile);
       const result = await api.analyzeBioimpedanceReport({ base64, mime_type: mimeType, filename: selectedFile.name, context: bodyContext });
       setBodyReport(result);
+      setShowNewUpload(false);
       void loadFiles();
       setSuccessMsg('Relatório analisado e armazenado. Na geração de treino, você poderá escolher se quer usar essas métricas.');
     } catch (err: any) {
@@ -300,7 +302,20 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
         </div>
       )}
 
+      {/* Existing OKOK assessments open with a compact upload action; first assessments show upload immediately. */}
+      {uploadMode === 'body' && displayedBodyReport && !showNewUpload && !selectedFile && (
+        <button type="button" onClick={() => setShowNewUpload(true)}
+          className="foco-v4-panel flex min-h-[98px] w-full items-center gap-3 p-4 text-left transition hover:border-white/35">
+          <span className="foco-v4-info-icon !h-14 !w-14"><FileUp className="h-6 w-6" /></span>
+          <span className="min-w-0 flex-1">
+            <strong className="block text-[14px]">Enviar avaliação OKOK</strong>
+            <span className="mt-1 block text-xs text-neutral-400">Atualize suas medições com um novo PDF ou imagem.</span>
+          </span>
+          <ChevronRight className="h-5 w-5 text-neutral-400" />
+        </button>
+      )}
       {/* Upload OKOK or workout sheet; remain the same secure file flow. */}
+      {(uploadMode === 'workout' || !displayedBodyReport || showNewUpload || selectedFile) && (
       <section className="foco-v4-panel space-y-4 p-4 sm:p-6">
         <div className="flex items-center gap-3">
           <span className="foco-v4-info-icon"><FileUp className="h-5 w-5" /></span>
@@ -387,6 +402,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
           <span>{isProcessing ? 'Analisando arquivo...' : uploadMode === 'body' ? 'Gerar relatório do perfil corporal' : 'Extrair exercícios com IA'}</span>
         </button>
       </section>
+      )}
 
       {displayedBodyReport && uploadMode === 'body' && (
         <div className="space-y-4 animate-in fade-in">
