@@ -63,6 +63,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
   const todayIndex = weekdayIndex(now);
   const todayKey = DAYS[todayIndex].id;
   const firstName = user?.full_name?.trim().split(/\s+/)[0] || 'atleta';
+  const greeting = now.getHours() < 12 ? 'Bom dia' : now.getHours() < 18 ? 'Boa tarde' : 'Boa noite';
   const exercises = activePlan?.exercises || [];
   const isDailyPlan = exercises.some(item => !!item.training_day);
   const todayExercises = isDailyPlan ? exercises.filter(item => item.training_day === todayKey) : exercises;
