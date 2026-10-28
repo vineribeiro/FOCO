@@ -132,8 +132,16 @@ export function normalizeScienceExercises(exercises, { experience = "iniciante",
     const sets = highRisk ? Math.min(Number(ex.sets), 2) : Number(ex.sets);
     const rawNotes = String(ex.notes || "").trim().slice(0, 350);
     const rirText = "RIR alvo: " + rir + ". Progrida após alcançar o topo das repetições com técnica e recuperação.";
+    // Normalize only a recognized SECONDARY muscle to the catalog's canonical
+    // primary label; never repair an anatomically unrelated classification.
+    // Example: Face pull labeled Ombros is catalogued with Trapézio primary.
+    const catalog = catalogExercise(ex.exercise_name);
+    const declaredGroup = muscleKey(ex.muscle_group);
+    const canonicalGroup = catalog && !catalog.primary.includes(declaredGroup)
+      && catalog.secondary.includes(declaredGroup) ? catalog.primary[0] : null;
     return {
       ...ex,
+      muscle_group: canonicalGroup || ex.muscle_group,
       sets,
       rest_seconds: correctedRest,
       suggested_load_kg: 0,
