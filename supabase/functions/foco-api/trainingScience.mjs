@@ -282,8 +282,11 @@ export function auditScientificWorkout(exercises, {
   if (uncoveredMajorGroups.length && !highRisk) {
     warnings.push("Revisar cobertura semanal: " + uncoveredMajorGroups.join(", ") + ". Uma omissão pode ser intencional conforme a avaliação.");
   }
+  // Incidental stabilizer recruitment in a squat or a press is not a
+  // dedicated core session. Count only explicitly assigned core work.
   const coreDays = new Set(exercises.filter(ex =>
-    muscleKey(ex.muscle_group) === "Core" || (catalogExercise(ex.exercise_name)?.secondary || []).includes("Core")
+    muscleKey(ex.muscle_group) === "Core" ||
+    classifyMovement(ex.exercise_name, ex.muscle_group) === "core"
   ).map(ex => ex.training_day));
   if (coreDays.size === 0 && !highRisk) {
     warnings.push("O plano não contém trabalho de core explicitamente identificado; conferir estabilidade do tronco e objetivos (FOCO LAB cap. 9).");
