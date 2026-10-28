@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Dumbbell, House, ScanLine, UserRound } from 'lucide-react';
+import { BookOpen, ChartNoAxesColumnIncreasing, Dumbbell, House, UserRound } from 'lucide-react';
 
 interface BottomNavBarProps {
   activeTab: string;
@@ -12,16 +12,13 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, setActive
   const tabs = [
     { id: 'dashboard', label: 'Início', icon: House },
     { id: 'sessao', label: 'Treino', icon: Dumbbell },
-    { id: 'arquivos', label: 'Avaliação', icon: ScanLine },
+    { id: 'progresso', label: 'Evolução', icon: ChartNoAxesColumnIncreasing },
     { id: 'biblioteca', label: 'Biblioteca', icon: BookOpen },
     { id: 'perfil', label: 'Perfil', icon: UserRound },
   ] as const;
 
   const navigate = (id: typeof tabs[number]['id']) => {
     if (id === 'sessao') { onStartSession(); return; }
-    if (id === 'arquivos') {
-      try { sessionStorage.setItem('foco_upload_mode', 'body'); } catch { /* navigate even without storage */ }
-    }
     setActiveTab(id);
   };
 
@@ -30,8 +27,10 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, setActive
       <div className="mx-auto grid h-[73px] max-w-xl grid-cols-5 gap-0.5 px-2">
         {tabs.map(({ id, label, icon: Icon }) => {
           const selected = activeTab === id
-            || (id === 'sessao' && ['treinos','novo-treino','revisao'].includes(activeTab))
-            || (id === 'arquivos' && activeTab === 'progresso');
+            || (id === 'sessao' && ['treinos', 'novo-treino', 'revisao'].includes(activeTab))
+            || (id === 'progresso' && ['arquivos', 'historico'].includes(activeTab))
+            || (id === 'biblioteca' && ['musculos', 'atlas'].includes(activeTab))
+            || (id === 'perfil' && ['configuracoes', 'anamnese', 'objetivos'].includes(activeTab));
           return (
             <button type="button" key={id} aria-current={selected ? 'page' : undefined}
               aria-label={label} onClick={() => navigate(id)}
