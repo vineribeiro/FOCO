@@ -187,7 +187,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       const { base64, mimeType } = await readSelectedFile(selectedFile);
       const result = await api.analyzeBioimpedanceReport({ base64, mime_type: mimeType, filename: selectedFile.name, context: bodyContext });
       setBodyReport(result);
-      setSuccessMsg('Relatório analisado. Confira os dados extraídos e as interpretações abaixo.');
+      setSuccessMsg('Relatório analisado e armazenado. Na geração de treino, você poderá escolher se quer usar essas métricas.');
     } catch (err: any) {
       const message = String(err?.message || 'Erro desconhecido');
       setErrorMsg(message.includes('Sessão') || message.includes('token')
@@ -383,6 +383,12 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
           </section>)}
           <p className="rounded-xl border border-white/10 p-4 text-[11px] leading-relaxed text-neutral-400">Limitações: {bodyReport.limitations} A bioimpedância é uma estimativa, não um diagnóstico; confirme interpretações com profissional de saúde.</p>
         </div>
+      )}
+      {bodyReport && uploadMode === 'body' && (
+        <button type="button" onClick={() => setActiveTab('novo-treino')}
+          className="min-h-11 w-full rounded-xl bg-white px-4 py-3 text-sm font-black text-black">
+          Criar treino usando minha avaliação (ativar uso no próximo passo)
+        </button>
       )}
       {/* Extracted Data Confirmation Box */}
       {extractedResult && (

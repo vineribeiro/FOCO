@@ -38,6 +38,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
     current.includes(muscle) ? current.filter((item) => item !== muscle) : [...current, muscle]);
   const [aiEquipment, setAiEquipment] = useState('Academia Completa com Polias e Barras');
   const [aiRestrictions, setAiRestrictions] = useState('');
+  const [includeBodyMetrics, setIncludeBodyMetrics] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Generated Plan State
@@ -61,7 +62,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       reps_min: 8,
       reps_max: 10,
       rest_seconds: 90,
-      suggested_load_kg: 80,
+      suggested_load_kg: 0,
       notes: 'Cadência controlada',
     },
     {
@@ -71,7 +72,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       reps_min: 10,
       reps_max: 12,
       rest_seconds: 75,
-      suggested_load_kg: 60,
+      suggested_load_kg: 0,
       notes: 'Pico de contração na barra',
     },
   ]);
@@ -115,6 +116,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         focus_muscles: aiFocus.length ? aiFocus.join(', ') : 'Corpo inteiro com distribuição equilibrada',
         equipment_available: aiEquipment,
         restrictions: aiRestrictions,
+        include_body_metrics: includeBodyMetrics,
       });
       setGeneratedPlan(result);
     } catch (err: any) {
@@ -295,6 +297,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                   onChange={(e) => setAiFrequency(Number(e.target.value))}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
                 >
+                  <option value={2}>2 dias por semana (corpo inteiro ou superior/inferior)</option>
                   <option value={3}>3 dias por semana (Divisão ABC)</option>
                   <option value={4}>4 dias por semana (Divisão ABCD / Upper-Lower)</option>
                   <option value={5}>5 dias por semana (Divisão ABCDE)</option>
@@ -360,6 +363,17 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
             </div>
 
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/15 bg-[#090909] p-4 text-sm">
+              <input type="checkbox" checked={includeBodyMetrics} onChange={(e) => setIncludeBodyMetrics(e.target.checked)}
+                className="mt-1 h-4 w-4 accent-white" />
+              <span>
+                <strong className="block text-white">Usar meu último relatório corporal (OKOK ou similar)</strong>
+                <span className="mt-1 block text-xs leading-relaxed text-neutral-400">
+                  Opcional. Autoriza o FOCO a considerar apenas as métricas extraídas de um relatório já enviado.
+                  A bioimpedância é uma estimativa, não um diagnóstico, e não substitui os teus objetivos, a anamnese ou a recuperação.
+                </span>
+              </span>
+            </label>
             <div className="pt-2">
               <button
                 type="submit"
@@ -401,12 +415,14 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 </button>
               </div>
 
+              <p className="text-xs leading-relaxed text-neutral-400">Revise a divisão semanal e cada exercício antes de ativar. Cargas iniciais ficam em aberto até serem ajustadas individualmente.</p>
               {/* Exercises Table */}
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
                     <tr className="text-neutral-500 font-bold border-b border-white/10 uppercase text-[10px]">
                       <th className="py-2 px-2">EXERCÍCIO</th>
+                      <th className="py-2 px-2">DIA</th>
                       <th className="py-2 px-2">GRUPAMENTO</th>
                       <th className="py-2 px-2">SÉRIES</th>
                       <th className="py-2 px-2">REPETIÇÕES</th>
@@ -424,6 +440,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                             <span>{ex.exercise_name}</span>
                           </div>
                         </td>
+                        <td className="py-2.5 px-2 font-sans text-white">{ex.training_day || "A definir"}</td>
                         <td className="py-2.5 px-2 font-sans text-neutral-400">
                           {ex.muscle_group}
                         </td>

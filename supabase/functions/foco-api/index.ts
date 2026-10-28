@@ -203,12 +203,319 @@ async function sessions(db: SupabaseClient, uid: string): Promise<any[]> {
 const exerciseSchema = { type: "OBJECT", properties: {
   exercise_name: { type: "STRING" }, muscle_group: { type: "STRING" }, sets: { type: "INTEGER" },
   reps_min: { type: "INTEGER" }, reps_max: { type: "INTEGER" }, rest_seconds: { type: "INTEGER" },
-  suggested_load_kg: { type: "NUMBER" }, notes: { type: "STRING" },
-}, required: ["exercise_name", "muscle_group", "sets", "reps_min", "reps_max", "rest_seconds", "suggested_load_kg"] };
+  suggested_load_kg: { type: "NUMBER" }, notes: { type: "STRING" }, training_day: { type: "STRING" },
+}, required: ["exercise_name", "muscle_group", "sets", "reps_min", "reps_max", "rest_seconds", "suggested_load_kg", "training_day"] };
+const importExerciseSchema = { ...exerciseSchema, required: exerciseSchema.required.filter((field: string) => field !== "training_day") };
 const workoutSchema = { type: "OBJECT", properties: {
   name: { type: "STRING" }, goal: { type: "STRING" }, weekly_frequency: { type: "INTEGER" },
   explanation: { type: "STRING" }, exercises: { type: "ARRAY", items: exerciseSchema },
 }, required: ["name", "goal", "weekly_frequency", "explanation", "exercises"] };
+
+
+// A ficha precisa indicar o dia de CADA exercício; não deixar o motor repetir a mesma ficha todos os dias.
+const WEEKDAYS = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"] as const;
+const OFFICIAL_EXERCISES: readonly string[] = [
+  "Supino reto com barra",
+  "Supino inclinado com halteres",
+  "Supino declinado com barra",
+  "Supino na máquina",
+  "Flexão de braços",
+  "Crucifixo com halteres",
+  "Crossover nas polias",
+  "Peck deck",
+  "Supino reto com halteres",
+  "Mergulho nas paralelas com foco no peito",
+  "Supino no Smith",
+  "Flexão inclinada",
+  "Puxada frontal na polia",
+  "Remada curvada com barra",
+  "Remada baixa no cabo",
+  "Remada unilateral com halter",
+  "Barra fixa pronada",
+  "Remada com peito apoiado",
+  "Remada com barra T",
+  "Pulldown com braços estendidos",
+  "Pullover com halter",
+  "Remada invertida",
+  "Remada na máquina",
+  "Puxada frontal com pegada neutra",
+  "Remada curvada no Smith",
+  "Remada unilateral no cabo",
+  "Remada Pendlay",
+  "Remada inclinada no cabo",
+  "Puxada frontal com pegada supinada",
+  "Pullover na máquina",
+  "Desenvolvimento com halteres",
+  "Desenvolvimento na máquina",
+  "Desenvolvimento com barra",
+  "Elevação lateral com halteres",
+  "Elevação lateral no cabo",
+  "Elevação lateral na máquina",
+  "Elevação frontal com halteres",
+  "Elevação frontal no cabo",
+  "Crucifixo inverso na máquina",
+  "Crucifixo inverso com halteres",
+  "Crucifixo inverso no cabo",
+  "Remada alta no cabo",
+  "Face pull na polia",
+  "Rotação externa do ombro no cabo",
+  "Rotação externa com elástico",
+  "Arnold press",
+  "Encolhimento de ombros com halteres",
+  "Elevação em Y",
+  "Rotação externa deitado de lado",
+  "Rosca direta com barra reta",
+  "Rosca direta com barra EZ",
+  "Rosca direta com halteres",
+  "Rosca alternada com halteres",
+  "Rosca martelo com halteres",
+  "Rosca martelo na polia com corda",
+  "Rosca Scott com barra EZ",
+  "Rosca Scott com halter",
+  "Rosca concentrada com halter",
+  "Rosca direta na polia com barra reta",
+  "Rosca unilateral na polia",
+  "Rosca inclinada com halteres",
+  "Rosca bayesiana na polia",
+  "Rosca martelo alternada",
+  "Rosca reversa com barra EZ",
+  "Rosca reversa na polia",
+  "Rosca de bíceps na máquina",
+  "Rosca Scott na máquina",
+  "Rosca drag com barra",
+  "Rosca 21",
+  "Tríceps pulley com barra reta",
+  "Tríceps pulley com corda",
+  "Tríceps pulley com barra V",
+  "Tríceps testa com barra EZ",
+  "Tríceps testa com halteres",
+  "Tríceps francês unilateral com halter",
+  "Tríceps francês com dois halteres",
+  "Tríceps coice com halter",
+  "Extensão de tríceps acima da cabeça na polia",
+  "Extensão unilateral de tríceps acima da cabeça na polia",
+  "Tríceps testa na polia",
+  "Mergulho no banco para tríceps",
+  "Mergulho nas paralelas assistido",
+  "Mergulho nas paralelas com peso corporal",
+  "Supino com pegada fechada",
+  "Supino fechado com halteres",
+  "Tríceps coice na polia",
+  "Extensão unilateral de tríceps na polia",
+  "Extensão de tríceps na máquina",
+  "Flexão de braços com pegada fechada",
+  "Extensão de tríceps com elástico",
+  "Flexão de punho com barra",
+  "Flexão de punho com halteres",
+  "Flexão de punho na polia",
+  "Extensão de punho com halteres",
+  "Extensão de punho com barra",
+  "Extensão de punho na polia",
+  "Rosca reversa com halteres",
+  "Pronação do antebraço com halter",
+  "Supinação do antebraço com halter",
+  "Pronação e supinação com martelo",
+  "Caminhada do fazendeiro",
+  "Caminhada unilateral com carga",
+  "Sustentação estática de carga",
+  "Suspensão na barra",
+  "Suspensão assistida na barra",
+  "Sustentação de pegada em pinça",
+  "Fechamento de hand gripper",
+  "Extensão dos dedos com elástico",
+  "Agachamento livre com barra",
+  "Agachamento frontal",
+  "Leg press 45 graus",
+  "Cadeira extensora",
+  "Agachamento goblet",
+  "Agachamento no Smith",
+  "Afundo",
+  "Afundo reverso",
+  "Agachamento búlgaro",
+  "Subida no banco",
+  "Agachamento sissy assistido",
+  "Agachamento na máquina hack",
+  "Agachamento com halteres",
+  "Agachamento com calcanhares elevados",
+  "Leg press unilateral",
+  "Cadeira extensora unilateral",
+  "Agachamento com peso corporal",
+  "Mesa flexora",
+  "Cadeira flexora",
+  "Flexora unilateral",
+  "Stiff com barra",
+  "Stiff com halteres",
+  "Levantamento terra romeno",
+  "Levantamento terra romeno com halteres",
+  "Levantamento terra convencional",
+  "Levantamento terra com barra hexagonal",
+  "Pull-through no cabo",
+  "Extensão de quadril no banco a 45 graus",
+  "Extensão de quadril no banco a 45 graus com carga",
+  "Nordic curl",
+  "Nordic curl assistido",
+  "Flexão de joelho no cabo",
+  "Bom dia com barra",
+  "Ponte de glúteos com pés no chão",
+  "Hip thrust",
+  "Ponte de glúteos unilateral",
+  "Hip thrust unilateral",
+  "Agachamento búlgaro com ênfase no quadril",
+  "Flexão de joelhos com sliders",
+  "Hip thrust com barra",
+  "Hip thrust na máquina",
+  "Ponte de glúteos",
+  "Abdução de quadril na máquina",
+  "Abdução de quadril no cabo",
+  "Abdução de quadril deitado de lado",
+  "Coice de glúteo no cabo",
+  "Coice de glúteo na máquina",
+  "Extensão de quadril em quatro apoios",
+  "Agachamento sumô",
+  "Avanço reverso",
+  "Abdução de quadril com mini band",
+  "Abdução de quadril em pé sem carga",
+  "Panturrilha em pé na máquina",
+  "Panturrilha sentada na máquina",
+  "Panturrilha no leg press",
+  "Panturrilha em pé unilateral",
+  "Panturrilha em pé no Smith",
+  "Panturrilha em pé com halteres",
+  "Panturrilha no degrau com peso corporal",
+  "Panturrilha sentada com halter",
+  "Panturrilha unilateral com halter",
+  "Panturrilha unilateral no leg press",
+  "Panturrilha donkey",
+  "Elevação de ponta dos pés",
+  "Abdominal crunch",
+  "Abdominal reverso",
+  "Abdominal bicicleta",
+  "Abdominal oblíquo",
+  "Prancha abdominal",
+  "Prancha lateral",
+  "Prancha com joelhos apoiados",
+  "Abdominal crunch com carga",
+  "Abdominal na polia",
+  "Elevação de joelhos deitado",
+  "Elevação de pernas deitado",
+  "Elevação de joelhos na cadeira romana",
+  "Elevação de pernas na cadeira romana",
+  "Elevação oblíqua de joelhos na cadeira romana",
+  "Abdominal com roda",
+  "Abdominal V-up",
+  "Mountain climber",
+  "Dead bug",
+  "Pallof press",
+  "Rotação russa",
+  "Prancha alta com toque no ombro",
+  "Extensão lombar no banco 45 graus",
+  "Extensão lombar com carga",
+  "Extensão de tronco no chão",
+  "Bird dog",
+  "Superman",
+  "Good morning",
+  "Levantamento terra com barra",
+  "Pull-through na polia",
+  "Encolhimento com halteres",
+  "Encolhimento com barra",
+  "Encolhimento no Smith",
+  "Encolhimento na máquina",
+  "Remada alta com corda na polia",
+  "Remada alta com halteres",
+  "Face pull",
+  "Encolhimento com barra atrás do corpo",
+  "Crucifixo invertido",
+  "Remada alta com barra",
+  "Encolhimento com kettlebells",
+  "Adução de quadril na máquina",
+  "Abdução de quadril na polia",
+  "Adução de quadril na polia",
+  "Adução de quadril deitado de lado",
+  "Caminhada lateral com miniband",
+  "Clam shell",
+  "Agachamento sumô com halter",
+  "Caminhada na esteira",
+  "Caminhada inclinada na esteira",
+  "Corrida na esteira",
+  "Bicicleta ergométrica",
+  "Bicicleta ergométrica intervalada",
+  "Transport elíptico",
+  "Remo ergométrico",
+  "Pular corda",
+  "Polichinelo",
+  "Corrida parada",
+  "Avanço alternado",
+  "Burpee",
+  "Kettlebell swing",
+  "Corrida intervalada"
+];
+const officialExerciseName = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').replace(/[^a-z0-9]/g, '');
+const officialExerciseKeys = new Set(OFFICIAL_EXERCISES.map(officialExerciseName));
+const DEFAULT_DAYS: Record<number, string[]> = {
+  2: ["segunda", "quinta"],
+  3: ["segunda", "quarta", "sexta"],
+  4: ["segunda", "terca", "quinta", "sexta"],
+  5: ["segunda", "terca", "quarta", "quinta", "sexta"],
+  6: ["segunda", "terca", "quarta", "quinta", "sexta", "sabado"],
+  7: [...WEEKDAYS],
+};
+function normalizedDay(value: unknown): string {
+  const normalized = text(value, 40).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const root = normalized.replace(/[^a-z]/g, "");
+  return WEEKDAYS.find(day => root === day || root.startsWith(day)) || "";
+}
+function scheduleDays(preferred: unknown, frequency: number): string[] {
+  const candidates = Array.isArray(preferred) ? preferred.map(normalizedDay).filter(Boolean) : [];
+  const unique = [...new Set(candidates)];
+  if (unique.length && unique.length < frequency) throw new ApiError(400, "A anamnese tem " + unique.length + " dia(s) disponível(is), mas a ficha pede " + frequency + ". Ajuste os dias na anamnese ou reduza a frequência.");
+  if (unique.length >= frequency) return unique.slice(0, frequency);
+  return DEFAULT_DAYS[frequency];
+}
+function verifiedTrainingProposal(result: any, days: string[], experience: string): any {
+  if (!Array.isArray(result?.exercises) || result.exercises.length === 0 || result.exercises.length > 75) {
+    throw new ApiError(502, "A IA não retornou uma ficha de exercícios válida. Tente gerar novamente.");
+  }
+  const seen = new Set<string>();
+  const exercises = result.exercises.map((e: any) => {
+    const day = normalizedDay(e.training_day);
+    const name = text(e.exercise_name, 160);
+    const muscle = text(e.muscle_group, 80);
+    if (!officialExerciseKeys.has(officialExerciseName(name))) throw new ApiError(502, "A IA sugeriu um exercício fora do catálogo FOCO: " + name + ". Gere novamente.");
+    const sets = Number(e.sets), min = Number(e.reps_min), max = Number(e.reps_max), rest = Number(e.rest_seconds);
+    if (!day || !days.includes(day) || !name || !muscle
+        || !Number.isInteger(sets) || sets < 1 || sets > (experience === "iniciante" ? 4 : 6)
+        || !Number.isInteger(min) || !Number.isInteger(max) || min < 1 || max > 60 || max < min
+        || !Number.isFinite(rest) || rest < 30 || rest > 300) {
+      throw new ApiError(502, "A IA retornou uma prescrição inconsistente (dia, carga de trabalho ou exercício). Gere novamente; esta ficha não foi salva.");
+    }
+    const key = day + ":" + name.toLocaleLowerCase("pt-BR");
+    if (seen.has(key)) throw new ApiError(502, "A IA duplicou um exercício no mesmo dia. Gere novamente.");
+    seen.add(key);
+    return {
+      exercise_name: name, muscle_group: muscle, training_day: day,
+      sets, reps_min: min, reps_max: max, rest_seconds: rest,
+      // Sem histórico individual da carga, não inventar quilos como recomendação inicial.
+      suggested_load_kg: 0,
+      notes: text(e.notes, 500),
+    };
+  });
+  if (days.some(day => !exercises.some((e: any) => e.training_day === day))) {
+    throw new ApiError(502, "A IA deixou um dia de treino sem exercícios. Gere novamente.");
+  }
+  // Conservador: se o mesmo grupamento principal aparece em dias consecutivos,
+  // pedir uma nova proposta. Esta checagem NÃO substitui a análise de fadiga real.
+  for (let i = 0; i < WEEKDAYS.length; i++) {
+    const today = WEEKDAYS[i], next = WEEKDAYS[(i + 1) % WEEKDAYS.length];
+    if (!days.includes(today) || !days.includes(next)) continue;
+    const groups = new Set(exercises.filter((e: any) => e.training_day === today)
+      .map((e: any) => officialExerciseName(e.muscle_group))
+      .filter((group: string) => group && !/cardio|aerobio|condicionamento|mobilidade/.test(group)));
+    if (exercises.some((e: any) => e.training_day === next && groups.has(officialExerciseName(e.muscle_group)))) {
+      throw new ApiError(502, "A IA repetiu o mesmo grupo muscular principal em dias consecutivos. Gere novamente para respeitar a recuperação.");
+    }
+  }
+  return { ...result, weekly_frequency: days.length, exercises };
+}
 
 function mediaData(value: string): string {
   const match = value.match(/^data:[^;]+;base64,([\s\S]+)$/);
@@ -511,25 +818,69 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
   if (path === "/api/ai/generate-workout" && method === "POST") {
     const b = await body(req), p = await profile(db, user);
-    const an = await db.from("anamneses").select("*").eq("user_id", user.id).maybeSingle(); fail(an.error, "Falha ao carregar anamnese.");
+    const an = await db.from("anamneses").select("*").eq("user_id", user.id).maybeSingle();
+    fail(an.error, "Falha ao carregar anamnese.");
     const a = an.data || {};
-    const restriction = a.consent_health_data ? [a.pain_or_injuries, a.health_notes].filter(Boolean).join("; ") : "";
-    const prompt = "Você é o treinador virtual do aplicativo FOCO, especializado em musculação baseada em evidências. Gere uma ficha equilibrada e personalizada em português do Brasil.\n" +
-      "Objetivo: " + text(b.goal || a.primary_goal, 160) + "\nExperiência: " + text(b.experience_level || p.experience_level, 80) +
-      "\nFrequência: " + (Number(b.weekly_frequency || a.weekly_frequency) || 4) + " dias/semana\nMúsculos prioritários: " + text(b.focus_muscles, 500) +
-      "\nEquipamentos: " + text(b.equipment_available, 500) + "\nRestrições: " + [text(b.restrictions, 800), restriction].filter(Boolean).join("; ") +
-      "\nPeso: " + (p.current_weight_kg || "não informado") + " kg\nAnamnese: " + JSON.stringify(a) +
-      "\nRegras: distribua volume e recuperação; priorize grupos selecionados sem negligenciar os demais; respeite equipamento, tempo, preferência e nível; não diagnostique; cargas sugeridas conservadoras. Retorne apenas JSON no schema.";
-    const r = await aiJson(prompt, workoutSchema);
-    if (!Array.isArray(r.exercises) || !r.exercises.length) throw new ApiError(502, "O Gemini não gerou uma lista de exercícios válida.");
-    return response(r, 200, origin);
+    const frequency = Number(b.weekly_frequency || a.weekly_frequency || 3);
+    if (!Number.isInteger(frequency) || frequency < 2 || frequency > 7) throw new ApiError(400, "Escolha de 2 a 7 dias de treino.");
+    const days = scheduleDays(a.preferred_days, frequency);
+    const experience = ["iniciante", "intermediario", "avancado"].includes(b.experience_level)
+      ? b.experience_level : (p.experience_level || "iniciante");
+    const restrictions = a.consent_health_data
+      ? [a.pain_or_injuries, a.health_notes].filter(Boolean).join("; ") : "";
+    let bodyMetrics = "Relatório não autorizado para esta geração.";
+    if (b.include_body_metrics === true) {
+      const files = await db.from("uploaded_files").select("extracted_data")
+        .eq("user_id", user.id).eq("processing_status", "processed")
+        .order("created_at", { ascending: false }).limit(25);
+      fail(files.error, "Falha ao localizar relatórios corporais.");
+      const report = (files.data || []).map((file: any) => file.extracted_data)
+        .find((record: any) => record && Array.isArray(record.metrics) && typeof record.summary === "string");
+      if (report) {
+        bodyMetrics = JSON.stringify({
+          metrics: report.metrics.slice(0, 20).map((metric: any) => ({
+            name: text(metric.name, 70), value: text(metric.value, 80),
+          })),
+          limitations: text(report.limitations, 300),
+        }).slice(0, 3800);
+      } else {
+        bodyMetrics = "Nenhum relatório de bioimpedância processado disponível.";
+      }
+    }
+    const prompt = [
+      "Você é um assistente educacional de treino do FOCO. Proponha uma ficha individual em português do Brasil, para revisão do usuário e de um profissional de Educação Física.",
+      "Objetivo: " + text(b.goal || a.primary_goal, 160),
+      "Experiência: " + experience,
+      "Frequência obrigatória: " + frequency + " dias por semana.",
+      "Dias EXATOS de treino: " + days.join(", ") + ".",
+      "Cada exercício DEVE ter training_day com um desses valores exatos; coloque exercícios em TODOS esses dias.",
+      "Músculos prioritários escolhidos: " + text(b.focus_muscles || (a.priority_muscles || []).join(", "), 500),
+      "Equipamentos disponíveis: " + text(b.equipment_available || (a.equipment_available || []).join(", "), 500),
+      "Preferências, duração da sessão e nível de atividade: " + JSON.stringify({
+        session_minutes: a.session_minutes || 60,
+        activity_level: a.activity_level || "",
+        exercise_preferences: a.exercise_preferences || "",
+        cardio_habits: a.cardio_habits || "",
+        sleep_quality: a.sleep_quality || "",
+      }).slice(0, 1100),
+      "Restrições autorizadas: " + [text(b.restrictions, 800), restrictions].filter(Boolean).join("; "),
+      "Peso: " + (p.current_weight_kg || "não informado") + " kg, altura: " + (p.height_cm || "não informada") + " cm.",
+      "Bioimpedância (estimativa; não diagnóstica): " + bodyMetrics,
+      "Regras: respeitar nível, equipamento e duração; dividir movimentos, volume e recuperação sem sobrepor desnecessariamente os mesmos músculos em dias consecutivos; incluir força e cardio conforme objetivo e capacidade; NÃO priorizar músculos por gênero; NÃO prescrever por IMC isolado; não inventar diagnóstico ou capacidade; nunca recomendar carga em kg sem histórico individual, usar suggested_load_kg=0; para iniciantes priorizar técnica e progressão gradual; não prescrever exercícios de risco quando há restrições relevantes.",
+      "Nomes EXATOS de exercícios permitidos: " + OFFICIAL_EXERCISES.join(" | "),
+      "Use exclusivamente os nomes desta lista, sem apelidos, sufixos ou variações inventadas; notas curtas de execução e sem texto genérico. Retorne apenas o JSON do schema.",
+    ].join("\n");
+    const generated = await aiJson(prompt, workoutSchema);
+    const proposal = verifiedTrainingProposal(generated, days, experience);
+    return response({ ...proposal, explanation: text(proposal.explanation, 2000) +
+      "\nDivisão: " + days.join(", ") + ". A proposta é educacional e requer revisão antes de praticar." }, 200, origin);
   }
 
   if (path === "/api/ai/extract-sheet" && method === "POST") {
     const b = await body(req), mime = String(b.mime_type || "");
     if (!ALLOWED_FILE_TYPES.includes(mime) || typeof b.base64 !== "string" || b.base64.length > 15_000_000) throw new ApiError(415, "Envie PDF, JPG, PNG ou WebP válido de até 10 MB.");
     const savedFile = await storeUploadedFile(db, user, b, mime, "pending");
-    const schema = { type: "OBJECT", properties: { plan_name: { type: "STRING" }, goal: { type: "STRING" }, weekly_frequency: { type: "INTEGER" }, confidence_notes: { type: "STRING" }, extracted_exercises: { type: "ARRAY", items: exerciseSchema } }, required: ["plan_name", "extracted_exercises", "confidence_notes"] };
+    const schema = { type: "OBJECT", properties: { plan_name: { type: "STRING" }, goal: { type: "STRING" }, weekly_frequency: { type: "INTEGER" }, confidence_notes: { type: "STRING" }, extracted_exercises: { type: "ARRAY", items: importExerciseSchema } }, required: ["plan_name", "extracted_exercises", "confidence_notes"] };
     const prompt = "Você lê fichas de musculação. Extraia apenas o que estiver legível: nome, objetivo, frequência e exercícios com grupamento, séries, repetições, descanso em segundos, carga em kg (0 se ausente) e notas. Não invente dados ilegíveis; explicite incertezas. Notas do usuário: " + text(b.notes, 1000) + ". Retorne somente JSON.";
     try {
       const r = await aiJson(prompt, schema, { data: mediaData(b.base64), mime });

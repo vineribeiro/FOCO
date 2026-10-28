@@ -5,7 +5,7 @@ import { api } from '../services/api';
 import { WorkoutPlan, WorkoutExercise } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
 import { soundEngine } from '../utils/soundEngine';
-import { ExerciseIllustration } from '../components/ExerciseIllustration';
+import { ExerciseExecutionGuide } from '../components/ExerciseExecutionGuide';
 import { getPreferredTrainingDay, getTrainingDayLabel, savePreferredTrainingDay, TRAINING_DAYS } from '../data/exerciseLibrary';
 import {
   Play,
@@ -500,7 +500,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                 </div>
 
                 <div className="flex items-center gap-1.5 shrink-0">
-<ExerciseIllustration exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} className="h-14 w-14 shrink-0" />
+
                   <button
                     onClick={() => handleAddSet(exIdx)}
                     className="foco-touch rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
@@ -511,6 +511,13 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                   </button>
                 </div>
               </div>
+
+              <details className="mt-3 overflow-hidden rounded-xl border border-white/10 bg-[#101010]" open={exIdx === 0}>
+                <summary className="foco-touch cursor-pointer px-4 py-3 text-sm font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
+                  Ver execução, músculos e cuidados · {exercise.exercise_name}
+                </summary>
+                <ExerciseExecutionGuide exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} />
+              </details>
 
               {/* Sets Table */}
               <div className="mt-2.5 overflow-x-auto">
