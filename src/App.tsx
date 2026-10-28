@@ -130,7 +130,7 @@ function MainApp() {
       case 'progresso':
         return <ProgressPage />;
       case 'perfil':
-        return <ProfilePage />;
+        return <ProfilePage setActiveTab={setActiveTab} />;
       case 'configuracoes':
         return <SettingsPage setActiveTab={setActiveTab} />;
       case 'historico':
