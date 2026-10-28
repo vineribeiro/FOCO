@@ -142,6 +142,10 @@ export interface FocoLabEvidence {
 }
 export interface TrainingScienceReport {
   source: string;
+  evidence?: FocoLabEvidence;
+  session_time_minutes_by_day?: Record<string, number>;
+  uncovered_major_groups?: string[];
+  core_exposure_days?: number;
   split_rationale: string;
   dose: string;
   direct_sets_by_group: Record<string, number>;
