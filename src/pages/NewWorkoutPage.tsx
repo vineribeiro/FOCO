@@ -486,6 +486,29 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                   </div>
                   <p className="text-[13px] leading-relaxed text-neutral-200">{generatedPlan.training_science.split_rationale}</p>
                   <p className="text-xs leading-relaxed text-neutral-400">{generatedPlan.training_science.dose}</p>
+                  {generatedPlan.training_science.evidence && (
+                    <div className="rounded-xl border border-white/10 bg-[#111] p-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-300">Fonte técnica rastreável</p>
+                      <p className="mt-1 text-xs font-semibold text-white">{generatedPlan.training_science.evidence.source_title}</p>
+                      <p className="mt-1 text-[11px] leading-relaxed text-neutral-400">
+                        {generatedPlan.training_science.evidence.source_id} · Revisão narrativa e heurísticas; não substitui avaliação individual.
+                      </p>
+                    </div>
+                  )}
+                  {generatedPlan.training_science.session_time_minutes_by_day &&
+                    Object.keys(generatedPlan.training_science.session_time_minutes_by_day).length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-xs font-bold text-neutral-300">Tempo estimado por sessão</p>
+                      <p className="text-[11px] text-neutral-400">Inclui aquecimento, pausas e transições; pode variar conforme execução real.</p>
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(generatedPlan.training_science.session_time_minutes_by_day).map(([day, minutes]) => (
+                          <span key={day} className="rounded-lg border border-white/10 bg-[#111] px-3 py-2 text-[11px] text-neutral-200">
+                            <strong className="capitalize">{day}</strong>: aproximadamente {minutes} min
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {Object.keys(generatedPlan.training_science.direct_sets_by_group || {}).length > 0 && (
                     <div>
                       <p className="mb-2 text-xs font-bold text-neutral-300">Séries diretas por grupo/semana</p>
