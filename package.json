@@ -14,7 +14,8 @@
     "audit:images": "node scripts/audit-exercise-images.mjs",
     "anatomy:generate": "node scripts/generate-anatomy.mjs",
     "audit:anatomy": "node scripts/audit-anatomy-v3.mjs",
-    "test:anatomy-review": "tsx scripts/test-anatomy-review.mjs"
+    "test:anatomy-review": "tsx scripts/test-anatomy-review.mjs",
+    "audit:anatomy-review-public": "node scripts/audit-anatomy-review-public.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

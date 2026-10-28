@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "policy": "Somente estudos visuais. Não utilizar como instrução de exercícios. Nenhum arquivo está aprovado.",
+  "previews": [
+    {
+      "id": "supino_reto_sem_rotulos",
+      "exercise_id": "peito_supino_reto_barra",
+      "title": "Supino reto — estudo de anatomia",
+      "status": "needs_review",
+      "image": "anatomy/review/supino_reto_estudo_nao_aprovado.jpg",
+      "resolution": "880 × 587",
+      "note": "Estudo de layout e anatomia, sem validação biomecânica; não usar como guia de execução."
+    },
+    {
+      "id": "supino_reto_rotulado",
+      "exercise_id": "peito_supino_reto_barra",
+      "title": "Supino reto — estudo com rótulos",
+      "status": "rejected",
+      "image": null,
+      "resolution": null,
+      "note": "Reprovada por inconsistência na orientação das fases e rotulagem. Disponível somente no ZIP original."
+    },
+    {
+      "id": "mosaico_peito",
+      "exercise_id": null,
+      "title": "Peito — painel coletivo",
+      "status": "rejected",
+      "image": null,
+      "resolution": null,
+      "note": "Reprovado: mosaico de múltiplos exercícios com erros e escala insuficiente para ensino. Disponível somente no ZIP original."
+    }
+  ]
+}
