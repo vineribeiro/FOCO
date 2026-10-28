@@ -3,7 +3,11 @@
  * Fonte: PDF fornecido pelo proprietário do FOCO.
  * Referência interna: docs/FOCO_LAB_DOSSIE_2026_IMPLEMENTACAO.md
  *
- * Revisão NARRATIVA do proprietário, não uma nova revisão sistemática.
+ * Síntese narrativa tecnicamente revisada e corrigida com um profissional de
+ * Educação Física, conforme informado pelo responsável pelo FOCO. A declaração
+ * refere-se ao CONTEÚDO do dossiê, não a toda ficha gerada pelo algoritmo,
+ * nem constitui certificação ou parecer formal documentado neste repositório.
+ * Não é uma revisão sistemática original.
  * As referências são citadas pelo dossiê, não verificadas automaticamente
  * por este módulo. Não converter heurísticas em verdades científicas.
  *
