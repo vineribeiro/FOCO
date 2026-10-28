@@ -1,5 +1,9 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient, type SupabaseClient, type User } from "npm:@supabase/supabase-js@2";
+import {
+  assessTrainingSafety, buildScientificWorkoutGuidance,
+  normalizeScienceExercises, auditScientificWorkout, sciencePlanSummary,
+} from "./trainingScience.mjs";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "https://buoefcnkpdrhevzbakze.supabase.co";
 function publicApiKey(): string {
@@ -203,7 +207,7 @@ async function sessions(db: SupabaseClient, uid: string): Promise<any[]> {
 const exerciseSchema = { type: "OBJECT", properties: {
   exercise_name: { type: "STRING" }, muscle_group: { type: "STRING" }, sets: { type: "INTEGER" },
   reps_min: { type: "INTEGER" }, reps_max: { type: "INTEGER" }, rest_seconds: { type: "INTEGER" },
-  suggested_load_kg: { type: "NUMBER" }, notes: { type: "STRING" }, training_day: { type: "STRING" },
+  suggested_load_kg: { type: "NUMBER" }, notes: { type: "STRING" }, training_day: { type: "STRING" }, rir_target: { type: "INTEGER" },
 }, required: ["exercise_name", "muscle_group", "sets", "reps_min", "reps_max", "rest_seconds", "suggested_load_kg", "training_day"] };
 const importExerciseSchema = { ...exerciseSchema, required: exerciseSchema.required.filter((field: string) => field !== "training_day") };
 const workoutSchema = { type: "OBJECT", properties: {
@@ -471,7 +475,7 @@ function scheduleDays(preferred: unknown, frequency: number): string[] {
   if (unique.length >= frequency) return unique.slice(0, frequency);
   return DEFAULT_DAYS[frequency];
 }
-function verifiedTrainingProposal(result: any, days: string[], experience: string): any {
+function verifiedTrainingProposal(result: any, days: string[], experience: string, studyContext: any): any {
   if (!Array.isArray(result?.exercises) || result.exercises.length === 0 || result.exercises.length > 75) {
     throw new ApiError(502, "A IA não retornou uma ficha de exercícios válida. Tente gerar novamente.");
   }
@@ -502,19 +506,22 @@ function verifiedTrainingProposal(result: any, days: string[], experience: strin
   if (days.some(day => !exercises.some((e: any) => e.training_day === day))) {
     throw new ApiError(502, "A IA deixou um dia de treino sem exercícios. Gere novamente.");
   }
-  // Conservador: se o mesmo grupamento principal aparece em dias consecutivos,
-  // pedir uma nova proposta. Esta checagem NÃO substitui a análise de fadiga real.
-  for (let i = 0; i < WEEKDAYS.length; i++) {
-    const today = WEEKDAYS[i], next = WEEKDAYS[(i + 1) % WEEKDAYS.length];
-    if (!days.includes(today) || !days.includes(next)) continue;
-    const groups = new Set(exercises.filter((e: any) => e.training_day === today)
-      .map((e: any) => officialExerciseName(e.muscle_group))
-      .filter((group: string) => group && !/cardio|aerobio|condicionamento|mobilidade/.test(group)));
-    if (exercises.some((e: any) => e.training_day === next && groups.has(officialExerciseName(e.muscle_group)))) {
-      throw new ApiError(502, "A IA repetiu o mesmo grupo muscular principal em dias consecutivos. Gere novamente para respeitar a recuperação.");
-    }
-  }
-  return { ...result, weekly_frequency: days.length, exercises };
+  // O estudo 2026 não estabelece 48 h como regra universal; auditar a dose, não apenas o calendário.
+  // Corrigir tempos de descanso insuficientes e preservar RIR nas notas (coluna já existente no banco).
+  const scientificExercises = normalizeScienceExercises(exercises, {
+    experience, highRisk: studyContext.highRisk === true,
+  });
+  const audit = auditScientificWorkout(scientificExercises, {
+    days, experience, sessionMinutes: studyContext.sessionMinutes,
+    highRisk: studyContext.highRisk === true,
+  });
+  if (!audit.ok) throw new ApiError(502, "A proposta de IA não passou na revisão de volume/recuperação: " + audit.issue + " Tente gerar novamente.");
+  return {
+    ...result, weekly_frequency: days.length, exercises: scientificExercises,
+    training_science: sciencePlanSummary({
+      frequency: days.length, experience, highRisk: studyContext.highRisk === true,
+    }, audit),
+  };
 }
 
 function mediaData(value: string): string {
