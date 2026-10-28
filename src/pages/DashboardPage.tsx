@@ -67,7 +67,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
   const greeting = now.getHours() < 12 ? 'Bom dia' : now.getHours() < 18 ? 'Boa tarde' : 'Boa noite';
   const exercises = activePlan?.exercises || [];
   const isDailyPlan = exercises.some(item => !!item.training_day);
-  const todayExercises = isDailyPlan ? exercises.filter(item => item.training_day === todayKey) : exercises;
+  const todayExercises = isDailyPlan ? exercises.filter(item => !item.training_day || item.training_day === todayKey) : exercises;
   const todayMuscles = [...new Set(todayExercises.map(item => item.muscle_group).filter(Boolean))];
   const heroTitle = todayMuscles.length ? todayMuscles.slice(0,2).join(' + ')
     : activePlan?.name || 'Treino feito para você';
@@ -186,7 +186,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
           </div>
           <div className="foco-v4-week">
             {DAYS.map((day,idx) => {
-              const daily = isDailyPlan ? exercises.filter(e => e.training_day === day.id) : exercises;
+              const daily = isDailyPlan ? exercises.filter(e => !e.training_day || e.training_day === day.id) : exercises;
               const muscles = [...new Set(daily.map(e=>e.muscle_group).filter(Boolean))];
               const done = completedDays.has(idx);
               return <button type="button" key={day.id} onClick={() => setActiveTab('sessao')}
