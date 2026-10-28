@@ -18,6 +18,8 @@ export interface WorkoutDraft {
   selectedTrainingDay: string;
   planId: string | null;
   sessionNotes: string;
+  perceivedEffort?: string;
+  sessionPerformance?: string;
   exerciseLogs: WorkoutDraftExercise[];
 }
 const keyFor = (userId: string) => 'foco:workout-draft:v1:' + encodeURIComponent(userId);
