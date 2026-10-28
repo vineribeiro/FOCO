@@ -533,12 +533,19 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                 </div>
               </div>
 
-              <details className="mt-3 overflow-hidden rounded-[19px] border border-white/10 bg-[#111]" open={exIdx === Math.max(focusedExerciseIndex, 0)}>
-                <summary className="foco-touch cursor-pointer px-4 py-3 text-sm font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
-                  <span className="flex items-center gap-2"><Dumbbell className="h-4 w-4" /> Execução, músculos e cuidados</span>
-                </summary>
-                <ExerciseExecutionGuide exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} />
-              </details>
+              {exIdx === focusedExerciseIndex ? (
+                <section className="mt-4 overflow-hidden rounded-[19px] border border-white/10 bg-[#111]" aria-label={'Guia de execução de ' + exercise.exercise_name}>
+                  <p className="foco-v4-eyebrow px-4 pt-4">Execução do exercício</p>
+                  <ExerciseExecutionGuide exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} />
+                </section>
+              ) : (
+                <details className="mt-3 overflow-hidden rounded-[19px] border border-white/10 bg-[#111]">
+                  <summary className="foco-touch cursor-pointer px-4 py-3 text-sm font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
+                    <span className="flex items-center gap-2"><Dumbbell className="h-4 w-4" /> Execução, músculos e cuidados</span>
+                  </summary>
+                  <ExerciseExecutionGuide exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} />
+                </details>
+              )}
 
               {/* Sets Table */}
               <div className="mt-2.5 overflow-x-auto">
