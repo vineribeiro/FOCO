@@ -993,8 +993,69 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
       progression_summary: { type: "OBJECT", properties: { strength_delta: { type: "STRING" }, volume_analysis: { type: "STRING" }, focus_adjustments: { type: "STRING" } }, required: ["strength_delta", "volume_analysis", "focus_adjustments"] },
       proposed_plan: { type: "OBJECT", properties: { name: { type: "STRING" }, goal: { type: "STRING" }, weekly_frequency: { type: "INTEGER" }, exercises: { type: "ARRAY", items: exerciseSchema } }, required: ["name", "goal", "weekly_frequency", "exercises"] },
     }, required: ["review_interval_days", "explanation", "progression_summary", "proposed_plan"] };
-    const prompt = "Revise este ciclo de musculação após " + interval + " dias. Ficha atual: " + JSON.stringify(active) + ". Histórico: " + JSON.stringify(history) + ". Feedback: " + text(b.user_feedback, 1200) + ". Avalie aderência e progressão, sem presumir o que não foi registrado; proponha ajustes cautelosos e explique-os. Responda apenas JSON.";
-    const result = await aiJson(prompt, schema);
+    const an = await db.from("anamneses").select("*").eq("user_id", user.id).maybeSingle();
+    fail(an.error, "Falha ao carregar anamnese para a revisão.");
+    const anamnesis = an.data || {};
+    const currentProfile = await profile(db, user);
+    const experience = ["iniciante", "intermediario", "avancado"].includes(currentProfile.experience_level)
+      ? currentProfile.experience_level : "iniciante";
+    const frequency = Math.max(2, Math.min(7, Number(active.weekly_frequency) || 3));
+    const days = scheduleDays(anamnesis.preferred_days, frequency);
+    const clinicalSafety = assessTrainingSafety({
+      consent: anamnesis.consent_health_data === true,
+      notes: [anamnesis.pain_or_injuries, anamnesis.health_notes].filter(Boolean).join("; "),
+    });
+    if (clinicalSafety.acuteRedFlag) throw new ApiError(400,
+      "Foram relatados sintomas que precisam de avaliação médica antes de ajustes de treino.");
+    const sessionMinutes = Math.max(20, Math.min(180, Number(anamnesis.session_minutes) || 60));
+    const summaryStudy = buildScientificWorkoutGuidance({
+      frequency, experience, goal: active.goal, sessionMinutes,
+      priorityMuscles: anamnesis.priority_muscles || [], highRisk: clinicalSafety.highRisk,
+      historyAvailable: history.length > 0,
+    });
+    const prompt = [
+      "Revise a ficha de musculação após " + interval + " dias considerando histórico e sinais de recuperação.",
+      summaryStudy,
+      "Mantenha o objetivo e a divisão nos dias exatos: " + days.join(", ") + ".",
+      "Ficha atual: " + JSON.stringify(active).slice(0, 12500),
+      "Sessões anteriores (não invente RIR nem técnica não registrada): " + JSON.stringify(history).slice(0, 14000),
+      "Feedback do atleta: " + text(b.user_feedback, 1200),
+      "Proponha alterações graduais com progressão dupla, intervalos adequados, adequação de volume e aderência.",
+      "Use somente nomes do catálogo FOCO: " + OFFICIAL_EXERCISES.join(" | "),
+      "Se houver pouca informação, prefira manutenção da ficha ou pequenos ajustes; não aumente volume automaticamente.",
+      "Evite promessas de emagrecimento por repetição, prescrição de dieta e inferências médicas.",
+      "A IA deve explicar o motivo de qualquer alteração. Retorne exclusivamente o JSON do schema.",
+    ].join("\n");
+    let reviewed: any = null;
+    let problem: unknown = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const addition = problem instanceof Error
+        ? "\nCorrija esta inconsistência: " + text(problem.message, 450) : "";
+      const candidate = await aiJson(prompt + addition, schema);
+      try {
+        const verified = verifiedTrainingProposal({
+          ...candidate.proposed_plan, explanation: candidate.explanation,
+        }, days, experience, { sessionMinutes, highRisk: clinicalSafety.highRisk });
+        reviewed = {
+          ...candidate, review_interval_days: interval,
+          proposed_plan: {
+            name: text(verified.name, 160),
+            goal: text(verified.goal, 160) || active.goal,
+            weekly_frequency: days.length,
+            exercises: verified.exercises,
+          },
+          explanation: text(candidate.explanation, 1500) +
+            "\nRevisão técnica FOCO 2026: " + verified.training_science.progression +
+            (clinicalSafety.highRisk ? "\nAtenção: exige revisão clínica e do profissional habilitado." : ""),
+        };
+        break;
+      } catch (error) {
+        if (!(error instanceof ApiError) || error.status !== 502) throw error;
+        problem = error;
+      }
+    }
+    if (!reviewed) throw problem || new ApiError(502, "A IA não conseguiu criar uma revisão segura da ficha.");
+    const result = reviewed;
     const rec = await db.from("ai_recommendations").insert({ user_id: user.id, previous_plan_id: active.id, review_interval_days: interval, explanation: result.explanation, status: "pending", proposed_plan: result.proposed_plan }).select("*").single();
     fail(rec.error, "Não foi possível salvar a recomendação.");
     return response({ recommendation_id: rec.data.id, ...result }, 200, origin);
