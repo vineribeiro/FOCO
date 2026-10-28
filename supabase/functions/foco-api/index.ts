@@ -534,27 +534,48 @@ async function aiJson(prompt: string, schema: any, media?: { data: string; mime:
   if (media) parts.push({ inline_data: { mime_type: media.mime, data: media.data } });
   parts.push({ text: prompt });
   const models = [...new Set([GEMINI_MODEL, GEMINI_FALLBACK_MODEL])];
+  const deadline = Date.now() + 55_000; // Keep two scientific proposal attempts below Edge Function wall-clock limits.
   let detail = "O Gemini não retornou uma resposta.";
-  for (const model of models) {
+  modelsLoop: for (const model of models) {
     for (let attempt = 0; attempt < 2; attempt++) {
-      const result = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent", {
-        method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": GEMINI_KEY },
-        body: JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema, temperature: 0.35 } }),
-      });
-      const raw = await result.text();
+      const remaining = deadline - Date.now();
+      if (remaining < 1500) break modelsLoop;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), Math.min(25_000, remaining));
+      let result: Response;
+      let raw: string;
+      try {
+        result = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent", {
+          method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": GEMINI_KEY },
+          signal: controller.signal,
+          body: JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema, temperature: 0.35 } }),
+        });
+        raw = await result.text();
+      } catch (error) {
+        detail = controller.signal.aborted
+          ? "O Gemini excedeu o tempo de resposta desta tentativa."
+          : (error instanceof Error ? error.message : "Falha de comunicação com Gemini.");
+        continue;
+      } finally {
+        clearTimeout(timeout);
+      }
       if (result.ok) {
-        let data: any = {}; try { data = JSON.parse(raw); } catch { /* parse below */ }
+        let data: any = {};
+        try { data = JSON.parse(raw); } catch { /* validate below */ }
         const output = (data.candidates?.[0]?.content?.parts || []).map((p: any) => p.text || "").join("").trim();
         try { return JSON.parse(output); } catch { detail = "O Gemini retornou JSON inválido."; break; }
       }
       try { detail = JSON.parse(raw)?.error?.message || raw; } catch { detail = raw; }
-      if (![408, 429, 500, 502, 503, 504].includes(result.status)) throw new ApiError(502, "Falha na API do Gemini: " + String(detail).slice(0, 400));
-      if (attempt === 0) await new Promise(resolve => setTimeout(resolve, 700));
+      if (![408, 429, 500, 502, 503, 504].includes(result.status)) {
+        throw new ApiError(502, "Falha na API do Gemini: " + String(detail).slice(0, 400));
+      }
+      if (attempt === 0 && deadline - Date.now() > 1000) {
+        await new Promise(resolve => setTimeout(resolve, 350));
+      }
     }
   }
-  throw new ApiError(503, "O Gemini está temporariamente indisponível. " + String(detail).slice(0, 250));
+  throw new ApiError(503, "O Gemini não concluiu no tempo disponível. " + String(detail).slice(0, 250));
 }
-
 async function dispatch(req: Request, path: string, origin: string): Promise<Response> {
   const method = req.method.toUpperCase();
 
