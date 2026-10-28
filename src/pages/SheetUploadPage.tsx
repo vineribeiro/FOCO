@@ -58,7 +58,15 @@ interface SheetUploadProps {
 
 export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) => {
   const [files, setFiles] = useState<UploadedFile[]>([]);
-  const [uploadMode, setUploadMode] = useState<'workout' | 'body'>('workout');
+  const [uploadMode, setUploadMode] = useState<'workout' | 'body'>(() => {
+    try {
+      const requested = sessionStorage.getItem('foco_upload_mode');
+      sessionStorage.removeItem('foco_upload_mode');
+      return requested === 'body' ? 'body' : 'workout';
+    } catch {
+      return 'workout';
+    }
+  });
   const [bodyContext, setBodyContext] = useState('');
   const [bodyReport, setBodyReport] = useState<{ summary: string; metrics: { name: string; value: string; interpretation: string }[]; strengths: string[]; attention_points: string[]; training_recommendations: string[]; nutrition_discussion: string[]; questions_for_professional: string[]; limitations: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -187,6 +195,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       const { base64, mimeType } = await readSelectedFile(selectedFile);
       const result = await api.analyzeBioimpedanceReport({ base64, mime_type: mimeType, filename: selectedFile.name, context: bodyContext });
       setBodyReport(result);
+      void loadFiles();
       setSuccessMsg('Relatório analisado e armazenado. Na geração de treino, você poderá escolher se quer usar essas métricas.');
     } catch (err: any) {
       const message = String(err?.message || 'Erro desconhecido');
