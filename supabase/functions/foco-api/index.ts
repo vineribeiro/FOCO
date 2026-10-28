@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient, type SupabaseClient, type User } from "npm:@supabase/supabase-js@2";
 import {
-  assessTrainingSafety, buildScientificWorkoutGuidance,
+  SCIENCE_ENGINE_VERSION, assessTrainingSafety, buildScientificWorkoutGuidance,
   normalizeScienceExercises, auditScientificWorkout, sciencePlanSummary,
 } from "./trainingScience.mjs";
 
@@ -569,7 +569,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
   if (method === "OPTIONS") return new Response(null, { status: 204, headers: { ...CORS, ...(ORIGINS.includes(origin) ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" } : {}) } });
   if (method === "GET" && path === "/api/system/status") return response({
-    app: "FOCO", version: "2.1.0", ai_status: GEMINI_KEY ? "configured" : "missing_key",
+    app: "FOCO", version: "2.2.0", science_engine: SCIENCE_ENGINE_VERSION, ai_status: GEMINI_KEY ? "configured" : "missing_key",
     database: "supabase-postgres", storage_persistent: true, storage_file_exists: true,
     storage_bucket: PRIVATE_FILE_BUCKET, file_uploads_supported: true,
     remote_storage_configured: true, remote_storage_ready: true, remote_storage_error: false,
