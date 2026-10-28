@@ -2,8 +2,20 @@ import assert from "node:assert/strict";
 import {
   SCIENCE_ENGINE_VERSION,
   buildScientificWorkoutGuidance, assessTrainingSafety, normalizeScienceExercises,
-  minimumRestSeconds, classifyMovement, auditScientificWorkout, sciencePlanSummary,
+  minimumRestSeconds, classifyMovement, auditScientificWorkout as auditStrictWorkout, sciencePlanSummary,
+  sessionExerciseRange,
 } from "../supabase/functions/foco-api/trainingScience.mjs";
+
+// Legacy scientific audit scenarios focus on volume and taxonomy, independently
+// of the product's preferred exercise-count bands.
+const auditScientificWorkout = (exercises, options) =>
+  auditStrictWorkout(exercises, { ...options, enforceExerciseRange: false });
+
+for (const [minutes, min, max] of [
+  [20, 2, 3], [29, 2, 3], [30, 4, 5], [45, 4, 5],
+  [46, 5, 6], [60, 5, 6], [61, 6, 7], [75, 6, 7],
+  [76, 7, 8], [90, 7, 8],
+]) assert.deepEqual(sessionExerciseRange(minutes), { min, max }, 'Duração: ' + minutes);
 
 const exercise = (name, group, day, sets = 3, rest = 120) => ({
   exercise_name: name, muscle_group: group, training_day: day,
@@ -96,4 +108,28 @@ const conservative = normalizeScienceExercises([exercise("Supino reto com barra"
 assert.equal(conservative[0].sets,2);
 assert.equal(conservative[0].rir_target,3);
 assert.equal(auditScientificWorkout(conservative,{experience:"intermediario",days:["segunda"],highRisk:true}).ok,true);
-console.log("FOCO study 2026: divisions, progression, safety, official catalog and indirect-volume assertions OK.");
+const fourExercises = [
+  exercise("Supino reto com barra", "Peitoral", "segunda", 2, 120),
+  exercise("Puxada frontal na polia", "Costas", "segunda", 2, 120),
+  exercise("Agachamento livre com barra", "Quadríceps", "segunda", 2, 120),
+  exercise("Mesa flexora", "Posteriores", "segunda", 2, 90),
+];
+const countOptions = { experience: "intermediario", days: ["segunda"], sessionMinutes: 45 };
+assert.equal(auditStrictWorkout(fourExercises, countOptions).ok, true, "4 exercícios em 45 minutos são aceitos");
+const underfilled = auditStrictWorkout(fourExercises.slice(0, 3), countOptions);
+assert.equal(underfilled.ok, false, "3 exercícios em 45 minutos devem ser rejeitados");
+assert.match(underfilled.issue, /4-5/);
+const fiveExercises = [...fourExercises, exercise("Prancha abdominal", "Core", "segunda", 2, 45)];
+assert.equal(auditStrictWorkout(fiveExercises, countOptions).ok, true, "5 exercícios em 45 minutos são aceitos");
+assert.equal(auditStrictWorkout(fiveExercises, { ...countOptions, sessionMinutes: 60 }).ok, true, "5 exercícios em 60 minutos são aceitos");
+const underfilled60 = auditStrictWorkout(fourExercises, { ...countOptions, sessionMinutes: 60 });
+assert.equal(underfilled60.ok, false, "4 exercícios em 60 minutos devem ser rejeitados");
+assert.match(underfilled60.issue, /5-6/);
+assert.equal(auditStrictWorkout(fourExercises.slice(0, 2), { ...countOptions, highRisk: true }).ok, true,
+  "Condições de alto risco não forçam adição de exercícios");
+const onlyCardio = [exercise("Bicicleta ergométrica", "Cardio", "segunda", 1, 45)];
+assert.equal(auditStrictWorkout(onlyCardio, countOptions).ok, true,
+  "Dia exclusivamente aeróbico não precisa atingir contagem de musculação");
+assert.match(buildScientificWorkoutGuidance({ sessionMinutes: 45 }), /4-5 exercícios/);
+assert.match(buildScientificWorkoutGuidance({ sessionMinutes: 60 }), /5-6 exercícios/);
+console.log("FOCO study 2026: divisions, progression, time bands, safety, official catalog and indirect-volume assertions OK.");
