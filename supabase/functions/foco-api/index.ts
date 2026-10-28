@@ -467,8 +467,9 @@ function normalizedDay(value: unknown): string {
 function scheduleDays(preferred: unknown, frequency: number): string[] {
   const candidates = Array.isArray(preferred) ? preferred.map(normalizedDay).filter(Boolean) : [];
   const unique = [...new Set(candidates)];
+  if (unique.length && unique.length < frequency) throw new ApiError(400, "A anamnese tem " + unique.length + " dia(s) disponível(is), mas a ficha pede " + frequency + ". Ajuste os dias na anamnese ou reduza a frequência.");
   if (unique.length >= frequency) return unique.slice(0, frequency);
-  return [...unique, ...DEFAULT_DAYS[frequency].filter(day => !unique.includes(day))].slice(0, frequency);
+  return DEFAULT_DAYS[frequency];
 }
 function verifiedTrainingProposal(result: any, days: string[], experience: string): any {
   if (!Array.isArray(result?.exercises) || result.exercises.length === 0 || result.exercises.length > 75) {
@@ -500,6 +501,18 @@ function verifiedTrainingProposal(result: any, days: string[], experience: strin
   });
   if (days.some(day => !exercises.some((e: any) => e.training_day === day))) {
     throw new ApiError(502, "A IA deixou um dia de treino sem exercícios. Gere novamente.");
+  }
+  // Conservador: se o mesmo grupamento principal aparece em dias consecutivos,
+  // pedir uma nova proposta. Esta checagem NÃO substitui a análise de fadiga real.
+  for (let i = 0; i < WEEKDAYS.length; i++) {
+    const today = WEEKDAYS[i], next = WEEKDAYS[(i + 1) % WEEKDAYS.length];
+    if (!days.includes(today) || !days.includes(next)) continue;
+    const groups = new Set(exercises.filter((e: any) => e.training_day === today)
+      .map((e: any) => officialExerciseName(e.muscle_group))
+      .filter((group: string) => group && !/cardio|aerobio|condicionamento|mobilidade/.test(group)));
+    if (exercises.some((e: any) => e.training_day === next && groups.has(officialExerciseName(e.muscle_group)))) {
+      throw new ApiError(502, "A IA repetiu o mesmo grupo muscular principal em dias consecutivos. Gere novamente para respeitar a recuperação.");
+    }
   }
   return { ...result, weekly_frequency: days.length, exercises };
 }
