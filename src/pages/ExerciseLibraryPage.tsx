@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  CheckCircle2, ChevronDown, Dumbbell, Filter,
+  ArrowUpRight, CheckCircle2, ChevronDown, Dumbbell, Filter,
   LoaderCircle, Plus, Search, X
 } from 'lucide-react';
 import { api } from '../services/api';
