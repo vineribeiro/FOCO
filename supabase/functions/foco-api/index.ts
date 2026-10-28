@@ -500,7 +500,7 @@ function verifiedTrainingProposal(result: any, days: string[], experience: strin
       sets, reps_min: min, reps_max: max, rest_seconds: rest,
       // Sem histórico individual da carga, não inventar quilos como recomendação inicial.
       suggested_load_kg: 0,
-      notes: text(e.notes, 500),
+      notes: text(e.notes, 500), rir_target: Number(e.rir_target) || undefined,
     };
   });
   if (days.some(day => !exercises.some((e: any) => e.training_day === day))) {
@@ -835,6 +835,41 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
       ? b.experience_level : (p.experience_level || "iniciante");
     const restrictions = a.consent_health_data
       ? [a.pain_or_injuries, a.health_notes].filter(Boolean).join("; ") : "";
+    const suppliedRestrictions = text(b.restrictions, 800);
+    const safetyContext = assessTrainingSafety({
+      notes: [restrictions, suppliedRestrictions].filter(Boolean).join("; "),
+      consent: a.consent_health_data === true || suppliedRestrictions.length > 0,
+    });
+    if (safetyContext.acuteRedFlag) throw new ApiError(400,
+      "Foram informados possíveis sinais de alerta. Procure avaliação clínica antes de gerar ou iniciar um treino.");
+    if (safetyContext.highRisk && b.medical_clearance_confirmed !== true)
+      throw new ApiError(400, "Histórico de rabdomiólise ou condição muscular relevante informado. Para criar uma proposta educacional, confirme primeiro a liberação médica e a necessidade de acompanhamento por profissional habilitado.");
+    const sessionMinutes = Math.min(180, Math.max(20, Number(a.session_minutes) || 60));
+    const priorHistory = await db.from("workout_sessions")
+      .select("id,started_at,duration_seconds,status")
+      .eq("user_id", user.id).eq("status", "completed")
+      .order("started_at", { ascending: false }).limit(10);
+    // Histórico de treinos, não métricas de saúde; usar somente registros do próprio usuário.
+    // Falhas ocasionais de leitura de histórico não impedem a primeira ficha.
+    let recentPerformance = "Nenhuma série anterior disponível.";
+    if (!priorHistory.error && priorHistory.data?.length) {
+      const ids = priorHistory.data.map((session: any) => session.id);
+      const setsHistory = await db.from("exercise_sets")
+        .select("session_id,exercise_name,repetitions,load_kg,completed")
+        .in("session_id", ids).limit(180);
+      if (!setsHistory.error && setsHistory.data) {
+        const completed = setsHistory.data.filter((set: any) => set.completed === true);
+        recentPerformance = JSON.stringify({
+          sessions: priorHistory.data.map((session: any) => ({
+            day: session.started_at, minutes: Math.round(Number(session.duration_seconds || 0) / 60),
+          })),
+          sets: completed.slice(0, 45).map((set: any) => ({
+            exercise: text(set.exercise_name, 90), repetitions: Number(set.repetitions),
+            load_kg: Number(set.load_kg),
+          })),
+        }).slice(0, 4900);
+      }
+    }
     let bodyMetrics = "Relatório não autorizado para esta geração.";
     if (b.include_body_metrics === true) {
       const files = await db.from("uploaded_files").select("extracted_data")
@@ -854,8 +889,14 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
         bodyMetrics = "Nenhum relatório de bioimpedância processado disponível.";
       }
     }
+    const studyGuidance = buildScientificWorkoutGuidance({
+      frequency, experience, goal: text(b.goal || a.primary_goal, 160),
+      sessionMinutes, priorityMuscles: text(b.focus_muscles || (a.priority_muscles || []).join(", "), 500).split(","),
+      historyAvailable: priorHistory.data?.length > 0, highRisk: safetyContext.highRisk,
+    });
     const prompt = [
       "Você é um assistente educacional de treino do FOCO. Proponha uma ficha individual em português do Brasil, para revisão do usuário e de um profissional de Educação Física.",
+      studyGuidance,
       "Objetivo: " + text(b.goal || a.primary_goal, 160),
       "Experiência: " + experience,
       "Frequência obrigatória: " + frequency + " dias por semana.",
@@ -872,15 +913,37 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
       }).slice(0, 1100),
       "Restrições autorizadas: " + [text(b.restrictions, 800), restrictions].filter(Boolean).join("; "),
       "Peso: " + (p.current_weight_kg || "não informado") + " kg, altura: " + (p.height_cm || "não informada") + " cm.",
-      "Bioimpedância (estimativa; não diagnóstica): " + bodyMetrics,
-      "Regras: respeitar nível, equipamento e duração; dividir movimentos, volume e recuperação sem sobrepor desnecessariamente os mesmos músculos em dias consecutivos; incluir força e cardio conforme objetivo e capacidade; NÃO priorizar músculos por gênero; NÃO prescrever por IMC isolado; não inventar diagnóstico ou capacidade; nunca recomendar carga em kg sem histórico individual, usar suggested_load_kg=0; para iniciantes priorizar técnica e progressão gradual; não prescrever exercícios de risco quando há restrições relevantes.",
+      "Bioimpedância OKOK (somente se autorizada; estimativa, não diagnóstico): " + bodyMetrics,
+      "Registros anteriores, quando disponíveis (não presumir técnica ou esforço não registrados): " + recentPerformance,
+      "Alertas e limites de segurança: " + safetyContext.warnings.join(" "),
+      "Regras invioláveis: respeitar o nível, equipamento, dias, duração, recuperação e restrições autorizadas; preferir técnica à carga; distribuir volume semanal com trabalho indireto dos sinergistas; NÃO priorizar grupos por gênero; NÃO prescrever por IMC isolado; não inventar diagnóstico, limitações, carga ou capacidade; suggested_load_kg=0; para iniciante priorizar progressão gradual, sem falha frequente.",
       "Nomes EXATOS de exercícios permitidos: " + OFFICIAL_EXERCISES.join(" | "),
       "Use exclusivamente os nomes desta lista, sem apelidos, sufixos ou variações inventadas; notas curtas de execução e sem texto genérico. Retorne apenas o JSON do schema.",
     ].join("\n");
-    const generated = await aiJson(prompt, workoutSchema);
-    const proposal = verifiedTrainingProposal(generated, days, experience);
-    return response({ ...proposal, explanation: text(proposal.explanation, 2000) +
-      "\nDivisão: " + days.join(", ") + ". A proposta é educacional e requer revisão antes de praticar." }, 200, origin);
+    // A IA pode errar a dose: uma regeneração limitada recebe o motivo da auditoria.
+    // Não publicar prescrições reprovadas pelo catálogo, pelo volume ou pelo descanso.
+    let proposal: any = null;
+    let lastError: unknown = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const correction = lastError instanceof Error
+        ? "\nA proposta anterior foi reprovada: " + text(lastError.message, 450) +
+          " Refaça a divisão corrigindo o erro sem inventar exercícios." : "";
+      const generated = await aiJson(prompt + correction, workoutSchema);
+      try {
+        proposal = verifiedTrainingProposal(generated, days, experience, {
+          sessionMinutes, highRisk: safetyContext.highRisk,
+        });
+        break;
+      } catch (error) {
+        if (!(error instanceof ApiError) || error.status !== 502) throw error;
+        lastError = error;
+      }
+    }
+    if (!proposal) throw lastError || new ApiError(502, "A IA não conseguiu criar uma ficha coerente com o estudo.");
+    const moreSafety = safetyContext.warnings.length ? "\nAtenção: " + safetyContext.warnings.join(" ") : "";
+    return response({ ...proposal, explanation: text(proposal.explanation, 1600) +
+      "\nMétodo FOCO 2026: divisão " + days.join(", ") + "; RIR, intervalos e progressão dupla por exercício." +
+      "\nRevisar a recuperação e a dose após 15 dias; a proposta é educacional e requer avaliação profissional." + moreSafety }, 200, origin);
   }
 
   if (path === "/api/ai/extract-sheet" && method === "POST") {
