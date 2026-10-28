@@ -205,6 +205,7 @@ const exerciseSchema = { type: "OBJECT", properties: {
   reps_min: { type: "INTEGER" }, reps_max: { type: "INTEGER" }, rest_seconds: { type: "INTEGER" },
   suggested_load_kg: { type: "NUMBER" }, notes: { type: "STRING" }, training_day: { type: "STRING" },
 }, required: ["exercise_name", "muscle_group", "sets", "reps_min", "reps_max", "rest_seconds", "suggested_load_kg", "training_day"] };
+const importExerciseSchema = { ...exerciseSchema, required: exerciseSchema.required.filter((field: string) => field !== "training_day") };
 const workoutSchema = { type: "OBJECT", properties: {
   name: { type: "STRING" }, goal: { type: "STRING" }, weekly_frequency: { type: "INTEGER" },
   explanation: { type: "STRING" }, exercises: { type: "ARRAY", items: exerciseSchema },
@@ -627,7 +628,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     const b = await body(req), mime = String(b.mime_type || "");
     if (!ALLOWED_FILE_TYPES.includes(mime) || typeof b.base64 !== "string" || b.base64.length > 15_000_000) throw new ApiError(415, "Envie PDF, JPG, PNG ou WebP válido de até 10 MB.");
     const savedFile = await storeUploadedFile(db, user, b, mime, "pending");
-    const schema = { type: "OBJECT", properties: { plan_name: { type: "STRING" }, goal: { type: "STRING" }, weekly_frequency: { type: "INTEGER" }, confidence_notes: { type: "STRING" }, extracted_exercises: { type: "ARRAY", items: exerciseSchema } }, required: ["plan_name", "extracted_exercises", "confidence_notes"] };
+    const schema = { type: "OBJECT", properties: { plan_name: { type: "STRING" }, goal: { type: "STRING" }, weekly_frequency: { type: "INTEGER" }, confidence_notes: { type: "STRING" }, extracted_exercises: { type: "ARRAY", items: importExerciseSchema } }, required: ["plan_name", "extracted_exercises", "confidence_notes"] };
     const prompt = "Você lê fichas de musculação. Extraia apenas o que estiver legível: nome, objetivo, frequência e exercícios com grupamento, séries, repetições, descanso em segundos, carga em kg (0 se ausente) e notas. Não invente dados ilegíveis; explicite incertezas. Notas do usuário: " + text(b.notes, 1000) + ". Retorne somente JSON.";
     try {
       const r = await aiJson(prompt, schema, { data: mediaData(b.base64), mime });
