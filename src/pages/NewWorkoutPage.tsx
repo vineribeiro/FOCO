@@ -244,7 +244,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
           {label:'Nível',value:aiExperience,icon:Activity,target:'foco-ai-experience'},
           {label:'Dias',value:aiFrequency+'x por semana',icon:CalendarDays,target:'foco-ai-frequency'},
           {label:'Equipamentos',value:aiEquipment,icon:Dumbbell,target:'foco-ai-equipment'},
-        ].map(item => <button type="button" key={item.label} onClick={() => document.getElementById(item.target)?.focus()}
+        ].map(item => <button type="button" key={item.label} onClick={() => { setTab('ai'); document.getElementById(item.target)?.focus(); }}
           className="foco-v4-panel flex min-h-[90px] items-center gap-3 overflow-hidden p-3 text-left transition hover:border-white/35">
           <item.icon className="h-5 w-5 shrink-0 text-neutral-400" />
           <span className="min-w-0 flex-1">
