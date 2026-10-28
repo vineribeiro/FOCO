@@ -159,7 +159,7 @@ export const ProgressPage: React.FC = () => {
           <p className="mt-2 text-xs text-neutral-400">{item.hint}</p>
         </div>)}
       </div>}
-      {weightDelta !== null && !isLoading && <p className="text-xs text-neutral-400">Variação de peso no período: <strong className="text-white">{weightDelta > 0 ? '+' : ''}{weightDelta.toLocaleString('pt-BR', {maximumFractionDigits: 2})} kg</strong>. Compare medidas feitas em condições semelhantes.</p>
+      {weightDelta !== null && !isLoading && <p className="text-xs text-neutral-400">Variação de peso no período: <strong className="text-white">{weightDelta > 0 ? '+' : ''}{weightDelta.toLocaleString('pt-BR', {maximumFractionDigits: 2})} kg</strong>. Compare medidas feitas em condições semelhantes.</p>}
 
       {actionMsg && (
         <div
