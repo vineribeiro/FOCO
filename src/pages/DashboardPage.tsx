@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
+import { savePreferredTrainingDay } from '../data/exerciseLibrary';
 import type { AIRecommendation, UploadedFile, WorkoutPlan, WorkoutSession } from '../types';
 import {
   Activity, ArrowRight, BarChart3, BellRing, BookOpen, CalendarDays,
@@ -39,20 +40,24 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [filesUnavailable, setFilesUnavailable] = useState(false);
+  const [planUnavailable, setPlanUnavailable] = useState(false);
+  const [sessionsUnavailable, setSessionsUnavailable] = useState(false);
   const [recommendations, setRecommendations] = useState<AIRecommendation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
     void Promise.all([
-      api.getActiveWorkout().catch(() => null),
-      api.getSessions().catch(() => [] as WorkoutSession[]),
+      api.getActiveWorkout().then(value => ({ value, failed: false })).catch(() => ({ value: null, failed: true })),
+      api.getSessions().then(value => ({ value, failed: false })).catch(() => ({ value: [] as WorkoutSession[], failed: true })),
       api.getFiles().catch(() => null),
       api.getRecommendations().catch(() => [] as AIRecommendation[]),
-    ]).then(([plan, allSessions, uploadedFiles, allRecommendations]) => {
+    ]).then(([planResult, sessionsResult, uploadedFiles, allRecommendations]) => {
       if (!mounted) return;
-      setActivePlan(plan);
-      setSessions(allSessions);
+      setActivePlan(planResult.value);
+      setPlanUnavailable(planResult.failed);
+      setSessions(sessionsResult.value);
+      setSessionsUnavailable(sessionsResult.failed);
       setFiles(uploadedFiles || []);
       setFilesUnavailable(uploadedFiles === null);
       setRecommendations(allRecommendations);
@@ -81,6 +86,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
   const totalCompleted = sessions.filter(s => s.status === 'completed').length;
   const completedDays = new Set(recentSessions.map(s => weekdayIndex(new Date(s.started_at))));
   const targetPerWeek = activePlan?.weekly_frequency || 0;
+  const weeklyMinutes = Math.round(recentSessions.reduce((sum, session) => sum + Math.max(0, Number(session.duration_seconds) || 0), 0) / 60);
   const bodyFiles = files.filter(isBodyAssessment).sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   const latestAssessment = bodyFiles[0];
   const lastDate = latestAssessment ? new Date(latestAssessment.created_at) : null;
@@ -93,6 +99,10 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
     setActiveTab('arquivos');
   };
   const pendingReview = recommendations.find(r => r.status === 'pending');
+  const openScheduledWorkout = (day: typeof DAYS[number]['id']) => {
+    savePreferredTrainingDay(day);
+    setActiveTab('sessao');
+  };
 
   if (isLoading) return <div className="foco-v4-page space-y-4" role="status" aria-label="Carregando painel">
     <div className="h-20 animate-pulse rounded-2xl bg-[#171717]" />
@@ -107,21 +117,26 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
         <p className="mt-2 text-[13px] text-neutral-400">Disciplina hoje, resultado sempre.</p>
       </header>
 
+      {planUnavailable && <div role="alert" className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-4">
+        <p className="max-w-xl text-sm text-neutral-300">Não foi possível consultar sua ficha agora. Seus dados não foram alterados.</p>
+        <button type="button" onClick={() => window.location.reload()} className="foco-v4-secondary">Tentar novamente</button>
+      </div>}
+
       {activePlan ? (
         <section className="foco-v4-hero" aria-labelledby="foco-workout-hero">
           <div className="foco-v4-hero-content relative z-10 space-y-3">
-            <p className="foco-v4-eyebrow !text-neutral-300">Treino de hoje</p>
-            <h2 id="foco-workout-hero" className="max-w-[430px] text-[29px] font-extrabold leading-[1.13] tracking-[-.055em] sm:text-[37px]">{heroTitle}</h2>
+            <p className="foco-v4-eyebrow !text-neutral-300">{todayExercises.length ? "Treino de hoje" : "Dia de recuperação"}</p>
+            <h2 id="foco-workout-hero" className="max-w-[430px] text-[29px] font-extrabold leading-[1.13] tracking-[-.055em] sm:text-[37px]">{todayExercises.length ? heroTitle : 'Recuperação também faz parte.'}</h2>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-neutral-200">
-              <span className="inline-flex items-center gap-1.5"><Dumbbell className="h-3.5 w-3.5" />{todayExercises.length} exercícios</span>
+              <span className="inline-flex items-center gap-1.5"><Dumbbell className="h-3.5 w-3.5" />{todayExercises.length ? todayExercises.length + ' exercícios' : 'Sem exercício atribuído a hoje'}</span>
               <span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{activePlan.weekly_frequency} dias por semana</span>
             </div>
-            <button type="button" onClick={() => setActiveTab('sessao')} className="foco-v4-action !mt-4 w-fit">
-              <span>Iniciar treino</span><span className="foco-v4-cta-arrow"><ChevronRight className="h-5 w-5" /></span>
+            <button type="button" onClick={() => todayExercises.length ? openScheduledWorkout(todayKey) : setActiveTab("treinos")} className="foco-v4-action !mt-4 w-fit">
+              <span>{todayExercises.length ? "Iniciar treino" : "Ver meu plano"}</span><span className="foco-v4-cta-arrow"><ChevronRight className="h-5 w-5" /></span>
             </button>
           </div>
         </section>
-      ) : (
+      ) : !planUnavailable ? (
         <section className="foco-v4-hero" aria-labelledby="foco-onboarding">
           <div className="foco-v4-hero-content relative z-10 space-y-3">
             <p className="foco-v4-eyebrow !text-neutral-300">Comece com FOCO IA</p>
@@ -132,7 +147,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
             </button>
           </div>
         </section>
-      )}
+      ) : null}
 
       <button type="button" onClick={openAssessment}
         className="foco-v4-panel flex min-h-[102px] w-full items-center gap-3.5 px-4 py-4 text-left transition hover:border-white/35 sm:px-6">
@@ -157,12 +172,12 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
         <ArrowRight className="mt-1 h-4 w-4 shrink-0" />
       </button>}
 
-      <div className="grid grid-cols-3 gap-2.5 sm:gap-3" aria-label="Seus indicadores">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3" aria-label="Seus indicadores">
         <button type="button" onClick={() => setActiveTab('historico')} className="foco-v4-stat text-left">
           <BarChart3 className="foco-v4-stat-icon" aria-hidden="true" />
-          <p className="foco-v4-stat-value">{recentSessions.length}/{targetPerWeek || '—'}</p>
+          <p className="foco-v4-stat-value">{sessionsUnavailable ? '—' : recentSessions.length}/{targetPerWeek || '—'}</p>
           <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">Treinos na semana</p>
-          <div className="mt-3 flex gap-1">{Array.from({length: Math.min(targetPerWeek || 4, 6)},(_,i)=><span key={i} className={'h-1.5 min-w-0 flex-1 rounded-full ' + (i<recentSessions.length?'bg-white':'bg-[#414141]')} />)}</div>
+          <div className="mt-3 flex gap-1">{Array.from({length: Math.min(targetPerWeek || 4, 6)},(_,i)=><span key={i} className={'h-1.5 min-w-0 flex-1 rounded-full ' + (!sessionsUnavailable && i<recentSessions.length?'bg-white':'bg-[#414141]')} />)}</div>
         </button>
         <button type="button" onClick={openAssessment} className="foco-v4-stat text-left">
           <ScanLine className="foco-v4-stat-icon" aria-hidden="true" />
@@ -171,15 +186,20 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
         </button>
         <button type="button" onClick={() => setActiveTab('progresso')} className="foco-v4-stat text-left">
           <TrendingUp className="foco-v4-stat-icon" aria-hidden="true" />
-          <p className="foco-v4-stat-value">{totalCompleted}</p>
+          <p className="foco-v4-stat-value">{sessionsUnavailable ? '—' : totalCompleted}</p>
           <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">Sessões concluídas</p>
+        </button>
+        <button type="button" onClick={() => setActiveTab("historico")} className="foco-v4-stat text-left">
+          <Clock3 className="foco-v4-stat-icon" aria-hidden="true" />
+          <p className="foco-v4-stat-value">{sessionsUnavailable ? "—" : weeklyMinutes} <span className="text-sm tracking-normal">min</span></p>
+          <p className="mt-1.5 text-[10px] leading-tight text-neutral-400 sm:text-xs">Tempo nesta semana</p>
         </button>
       </div>
 
       {activePlan && (
         <section className="foco-v4-panel px-3.5 py-4 sm:p-5">
           <div className="mb-4 flex items-center justify-between gap-3 px-1">
-            <h2 className="foco-v4-section-title">Seu plano</h2>
+            <div><h2 className="foco-v4-section-title">Seu plano</h2><p className="mt-1 text-xs text-neutral-400">Toque em um dia para abrir a sessão correspondente.</p></div>
             <button type="button" onClick={() => setActiveTab('treinos')} className="inline-flex min-h-9 items-center gap-1 text-xs text-neutral-300 hover:text-white">
               Ver plano completo <ChevronRight className="h-4 w-4" />
             </button>
@@ -189,17 +209,17 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
               const daily = isDailyPlan ? exercises.filter(e => !e.training_day || e.training_day === day.id) : exercises;
               const muscles = [...new Set(daily.map(e=>e.muscle_group).filter(Boolean))];
               const done = completedDays.has(idx);
-              return <button type="button" key={day.id} onClick={() => setActiveTab('sessao')}
+              return <button type="button" key={day.id} onClick={() => daily.length ? openScheduledWorkout(day.id) : setActiveTab("treinos")}
                 className={'foco-v4-day transition hover:border-white/35 ' + (todayIndex === idx ? 'foco-v4-day-today' : '')}
-                aria-label={day.short + ': ' + (daily.length ? muscles.join(', ') : 'Sem treino programado')}>
+                aria-label={day.short + ': ' + (daily.length ? (muscles.join(', ') || 'Treino') + '. Abrir sessão desse dia' : 'Dia sem treino. Ver plano')}>
                 <span className="text-xs text-neutral-300">{day.short}</span>
                 <span className="line-clamp-2 min-h-[31px] text-[10px] font-semibold leading-snug">
                   {isDailyPlan ? (daily.length ? muscles.slice(0,2).join(' + ') || 'Treino' : 'Descanso') : 'Flexível'}
                 </span>
                 <Dumbbell className="mt-auto h-4 w-4 text-neutral-400" />
                 <span className={'mt-1 flex h-5 w-5 items-center justify-center rounded-full border ' +
-                  (done ? 'border-white bg-white text-black' : todayIndex === idx ? 'border-white bg-white text-white' : 'border-[#777] text-transparent')}>
-                  {done ? <CheckCircle2 className="h-4 w-4" /> : todayIndex === idx ? <span className="h-1.5 w-1.5 rounded-full bg-black" /> : null}
+                  (done && !sessionsUnavailable ? 'border-white bg-white text-black' : todayIndex === idx ? 'border-white bg-white text-white' : 'border-[#777] text-transparent')}>
+                  {done && !sessionsUnavailable ? <CheckCircle2 className="h-4 w-4" /> : todayIndex === idx ? <span className="h-1.5 w-1.5 rounded-full bg-black" /> : null}
                 </span>
               </button>;
             })}
