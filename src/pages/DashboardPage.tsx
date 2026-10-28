@@ -102,7 +102,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
   return (
     <div className="foco-v4-page space-y-[17px] sm:space-y-6">
       <header className="pb-1">
-        <h1 className="foco-v4-heading">Bom dia, <span className="font-extrabold">{firstName}</span></h1>
+        <h1 className="foco-v4-heading">{greeting}, <span className="font-extrabold">{firstName}</span></h1>
         <p className="mt-2 text-[13px] text-neutral-400">Disciplina hoje, resultado sempre.</p>
       </header>
 
