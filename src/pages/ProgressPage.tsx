@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import { OkokEvolutionSection } from '../components/OkokEvolutionSection';
 import { BodyMeasurement, WorkoutSession } from '../types';
 import {
   AreaChart,
@@ -20,7 +21,11 @@ import {
   Activity,
 } from 'lucide-react';
 
-export const ProgressPage: React.FC = () => {
+export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = ({ setActiveTab }) => {
+  const openOkok = () => {
+    try { sessionStorage.setItem('foco_upload_mode', 'body'); } catch { /* route remains available */ }
+    setActiveTab('arquivos');
+  };
   const [measurements, setMeasurements] = useState<BodyMeasurement[]>([]);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -135,7 +140,7 @@ export const ProgressPage: React.FC = () => {
         <div>
           <span className="foco-v4-eyebrow">Métricas registradas</span>
           <h1 className="foco-v4-heading">Minha evolução</h1>
-          <p className="mt-2 text-sm text-neutral-400">Seus treinos e medidas, com dados reais.</p>
+          <p className="mt-2 text-sm text-neutral-400">Acompanhe sua composição corporal OKOK, seus treinos e as medidas registradas.</p>
         </div>
         <label className="flex flex-col gap-1.5 text-xs font-semibold text-neutral-300">
           Período dos gráficos
@@ -146,20 +151,22 @@ export const ProgressPage: React.FC = () => {
           </select>
         </label>
       </header>
+      <OkokEvolutionSection period={period} onOpenAssessment={openOkok} />
+
       {isLoading && <div role="status" className="foco-v4-panel p-4 text-sm text-neutral-300">Atualizando seus registros...</div>}
       {!isLoading && <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4" aria-label="Resumo da evolução">
         {[
           { label: 'Treinos concluídos', value: String(completedSessions.length), hint: 'Desde o início' },
           { label: 'Nesta semana', value: String(weeklyCompleted), hint: 'Sessões concluídas' },
           { label: 'Tempo de treino', value: lifetimeMinutes + ' min', hint: 'Tempo acumulado' },
-          { label: 'Peso registrado', value: latestWeight === null ? '—' : latestWeight.toLocaleString('pt-BR') + ' kg', hint: 'Última medição' },
+          { label: 'Peso manual', value: latestWeight === null ? '—' : latestWeight.toLocaleString('pt-BR') + ' kg', hint: 'Último registro manual' },
         ].map(item => <div className="foco-v4-stat" key={item.label}>
           <span className="foco-v4-eyebrow">{item.label}</span>
           <p className="foco-v4-stat-value mt-3">{item.value}</p>
           <p className="mt-2 text-xs text-neutral-400">{item.hint}</p>
         </div>)}
       </div>}
-      {weightDelta !== null && !isLoading && <p className="text-xs text-neutral-400">Variação de peso no período: <strong className="text-white">{weightDelta > 0 ? '+' : ''}{weightDelta.toLocaleString('pt-BR', {maximumFractionDigits: 2})} kg</strong>. Compare medidas feitas em condições semelhantes.</p>}
+      {weightDelta !== null && !isLoading && <p className="text-xs text-neutral-400">Variação do peso manual no período: <strong className="text-white">{weightDelta > 0 ? '+' : ''}{weightDelta.toLocaleString('pt-BR', {maximumFractionDigits: 2})} kg</strong>. Compare medidas feitas em condições semelhantes.</p>}
 
       {actionMsg && (
         <div
@@ -181,7 +188,7 @@ export const ProgressPage: React.FC = () => {
           <div className="flex items-center gap-2">
             <Weight className="w-4 h-4 text-white" />
             <h3 className="text-xs font-black text-white uppercase tracking-wider">
-              Peso Corporal (kg)
+              Peso manual (kg)
             </h3>
           </div>
           {visibleWeightData.length > 0 && (
@@ -231,7 +238,7 @@ export const ProgressPage: React.FC = () => {
             </ResponsiveContainer>
           ) : (
             <div className="h-full flex items-center justify-center text-xs text-neutral-500 text-center">
-              São necessárias duas pesagens no período selecionado.
+              São necessários dois registros manuais de peso no período. As avaliações OKOK aparecem na seção acima.
             </div>
           )}
         </div>
@@ -291,7 +298,7 @@ export const ProgressPage: React.FC = () => {
       >
         <div className="flex items-center gap-2 text-xs font-black text-white uppercase tracking-wider">
           <Plus className="w-4 h-4 text-white" />
-          <span>Registrar Medida Corporal</span>
+          <span>Registrar medida manual</span>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
@@ -349,12 +356,12 @@ export const ProgressPage: React.FC = () => {
       {/* History Table */}
       <div className="p-5 rounded-2xl bg-[#171717] border border-white/10 space-y-3">
         <h3 className="text-xs font-black text-white uppercase tracking-wider">
-          Histórico de Medições ({measurements.length})
+          Histórico de medidas manuais ({measurements.length})
         </h3>
 
         <div className="max-h-64 overflow-auto">
           {measurements.length === 0 ? (
-            <p className="text-xs text-neutral-500 py-4 text-center">Nenhuma medição registrada.</p>
+            <p className="text-xs text-neutral-500 py-4 text-center">Nenhuma medida manual registrada.</p>
           ) : (
             <table className="w-full text-left text-xs">
               <thead>
