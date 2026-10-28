@@ -28,6 +28,8 @@ jobs:
         run: npm run build
       - name: Scientific workout generation rules and safety regression
         run: npm run test:training-science
+      - name: OKOK assessment trends and data-integrity regression
+        run: npm run test:okok
       - name: Exercise image catalog audit
         run: npm run audit:images
       - name: Anatomy atlas manifest integrity
