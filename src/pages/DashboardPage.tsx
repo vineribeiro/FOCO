@@ -28,7 +28,8 @@ function findMetric(file: UploadedFile | undefined, pattern: RegExp): string | n
   const entries = file.extracted_data?.metrics;
   if (!Array.isArray(entries)) return null;
   const matching = entries.find((metric: { name?: unknown; value?: unknown }) =>
-    typeof metric?.name === 'string' && pattern.test(normalize(metric.name)));
+    typeof metric?.name === 'string' && pattern.test(normalize(metric.name))
+      && !/(gordura|muscular|osseo|visceral|proteina|magra)/.test(normalize(metric.name)));
   return matching && typeof matching.value === 'string' ? matching.value : null;
 }
 
