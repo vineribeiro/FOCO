@@ -73,9 +73,11 @@ await check("GitHub Pages entrega HTML do FOCO", async () => {
   assert.match(response.headers.get("content-type") || "", /text\/html/);
   const html = await response.text();
   assert.match(html, /<div[^>]+id=["']root["']/);
-  const asset = html.match(/(?:src|href)=["'](\/FOCO\/assets\/[^"']+\.js)["']/)?.[1];
-  assert.ok(asset, "bundle JS deve referenciar /FOCO/assets/");
-  const bundle = await request("https://vineribeiro.github.io" + asset);
+  const scripts = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/g)].map(match => match[1]);
+  const asset = scripts.find(source => /(?:^|\/)assets\/[^/]+\.js(?:\?.*)?$/.test(source));
+  assert.ok(asset, "bundle JS de produção não encontrado no HTML; scripts: " + JSON.stringify(scripts));
+  const assetUrl = new URL(asset, SITE);
+  const bundle = await request(assetUrl.toString());
   assert.equal(bundle.status, 200, "bundle de produção está acessível");
 });
 
