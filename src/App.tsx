@@ -128,7 +128,7 @@ function MainApp() {
       case 'ia-lab':
         return <AiLabPage setActiveTab={setActiveTab} />;
       case 'progresso':
-        return <ProgressPage />;
+        return <ProgressPage setActiveTab={setActiveTab} />;
       case 'perfil':
         return <ProfilePage setActiveTab={setActiveTab} />;
       case 'configuracoes':
