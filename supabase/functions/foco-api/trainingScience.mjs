@@ -9,8 +9,9 @@
  * Descanso https://pubmed.ncbi.nlm.nih.gov/39205815/
  */
 import { catalogExercise } from "./trainingCatalog.mjs";
+import { focoLabGuidance, focoLabEvidenceRefs, FOCO_LAB_SOURCE } from "./focoLabKnowledge.mjs";
 
-export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.2";
+export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.3";
 const WEEKDAYS = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
 const NORMALIZE = (value) => String(value || "").normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -115,6 +116,7 @@ export function buildScientificWorkoutGuidance({
     "14. " + (historyAvailable ? "Use desempenho anterior registrado para evitar trocar exercícios sem necessidade e melhorar a progressão." : "Sem histórico de carga: suggested_load_kg = 0, ajuste inicial presencial."),
     "15. " + (highRisk ? "ALERTA: condição médica relatada; apenas proposta educacional conservadora, RIR 3-4, até 2 séries por exercício, sem cargas máximas/falha/sessões extenuantes; revisão médica e profissional indispensável." : "Não prescrever dieta ou tratar doenças. Respeitar limitações consentidas."),
     "16. Para cada exercício inclua rir_target inteiro compatível com as orientações acima (tipicamente " + level.rir[0] + "-" + level.rir[1] + "); notes com cue técnico breve, sem alegações médicas.",
+    focoLabGuidance({ goal, highRisk }),
     "Retorne a ficha em JSON, sem instruções fora do schema.",
   ].join("\n");
 }
@@ -162,6 +164,22 @@ function muscleKey(group) {
   return /cardio|aerobio|condicionamento/.test(s) ? "Cardio" : s || "Geral";
 }
 
+/**
+ * Estimativa não clínica da duração: aquecimento, execução de séries, intervalos
+ * ENTRE séries (não após a última) e transições. Para cardio sem campo de duração
+ * explícito, oito minutos por bloco são apenas placeholder de planejamento.
+ * Referência: FOCO LAB capítulo 6, página 8 (heurística de produto).
+ */
+export function estimateTrainingSessionMinutes(exercises = []) {
+  const estimated = 6 + exercises.reduce((total, exercise) => {
+    if (classifyMovement(exercise.exercise_name, exercise.muscle_group) === "cardio") return total + 8 + 1;
+    const sets = Math.max(0, Number(exercise.sets) || 0);
+    const restSeconds = Math.max(0, Number(exercise.rest_seconds) || 0);
+    return total + sets * 1 + Math.max(0, sets - 1) * restSeconds / 60 + 1.5;
+  }, 0);
+  return Math.ceil(estimated);
+}
+
 export function auditScientificWorkout(exercises, {
   days = WEEKDAYS.slice(0, 3), experience = "iniciante", sessionMinutes = 60, highRisk = false,
   enforceExerciseRange = true,
@@ -171,6 +189,7 @@ export function auditScientificWorkout(exercises, {
   const indirect = new Map();
   const dayVolume = new Map();
   const warnings = [];
+  const sessionTimeByDay = {};
   for (const ex of exercises) {
     const day = String(ex.training_day || "");
     const group = muscleKey(ex.muscle_group);
@@ -219,10 +238,8 @@ export function auditScientificWorkout(exercises, {
     if (sets > config.dailyCeiling)
       return { ok: false, issue: day + " concentra " + sets + " séries; reduza a dose ou redistribua." };
     const daily = exercises.filter(e => e.training_day === day);
-    const estimatedMinutes = 6 + daily.reduce((acc, ex) => {
-      if (classifyMovement(ex.exercise_name, ex.muscle_group) === "cardio") return acc + 8;
-      return acc + Number(ex.sets) * (1 + Number(ex.rest_seconds) / 60) + 1;
-    }, 0);
+    const estimatedMinutes = estimateTrainingSessionMinutes(daily);
+    sessionTimeByDay[day] = estimatedMinutes;
     if (estimatedMinutes > Number(sessionMinutes || 60) * 1.4 + 8)
       return { ok: false, issue: day + " excede tempo disponível estimado para sessão (" + Math.ceil(estimatedMinutes) + " min)." };
   }
@@ -254,8 +271,28 @@ export function auditScientificWorkout(exercises, {
       warnings.push("O estímulo estimado de " + group + " (" + effective + " séries ponderadas) inclui trabalho indireto: acompanhe a recuperação.");
     }
   }
+  // LAB17: expose omissions for informed review, but do not reject by a
+  // universal split rule: focus, constraints and medical reviews may differ.
+  const covered = new Set([...volume.keys()].filter(group => (volume.get(group) || 0) > 0));
+  const importantGroups = ["Peitoral", "Costas", "Quadríceps"];
+  const uncoveredMajorGroups = importantGroups.filter(group => !covered.has(group));
+  if (!covered.has("Posteriores") && !covered.has("Glúteos")) {
+    uncoveredMajorGroups.push("Cadeia posterior/glúteos");
+  }
+  if (uncoveredMajorGroups.length && !highRisk) {
+    warnings.push("Revisar cobertura semanal: " + uncoveredMajorGroups.join(", ") + ". Uma omissão pode ser intencional conforme a avaliação.");
+  }
+  const coreDays = new Set(exercises.filter(ex =>
+    muscleKey(ex.muscle_group) === "Core" || (catalogExercise(ex.exercise_name)?.secondary || []).includes("Core")
+  ).map(ex => ex.training_day));
+  if (coreDays.size === 0 && !highRisk) {
+    warnings.push("O plano não contém trabalho de core explicitamente identificado; conferir estabilidade do tronco e objetivos (FOCO LAB cap. 9).");
+  }
   return {
     ok: true,
+    sessionTimeByDay,
+    uncoveredMajorGroups,
+    coreExposureDays: coreDays.size,
     directSetsByGroup: Object.fromEntries(volume.entries()),
     estimatedEffectiveSetsByGroup: estimatedEffective,
     totalSetsByDay: Object.fromEntries(dayVolume.entries()),
@@ -268,6 +305,10 @@ export function sciencePlanSummary({ frequency = 3, experience = "iniciante", hi
   const level = EXPERIENCE[experience] || EXPERIENCE.iniciante;
   return {
     source: SCIENCE_ENGINE_VERSION,
+    evidence: focoLabEvidenceRefs(),
+    session_time_minutes_by_day: audit.sessionTimeByDay || {},
+    uncovered_major_groups: audit.uncoveredMajorGroups || [],
+    core_exposure_days: audit.coreExposureDays ?? 0,
     split_rationale: splitForFrequency(frequency),
     dose: "Referência inicial para " + experience + ": " + level.weeklyHint[0] + "-" + level.weeklyHint[1] +
       " séries diretas por grupo/semana. O volume indireto conta e não é idêntico às séries diretas.",
@@ -276,7 +317,7 @@ export function sciencePlanSummary({ frequency = 3, experience = "iniciante", hi
     total_sets_by_day: audit.totalSetsByDay || {},
     recovery: "Pausas variam com o exercício; observe desempenho, sono, sintomas e técnica. Deload não é obrigatório pelo calendário.",
     progression: "Progressão dupla: atingir o topo das repetições com técnica e RIR adequados antes de aumentar gradualmente a carga.",
-    monitoring: "Registro por sessão; revisão de prioridades, fadiga e dose em 15 dias. Métricas OKOK são estimativas e precisam de condições de medição comparáveis.",
+    monitoring: "Registro por sessão; revisão de prioridades, fadiga e dose em 15 dias. Métricas OKOK são estimativas e precisam de condições de medição comparáveis. Fonte: " + FOCO_LAB_SOURCE.id + " (capítulos 11–14, 17–18).",
     alerts: highRisk
       ? ["Condição clínica informada: revisão presencial e alinhamento com médico; nenhum teste máximo, falha frequente ou aumento brusco de volume."]
       : [...(audit.warnings || [])],
