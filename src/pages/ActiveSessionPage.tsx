@@ -76,6 +76,8 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLog[]>([]);
   const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => getPreferredTrainingDay());
   const [sessionNotes, setSessionNotes] = useState('');
+  const [perceivedEffort, setPerceivedEffort] = useState('');
+  const [sessionPerformance, setSessionPerformance] = useState('');
   const [sessionCompletedModal, setSessionCompletedModal] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errorAlert, setErrorAlert] = useState<string | null>(null);
@@ -92,6 +94,8 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       setSessionStartTime(new Date(draft.sessionStartedAt));
       setSelectedTrainingDay(draft.selectedTrainingDay);
       setSessionNotes(draft.sessionNotes);
+      setPerceivedEffort(draft.perceivedEffort || '');
+      setSessionPerformance(draft.sessionPerformance || '');
       setExerciseLogs(draft.exerciseLogs);
       setRestoredDraft(true);
     }
@@ -106,10 +110,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       selectedTrainingDay,
       planId: activePlan?.id || null,
       sessionNotes,
+      perceivedEffort,
+      sessionPerformance,
       exerciseLogs,
     });
     setDraftError(ok ? null : 'Não foi possível salvar o rascunho neste aparelho.');
-  }, [draftHydrated, user?.id, sessionStarted, sessionStartTime, selectedTrainingDay, activePlan?.id, sessionNotes, exerciseLogs, sessionCompletedModal]);
+  }, [draftHydrated, user?.id, sessionStarted, sessionStartTime, selectedTrainingDay, activePlan?.id, sessionNotes, perceivedEffort, sessionPerformance, exerciseLogs, sessionCompletedModal]);
 
   // Relógio real: o cronômetro continua correto depois de trocar de aba.
   useEffect(() => {
@@ -275,7 +281,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         started_at: (sessionStartTime || new Date()).toISOString(),
         finished_at: new Date().toISOString(),
         duration_seconds: sessionStartTime ? Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)) : elapsedSeconds,
-        notes: sessionNotes,
+        notes: [
+          sessionNotes.trim(),
+          perceivedEffort || sessionPerformance
+            ? '[Feedback FOCO — esforço percebido: ' + (perceivedEffort || 'não informado') +
+              '; desempenho: ' + (sessionPerformance || 'não informado') + ']' : '',
+        ].filter(Boolean).join('\n').slice(0, 1200),
         status: 'completed',
         sets: flatSets,
       });
@@ -670,6 +681,36 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         })}
       </div>
 
+      {/* Feedback opcional ajuda o motor a ajustar progressão por resposta individual. */}
+      {sessionStarted && (
+        <section className="foco-v4-panel space-y-3 p-4 sm:p-5" aria-labelledby="foco-perception-title">
+          <div>
+            <h2 id="foco-perception-title" className="text-sm font-extrabold">Como foi o treino?</h2>
+            <p className="mt-1 text-xs leading-relaxed text-neutral-400">Opcional. Seu feedback ajuda a IA a interpretar o histórico e ajustar a próxima ficha.</p>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <label className="text-xs font-bold text-neutral-300">Esforço percebido
+              <select value={perceivedEffort} onChange={(event) => setPerceivedEffort(event.target.value)}
+                className="foco-v4-field mt-2 w-full">
+                <option value="">Não informar</option>
+                <option value="leve (RPE 3-4)">Leve</option>
+                <option value="moderado (RPE 5-6)">Moderado</option>
+                <option value="alto (RPE 7-8)">Alto</option>
+                <option value="muito alto (RPE 9-10)">Muito alto</option>
+              </select>
+            </label>
+            <label className="text-xs font-bold text-neutral-300">Desempenho
+              <select value={sessionPerformance} onChange={(event) => setSessionPerformance(event.target.value)}
+                className="foco-v4-field mt-2 w-full">
+                <option value="">Não informar</option>
+                <option value="acima do esperado">Acima do esperado</option>
+                <option value="dentro do esperado">Dentro do esperado</option>
+                <option value="abaixo do esperado">Abaixo do esperado</option>
+              </select>
+            </label>
+          </div>
+        </section>
+      )}
       {/* Session Notes */}
       <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 space-y-2">
         <label className="block text-xs font-black text-white uppercase tracking-wider">
