@@ -21,7 +21,7 @@ assert.equal((mobile.match(/id: 'progresso'/g) || []).length, 1);
 assert.equal((desktop.match(/id: 'progresso'/g) || []).length, 1);
 assert.match(mobile, /aria-current=\{selected \? 'page'/);
 assert.match(desktop, /aria-current=\{selected \? 'page'/);
-assert.match(mobile, /activeTab === 'progresso'/);
+assert.match(mobile, /id === 'progresso' && \['arquivos', 'historico'\]\.includes\(activeTab\)/);
 assert.match(app, /case 'progresso'/);
 assert.match(app, /case 'arquivos'/);
 assert.match(app, /href="#foco-main-content"/);
