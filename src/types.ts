@@ -133,6 +133,13 @@ export interface AIRecommendation {
 }
 
 /** Justificativa educativa do motor FOCO. Séries ponderadas indiretas são estimativas, não dose medida. */
+export interface FocoLabEvidence {
+  source_id: string;
+  source_title: string;
+  methodology: string;
+  sections: string[];
+  note: string;
+}
 export interface TrainingScienceReport {
   source: string;
   split_rationale: string;
