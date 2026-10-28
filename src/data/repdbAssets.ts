@@ -1,3 +1,4 @@
+import { extraRows } from './repdbExtra';
 /** Curated FOCO-to-RepDB exact variants. In-app use with visible credit required.
  * https://github.com/RepDB/exercise-dataset/blob/main/LICENSE-DATA.md */
 const rows = `
@@ -74,7 +75,7 @@ Extensão de tríceps na máquina|machine-triceps-extension
 Flexão de braços com pegada fechada|close-grip-push-ups
 `.trim();
 const normalize = (s: string): string => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g,'');
-export const REPD_B_MAPPING = new Map(rows.split('\n').map(line => {
+export const REPD_B_MAPPING = new Map((rows + '\n' + extraRows).split('\n').map(line => {
  const [name, id] = line.split('|'); return [normalize(name),id] as const;
 }));
 export const repdbIdForExercise = (name: string): string | null => REPD_B_MAPPING.get(normalize(name)) || null;
