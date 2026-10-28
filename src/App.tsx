@@ -9,7 +9,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { RestTimerProvider } from './context/RestTimerContext';
 import { BottomNavBar } from './components/BottomNavBar';
 import { RestTimerHUD } from './components/RestTimerHUD';
-import { FocoSymbol, FocoLogoHorizontal } from './components/FocoBrand';
+import { FocoSymbol, FocoLettering } from './components/FocoBrand';
 import { AuthPage } from './pages/AuthPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ActiveSessionPage } from './pages/ActiveSessionPage';
@@ -24,7 +24,7 @@ import { HistoryPage } from './pages/HistoryPage';
 import { GoalsPage } from './pages/GoalsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
-import { Settings, User } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { api } from './services/api';
 import { InstallAppButton } from './components/InstallAppButton';
 import { ExerciseLibraryPage } from './pages/ExerciseLibraryPage';
@@ -156,59 +156,38 @@ function MainApp() {
     }
   };
 
+  const avatarInitials = (user?.full_name || 'FOCO').trim().split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
+
   return (
-    <div className="min-h-screen bg-[#000000] text-[#FFFFFF] antialiased flex justify-center">
+    <div className="foco-v4-shell min-h-screen text-white antialiased flex justify-center">
       
       {/* Mobile Ergonomic Container Shell (Zero-Overlap Guarantee) */}
-      <div className="w-full min-h-screen bg-[#0A0A0A] flex flex-col relative">
+      <div className="w-full min-h-screen flex flex-col relative">
         <div className="flex min-h-screen flex-1">
           <DesktopNav activeTab={activeTab} navigate={setActiveTab} />
           <div className="min-w-0 flex flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#0A0A0A]/95 px-4 backdrop-blur-md sm:px-6">
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className="flex items-center text-left cursor-pointer group md:hidden"
-            aria-label="FOCO — voltar ao início"
-          >
-            <FocoLogoHorizontal
-              symbolSize="w-8 h-8"
-              showSlogan={true}
-              className="gap-2.5"
-            />
+        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between bg-[#080808]/95 px-5 backdrop-blur-xl sm:px-7 md:h-[70px] md:border-b md:border-white/10">
+          <button type="button" onClick={() => setActiveTab('dashboard')}
+            className="inline-flex items-center justify-center md:hidden" aria-label="FOCO — início">
+            <FocoLettering className="h-[31px] w-[159px]" />
           </button>
-
-          <span className="hidden text-xs font-semibold text-neutral-400 md:block">FOCO EM EVOLUIR.</span>
-          {/* Atalhos da conta */}
-          <div className="flex items-center gap-2">
-            <InstallAppButton />
-            <button
-              onClick={() => setActiveTab('configuracoes')}
-              aria-label="Preferências" className={`foco-touch rounded-xl border transition-colors cursor-pointer ${
-                activeTab === 'configuracoes'
-                  ? 'bg-white text-black border-white'
-                  : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
-              }`}
-              title="Preferências"
-            >
-              <Settings className="w-5 h-5" />
+          <span className="hidden text-[10px] font-bold tracking-[.2em] text-neutral-500 md:block">FOCO EM EVOLUIR.</span>
+          <div className="flex items-center gap-2.5">
+            <div className="hidden sm:block"><InstallAppButton /></div>
+            <button type="button" onClick={() => setActiveTab('configuracoes')} aria-label="Configurações"
+              className="hidden h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#1A1A1A] text-neutral-400 transition hover:border-white/30 hover:text-white sm:flex">
+              <Settings className="h-[19px] w-[19px]" />
             </button>
-            
-            <button
-              onClick={() => setActiveTab('perfil')}
-              aria-label="Meu perfil" className={`foco-touch rounded-xl border transition-colors cursor-pointer ${
-                activeTab === 'perfil'
-                  ? 'bg-white text-black border-white'
-                  : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
-              }`}
-              title="Perfil"
-            >
-              <User className="w-5 h-5" />
+            <button type="button" onClick={() => setActiveTab('perfil')} aria-label="Meu perfil"
+              className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-white/30 bg-gradient-to-br from-[#373737] to-[#101010] text-sm font-black tracking-wide text-white shadow-lg"
+              title="Meu perfil">
+              {avatarInitials}
             </button>
           </div>
         </header>
 
         {/* Viewport Content Area with Protected Bottom Space (pb-32) */}
-        <main id="foco-main-content" className="flex-1 min-w-0 p-4 pb-28 sm:p-6 lg:p-8 md:pb-12">
+        <main id="foco-main-content" className="flex-1 min-w-0 px-4 pb-28 pt-3 sm:px-6 sm:pt-4 lg:px-9 lg:pt-6 md:pb-10">
           {renderActiveView()}
         </main>
 
