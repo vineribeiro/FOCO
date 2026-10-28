@@ -8,6 +8,8 @@
  * Dose-resposta https://pubmed.ncbi.nlm.nih.gov/41343037/
  * Descanso https://pubmed.ncbi.nlm.nih.gov/39205815/
  */
+import { catalogExercise } from "./trainingCatalog.mjs";
+
 export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.1";
 const WEEKDAYS = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
 const NORMALIZE = (value) => String(value || "").normalize("NFD")
@@ -149,12 +151,20 @@ export function auditScientificWorkout(exercises, {
 } = {}) {
   const config = EXPERIENCE[experience] || EXPERIENCE.iniciante;
   const volume = new Map();
+  const indirect = new Map();
   const dayVolume = new Map();
   const warnings = [];
   for (const ex of exercises) {
     const day = String(ex.training_day || "");
     const group = muscleKey(ex.muscle_group);
     const sets = Number(ex.sets || 0);
+    const catalog = catalogExercise(ex.exercise_name);
+    if (!catalog) return { ok: false, issue: "Exercício fora do catálogo FOCO: " + ex.exercise_name };
+    if (!catalog.primary.includes(group)) return {
+      ok: false,
+      issue: "O exercício " + ex.exercise_name + " foi classificado como " + group +
+        ", mas seu grupamento no catálogo FOCO é " + catalog.primary.join(" / ") + ".",
+    };
     if (!WEEKDAYS.includes(day) || !days.includes(day) || !Number.isInteger(sets) || sets < 1)
       return { ok: false, issue: "Dia ou série inválida." };
     const type = classifyMovement(ex.exercise_name, ex.muscle_group);
@@ -166,9 +176,12 @@ export function auditScientificWorkout(exercises, {
     dayVolume.set(day, (dayVolume.get(day) || 0) + sets);
     if (group !== "Cardio") {
       volume.set(group, (volume.get(group) || 0) + sets);
-      // Do not count all sets of a compound as direct work for its synergists.
-      if (group === "Peitoral" && type === "heavy_compound") warnings.push("Peitoral possui trabalho indireto de tríceps e deltoide anterior.");
-      if (group === "Costas" && type === "pull_push_compound") warnings.push("Puxadas e remadas também recrutam bíceps e estabilizadores escapulares.");
+      // Indirect-series accounting is a practical estimate (0.5), not measured stimulus.
+      // Data comes from FOCO's exercise catalog, not an unconstrained AI classification.
+      for (const secondary of new Set(catalog.secondary)) {
+        if (secondary === group || catalog.primary.includes(secondary) && catalog.primary.length > 1) continue;
+        indirect.set(secondary, (indirect.get(secondary) || 0) + sets);
+      }
     }
   }
   for (const [day, sets] of dayVolume) {
@@ -199,11 +212,23 @@ export function auditScientificWorkout(exercises, {
         return { ok: false, issue: "Repetição de volume alto para " + group + " em dias consecutivos (" + dayA + "/" + dayB + ")." };
     }
   }
+  const estimatedEffective = {};
+  const allGroups = new Set([...volume.keys(), ...indirect.keys()]);
+  for (const group of allGroups) {
+    const directSets = volume.get(group) || 0;
+    const indirectSets = indirect.get(group) || 0;
+    const effective = Math.round((directSets + indirectSets * 0.5) * 10) / 10;
+    estimatedEffective[group] = effective;
+    if (indirectSets > 0 && effective > config.weeklyCeiling) {
+      warnings.push("O estímulo estimado de " + group + " (" + effective + " séries ponderadas) inclui trabalho indireto: acompanhe a recuperação.");
+    }
+  }
   return {
     ok: true,
     directSetsByGroup: Object.fromEntries(volume.entries()),
+    estimatedEffectiveSetsByGroup: estimatedEffective,
     totalSetsByDay: Object.fromEntries(dayVolume.entries()),
-    warnings: [...new Set(warnings)].slice(0, 3),
+    warnings: [...new Set(warnings)].slice(0, 4),
     guidance: "Faixas e tetos são pontos de partida; ajustar conforme desempenho, esforço e recuperação.",
   };
 }
@@ -216,6 +241,7 @@ export function sciencePlanSummary({ frequency = 3, experience = "iniciante", hi
     dose: "Referência inicial para " + experience + ": " + level.weeklyHint[0] + "-" + level.weeklyHint[1] +
       " séries diretas por grupo/semana. O volume indireto conta e não é idêntico às séries diretas.",
     direct_sets_by_group: audit.directSetsByGroup || {},
+    estimated_effective_sets_by_group: audit.estimatedEffectiveSetsByGroup || {},
     total_sets_by_day: audit.totalSetsByDay || {},
     recovery: "Pausas variam com o exercício; observe desempenho, sono, sintomas e técnica. Deload não é obrigatório pelo calendário.",
     progression: "Progressão dupla: atingir o topo das repetições com técnica e RIR adequados antes de aumentar gradualmente a carga.",
