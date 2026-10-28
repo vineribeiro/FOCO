@@ -164,7 +164,7 @@ function muscleKey(group) {
 
 export function auditScientificWorkout(exercises, {
   days = WEEKDAYS.slice(0, 3), experience = "iniciante", sessionMinutes = 60, highRisk = false,
-  enforceExerciseRange = false,
+  enforceExerciseRange = true,
 } = {}) {
   const config = EXPERIENCE[experience] || EXPERIENCE.iniciante;
   const volume = new Map();
