@@ -47,6 +47,7 @@ export function parseOkokNumber(value: unknown): number | null {
   const candidate = raw.match(/^([+-]?(?:\d+(?:[.,]\d+)*))\s*(?:kg\s*\/\s*m(?:²|2)|kcal(?:\s*\/\s*dia)?|kg|g|%|cm|mm|l|litros?|anos?|n[ií]vel|pontos?)?$/i);
   if (!candidate) return null;
   const number = candidate[1];
+  const isEnergy = /kcal/i.test(raw);
   let standardized = number;
   if (number.includes(',') && number.includes('.')) {
     const lastComma = number.lastIndexOf(',');
@@ -55,8 +56,8 @@ export function parseOkokNumber(value: unknown): number | null {
   } else if (number.includes(',')) {
     standardized = number.replace(',', '.');
   } else if ((number.match(/\./g) || []).length === 1) {
-    // 1.234 may be a thousand separator or decimal: prefer decimal unless grouping is explicit.
-    standardized = number;
+    // 1.450 kcal is a common Portuguese thousands format; weight 72.345 kg is decimal.
+    standardized = isEnergy && /^\d{1,3}\.\d{3}$/.test(number) ? number.replace('.', '') : number;
   }
   if (!/^[+-]?\d+(?:\.\d+)?$/.test(standardized)) return null;
   const parsed = Number(standardized);
@@ -82,7 +83,7 @@ function unitOf(name: string, value: string): string {
  */
 export function classifyOkokMetric(name: string, value: string): Pick<OkokMetric, 'key' | 'category' | 'unit'> {
   const text = clean(name);
-  const unit = unitOf(name, value);
+  let unit = unitOf(name, value);
   const pct = unit === '%';
   const category: OkokMetric['category'] = /cintura|quadril|torax|peito|pescoco|braco|coxa|panturrilha|abd[oô]men|circunferencia/.test(text) ? 'Circunferências'
     : /metabol|taxa metabolica|tmb|basal|idade corporal/.test(text) ? 'Metabolismo'
@@ -104,7 +105,13 @@ export function classifyOkokMetric(name: string, value: string): Pick<OkokMetric
   else if (matches(text, [/relacao cintura.quadril/, /cintura\s*\/\s*quadril/, /\bwh[rq]\b/])) key = 'relacao_cintura_quadril';
   else if (category === 'Circunferências') key = 'circunferencia:' + text.replace(/[^a-z0-9]+/g, '_');
   else key = 'original:' + text.replace(/[^a-z0-9]+/g, '_');
-  // Separates "muscle mass 36 kg" from "muscle rate 42%" and similar reports.
+  // Infer units only for unambiguous measurements; never assume fat rate or muscle rate.
+  if (key === 'imc') unit = 'kg/m²';
+  if (!unit && key === 'peso') unit = 'kg';
+  if (!unit && key === 'metabolismo_basal') unit = 'kcal';
+  if (!unit && key === 'idade_metabolica') unit = 'anos';
+  if (!unit && key.startsWith('circunferencia:')) unit = 'cm';
+  // Values expressed in percent and kg must never merge into the same trend.
   return { key: key + ':' + (unit || 'sem_unidade'), unit, category: key.startsWith('original:') ? 'Outros indicadores' : category };
 }
 
