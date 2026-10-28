@@ -66,6 +66,22 @@ assert.equal(normalized[1].rest_seconds,60);
 assert.equal(normalized[0].suggested_load_kg,0);
 assert.equal(normalized[0].rir_target,3);
 assert.match(normalized[1].notes,/RIR alvo: 3/);
+const facePullNormalized = normalizeScienceExercises([
+  exercise("Face pull", "Ombros", "segunda", 2, 75),
+], { experience: "intermediario" });
+assert.equal(facePullNormalized[0].muscle_group, "Trapézio",
+  "Face pull com ombros secundários deve usar o grupo principal do catálogo");
+assert.equal(auditStrictWorkout(facePullNormalized, {
+  experience: "intermediario", days: ["segunda"], sessionMinutes: 45,
+  enforceExerciseRange: false,
+}).ok, true, "Classificação secundária válida não deve causar erro 502");
+const unrelatedMuscle = normalizeScienceExercises([
+  exercise("Face pull", "Quadríceps", "segunda", 2, 75),
+], { experience: "intermediario" });
+assert.equal(auditStrictWorkout(unrelatedMuscle, {
+  experience: "intermediario", days: ["segunda"], sessionMinutes: 45,
+  enforceExerciseRange: false,
+}).ok, false, "Grupo muscular incompatível não deve ser corrigido silenciosamente");
 assert.ok(normalized[1].notes.length <=500);
 const valid = auditScientificWorkout(normalized, {experience:"iniciante",days:["segunda"],sessionMinutes:60});
 assert.equal(valid.ok,true,valid.issue);
