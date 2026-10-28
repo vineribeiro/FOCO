@@ -18,12 +18,14 @@ export const ExercisePhaseGallery: React.FC<Props> = ({ exerciseId, exerciseName
   const [phases, setPhases] = useState<string[]>([]);
   const [showAtlas, setShowAtlas] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let live = true;
     setPhases([]);
     setFailed(false);
     setShowAtlas(false);
+    setLoading(true);
     void Promise.all([
       getRepDBIllustrations(exerciseName).catch(() => []),
       findApprovedAnatomyAtlas(exerciseId, exerciseName).catch(() => null),
@@ -31,9 +33,15 @@ export const ExercisePhaseGallery: React.FC<Props> = ({ exerciseId, exerciseName
       if (!live) return;
       setShowAtlas(Boolean(atlas));
       setPhases(images.slice(0, 2));
+      setLoading(false);
     });
     return () => { live = false; };
   }, [exerciseId, exerciseName]);
+
+  if (loading) return <div className="grid h-60 grid-cols-2 gap-2" role="status" aria-label="Carregando ilustrações">
+    <div className="animate-pulse rounded-[18px] bg-[#242424]" />
+    <div className="animate-pulse rounded-[18px] bg-[#242424]" />
+  </div>;
 
   if (showAtlas || failed || phases.length === 0) {
     return <ExerciseIllustration exerciseId={exerciseId} exerciseName={exerciseName} muscleGroup={muscleGroup}
