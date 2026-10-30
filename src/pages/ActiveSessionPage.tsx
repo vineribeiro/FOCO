@@ -25,6 +25,8 @@ import {
   Timer,
   ChevronRight,
   Dumbbell,
+  Share2,
+  Download,
 } from 'lucide-react';
 
 interface ActiveSessionProps {
@@ -40,11 +42,14 @@ interface SetLog {
 }
 
 interface ExerciseLog {
+  track_load?: boolean;
   exercise_name: string;
   muscle_group: string;
   rest_seconds: number;
   sets: SetLog[];
 }
+
+const defaultTracksLoad = (name: string) => !/(abdominal|crunch|prancha|plank|flexão de braço|flexao de braco|burpee|polichinelo|elevação de pernas|elevacao de pernas|mountain climber)/i.test(name) || /(anilha|halter|peso|carga|máquina|maquina|cabo|polia)/i.test(name);
 
 export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }) => {
   const { user } = useAuth();
@@ -144,12 +149,13 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const initExerciseLogs = (exercises: WorkoutExercise[]) => {
     const logs: ExerciseLog[] = exercises.map((ex) => ({
       exercise_name: ex.exercise_name,
+      track_load: defaultTracksLoad(ex.exercise_name),
       muscle_group: ex.muscle_group,
       rest_seconds: ex.rest_seconds || 60,
       sets: Array.from({ length: ex.sets || 3 }).map((_, idx) => ({
         set_number: idx + 1,
         repetitions: ex.reps_min || 10,
-        load_kg: ex.suggested_load_kg || 0,
+        load_kg: defaultTracksLoad(ex.exercise_name) ? (ex.suggested_load_kg || 0) : 0,
         completed: false,
         rpe: 8,
       })),
@@ -166,6 +172,41 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     );
     initExerciseLogs(todaysExercises);
   }, [activePlan, selectedTrainingDay]);
+
+  const tracksLoad = (ex: ExerciseLog) => ex.track_load ?? defaultTracksLoad(ex.exercise_name);
+  const toggleExerciseLoad = (index: number) => setExerciseLogs(prev => prev.map((ex, i) => i === index ? { ...ex, track_load: !tracksLoad(ex) } : ex));
+
+  const createStoryImage = async () => {
+    if (!sessionCompletedModal) return null;
+    const canvas = document.createElement('canvas'); canvas.width = 1080; canvas.height = 1920;
+    const ctx = canvas.getContext('2d'); if (!ctx) return null;
+    const gradient = ctx.createLinearGradient(0, 0, 1080, 1920);
+    gradient.addColorStop(0, '#222222'); gradient.addColorStop(1, '#050505');
+    ctx.fillStyle = gradient; ctx.fillRect(0, 0, 1080, 1920);
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 95px Arial'; ctx.fillText('FOCO', 90, 180);
+    ctx.fillStyle = '#aaaaaa'; ctx.font = 'bold 32px Arial'; ctx.fillText('MEU TREINO • CONCLUÍDO', 90, 310);
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 82px Arial'; ctx.fillText('MISSÃO', 90, 470); ctx.fillText('CUMPRIDA.', 90, 565);
+    ctx.fillStyle = '#aaaaaa'; ctx.font = '32px Arial'; ctx.fillText('DURAÇÃO', 90, 790); ctx.fillText('SÉRIES', 90, 1010); ctx.fillText('EXERCÍCIOS', 90, 1230);
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 110px Arial';
+    ctx.fillText(Math.round(sessionCompletedModal.duration / 60) + ' min', 90, 900);
+    ctx.fillText(String(sessionCompletedModal.setsDone), 90, 1120);
+    ctx.fillText(String(sessionCompletedModal.exercisesDone), 90, 1340);
+    ctx.fillStyle = '#777777'; ctx.font = 'bold 36px Arial'; ctx.fillText('CONSISTÊNCIA CONSTRÓI RESULTADOS.', 90, 1720);
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 38px Arial'; ctx.fillText('FOCO • SEU TREINO, SUA EVOLUÇÃO', 90, 1810);
+    return new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+  };
+
+  const shareStory = async (download = false) => {
+    const blob = await createStoryImage(); if (!blob) { setErrorAlert('Não foi possível gerar o card.'); return; }
+    const file = new File([blob], 'foco-treino-story.png', { type: 'image/png' });
+    if (!download && navigator.share && navigator.canShare?.({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: 'Meu treino FOCO' }); return; }
+      catch (err) { if ((err as Error).name === 'AbortError') return; }
+    }
+    const url = URL.createObjectURL(blob); const link = document.createElement('a');
+    link.href = url; link.download = file.name; document.body.appendChild(link); link.click(); link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+  };
 
   const handleStartWorkout = () => {
     if (exerciseLogs.length === 0) {
@@ -265,12 +306,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             exercise_name: ex.exercise_name,
             set_number: s.set_number,
             repetitions: Number(s.repetitions) || 0,
-            load_kg: Number(s.load_kg) || 0,
+            load_kg: tracksLoad(ex) ? (Number(s.load_kg) || 0) : 0,
             completed: s.completed,
           });
           if (s.completed) {
             completedSetsCount++;
-            totalTonnage += (Number(s.repetitions) || 0) * (Number(s.load_kg) || 0);
+            totalTonnage += tracksLoad(ex) ? (Number(s.repetitions) || 0) * (Number(s.load_kg) || 0) : 0;
           }
         });
       });
@@ -303,6 +344,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         duration: elapsedSeconds,
         tonnage: totalTonnage,
         setsDone: completedSetsCount,
+        exercisesDone: exerciseLogs.filter(ex => ex.sets.some(set => set.completed)).length,
         session: res,
       });
     } catch (err: any) {
@@ -320,7 +362,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
   // Resumo de tonelagem e séries concluídas em tempo real
   const currentTotalTonnage = exerciseLogs.reduce((acc, ex) => {
-    return acc + ex.sets.reduce((setAcc, s) => (s.completed ? setAcc + (s.load_kg * s.repetitions) : setAcc), 0);
+    return acc + ex.sets.reduce((setAcc, s) => (s.completed && tracksLoad(ex) ? setAcc + (s.load_kg * s.repetitions) : setAcc), 0);
   }, 0);
 
   const currentTotalSetsDone = exerciseLogs.reduce((acc, ex) => {
@@ -520,6 +562,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       <div className="space-y-4">
         {exerciseLogs.map((exercise, exIdx) => {
           const completedCount = exercise.sets.filter((s) => s.completed).length;
+          const showLoad = tracksLoad(exercise);
           const isAllDone = completedCount === exercise.sets.length;
 
           return (
@@ -554,6 +597,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                 </div>
               </div>
 
+              <label className="mt-3 flex items-center gap-2 text-xs text-neutral-300">
+                <input type="checkbox" checked={showLoad} onChange={() => toggleExerciseLoad(exIdx)} /> Registrar carga (kg) neste exercício
+              </label>
               {exIdx === focusedExerciseIndex ? (
                 <section className="mt-4 overflow-hidden rounded-[19px] border border-white/10 bg-[#111]" aria-label={'Guia de execução de ' + exercise.exercise_name}>
                   <p className="foco-v4-eyebrow px-4 pt-4">Execução do exercício</p>
@@ -574,7 +620,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                   <thead>
                     <tr className="border-b border-white/10 text-xs font-semibold text-neutral-300">
                       <th className="py-2 px-1 w-12">SÉRIE</th>
-                      <th className="py-2 px-1">CARGA</th>
+                      {showLoad && <th className="py-2 px-1">CARGA</th>}
                       <th className="py-2 px-1">REPS</th>
                       <th className="py-2 px-1 text-right">FEITO</th>
                     </tr>
@@ -591,13 +637,13 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                             #{set.set_number}
                           </td>
 
-                          <td className="py-2 px-1">
+                          {showLoad && <td className="py-2 px-1">
                             <input type="number" min="0" step="0.5" inputMode="decimal"
                               aria-label={'Carga da série ' + set.set_number + ' em quilogramas'}
                               value={set.load_kg === 0 ? '' : set.load_kg} placeholder="0"
                               onChange={(e) => handleUpdateSet(exIdx, setIdx, 'load_kg', Math.max(0, parseFloat(e.target.value) || 0))}
                               className="foco-field !w-[84px] !min-h-12 !px-2 text-center font-mono text-base tabular-nums" />
-                          </td>
+                          </td>}
 
                           {/* Repetitions */}
                           <td className="py-2.5 px-1">
@@ -668,12 +714,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                     {exercise.sets.map((set, idx) => (
                       <div key={idx} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/5 p-2">
                         <span className="text-sm font-semibold">Série {set.set_number}</span>
-                        <span className="text-xs text-neutral-400">1RM estimado: {calculateEstimated1RM(set.load_kg, set.repetitions) || '—'} kg</span>
+                        {showLoad && <span className="text-xs text-neutral-400">1RM estimado: {calculateEstimated1RM(set.load_kg, set.repetitions) || '—'} kg</span>}
                         <div className="flex items-center gap-1">
-                          <button type="button" onClick={() => handleQuickAddLoad(exIdx, idx, -2.5)}
-                            className="foco-touch rounded-lg border border-white/15 text-sm" aria-label={'Diminuir 2,5 kg da série ' + set.set_number}>−2,5</button>
-                          <button type="button" onClick={() => handleQuickAddLoad(exIdx, idx, 2.5)}
-                            className="foco-touch rounded-lg border border-white/15 text-sm" aria-label={'Aumentar 2,5 kg da série ' + set.set_number}>+2,5</button>
+                          {showLoad && <button type="button" onClick={() => handleQuickAddLoad(exIdx, idx, -2.5)}
+                            className="foco-touch rounded-lg border border-white/15 text-sm" aria-label={'Diminuir 2,5 kg da série ' + set.set_number}>−2,5</button>}
+                          {showLoad && <button type="button" onClick={() => handleQuickAddLoad(exIdx, idx, 2.5)}
+                            className="foco-touch rounded-lg border border-white/15 text-sm" aria-label={'Aumentar 2,5 kg da série ' + set.set_number}>+2,5</button>}
                           {exercise.sets.length > 1 && (
                             <button type="button" onClick={() => handleRemoveSet(exIdx, idx)}
                               className="foco-touch rounded-lg border border-white/15" aria-label={'Remover série ' + set.set_number}><Trash2 className="h-4 w-4" /></button>
@@ -789,6 +835,8 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             </div>
 
             <div className="flex flex-col gap-2">
+              <button type="button" onClick={() => shareStory(false)} className="w-full py-3 rounded-xl bg-white text-black font-bold flex items-center justify-center gap-2"><Share2 className="w-4 h-4" /> Compartilhar Story</button>
+              <button type="button" onClick={() => shareStory(true)} className="w-full py-3 rounded-xl border border-white/20 text-white font-bold flex items-center justify-center gap-2"><Download className="w-4 h-4" /> Salvar imagem 1080 × 1920</button>
               <button
                 onClick={() => {
                   setSessionCompletedModal(null);
