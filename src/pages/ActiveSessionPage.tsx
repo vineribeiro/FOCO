@@ -82,10 +82,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => {
     try {
       const chosen = sessionStorage.getItem('foco_next_training_day');
-      if (chosen && TRAINING_DAYS.some(day => day.value === chosen)) {
-        sessionStorage.removeItem('foco_next_training_day');
-        return chosen;
-      }
+      if (chosen && TRAINING_DAYS.some(day => day.value === chosen)) return chosen;
     } catch { /* Preserve the existing selector when storage is restricted. */ }
     return getPreferredTrainingDay();
   });
@@ -99,6 +96,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [draftHydrated, setDraftHydrated] = useState(false);
   const [restoredDraft, setRestoredDraft] = useState(false);
   const [draftError, setDraftError] = useState<string | null>(null);
+
+  // Consumir a escolha somente depois da montagem evita perder o valor no
+  // segundo render de inicialização do React StrictMode.
+  useEffect(() => {
+    try { sessionStorage.removeItem('foco_next_training_day'); } catch { /* Sem armazenamento persistente. */ }
+  }, []);
 
   useEffect(() => {
     setDraftHydrated(false);
