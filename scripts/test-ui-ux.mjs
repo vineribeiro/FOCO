@@ -11,11 +11,21 @@ const session = read("src/pages/ActiveSessionPage.tsx");
 const dashboard = read("src/pages/DashboardPage.tsx");
 const css = read("src/index.css");
 
-const expectedNavigation = ["dashboard", "sessao", "progresso", "biblioteca", "perfil"];
-for (const id of expectedNavigation) {
+// Mobile uses "Treinos" as the canonical entry for the workout and cardio flows.
+const mobileNavigation = ["dashboard", "treinos", "progresso", "biblioteca", "perfil"];
+const desktopNavigation = ["dashboard", "sessao", "progresso", "biblioteca", "perfil"];
+for (const id of mobileNavigation) {
   assert.match(mobile, new RegExp("id: '" + id + "'"), "Mobile menu missing " + id);
+}
+for (const id of desktopNavigation) {
   assert.match(desktop, new RegExp("id: '" + id + "'"), "Desktop menu missing " + id);
 }
+assert.match(desktop, /id: 'cardio'/);
+assert.match(app, /case 'cardio'/);
+assert.match(read("src/pages/WorkoutsPage.tsx"), /Fazer cardio/);
+assert.match(read("src/pages/CardioPage.tsx"), /Finalizar e registrar cardio/);
+assert.match(read("src/pages/CardioPage.tsx"), /stopActivity/);
+assert.match(read("src/pages/HistoryPage.tsx"), /cardioDetails/);
 assert.equal((mobile.match(/id: 'dashboard'/g) || []).length, 1);
 assert.equal((mobile.match(/id: 'progresso'/g) || []).length, 1);
 assert.equal((desktop.match(/id: 'progresso'/g) || []).length, 1);
