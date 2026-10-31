@@ -6,7 +6,7 @@ import { WorkoutPlan, WorkoutExercise } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
 import { soundEngine } from '../utils/soundEngine';
 import { ExerciseExecutionGuide } from '../components/ExerciseExecutionGuide';
-import { getPreferredTrainingDay, getTrainingDayLabel, savePreferredTrainingDay, TRAINING_DAYS } from '../data/exerciseLibrary';
+import { getPreferredTrainingDay, getTrainingDayLabel, savePreferredTrainingDay, TRAINING_DAYS, loadExerciseCatalog, getExerciseImageUrl, normalizeExerciseText } from '../data/exerciseLibrary';
 import {
   Play,
   Pause,
@@ -52,7 +52,7 @@ interface ExerciseLog {
 const defaultTracksLoad = (name: string) => !/(abdominal|crunch|prancha|plank|flexão de braço|flexao de braco|burpee|polichinelo|elevação de pernas|elevacao de pernas|mountain climber)/i.test(name) || /(anilha|halter|peso|carga|máquina|maquina|cabo|polia)/i.test(name);
 
 export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }) => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [activePlan, setActivePlan] = useState<WorkoutPlan | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sessionStarted, setSessionStarted] = useState(false);
@@ -84,6 +84,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [perceivedEffort, setPerceivedEffort] = useState('');
   const [sessionPerformance, setSessionPerformance] = useState('');
   const [sessionCompletedModal, setSessionCompletedModal] = useState<any | null>(null);
+  const [storyPreviewUrl, setStoryPreviewUrl] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [errorAlert, setErrorAlert] = useState<string | null>(null);
   const [draftHydrated, setDraftHydrated] = useState(false);
@@ -176,25 +177,222 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const tracksLoad = (ex: ExerciseLog) => ex.track_load ?? defaultTracksLoad(ex.exercise_name);
   const toggleExerciseLoad = (index: number) => setExerciseLogs(prev => prev.map((ex, i) => i === index ? { ...ex, track_load: !tracksLoad(ex) } : ex));
 
-  const createStoryImage = async () => {
-    if (!sessionCompletedModal) return null;
-    const canvas = document.createElement('canvas'); canvas.width = 1080; canvas.height = 1920;
-    const ctx = canvas.getContext('2d'); if (!ctx) return null;
-    const gradient = ctx.createLinearGradient(0, 0, 1080, 1920);
-    gradient.addColorStop(0, '#222222'); gradient.addColorStop(1, '#050505');
-    ctx.fillStyle = gradient; ctx.fillRect(0, 0, 1080, 1920);
-    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 95px Arial'; ctx.fillText('FOCO', 90, 180);
-    ctx.fillStyle = '#aaaaaa'; ctx.font = 'bold 32px Arial'; ctx.fillText('MEU TREINO • CONCLUÍDO', 90, 310);
-    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 82px Arial'; ctx.fillText('MISSÃO', 90, 470); ctx.fillText('CUMPRIDA.', 90, 565);
-    ctx.fillStyle = '#aaaaaa'; ctx.font = '32px Arial'; ctx.fillText('DURAÇÃO', 90, 790); ctx.fillText('SÉRIES', 90, 1010); ctx.fillText('EXERCÍCIOS', 90, 1230);
-    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 110px Arial';
-    ctx.fillText(Math.round(sessionCompletedModal.duration / 60) + ' min', 90, 900);
-    ctx.fillText(String(sessionCompletedModal.setsDone), 90, 1120);
-    ctx.fillText(String(sessionCompletedModal.exercisesDone), 90, 1340);
-    ctx.fillStyle = '#777777'; ctx.font = 'bold 36px Arial'; ctx.fillText('CONSISTÊNCIA CONSTRÓI RESULTADOS.', 90, 1720);
-    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 38px Arial'; ctx.fillText('FOCO • SEU TREINO, SUA EVOLUÇÃO', 90, 1810);
-    return new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+
+  // Card 9:16 com a identidade monocromática oficial do FOCO.
+  // A fotografia é obtida do catálogo de exercícios já utilizado pelo app.
+  // Caso a imagem não carregue ou não permita Canvas, o card segue exportável.
+  const createStoryImage = async (): Promise<Blob | null> => {
+    const completed = sessionCompletedModal;
+    if (!completed) return null;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1920;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    const W = canvas.width;
+    const H = canvas.height;
+    const durationMinutes = Math.max(0, Math.round(completed.duration / 60));
+    const completedDate = new Date(completed.finishedAt || Date.now());
+    const dateLabel = completedDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '').toUpperCase();
+    const timeLabel = completedDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const title = String(completed.planName || 'Treino livre').trim() || 'Treino livre';
+    const calorieLabel = typeof completed.caloriesEstimate === 'number'
+      ? '~' + completed.caloriesEstimate + ' kcal'
+      : '— kcal';
+
+    ctx.fillStyle = '#080808';
+    ctx.fillRect(0, 0, W, H);
+
+    // Fundo fotográfico: um exercício executado na sessão (não uma imagem aleatória).
+    let drewPhoto = false;
+    try {
+      const catalog = await Promise.race([
+        loadExerciseCatalog(),
+        new Promise<null>(resolve => window.setTimeout(() => resolve(null), 1700)),
+      ]);
+      if (catalog) {
+        const imageEntry = (completed.exerciseNames as string[] || [])
+          .map(name => catalog.find(item =>
+            [item.name, ...(item.aliases || [])].some(candidate =>
+              normalizeExerciseText(candidate) === normalizeExerciseText(name)) && item.images?.length))
+          .find(Boolean);
+        const source = imageEntry?.images?.[0];
+        if (source) {
+          const photo = new Image();
+          photo.crossOrigin = 'anonymous';
+          photo.src = getExerciseImageUrl(source);
+          const loaded = await Promise.race([
+            new Promise<boolean>(resolve => {
+              photo.onload = () => resolve(true);
+              photo.onerror = () => resolve(false);
+              if (photo.complete && photo.naturalWidth) resolve(true);
+            }),
+            new Promise<boolean>(resolve => window.setTimeout(() => resolve(false), 2200)),
+          ]);
+          if (loaded && photo.naturalWidth && photo.naturalHeight) {
+            const box = { x: 320, y: 235, w: 880, h: 1360 };
+            const scale = Math.max(box.w / photo.naturalWidth, box.h / photo.naturalHeight);
+            const dw = photo.naturalWidth * scale;
+            const dh = photo.naturalHeight * scale;
+            ctx.save();
+            ctx.globalAlpha = 0.19;
+            ctx.filter = 'grayscale(100%) contrast(125%)';
+            ctx.drawImage(photo, box.x + (box.w - dw) / 2, box.y + (box.h - dh) / 2, dw, dh);
+            ctx.restore();
+            drewPhoto = true;
+          }
+        }
+      }
+    } catch {
+      // A fotografia é ornamental; falhar não pode impedir a exportação.
+    }
+
+    if (!drewPhoto) {
+      // Ilustração vetorial de academia como fallback offline.
+      ctx.save();
+      ctx.translate(625, 860);
+      ctx.rotate(-Math.PI / 8);
+      ctx.strokeStyle = 'rgba(235,235,235,.12)';
+      ctx.lineCap = 'round';
+      ctx.lineWidth = 26;
+      ctx.beginPath(); ctx.moveTo(-390, 0); ctx.lineTo(390, 0); ctx.stroke();
+      [-320, -270, 270, 320].forEach((x, i) => {
+        ctx.fillStyle = i === 0 || i === 3 ? 'rgba(255,255,255,.10)' : 'rgba(255,255,255,.075)';
+        ctx.fillRect(x - 24, -145, 48, 290);
+      });
+      ctx.restore();
+    }
+
+    // Vinheta suave que garante contraste do texto e integra a foto ao aplicativo.
+    const fade = ctx.createLinearGradient(0, 0, 0, H);
+    fade.addColorStop(0, 'rgba(8,8,8,.65)');
+    fade.addColorStop(.34, 'rgba(8,8,8,.42)');
+    fade.addColorStop(.68, 'rgba(8,8,8,.84)');
+    fade.addColorStop(1, '#080808');
+    ctx.fillStyle = fade;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = 'rgba(255,255,255,.025)';
+    for (let x = 80; x < W; x += 120) ctx.fillRect(x, 250, 1, 1180);
+
+    // Monograma e lettering vetoriais correspondentes ao FocoBrand.tsx.
+    ctx.fillStyle = '#FFFFFF';
+    ctx.save();
+    ctx.translate(79, 88);
+    ctx.scale(.94, .94);
+    ctx.fill(new Path2D('M 32 30 L 52 10 L 98 10 L 80 28 L 52 28 Z'));
+    ctx.fill(new Path2D('M 4 58 L 32 30 L 76 30 L 60 46 L 38 46 L 24 60 L 4 60 Z'));
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(185, 91);
+    ctx.scale(.83, .83);
+    const letterPaths = [
+      'M 10 8 L 86 8 L 86 24 L 34 24 L 34 34 L 76 34 L 76 50 L 34 50 L 34 68 L 10 68 Z',
+      'M 122 8 C 104 8 96 16 96 34 C 96 52 104 68 122 68 L 168 68 C 186 68 194 52 194 34 C 194 16 186 8 168 8 L 122 8 Z M 126 24 C 122 24 120 28 120 38 C 120 48 122 52 126 52 L 164 52 C 168 52 170 48 170 38 C 170 28 168 24 164 24 L 126 24 Z',
+      'M 292 24 L 292 8 L 230 8 C 212 8 204 16 204 34 C 204 52 212 68 230 68 L 292 68 L 292 52 L 234 52 C 230 52 228 48 228 38 C 228 28 230 24 234 24 L 292 24 Z',
+      'M 328 8 C 310 8 302 16 302 34 C 302 52 310 68 328 68 L 374 68 C 392 68 400 52 400 34 C 400 16 392 8 374 8 L 328 8 Z M 332 24 C 328 24 326 28 326 38 C 326 48 328 52 332 52 L 370 52 C 374 52 376 48 376 38 C 376 28 374 24 L 332 24 Z',
+    ];
+    letterPaths.forEach(path => ctx.fill(new Path2D(path), 'evenodd'));
+    ctx.restore();
+
+    const rule = (y: number) => {
+      ctx.fillStyle = 'rgba(255,255,255,.22)';
+      ctx.fillRect(82, y, 916, 2);
+    };
+    const label = (value: string, x: number, y: number, size = 27) => {
+      ctx.font = '700 ' + size + 'px Arial, sans-serif';
+      ctx.fillStyle = '#AAA9A9';
+      ctx.fillText(value, x, y);
+    };
+
+    rule(233);
+    label('REGISTRO DE TREINO  /  FOCO', 83, 303, 26);
+    label('SESSÃO CONCLUÍDA', 83, 480, 30);
+
+    // O nome verdadeiro da ficha é o centro visual, com quebra de linha segura.
+    const fontSize = title.length > 36 ? 72 : title.length > 24 ? 82 : 100;
+    const maxTextWidth = 915;
+    ctx.font = '900 ' + fontSize + 'px Arial, sans-serif';
+    const titleWords = title.toLocaleUpperCase('pt-BR').split(/\s+/);
+    const titleLines: string[] = [];
+    let currentLine = '';
+    titleWords.forEach(word => {
+      const next = currentLine ? currentLine + ' ' + word : word;
+      if (currentLine && ctx.measureText(next).width > maxTextWidth) {
+        titleLines.push(currentLine);
+        currentLine = word;
+      } else currentLine = next;
+    });
+    if (currentLine) titleLines.push(currentLine);
+    const trimmedLines = titleLines.slice(0, 3);
+    if (titleLines.length > 3) {
+      let last = trimmedLines[2];
+      while (last.length && ctx.measureText(last + '…').width > maxTextWidth) last = last.slice(0, -1);
+      trimmedLines[2] = last + '…';
+    }
+    ctx.fillStyle = '#FFFFFF';
+    trimmedLines.forEach((line, index) => ctx.fillText(line, 80, 590 + index * (fontSize + 15), maxTextWidth));
+    ctx.fillStyle = 'rgba(255,255,255,.16)';
+    ctx.fillRect(83, 955, 82, 7);
+
+    // Estatísticas principais: números reais da sessão e kcal apenas estimadas.
+    rule(1050);
+    label('TEMPO DE TREINO', 83, 1135);
+    label('CALORIAS ESTIMADAS', 550, 1135);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '900 94px Arial, sans-serif';
+    ctx.fillText(durationMinutes + ' min', 79, 1248, 445);
+    ctx.font = '900 82px Arial, sans-serif';
+    ctx.fillText(calorieLabel, 546, 1246, 475);
+    label(typeof completed.caloriesEstimate === 'number'
+      ? 'Estimativa por peso, duração e esforço'
+      : 'Cadastre o peso para estimar', 548, 1304, 21);
+
+    rule(1408);
+    label('SÉRIES', 83, 1487, 25);
+    label('EXERCÍCIOS', 550, 1487, 25);
+    ctx.font = '900 73px Arial, sans-serif';
+    ctx.fillStyle = '#F8F8F8';
+    ctx.fillText(String(completed.setsDone), 81, 1578);
+    ctx.fillText(String(completed.exercisesDone), 548, 1578);
+
+    rule(1670);
+    label(dateLabel + '   •   ' + timeLabel, 83, 1741, 29);
+    ctx.font = '700 28px Arial, sans-serif';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('FOCO EM EVOLUIR.', 83, 1832);
+    ctx.fillStyle = '#777777';
+    ctx.font = '23px Arial, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('RESULTADOS, UM TREINO POR VEZ.', 998, 1832);
+    ctx.textAlign = 'left';
+
+    return new Promise<Blob | null>(resolve => {
+      try { canvas.toBlob(resolve, 'image/png'); } catch { resolve(null); }
+    });
   };
+
+  // Mostra exatamente a imagem que será salva ou compartilhada.
+  useEffect(() => {
+    if (!sessionCompletedModal) {
+      setStoryPreviewUrl(null);
+      return;
+    }
+    let cancelled = false;
+    let url: string | null = null;
+    void createStoryImage().then(blob => {
+      if (!blob || cancelled) return;
+      url = URL.createObjectURL(blob);
+      setStoryPreviewUrl(url);
+    });
+    return () => {
+      cancelled = true;
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, [sessionCompletedModal]);
 
   const shareStory = async (download = false) => {
     const blob = await createStoryImage(); if (!blob) { setErrorAlert('Não foi possível gerar o card.'); return; }
@@ -341,7 +539,21 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       soundEngine.playWorkoutCompletedChime();
 
       setSessionCompletedModal({
-        duration: elapsedSeconds,
+        duration: sessionStartTime ? Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)) : elapsedSeconds,
+        planName: activePlan?.name || 'Treino Livre',
+        finishedAt: new Date().toISOString(),
+        exerciseNames: exerciseLogs.filter(ex => ex.sets.some(set => set.completed)).map(ex => ex.exercise_name),
+        caloriesEstimate: (() => {
+          const weightKg = Number(profile?.current_weight_kg);
+          const minutes = (sessionStartTime ? Math.max(0, (Date.now() - sessionStartTime.getTime()) / 1000) : elapsedSeconds) / 60;
+          if (!Number.isFinite(weightKg) || weightKg < 25 || weightKg > 350 || minutes < 1) return null;
+          const met = perceivedEffort.startsWith('leve') ? 3.5
+            : perceivedEffort.startsWith('alto') ? 5.5
+            : perceivedEffort.startsWith('muito alto') ? 6
+            : 4.5;
+          // Estimativa bruta baseada em MET; inclui descanso e não é medição clínica.
+          return Math.round((met * 3.5 * weightKg / 200 * minutes) / 10) * 10;
+        })(),
         tonnage: totalTonnage,
         setsDone: completedSetsCount,
         exercisesDone: exerciseLogs.filter(ex => ex.sets.some(set => set.completed)).length,
@@ -834,6 +1046,11 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
               </div>
             </div>
 
+            {storyPreviewUrl && (
+              <div className="mx-auto w-[140px] overflow-hidden rounded-xl border border-white/20 shadow-2xl" aria-label="Prévia da imagem do Story">
+                <img src={storyPreviewUrl} alt="Prévia real do Story de treino FOCO" className="block h-auto w-full" />
+              </div>
+            )}
             <div className="flex flex-col gap-2">
               <button type="button" onClick={() => shareStory(false)} className="w-full py-3 rounded-xl bg-white text-black font-bold flex items-center justify-center gap-2"><Share2 className="w-4 h-4" /> Compartilhar Story</button>
               <button type="button" onClick={() => shareStory(true)} className="w-full py-3 rounded-xl border border-white/20 text-white font-bold flex items-center justify-center gap-2"><Download className="w-4 h-4" /> Salvar imagem 1080 × 1920</button>
