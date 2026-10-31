@@ -6,7 +6,7 @@ import { WorkoutPlan, WorkoutExercise } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
 import { soundEngine } from '../utils/soundEngine';
 import { ExerciseExecutionGuide } from '../components/ExerciseExecutionGuide';
-import { getPreferredTrainingDay, getTrainingDayLabel, savePreferredTrainingDay, TRAINING_DAYS, loadExerciseCatalog, getExerciseImageUrl, normalizeExerciseText } from '../data/exerciseLibrary';
+import { getPreferredTrainingDay, getTrainingDayLabel, savePreferredTrainingDay, TRAINING_DAYS, loadExerciseCatalog, getExerciseImageUrl, normalizeExerciseText, getExerciseDisplayName } from '../data/exerciseLibrary';
 import {
   Play,
   Pause,
@@ -215,7 +215,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       if (catalog) {
         const imageEntry = (completed.exerciseNames as string[] || [])
           .map(name => catalog.find(item =>
-            [item.name, ...(item.aliases || [])].some(candidate =>
+            [item.name, getExerciseDisplayName(item.name), ...(item.aliases || [])].some(candidate =>
               normalizeExerciseText(candidate) === normalizeExerciseText(name)) && item.images?.length))
           .find(Boolean);
         const source = imageEntry?.images?.[0];
