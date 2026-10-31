@@ -1009,8 +1009,8 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
       {/* Workout Completed Modal (Monochrome Luxury) */}
       {sessionCompletedModal && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#141414] border border-white/20 rounded-3xl p-6 max-w-sm w-full text-center space-y-5 shadow-2xl">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md flex items-start justify-center p-4 sm:items-center">
+          <div className="my-auto max-h-[calc(100dvh-2rem)] w-full max-w-sm space-y-4 overflow-y-auto rounded-3xl border border-white/20 bg-[#141414] p-5 text-center shadow-2xl sm:p-6">
             <div className="w-16 h-16 rounded-2xl bg-white text-black flex items-center justify-center mx-auto shadow-xl">
               <Award className="w-9 h-9" />
             </div>
@@ -1047,9 +1047,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             </div>
 
             {storyPreviewUrl && (
-              <div className="mx-auto w-[140px] overflow-hidden rounded-xl border border-white/20 shadow-2xl" aria-label="Prévia da imagem do Story">
-                <img src={storyPreviewUrl} alt="Prévia real do Story de treino FOCO" className="block h-auto w-full" />
-              </div>
+              <a href={storyPreviewUrl} target="_blank" rel="noopener noreferrer" className="mx-auto block w-[112px] overflow-hidden rounded-xl border border-white/20 shadow-2xl" aria-label="Abrir prévia do Story em tamanho completo">
+                <img src={storyPreviewUrl} alt="Prévia do Story de treino FOCO — toque para ampliar" className="block h-auto w-full" />
+              </a>
             )}
             <div className="flex flex-col gap-2">
               <button type="button" onClick={() => shareStory(false)} className="w-full py-3 rounded-xl bg-white text-black font-bold flex items-center justify-center gap-2"><Share2 className="w-4 h-4" /> Compartilhar Story</button>
