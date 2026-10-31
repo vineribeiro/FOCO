@@ -128,8 +128,9 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
     const date = new Date(session.started_at);
     if (session.status !== 'completed' || session.plan_id !== activePlan?.id
       || date < weekStart || date >= nextWeekStart) return;
-    const matched = session.notes?.match(/\[FOCO:TREINO_DIA=(segunda|terca|quarta|quinta|sexta|sabado|domingo)\]/);
-    if (matched?.[1]) completedPlannedDays.add(matched[1]);
+    const selectedName = session.notes?.match(/Treino escolhido da semana: (Segunda-feira|Terça-feira|Quarta-feira|Quinta-feira|Sexta-feira|Sábado|Domingo)/)?.[1];
+    const selectedDay = TRAINING_DAYS.find(day => day.label === selectedName);
+    if (selectedDay) completedPlannedDays.add(selectedDay.value);
   });
 
   const selectSession = (day: string) => {
