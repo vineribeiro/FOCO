@@ -136,7 +136,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
       </div>}
 
       {activePlan ? (
-        <section className="foco-v4-hero" aria-labelledby="foco-workout-hero">
+        <section className="foco-v4-hero cursor-pointer" aria-labelledby="foco-workout-hero" role="button" tabIndex={0} aria-label="Ver detalhes do treino de hoje" onClick={() => { if (todayExercises.length) setShowWorkoutPreview(true); else setActiveTab("treinos"); }} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); if (todayExercises.length) setShowWorkoutPreview(true); else setActiveTab("treinos"); } }}>
           <div className="foco-v4-hero-content relative z-10 space-y-3">
             <p className="foco-v4-eyebrow !text-neutral-300">{todayExercises.length ? "Treino de hoje" : "Dia de recuperação"}</p>
             <h2 id="foco-workout-hero" className="max-w-[430px] text-[29px] font-extrabold leading-[1.13] tracking-[-.055em] sm:text-[37px]">{todayExercises.length ? heroTitle : 'Recuperação também faz parte.'}</h2>
