@@ -44,6 +44,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
   const [sessionsUnavailable, setSessionsUnavailable] = useState(false);
   const [recommendations, setRecommendations] = useState<AIRecommendation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showWorkoutPreview, setShowWorkoutPreview] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -112,6 +113,18 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
 
   return (
     <div className="foco-v4-page space-y-[17px] sm:space-y-6">
+      {showWorkoutPreview && activePlan && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" role="dialog" aria-modal="true" aria-label="Detalhes do treino de hoje">
+        <section className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl border border-white/20 bg-[#141414] p-5 text-white">
+          <div className="flex items-start justify-between gap-3">
+            <div><p className="foco-v4-eyebrow">Treino de hoje</p><h2 className="mt-2 text-2xl font-extrabold">{heroTitle}</h2><p className="mt-2 text-sm text-neutral-400">{todayExercises.length} exercícios • {activePlan.name}</p></div>
+            <button type="button" onClick={() => setShowWorkoutPreview(false)} aria-label="Fechar detalhes" className="min-h-11 min-w-11 rounded-xl border border-white/20 text-xl">×</button>
+          </div>
+          <ol className="mt-5 space-y-2">{todayExercises.map((exercise, index) => <li key={index} className="rounded-xl border border-white/10 bg-white/5 p-3">
+            <div className="flex items-start gap-3"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-xs font-bold">{index+1}</span><div className="min-w-0"><p className="font-bold">{exercise.exercise_name}</p><p className="mt-1 text-xs text-neutral-400">{exercise.muscle_group} • {exercise.sets || 3} séries • {exercise.reps_min || 10}{exercise.reps_max && exercise.reps_max !== exercise.reps_min ? '–' + exercise.reps_max : ''} repetições • {exercise.rest_seconds || 60}s descanso</p></div></div>
+          </li>)}</ol>
+          <button type="button" onClick={() => {setShowWorkoutPreview(false);openScheduledWorkout(todayKey);}} className="foco-v4-action mt-5 w-full justify-center">Ir para iniciar treino <ChevronRight className="h-5 w-5" /></button>
+        </section>
+      </div>}
       <header className="pb-1">
         <h1 className="foco-v4-heading">{greeting}, <span className="font-extrabold">{firstName}</span></h1>
         <p className="mt-2 text-sm text-neutral-300">Disciplina hoje, resultado sempre.</p>
@@ -131,8 +144,8 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
               <span className="inline-flex items-center gap-1.5"><Dumbbell className="h-3.5 w-3.5" />{todayExercises.length ? todayExercises.length + ' exercícios' : 'Sem exercício atribuído a hoje'}</span>
               <span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{activePlan.weekly_frequency} dias por semana</span>
             </div>
-            <button type="button" onClick={() => todayExercises.length ? openScheduledWorkout(todayKey) : setActiveTab("treinos")} className="foco-v4-action !mt-4 w-fit">
-              <span>{todayExercises.length ? "Iniciar treino" : "Ver meu plano"}</span><span className="foco-v4-cta-arrow"><ChevronRight className="h-5 w-5" /></span>
+            <button type="button" onClick={() => todayExercises.length ? setShowWorkoutPreview(true) : setActiveTab("treinos")} className="foco-v4-action !mt-4 w-fit">
+              <span>{todayExercises.length ? "Ver treino de hoje" : "Ver meu plano"}</span><span className="foco-v4-cta-arrow"><ChevronRight className="h-5 w-5" /></span>
             </button>
           </div>
         </section>
