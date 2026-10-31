@@ -13,6 +13,7 @@ interface CardioDraft {
   startedAt: number;
   runningSince: number | null;
   accumulatedSeconds: number;
+  finalizing?: boolean;
   metric: string;
   notes: string;
 }
@@ -94,12 +95,20 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
     saveDraft(next);
   };
   const pause = () => {
-    if (!draft || draft.runningSince === null) return;
+    if (!draft || draft.runningSince === null || draft.finalizing) return;
     saveDraft({ ...draft, accumulatedSeconds: currentSeconds(draft), runningSince: null });
   };
   const resume = () => {
-    if (!draft || draft.runningSince !== null) return;
+    if (!draft || draft.runningSince !== null || draft.finalizing) return;
     saveDraft({ ...draft, runningSince: Date.now() });
+  };
+  const stopActivity = () => {
+    if (!draft || draft.finalizing) return;
+    saveDraft({ ...draft, accumulatedSeconds: currentSeconds(draft), runningSince: null, finalizing: true });
+  };
+  const continueActivity = () => {
+    if (!draft || !draft.finalizing) return;
+    saveDraft({ ...draft, finalizing: false, runningSince: Date.now() });
   };
   const discard = () => {
     if (!window.confirm('Descartar o cardio não salvo?')) return;
@@ -109,7 +118,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
     setMessage('');
   };
   const finish = async () => {
-    if (!draft || isSaving) return;
+    if (!draft || !draft.finalizing || isSaving) return;
     const seconds = currentSeconds(draft);
     if (seconds < 5) { setMessage('Registra pelo menos cinco segundos antes de concluir.'); return; }
     const selected = CARDIO_TYPES.find(item => item.id === draft.machine)!;
@@ -192,11 +201,15 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
           <Clock3 className="mx-auto mb-4 h-6 w-6 text-neutral-400" />
           <p className="foco-v4-eyebrow">Tempo de atividade</p>
           <p role="timer" className="mt-2 font-mono text-5xl font-black tracking-tighter tabular-nums sm:text-6xl">{clock(elapsedSeconds)}</p>
-          <p className="mt-3 text-xs text-neutral-400">{draft ? draft.runningSince !== null ? 'Cronômetro em andamento' : 'Cronômetro pausado' : 'Pronto para começar'}</p>
+          <p className="mt-3 text-xs text-neutral-400">{draft ? draft.finalizing ? 'Atividade encerrada · Preenche os dados abaixo' : draft.runningSince !== null ? 'Cronômetro em andamento' : 'Cronômetro pausado' : 'Pronto para começar'}</p>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             {!draft ? (
               <button type="button" onClick={start} className="foco-v4-action min-w-48 justify-center">
                 <Play className="h-4 w-4" /> Iniciar cardio
+              </button>
+            ) : draft.finalizing ? (
+              <button type="button" onClick={continueActivity} className="foco-v4-secondary justify-center">
+                <RotateCcw className="h-4 w-4" /> Retomar atividade
               </button>
             ) : (
               <>
@@ -205,6 +218,9 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
                   {draft.runningSince === null ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
                   {draft.runningSince === null ? 'Continuar' : 'Pausar'}
                 </button>
+                <button type="button" onClick={stopActivity} className="foco-v4-secondary justify-center">
+                  <CheckCircle2 className="h-4 w-4" /> Encerrar atividade
+                </button>
                 <button type="button" onClick={discard} className="foco-v4-secondary justify-center">
                   <RotateCcw className="h-4 w-4" /> Descartar
                 </button>
@@ -212,7 +228,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
             )}
           </div>
         </div>
-        {draft && (
+        {draft?.finalizing && (
           <div className="space-y-4 border-t border-white/10 pt-5">
             <div>
               <label htmlFor="cardio-metric" className="mb-2 block text-sm font-bold">
