@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
+import { isCardioSession } from '../utils/cardio';
 import { savePreferredTrainingDay } from '../data/exerciseLibrary';
 import type { AIRecommendation, UploadedFile, WorkoutPlan, WorkoutSession } from '../types';
 import {
@@ -84,8 +85,11 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
     weekStart.setDate(weekStart.getDate() - weekdayIndex(weekStart));
     return sessions.filter(s => s.status === 'completed' && new Date(s.started_at) >= weekStart);
   }, [sessions]);
+  const strengthSessions = recentSessions.filter(session => !isCardioSession(session));
+  const weeklyCardioMinutes = Math.round(recentSessions.filter(isCardioSession).reduce(
+    (sum, session) => sum + Math.max(0, Number(session.duration_seconds) || 0), 0) / 60);
   const totalCompleted = sessions.filter(s => s.status === 'completed').length;
-  const completedDays = new Set(recentSessions.map(s => weekdayIndex(new Date(s.started_at))));
+  const completedDays = new Set(strengthSessions.map(s => weekdayIndex(new Date(s.started_at))));
   const targetPerWeek = activePlan?.weekly_frequency || 0;
   const weeklyMinutes = Math.round(recentSessions.reduce((sum, session) => sum + Math.max(0, Number(session.duration_seconds) || 0), 0) / 60);
   const bodyFiles = files.filter(isBodyAssessment).sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
@@ -162,6 +166,17 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
         </section>
       ) : null}
 
+      <button type="button" onClick={() => setActiveTab('cardio')}
+        className="foco-v4-panel flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition hover:border-white/35 sm:px-6">
+        <span className="flex min-w-0 items-center gap-3">
+          <span className="foco-v4-info-icon !h-12 !w-12 shrink-0"><Activity className="h-5 w-5" /></span>
+          <span><strong className="block text-sm">Hoje quero fazer cardio</strong>
+            <span className="mt-1 block text-xs text-neutral-400">Atividade livre sem mudar minha ficha · ${weeklyCardioMinutes} min de cardio nesta semana</span>
+          </span>
+        </span>
+        <ChevronRight className="h-5 w-5 shrink-0 text-neutral-300" />
+      </button>
+
       <button type="button" onClick={openAssessment}
         className="foco-v4-panel flex min-h-[102px] w-full items-center gap-3.5 px-4 py-4 text-left transition hover:border-white/35 sm:px-6">
         <span className="foco-v4-info-icon !h-16 !w-16 shrink-0"><ScanLine className="h-7 w-7 text-neutral-300" /></span>
@@ -188,7 +203,7 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3" aria-label="Seus indicadores">
         <button type="button" onClick={() => setActiveTab('historico')} className="foco-v4-stat text-left">
           <BarChart3 className="foco-v4-stat-icon" aria-hidden="true" />
-          <p className="foco-v4-stat-value">{sessionsUnavailable ? '—' : recentSessions.length}/{targetPerWeek || '—'}</p>
+          <p className="foco-v4-stat-value">{sessionsUnavailable ? '—' : strengthSessions.length}/{targetPerWeek || '—'}</p>
           <p className="mt-1.5 text-xs leading-snug text-neutral-300">Treinos na semana</p>
           <div className="mt-3 flex gap-1">{Array.from({length: Math.min(targetPerWeek || 4, 6)},(_,i)=><span key={i} className={'h-1.5 min-w-0 flex-1 rounded-full ' + (!sessionsUnavailable && i<recentSessions.length?'bg-white':'bg-[#414141]')} />)}</div>
         </button>
@@ -222,12 +237,12 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
               const daily = isDailyPlan ? exercises.filter(e => !e.training_day || e.training_day === day.id) : exercises;
               const muscles = [...new Set(daily.map(e=>e.muscle_group).filter(Boolean))];
               const done = completedDays.has(idx);
-              return <button type="button" key={day.id} onClick={() => daily.length ? openScheduledWorkout(day.id) : setActiveTab("treinos")}
+              return <button type="button" key={day.id} onClick={() => daily.length ? openScheduledWorkout(day.id) : setActiveTab('cardio')}
                 className={'foco-v4-day transition hover:border-white/35 ' + (todayIndex === idx ? 'foco-v4-day-today' : '')}
-                aria-label={day.short + ': ' + (daily.length ? (muscles.join(', ') || 'Treino') + '. Abrir sessão desse dia' : 'Dia sem treino. Ver plano')}>
+                aria-label={day.short + ': ' + (daily.length ? (muscles.join(', ') || 'Treino') + '. Abrir sessão desse dia' : 'Dia de descanso. Cardio opcional')}>
                 <span className="text-xs text-neutral-300">{day.short}</span>
                 <span className="line-clamp-2 min-h-[33px] text-xs font-semibold leading-snug">
-                  {isDailyPlan ? (daily.length ? muscles.slice(0,2).join(' + ') || 'Treino' : 'Descanso') : 'Flexível'}
+                  {isDailyPlan ? (daily.length ? muscles.slice(0,2).join(' + ') || 'Treino' : 'Descanso · Cardio opcional') : 'Flexível'}
                 </span>
                 <Dumbbell className="mt-auto h-4 w-4 text-neutral-400" />
                 <span className={'mt-1 flex h-5 w-5 items-center justify-center rounded-full border ' +
