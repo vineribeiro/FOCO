@@ -79,7 +79,16 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
   // Exercise state for the session
   const [exerciseLogs, setExerciseLogs] = useState<ExerciseLog[]>([]);
-  const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => getPreferredTrainingDay());
+  const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => {
+    try {
+      const chosen = sessionStorage.getItem('foco_next_training_day');
+      if (chosen && TRAINING_DAYS.some(day => day.value === chosen)) {
+        sessionStorage.removeItem('foco_next_training_day');
+        return chosen;
+      }
+    } catch { /* Preserve the existing selector when storage is restricted. */ }
+    return getPreferredTrainingDay();
+  });
   const [sessionNotes, setSessionNotes] = useState('');
   const [perceivedEffort, setPerceivedEffort] = useState('');
   const [sessionPerformance, setSessionPerformance] = useState('');
@@ -485,6 +494,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     }));
   };
 
+  const currentWorkoutTitle = [...new Set(exerciseLogs.map(ex => ex.muscle_group).filter(Boolean))].join(' + ')
+    || activePlan?.name || 'Treino Livre';
+
   const handleFinishWorkout = async () => {
     if (!sessionStarted && elapsedSeconds === 0) {
       setErrorAlert('Inicie o treino antes de finalizar.');
@@ -516,12 +528,13 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
       const res = await api.recordSession({
         plan_id: activePlan?.id,
-        plan_name: activePlan?.name || 'Treino Livre',
+        plan_name: currentWorkoutTitle,
         started_at: (sessionStartTime || new Date()).toISOString(),
         finished_at: new Date().toISOString(),
         duration_seconds: sessionStartTime ? Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)) : elapsedSeconds,
         notes: [
           sessionNotes.trim(),
+          'Treino escolhido da semana: ' + getTrainingDayLabel(selectedTrainingDay),
           perceivedEffort || sessionPerformance
             ? '[Feedback FOCO — esforço percebido: ' + (perceivedEffort || 'não informado') +
               '; desempenho: ' + (sessionPerformance || 'não informado') + ']' : '',
@@ -540,7 +553,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
       setSessionCompletedModal({
         duration: sessionStartTime ? Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)) : elapsedSeconds,
-        planName: activePlan?.name || 'Treino Livre',
+        planName: currentWorkoutTitle,
         finishedAt: new Date().toISOString(),
         exerciseNames: exerciseLogs.filter(ex => ex.sets.some(set => set.completed)).map(ex => ex.exercise_name),
         caloriesEstimate: (() => {
@@ -614,7 +627,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
               </span>
             </div>
             <h2 className="mt-1 line-clamp-2 text-lg font-extrabold leading-tight text-white sm:max-w-[420px]">
-              {activePlan?.name || 'Treino Livre'}
+              {currentWorkoutTitle}
             </h2>
           </div>
 
