@@ -14,6 +14,7 @@ import {
   Play,
   CheckCircle2,
   CalendarDays,
+  Activity,
 } from 'lucide-react';
 
 interface WorkoutsPageProps {
@@ -188,6 +189,21 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
         </div>
       )}
 
+
+      <section className="foco-v4-panel flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10"><Activity className="h-5 w-5" /></span>
+          <div>
+            <p className="foco-v4-eyebrow">Atividade flexível</p>
+            <h2 className="mt-1 text-lg font-black">Cardio livre</h2>
+            <p className="mt-1 max-w-md text-sm leading-relaxed text-neutral-300">
+              Vai de esteira, bicicleta, escada ou elíptico? Registra aqui, mesmo num dia de descanso, sem alterar tua ficha.
+            </p>
+          </div>
+        </div>
+        <button type="button" onClick={() => setActiveTab('cardio')}
+          className="foco-v4-action shrink-0 justify-center"><Activity className="h-4 w-4" /> Fazer cardio</button>
+      </section>
 
       {/* Galeria de treinos da semana — escolha manual, sem remanejamento automático. */}
       {!isLoading && activePlan && (
