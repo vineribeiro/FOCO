@@ -24,7 +24,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, setActive
       <div className="mx-auto grid h-[73px] max-w-xl grid-cols-5 gap-0.5 px-2">
         {tabs.map(({ id, label, icon: Icon }) => {
           const selected = activeTab === id
-            || (id === 'treinos' && ['sessao', 'novo-treino', 'revisao'].includes(activeTab))
+            || (id === 'treinos' && ['sessao', 'novo-treino', 'revisao', 'cardio'].includes(activeTab))
             || (id === 'progresso' && ['arquivos', 'historico'].includes(activeTab))
             || (id === 'biblioteca' && ['musculos', 'atlas'].includes(activeTab))
             || (id === 'perfil' && ['configuracoes', 'anamnese', 'objetivos'].includes(activeTab));
