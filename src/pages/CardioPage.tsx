@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Activity, ArrowLeft, Bike, CheckCircle2, Clock3, Footprints, Pause, Play, RotateCcw, Save } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { CARDIO_TYPES, CardioEffort, CardioMachine } from '../utils/cardio';
+import { CARDIO_TYPES } from '../utils/cardio';
+import type { CardioEffort, CardioMachine } from '../utils/cardio';
 
 interface CardioPageProps { setActiveTab: (tab: string) => void }
 interface CardioDraft {
@@ -219,7 +220,10 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
               </label>
               <input id="cardio-metric" type="text" inputMode="decimal" value={metric}
                 placeholder={chosen.metric === 'andares' ? 'Ex.: 18' : 'Ex.: 3,50'}
-                onChange={event => setMetric(event.target.value)}
+                onChange={event => {
+                  setMetric(event.target.value);
+                  if (draft) saveDraft({ ...draft, metric: event.target.value });
+                }}
                 className="min-h-12 w-full rounded-xl border border-white/20 bg-[#101010] px-4 text-white outline-none focus:border-white" />
             </div>
             <div>
@@ -227,7 +231,10 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
               <div className="grid grid-cols-3 gap-2">
                 {(['leve', 'moderado', 'intenso'] as CardioEffort[]).map(value => (
                   <button type="button" key={value} aria-pressed={effort === value}
-                    onClick={() => setEffort(value)}
+                    onClick={() => {
+                      setEffort(value);
+                      if (draft) saveDraft({ ...draft, effort: value });
+                    }}
                     className={`min-h-12 rounded-xl border text-xs font-bold capitalize ${effort === value
                       ? 'border-white bg-white text-black' : 'border-white/20 bg-[#101010] text-neutral-200'}`}>
                     {value}
@@ -238,7 +245,10 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
             <div>
               <label htmlFor="cardio-notes" className="mb-2 block text-sm font-bold">Observações <span className="font-normal text-neutral-400">opcional</span></label>
               <textarea id="cardio-notes" rows={2} maxLength={400} value={notes}
-                onChange={event => setNotes(event.target.value)}
+                onChange={event => {
+                  setNotes(event.target.value);
+                  if (draft) saveDraft({ ...draft, notes: event.target.value });
+                }}
                 className="w-full rounded-xl border border-white/20 bg-[#101010] p-3 text-sm text-white outline-none focus:border-white"
                 placeholder="Inclinação, velocidade média, como te sentiu..." />
             </div>
