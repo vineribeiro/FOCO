@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, FileUp, House, ScanLine, Settings2, Sparkles, Target, UserRound } from 'lucide-react';
+import { BookOpen, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, FileUp, House, ScanLine, Settings2, Sparkles, Target, UserRound, Activity } from 'lucide-react';
 import { FocoLogoVertical } from './FocoBrand';
 
 interface DesktopNavProps {
@@ -15,6 +15,7 @@ const primary = [
 ];
 const tools = [
   { id: 'treinos', label: 'Minhas fichas', icon: ClipboardList },
+  { id: 'cardio', label: 'Cardio livre', icon: Activity },
   { id: 'novo-treino', label: 'Nova ficha com IA', icon: Sparkles },
   { id: 'arquivos', label: 'Avaliação OKOK', icon: ScanLine },
   { id: 'anamnese', label: 'Anamnese', icon: FileUp },
