@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import { cardioDetails, isCardioSession } from '../utils/cardio';
 import { WorkoutSession } from '../types';
 import {
   History,
   Dumbbell,
+  Activity,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -43,7 +45,7 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
         <div>
           <h2 className="text-xl font-black uppercase tracking-tight text-white">Histórico de Treinos</h2>
           <p className="text-xs text-neutral-400 mt-0.5">
-            Registro cronológico de todas as sessões concluídas, tonelagem e séries executadas.
+            Registro de musculação e cardio, com tempo, distância, séries e cargas.
           </p>
         </div>
 
@@ -71,6 +73,8 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
         <div className="space-y-3">
           {sessions.map((sess) => {
             const isExpanded = expandedSessionId === sess.id;
+            const cardio = cardioDetails(sess);
+            const isCardio = isCardioSession(sess);
             const totalTonnage = (sess.sets || []).reduce(
               (acc, cur) => acc + (cur.completed ? cur.load_kg * cur.repetitions : 0),
               0
@@ -88,7 +92,7 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                 >
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white shrink-0">
-                      <Dumbbell className="w-5 h-5" />
+                      {isCardio ? <Activity className="w-5 h-5" /> : <Dumbbell className="w-5 h-5" />}
                     </div>
                     <div>
                       <h4 className="font-black text-sm text-white uppercase">
@@ -99,16 +103,16 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                         <span>·</span>
                         <span>{Math.round(sess.duration_seconds / 60)} min</span>
                         <span>·</span>
-                        <span>{(sess.sets || []).length} séries</span>
+                        <span>{isCardio ? 'Atividade cardiovascular' : (sess.sets || []).length + ' séries'}</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-4">
                     <div className="text-right font-mono">
-                      <span className="text-[10px] text-neutral-500 block uppercase">Tonelagem Total</span>
+                      <span className="text-[10px] text-neutral-500 block uppercase">{isCardio ? 'Distância / Andares' : 'Tonelagem Total'}</span>
                       <span className="text-xs font-black text-white tabular-nums">
-                        {Math.round(totalTonnage)} kg
+                        {isCardio ? (cardio?.metric || '—') : Math.round(totalTonnage) + ' kg'}
                       </span>
                     </div>
 
@@ -127,7 +131,7 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                       </p>
                     )}
 
-                    <div className="overflow-x-auto">
+                    {!isCardio && <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs">
                         <thead>
                           <tr className="text-neutral-500 font-bold border-b border-white/10 uppercase text-[10px]">
@@ -163,7 +167,7 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                           ))}
                         </tbody>
                       </table>
-                    </div>
+                    </div>}
                   </div>
                 )}
               </div>
