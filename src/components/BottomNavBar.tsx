@@ -8,26 +8,23 @@ interface BottomNavBarProps {
 }
 
 /** Five-section navigation matching the approved FOCO premium mockups. */
-export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, setActiveTab, onStartSession }) => {
+export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, setActiveTab }) => {
   const tabs = [
     { id: 'dashboard', label: 'Início', icon: House },
-    { id: 'sessao', label: 'Treino', icon: Dumbbell },
+    { id: 'treinos', label: 'Treinos', icon: Dumbbell },
     { id: 'progresso', label: 'Evolução', icon: ChartNoAxesColumnIncreasing },
     { id: 'biblioteca', label: 'Biblioteca', icon: BookOpen },
     { id: 'perfil', label: 'Perfil', icon: UserRound },
   ] as const;
 
-  const navigate = (id: typeof tabs[number]['id']) => {
-    if (id === 'sessao') { onStartSession(); return; }
-    setActiveTab(id);
-  };
+  const navigate = (id: typeof tabs[number]['id']) => setActiveTab(id);
 
   return (
     <nav aria-label="Navegação principal" className="foco-v4-tabbar md:hidden">
       <div className="mx-auto grid h-[73px] max-w-xl grid-cols-5 gap-0.5 px-2">
         {tabs.map(({ id, label, icon: Icon }) => {
           const selected = activeTab === id
-            || (id === 'sessao' && ['treinos', 'novo-treino', 'revisao'].includes(activeTab))
+            || (id === 'treinos' && ['sessao', 'novo-treino', 'revisao'].includes(activeTab))
             || (id === 'progresso' && ['arquivos', 'historico'].includes(activeTab))
             || (id === 'biblioteca' && ['musculos', 'atlas'].includes(activeTab))
             || (id === 'perfil' && ['configuracoes', 'anamnese', 'objetivos'].includes(activeTab));
