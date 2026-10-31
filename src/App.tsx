@@ -13,6 +13,7 @@ import { FocoSymbol, FocoLettering } from './components/FocoBrand';
 import { AuthPage } from './pages/AuthPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ActiveSessionPage } from './pages/ActiveSessionPage';
+import { CardioPage } from './pages/CardioPage';
 import { AiLabPage } from './pages/AiLabPage';
 import { WorkoutsPage } from './pages/WorkoutsPage';
 import { NewWorkoutPage } from './pages/NewWorkoutPage';
@@ -32,7 +33,7 @@ import { AnatomyStudioPage } from './pages/AnatomyStudioPage';
 
 function MainApp() {
   const { user, isAuthenticated, isLoading, authLoadError } = useAuth();
-  const validViews = ['dashboard', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas'];
+  const validViews = ['dashboard', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas', 'cardio'];
   const [activeTab, setActiveTabState] = useState<string>(() => {
     const view = new URLSearchParams(window.location.search).get('view');
     return view && validViews.includes(view) ? view : 'dashboard';
@@ -122,6 +123,8 @@ function MainApp() {
         return <ExerciseLibraryPage setActiveTab={setActiveTab} />;
       case 'atlas':
         return <AnatomyStudioPage setActiveTab={setActiveTab} />;
+      case 'cardio':
+        return <CardioPage setActiveTab={setActiveTab} />;
       case 'sessao':
         return (
           <ActiveSessionPage
