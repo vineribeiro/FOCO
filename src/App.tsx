@@ -26,7 +26,7 @@ import { HistoryPage } from './pages/HistoryPage';
 import { GoalsPage } from './pages/GoalsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
-import { Settings } from 'lucide-react';
+import { Settings, House } from 'lucide-react';
 import { api } from './services/api';
 import { InstallAppButton } from './components/InstallAppButton';
 import { ExerciseLibraryPage } from './pages/ExerciseLibraryPage';
@@ -183,7 +183,7 @@ function MainApp() {
           </button>
           <span className="hidden text-[10px] font-bold tracking-[.2em] text-neutral-500 md:block">FOCO EM EVOLUIR.</span>
           <div className="flex items-center gap-2.5">
-            <button type="button" onClick={() => setActiveTab("complementares")} className="rounded-xl border border-white/20 px-3 py-2 text-xs font-bold text-white">Extras</button>
+            <button type="button" onClick={() => setActiveTab("complementares")} aria-label="FOCO em Casa" title="FOCO em Casa" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#171717] text-neutral-300 transition hover:border-white/30 hover:text-white"><House className="h-[19px] w-[19px]" /></button>
             <div className="hidden sm:block"><InstallAppButton /></div>
             <button type="button" onClick={() => setActiveTab('configuracoes')} aria-label="Configurações"
               className="hidden h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#1A1A1A] text-neutral-400 transition hover:border-white/30 hover:text-white sm:flex">
