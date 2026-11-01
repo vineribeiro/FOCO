@@ -14,6 +14,7 @@ import { AuthPage } from './pages/AuthPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ActiveSessionPage } from './pages/ActiveSessionPage';
 import { CardioPage } from './pages/CardioPage';
+import { ComplementaryPage } from './pages/ComplementaryPage';
 import { AiLabPage } from './pages/AiLabPage';
 import { WorkoutsPage } from './pages/WorkoutsPage';
 import { NewWorkoutPage } from './pages/NewWorkoutPage';
@@ -33,7 +34,7 @@ import { AnatomyStudioPage } from './pages/AnatomyStudioPage';
 
 function MainApp() {
   const { user, isAuthenticated, isLoading, authLoadError } = useAuth();
-  const validViews = ['dashboard', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas', 'cardio'];
+  const validViews = ['dashboard', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas', 'cardio', 'complementares'];
   const [activeTab, setActiveTabState] = useState<string>(() => {
     const view = new URLSearchParams(window.location.search).get('view');
     return view && validViews.includes(view) ? view : 'dashboard';
@@ -123,6 +124,8 @@ function MainApp() {
         return <ExerciseLibraryPage setActiveTab={setActiveTab} />;
       case 'atlas':
         return <AnatomyStudioPage setActiveTab={setActiveTab} />;
+      case 'complementares':
+        return <ComplementaryPage />;
       case 'cardio':
         return <CardioPage setActiveTab={setActiveTab} />;
       case 'sessao':
@@ -180,6 +183,7 @@ function MainApp() {
           </button>
           <span className="hidden text-[10px] font-bold tracking-[.2em] text-neutral-500 md:block">FOCO EM EVOLUIR.</span>
           <div className="flex items-center gap-2.5">
+            <button type="button" onClick={() => setActiveTab("complementares")} className="rounded-xl border border-white/20 px-3 py-2 text-xs font-bold text-white">Extras</button>
             <div className="hidden sm:block"><InstallAppButton /></div>
             <button type="button" onClick={() => setActiveTab('configuracoes')} aria-label="Configurações"
               className="hidden h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#1A1A1A] text-neutral-400 transition hover:border-white/30 hover:text-white sm:flex">
