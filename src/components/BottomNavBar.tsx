@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, ChartNoAxesColumnIncreasing, Dumbbell, House, UserRound } from 'lucide-react';
+import { BookOpen, ChartNoAxesColumnIncreasing, Dumbbell, House, Activity, UserRound } from 'lucide-react';
 
 interface BottomNavBarProps {
   activeTab: string;
@@ -13,7 +13,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, setActive
     { id: 'dashboard', label: 'Início', icon: House },
     { id: 'treinos', label: 'Treinos', icon: Dumbbell },
     { id: 'progresso', label: 'Evolução', icon: ChartNoAxesColumnIncreasing },
-    { id: 'biblioteca', label: 'Biblioteca', icon: BookOpen },
+    { id: 'complementares', label: 'Em Casa', icon: Activity },
     { id: 'perfil', label: 'Perfil', icon: UserRound },
   ] as const;
 
