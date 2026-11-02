@@ -29,6 +29,31 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
   const [expandedWeekDay, setExpandedWeekDay] = useState<string>(() => getCurrentTrainingDay());
   const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null);
   const [savingDayKey, setSavingDayKey] = useState<string | null>(null);
+  const [addingToPlan,setAddingToPlan]=useState<string|null>(null);
+  const [newExercise,setNewExercise]=useState({name:'',group:'Geral',day:'',sets:3,reps:10,rest:60});
+  const [addingExercise,setAddingExercise]=useState(false);
+  const addToExistingPlan=async(e:React.FormEvent)=>{
+    e.preventDefault();
+    if(!addingToPlan||addingExercise)return;
+    const name=newExercise.name.trim();
+    if(name.length<3){setActionMsg({type:'error',text:'Digite o nome completo do exercício.'});return}
+    const plan=plans.find(p=>p.id===addingToPlan);
+    if(plan?.exercises?.some(x=>x.exercise_name.trim().toLowerCase()===name.toLowerCase()&&(!x.training_day||!newExercise.day||x.training_day===newExercise.day))){
+      setActionMsg({type:'error',text:'Este exercício já existe nesse dia da ficha.'});return;
+    }
+    setAddingExercise(true);setActionMsg(null);
+    try{
+      const saved=await api.addExerciseToWorkout(addingToPlan,{
+        exercise_name:name,muscle_group:newExercise.group,training_day:(newExercise.day||null) as WorkoutExercise['training_day'],
+        sets:newExercise.sets,reps_min:newExercise.reps,reps_max:newExercise.reps,rest_seconds:newExercise.rest,suggested_load_kg:0,notes:''
+      });
+      setPlans(current=>current.map(p=>p.id===addingToPlan?{...p,exercises:[...(p.exercises||[]),saved]}:p));
+      setActionMsg({type:'success',text:name+' foi salvo na ficha. Confere o exercício na lista abaixo.'});
+      setNewExercise({name:'',group:'Geral',day:'',sets:3,reps:10,rest:60});
+      setAddingToPlan(null);
+    }catch(err){setActionMsg({type:'error',text:'Não foi possível salvar no servidor: '+(err instanceof Error?err.message:String(err))})}
+    finally{setAddingExercise(false)}
+  };
   const [actionMsg, setActionMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const loadPlans = async () => {
@@ -389,6 +414,8 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                   </div>
                 </div>
 
+                <div className="border-t border-white/10 px-5 py-3"><button type="button" onClick={()=>{setAddingToPlan(addingToPlan===plan.id?null:plan.id);setExpandedPlanId(plan.id);setActionMsg(null)}} className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-4 py-3 text-sm font-bold hover:bg-white/15"><Plus className="h-4 w-4"/> {addingToPlan===plan.id?'Fechar formulário':'Adicionar exercício a esta ficha'}</button>
+                {addingToPlan===plan.id&&<form onSubmit={addToExistingPlan} className="mt-4 space-y-3 rounded-2xl border border-white/15 bg-[#0b0b0b] p-4"><div><h4 className="text-base font-black">Novo exercício</h4><p className="mt-1 text-xs text-neutral-400">Adiciona diretamente à ficha existente. Só será incluído após confirmação do servidor.</p></div><label className="block text-xs text-neutral-300">Nome do exercício<input required minLength={3} value={newExercise.name} onChange={e=>setNewExercise(v=>({...v,name:e.target.value}))} placeholder="Ex.: Supino inclinado com halteres" className="mt-1 w-full rounded-xl border border-white/20 bg-[#171717] px-3 py-3 text-sm text-white"/></label><div className="grid grid-cols-2 gap-3"><label className="text-xs text-neutral-300">Grupo muscular<select value={newExercise.group} onChange={e=>setNewExercise(v=>({...v,group:e.target.value}))} className="mt-1 w-full rounded-xl border border-white/20 bg-[#171717] p-3 text-sm">{['Geral','Peito','Costas','Ombros','Bíceps','Tríceps','Quadríceps','Posteriores','Glúteos','Panturrilhas','Abdômen'].map(g=><option key={g}>{g}</option>)}</select></label><label className="text-xs text-neutral-300">Dia do treino<select value={newExercise.day} onChange={e=>setNewExercise(v=>({...v,day:e.target.value}))} className="mt-1 w-full rounded-xl border border-white/20 bg-[#171717] p-3 text-sm"><option value="">Qualquer dia</option>{TRAINING_DAYS.map(d=><option key={d.value} value={d.value}>{d.label}</option>)}</select></label></div><div className="grid grid-cols-3 gap-3">{([{key:'sets',label:'Séries',min:1,max:12},{key:'reps',label:'Repetições',min:1,max:100},{key:'rest',label:'Descanso (s)',min:0,max:600}] as const).map(x=><label key={x.key} className="text-xs text-neutral-300">{x.label}<input type="number" required min={x.min} max={x.max} value={newExercise[x.key]} onChange={e=>setNewExercise(v=>({...v,[x.key]:Number(e.target.value)}))} className="mt-1 w-full rounded-xl border border-white/20 bg-[#171717] px-2 py-3 text-sm"/></label>)}</div><button disabled={addingExercise} type="submit" className="w-full rounded-xl bg-white px-4 py-3 text-sm font-black text-black disabled:opacity-50">{addingExercise?'Salvando no servidor...':'Salvar exercício na ficha'}</button></form>}</div>
                 {/* Expanded Exercises Detail */}
                 {isExpanded && (
                   <div className="px-5 pb-5 pt-2 border-t border-white/10">
