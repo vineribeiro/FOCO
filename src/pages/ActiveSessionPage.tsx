@@ -612,19 +612,37 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   }
 
   return (
-    <div className="foco-v4-page max-w-3xl space-y-4 pb-20">
+    <div className="foco-v5-session foco-v4-page max-w-3xl space-y-4 pb-20">
       <header className="space-y-1">
         <p className="foco-v4-eyebrow">{sessionStarted ? 'Sessão ativa' : 'Sua sessão'}</p>
         <h1 className="foco-v4-heading">{sessionStarted ? 'Treino em andamento' : 'Pronto para treinar?'}</h1>
         <p className="foco-v4-muted">Mantenha o foco. Cada série conta.</p>
       </header>
 
+
+      <section className="foco-v5-session-poster" aria-label="Resumo da sessão de treinamento">
+        <div className="min-w-0">
+          <p className="foco-v5-kicker mb-3">{sessionStarted ? 'SÉRIES CONCLUÍDAS' : 'SEU PRÓXIMO TREINO'}</p>
+          <div className="foco-v5-session-poster-number">
+            {sessionStarted ? currentTotalSetsDone : '00'}<span className="foco-v5-session-poster-total">/{currentTotalSets}</span>
+          </div>
+          <p className="mt-3 max-w-[240px] text-xs leading-relaxed text-[#B6C0AD]">
+            {sessionStarted ? 'Registre cada série. O progresso é atualizado durante a sessão.' : 'Confira a ficha e inicie quando estiver pronto.'}
+          </p>
+        </div>
+        <div className="shrink-0 text-right">
+          <Clock className="ml-auto mb-3 h-6 w-6 text-[#D5FF40]" aria-hidden="true"/>
+          <span className="block text-[10px] font-bold uppercase tracking-wider text-[#A7B39D]">Tempo</span>
+          <span className="foco-v5-session-poster-clock">{formatTime(elapsedSeconds)}</span>
+        </div>
+      </section>
+
       {/* Controller: progress, pause/resume and rest status remain fully functional. */}
       <section className="foco-v4-panel space-y-3 p-4 sm:p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-white animate-ping' : 'bg-neutral-600'}`} />
+              <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-[#D5FF40] animate-ping' : 'bg-neutral-600'}`} />
               <span className="text-xs uppercase font-extrabold tracking-wider text-white">
                 {sessionStarted ? 'Treino em Andamento' : 'Sessão Pronta'}
               </span>
@@ -683,7 +701,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             value={selectedTrainingDay}
             disabled={sessionStarted}
             onChange={(event) => { setSelectedTrainingDay(event.target.value); savePreferredTrainingDay(event.target.value); }}
-            className="w-full min-h-12 rounded-xl border border-white/20 bg-[#141414] px-3 py-2.5 text-base font-bold text-white outline-none focus:border-white/50 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:text-sm"
+            className="foco-v4-field w-full min-h-12 rounded-xl px-3 py-2.5 text-base font-bold text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:text-sm"
           >
             {TRAINING_DAYS.map((day) => <option key={day.value} value={day.value}>{day.label}</option>)}
           </select>
