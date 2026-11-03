@@ -56,7 +56,7 @@ assert.match(progress,/OkokEvolutionSection/);
 assert.match(progress,/htmlFor="foco-measurement-value"/);
 assert.match(progress,/dataUnavailable/);
 assert.match(progress,/role="alert"/);
-assert.match(css,/--v6-accent:#D5FF40/);
+assert.match(css,/--v6-accent:#C8F040/);
 assert.match(css,/backdrop-filter:blur\(24px\)/);
 assert.match(css,/safe-area-inset-bottom/);
 assert.match(css,/prefers-reduced-motion/);
