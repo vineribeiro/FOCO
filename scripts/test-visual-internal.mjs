@@ -117,6 +117,12 @@ try{
       }));
       assert.ok(hero.loaded,'FOCO hero athlete media must decode, not show a broken-image icon');
     }
+    if(view==='sessao'){
+      const photo=page.locator('.foco-v6-session-bench-photo');
+      await photo.first().waitFor({timeout:7000});
+      const photoLoaded=await photo.first().evaluate(img=>img.complete&&img.naturalWidth>100);
+      assert.ok(photoLoaded,'Supino active session must render the approved photographic asset');
+    }
     const screenshot=out+'/'+view+'-'+size.name+'.png';
     await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
     const issue=overflow>2?'horizontal overflow '+overflow+' px':!check.title?'page heading missing':jsErrors.length?'JS errors '+jsErrors.join('; '):'';
