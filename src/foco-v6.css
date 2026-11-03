@@ -307,3 +307,29 @@ body {font-family:Inter,Poppins,'Plus Jakarta Sans',system-ui,sans-serif;backgro
   background:linear-gradient(0deg,rgba(8,11,7,.92),transparent 50%);
 }
 .foco-v6-session-photo>h2 {z-index:3;position:absolute;}
+
+/* V6 fidelity corrections: five real weekday cards, reference athlete imagery,
+   optically-layered glass and a stable photography fallback. */
+.foco-v6-week-strip{grid-template-columns:repeat(5,minmax(0,1fr));}
+.foco-v6-hero img{object-position:59% 31%;filter:contrast(1.09) saturate(.84) brightness(.87);}
+.foco-v6-hero:before{background:linear-gradient(0deg,rgba(8,10,7,.99) 0%,rgba(8,10,7,.92) 16%,rgba(8,10,7,.23) 56%,rgba(8,10,7,.02) 91%);}
+.foco-v6-hero:after{background:radial-gradient(ellipse 70% 65% at 100% 30%,rgba(213,255,64,.12),transparent 78%);}
+.foco-v6-splash-photo{object-position:57% 23%;filter:contrast(1.13) saturate(.78) brightness(.86);}
+.foco-v6-auth:before {
+ background-image:linear-gradient(0deg,rgba(7,9,6,.98) 8%,rgba(7,9,6,.88) 50%,rgba(7,9,6,.6)),var(--foco-v6-portrait);
+ background-position:center,center 25%;background-size:cover;
+}
+.foco-v6-auth-editorial:before {
+ background-image:linear-gradient(0deg,#0B0D09,rgba(8,10,7,.34) 80%),var(--foco-v6-portrait);
+ background-position:center,center 27%;background-size:cover;
+}
+.foco-v6-glass,.foco-v6-glass-button,.foco-v6-segments {
+ -webkit-backdrop-filter:blur(24px) saturate(155%);
+ backdrop-filter:blur(24px) saturate(155%);
+ background-clip:padding-box;
+}
+.foco-v6-glass,.foco-v6-glass-button {box-shadow:inset 0 1px rgba(255,255,255,.17),inset 0 -1px rgba(255,255,255,.035),0 14px 38px rgba(0,0,0,.29);}
+.foco-v6-glass-button:focus-visible,.foco-v6-primary:focus-visible{outline:2px solid #C8F040;outline-offset:3px;}
+.foco-v6-session-photo>.foco-v6-session-dynamic-illustration{border-radius:0;}
+.foco-v6-session-photo>.foco-v6-session-dynamic-illustration img{object-fit:contain;filter:grayscale(.28) contrast(1.06);}
+@media(max-width:360px){.foco-v6-week-strip{gap:4px;}}
