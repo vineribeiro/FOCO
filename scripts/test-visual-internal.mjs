@@ -95,7 +95,7 @@ try{
     page.on('pageerror',onPageError);
     const response=await page.goto(base+'?view='+view,{waitUntil:'domcontentloaded',timeout:30000});
     assert.equal(response?.status(),200,'Site HTTP status');
-    await page.locator('.foco-v4-page').waitFor({timeout:16000});
+    await page.locator('.foco-v4-page').first().waitFor({timeout:16000});
     await page.waitForTimeout(1000);
     const check=await page.evaluate(()=>({
       body:document.body.scrollWidth,doc:document.documentElement.scrollWidth,viewport:window.innerWidth,
