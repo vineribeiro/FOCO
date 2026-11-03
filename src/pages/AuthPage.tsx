@@ -172,7 +172,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
   const isReset = mode === 'reset';
 
   return (
-    <main className="foco-v6-auth foco-v5-auth relative min-h-screen overflow-hidden bg-[#090C09] text-white selection:bg-[#D5FF40] selection:text-black">
+    <main className="foco-v6-auth foco-v5-auth relative min-h-screen overflow-hidden bg-[#090C09] text-white selection:bg-[#C8F040] selection:text-black">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-36 top-[-10rem] h-[30rem] w-[30rem] rounded-full bg-white/[0.045] blur-[110px]" />
         <div className="absolute -bottom-48 right-[-8rem] h-[32rem] w-[32rem] rounded-full bg-neutral-500/[0.07] blur-[130px]" />
