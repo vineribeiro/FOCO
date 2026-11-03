@@ -199,7 +199,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
   );
 
   return (
-    <div className="foco-v5-onboarding mx-auto w-full max-w-4xl space-y-6 pb-32 text-white">
+    <div className="foco-v5-onboarding foco-v4-page mx-auto w-full max-w-4xl space-y-6 pb-32 text-white">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="mb-2 flex items-center gap-2 text-neutral-400">
