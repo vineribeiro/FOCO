@@ -12,6 +12,8 @@ import {
   Target,
 } from 'lucide-react';
 import { api } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import { FocoV6Status } from '../components/FocoV6UI';
 import { Anamnesis } from '../types';
 
 interface AnamnesisPageProps {
@@ -76,6 +78,10 @@ const labelClass = 'mb-1.5 block text-[11px] font-bold uppercase tracking-wide t
 const panelClass = 'rounded-3xl border border-[#D5FF40]/10 bg-gradient-to-br from-[#22291D] to-[#10150F] p-4 sm:p-6';
 
 export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) => {
+  const {profile,refreshProfile}=useAuth();
+  const [introStep,setIntroStep]=useState<'goal'|'height'|'form'>('goal');
+  const [heightCm,setHeightCm]=useState(profile?.height_cm||170);
+  const [heightSaving,setHeightSaving]=useState(false);
   const [form, setForm] = useState<Anamnesis>(initialAnamnesis);
   const [step, setStep] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -87,7 +93,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
     let active = true;
     api.getAnamnesis()
       .then((saved) => {
-        if (active && saved) setForm({ ...initialAnamnesis, ...saved });
+        if (active && saved) {setForm({ ...initialAnamnesis, ...saved });setIntroStep('form');}
       })
       .catch((error: any) => {
         if (active) setErrorMsg('Não foi possível carregar a anamnese salva: ' + error.message);
@@ -139,6 +145,57 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
   };
 
   const stepTitles = ['Perfil e objetivo', 'Prioridades e rotina', 'Saúde e recuperação'];
+  const goals=[
+    {value:'Hipertrofia Máxima',label:'Hipertrofia',hint:'Ganhar massa muscular',icon:Dumbbell},
+    {value:'Definição & Emagrecimento',label:'Perda de gordura',hint:'Reduzir o percentual de gordura',icon:Activity},
+    {value:'Condicionamento & Resistência',label:'Performance',hint:'Mais força, resistência e rendimento',icon:Sparkles},
+    {value:'Saúde e qualidade de vida',label:'Saúde e bem-estar',hint:'Rotina ativa e qualidade de vida',icon:ShieldCheck},
+  ];
+  const saveHeight=async()=>{
+    setHeightSaving(true);setErrorMsg(null);
+    try {await api.updateProfile({height_cm:heightCm});await refreshProfile();setIntroStep('form');}
+    catch(e){setErrorMsg('Não conseguimos salvar sua altura: '+(e instanceof Error?e.message:'erro de conexão'));}
+    finally{setHeightSaving(false);}
+  };
+  if(introStep!=='form') return (
+    <div className="foco-v6-onboarding foco-v4-page">
+      <div className="md:hidden"><FocoV6Status/></div>
+      <div className="foco-v6-onboarding-head">
+        <div className="foco-v6-lines" aria-label="Progresso do cadastro">
+          {[0,1,2,3].map(n=><span key={n} className={n<=(introStep==='goal'?0:1)?'is-current':''}/>)}
+        </div>
+        <button type="button" onClick={()=>setIntroStep('form')} className="min-h-11 px-3 text-xs text-[#C2C9BB]">Pular</button>
+      </div>
+      {introStep==='goal'?<>
+        <h1>Qual é o teu <em>objetivo?</em></h1>
+        <p className="foco-v6-onboard-subtitle">Vamos personalizar o FOCO pra tua realidade.</p>
+        <div className="foco-v6-goal-list">
+          {goals.map(goal=><button type="button" className={'foco-v6-goal '+(form.primary_goal===goal.value?'is-selected':'')} key={goal.value}
+            aria-pressed={form.primary_goal===goal.value} onClick={()=>updateField('primary_goal',goal.value)}>
+            <goal.icon size={26} strokeWidth={1.5}/><span className="foco-v6-goal-label"><strong>{goal.label}</strong><small>{goal.hint}</small></span>
+            {form.primary_goal===goal.value&&<span className="foco-v6-goal-check"><Check size={13} strokeWidth={3}/></span>}
+          </button>)}
+        </div>
+        <div className="foco-v6-onboarding-footer"><button type="button" className="foco-v6-primary" onClick={()=>setIntroStep('height')}>Avançar <ArrowRight size={18}/></button></div>
+      </>:<>
+        <button type="button" className="foco-v6-icon-button mb-5" aria-label="Voltar ao objetivo" onClick={()=>setIntroStep('goal')}><ArrowLeft size={18}/></button>
+        <h1>Qual é a tua altura?</h1>
+        <p className="foco-v6-onboard-subtitle">Esta informação nos ajuda a contextualizar tuas metas e treinos.</p>
+        <div className="foco-v6-height-ui">
+          <div className="foco-v6-height-ruler" aria-hidden="true">
+            <strong className="foco-v6-height-number">{heightCm} <small className="text-sm">cm</small></strong>
+            <div className="foco-v6-ruler-track"/>
+          </div>
+          <label className="w-full text-center text-xs text-[#BDC5B8]">Ajustar altura
+            <input type="range" aria-label="Altura em centímetros" min="135" max="215" step="1" value={heightCm} onChange={e=>setHeightCm(Number(e.target.value))}/>
+          </label>
+          <div className="foco-v6-segments w-44"><span className="foco-v6-segment is-active text-center">cm</span><span className="foco-v6-segment text-center opacity-50">ft</span></div>
+        </div>
+        {errorMsg&&<p role="alert" className="mt-4 text-xs text-rose-300">{errorMsg}</p>}
+        <div className="foco-v6-onboarding-footer"><button type="button" className="foco-v6-primary" disabled={heightSaving} onClick={()=>void saveHeight()}>{heightSaving?'Salvando...':'Avançar'} <ArrowRight size={18}/></button></div>
+      </>}
+    </div>
+  );
 
   return (
     <div className="foco-v5-onboarding mx-auto w-full max-w-4xl space-y-6 pb-32 text-white">
