@@ -630,7 +630,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           <div><h1>{sessionStarted?'Treino em andamento':'Pronto para treinar?'}</h1>
             <p>{exerciseLogs.length?Math.min(v6ExIndex+1,exerciseLogs.length)+'/'+exerciseLogs.length+' exercícios':'Selecione uma ficha'}</p></div>
         </div>
-        <span className="text-xs font-bold text-[#D5FF40]">{formatTime(elapsedSeconds)}</span>
+        <span className="text-xs font-bold text-[#C8F040]">{formatTime(elapsedSeconds)}</span>
       </header>
       {v6CurrentExercise&&<section className="foco-v6-session-photo">
         <img src={V6_IMAGES.bench} loading="eager" decoding="async" alt="Atleta executando exercício com barra"/>
@@ -640,7 +640,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <div><p className="text-[11px] text-[#B6BDB0]">{sessionStarted?'Exercício atual':'Seu primeiro exercício'}</p>
           <h2 className="mt-1 text-[17px] font-extrabold tracking-[-.05em]">{v6CurrentExercise.exercise_name}</h2>
           <p className="mt-1 text-xs text-[#BDC4B5]">Série {Math.min(v6SetIndex+1,v6CurrentExercise.sets.length)} de {v6CurrentExercise.sets.length}</p></div>
-        <span className="rounded-full bg-[#D5FF40]/10 px-3 py-1.5 text-[10px] font-bold text-[#D5FF40]">{Math.round(completionRate)}% concluído</span>
+        <span className="rounded-full bg-[#C8F040]/10 px-3 py-1.5 text-[10px] font-bold text-[#C8F040]">{Math.round(completionRate)}% concluído</span>
       </div>}
       <FocoV6Segment label="Modo do exercício" options={[{value:'register',label:'Registro'},{value:'execution',label:'Execução'},{value:'tips',label:'Dicas'}]} value={v6SessionMode} onChange={setV6SessionMode}/>
       {v6CurrentExercise&&v6SessionMode==='register'&&v6CurrentSet&&<>
@@ -679,7 +679,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       {sessionStarted&&<button type="button" className="foco-v6-glass-button w-full" disabled={isSaving} onClick={handleFinishWorkout}><CheckCircle2 size={16}/> {isSaving?'Salvando...':'Finalizar e salvar treino'}</button>}
       {errorAlert&&<p role="alert" className="foco-v6-glass rounded-xl p-3 text-xs">{errorAlert}</p>}
       <details className="foco-v6-glass rounded-2xl p-3">
-        <summary className="cursor-pointer p-2 text-xs font-bold text-[#D5FF40]">Ver todas as séries, trocar dia e ajustar descanso</summary>
+        <summary className="cursor-pointer p-2 text-xs font-bold text-[#C8F040]">Ver todas as séries, trocar dia e ajustar descanso</summary>
       <div className="foco-v5-session foco-v4-page max-w-3xl space-y-4 pb-8">
       <header className="space-y-1">
         <p className="foco-v4-eyebrow">{sessionStarted ? 'Sessão ativa' : 'Sua sessão'}</p>
@@ -699,7 +699,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <Clock className="ml-auto mb-3 h-6 w-6 text-[#D5FF40]" aria-hidden="true"/>
+          <Clock className="ml-auto mb-3 h-6 w-6 text-[#C8F040]" aria-hidden="true"/>
           <span className="block text-[10px] font-bold uppercase tracking-wider text-[#A7B39D]">Tempo</span>
           <span className="foco-v5-session-poster-clock">{formatTime(elapsedSeconds)}</span>
         </div>
@@ -710,7 +710,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-[#D5FF40] animate-ping' : 'bg-neutral-600'}`} />
+              <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-[#C8F040] animate-ping' : 'bg-neutral-600'}`} />
               <span className="text-xs uppercase font-extrabold tracking-wider text-white">
                 {sessionStarted ? 'Treino em Andamento' : 'Sessão Pronta'}
               </span>
