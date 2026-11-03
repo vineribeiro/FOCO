@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 /** Public, anonymous-only visual smoke. NO production login, user edits or mock data. */
-const BASE = 'https://vineribeiro.github.io/FOCO/';
+const BASE = process.env.FOCO_VISUAL_BASE || 'https://vineribeiro.github.io/FOCO/';
 const OUT = 'visual-qa';
 const sizes = [
   { label: 'mobile-320', width: 320, height: 720 },
