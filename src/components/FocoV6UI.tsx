@@ -19,9 +19,8 @@ export const FocoV6Mark: React.FC<{ size?: number; className?: string; light?: b
 );
 
 export const FocoV6Lockup: React.FC<{ compact?: boolean; className?: string }> = ({ compact = false, className = '' }) => (
-  <span className={'foco-v6-brand ' + className} aria-label="FOCO — treino, evolução, performance">
-    <FocoV6Mark size={compact ? 24 : 47} />
-    <span className="foco-v6-wordmark">FOCO</span>
+  <span className={'foco-v6-brand '+(compact?'compact ':'')+className}>
+    <img src={import.meta.env.BASE_URL+'assets/brand/foco-v6-reference-vector.svg'} alt="FOCO" width={compact?132:215} height={compact?34:52} />
   </span>
 );
 
