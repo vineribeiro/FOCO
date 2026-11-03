@@ -14,6 +14,7 @@ import {
   ChevronRight,
   ShieldCheck,
   Vibrate,
+  RefreshCcw,
 } from 'lucide-react';
 
 interface SettingsPageProps {
@@ -59,6 +60,17 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
       <section className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-5">
         <div><h2 className="text-sm font-extrabold">Instalar FOCO</h2><p className="mt-1 text-xs text-neutral-400">Acesse pela tela inicial do celular, como um aplicativo.</p></div>
         <InstallAppButton />
+      </section>
+
+      <section className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-5" aria-label="Atualizar FOCO">
+        <div>
+          <h2 className="text-sm font-extrabold">Atualizações do FOCO</h2>
+          <p className="mt-1 text-xs text-neutral-400">Versão visual 2026.11.03 · Se o design antigo aparecer, atualize os arquivos sem excluir seus treinos.</p>
+        </div>
+        <a href={import.meta.env.BASE_URL + 'atualizar.html'}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#D5FF40] px-4 text-xs font-extrabold text-[#10160D]">
+          <RefreshCcw className="h-4 w-4"/> Atualizar
+        </a>
       </section>
 
       <section aria-labelledby="foco-haptics-label" className="rounded-2xl border border-white/10 bg-[#141414] p-5 sm:p-6">
