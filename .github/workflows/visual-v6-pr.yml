@@ -44,6 +44,22 @@ jobs:
         env:
           FOCO_VISUAL_BASE: http://127.0.0.1:4173/FOCO/
         run: node scripts/test-visual-internal.mjs
+      - name: Export tiny synthetic-screen previews for design review
+        if: always()
+        run: |
+          python -m pip -q install Pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import io,base64
+          for view in ('dashboard','detalhes','sessao','treinos','progresso','perfil'):
+              path=Path(f'visual-qa/internal/{view}-mobile-390.png')
+              if not path.exists():continue
+              image=Image.open(path).convert('RGB')
+              image.thumbnail((340,750))
+              out=io.BytesIO();image.save(out,'JPEG',quality=50,optimize=True)
+              print('FOCO_SYNTHETIC_PREVIEW_'+view+':'+base64.b64encode(out.getvalue()).decode('ascii'))
+          PY
       - name: Upload screenshot reports
         if: always()
         uses: actions/upload-artifact@v4
