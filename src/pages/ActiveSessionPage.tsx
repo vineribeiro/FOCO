@@ -1,3 +1,4 @@
+import { FOCO_REFERENCE_BENCH } from '../data/focoReferenceBench';
 import React, { useState, useEffect } from 'react';
 import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
@@ -618,6 +619,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
   const v6ExIndex=focusedExerciseIndex>=0?focusedExerciseIndex:Math.max(0,exerciseLogs.length-1);
   const v6CurrentExercise=exerciseLogs[v6ExIndex];
+  const v6ReferenceBench=!!v6CurrentExercise && /supino reto|bench press/i.test(normalizeExerciseText(v6CurrentExercise.exercise_name));
   const v6SetIndex=v6CurrentExercise?Math.max(0,v6CurrentExercise.sets.findIndex(set=>!set.completed)):0;
   const v6CurrentSet=v6CurrentExercise?.sets[v6SetIndex];
   const v6TracksLoad=v6CurrentExercise?tracksLoad(v6CurrentExercise):false;
@@ -634,7 +636,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <span className="text-xs font-bold text-[#C8F040]">{formatTime(elapsedSeconds)}</span>
       </header>
       {v6CurrentExercise&&<section className="foco-v6-session-photo">
-        <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name} muscleGroup={v6CurrentExercise.muscle_group} className="foco-v6-session-dynamic-illustration h-full w-full" />
+        {v6ReferenceBench
+          ? <img className="foco-v6-session-bench-photo" src={FOCO_REFERENCE_BENCH} alt="Atleta executando supino reto com barra" loading="eager" decoding="async"/>
+          : <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name} muscleGroup={v6CurrentExercise.muscle_group} className="foco-v6-session-dynamic-illustration h-full w-full" />}
         <h2>{v6CurrentExercise.exercise_name}</h2>
       </section>}
       {v6CurrentExercise&&<div className="flex items-end justify-between">
