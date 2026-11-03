@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FocoV6Status, FocoV6Segment, V6_IMAGES } from '../components/FocoV6UI';
+import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
+import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { useAuth } from '../context/AuthContext';
 import { loadWorkoutDraft, saveWorkoutDraft, clearWorkoutDraft } from '../utils/workoutDraft';
 import { api } from '../services/api';
@@ -633,7 +634,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <span className="text-xs font-bold text-[#C8F040]">{formatTime(elapsedSeconds)}</span>
       </header>
       {v6CurrentExercise&&<section className="foco-v6-session-photo">
-        <img src={V6_IMAGES.bench} loading="eager" decoding="async" alt="Atleta executando exercício com barra"/>
+        <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name} muscleGroup={v6CurrentExercise.muscle_group} className="foco-v6-session-dynamic-illustration h-full w-full" />
         <h2>{v6CurrentExercise.exercise_name}</h2>
       </section>}
       {v6CurrentExercise&&<div className="flex items-end justify-between">
