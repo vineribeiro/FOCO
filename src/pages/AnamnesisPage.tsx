@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   ArrowLeft,
+  Activity,
   ArrowRight,
   Check,
   CheckCircle2,
@@ -12,6 +13,8 @@ import {
   Target,
 } from 'lucide-react';
 import { api } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import { FocoV6Status } from '../components/FocoV6UI';
 import { Anamnesis } from '../types';
 
 interface AnamnesisPageProps {
@@ -71,11 +74,15 @@ const equipmentOptions = [
   'Treino em casa',
 ];
 
-const inputClass = 'w-full min-h-12 rounded-xl border border-[#D5FF40]/15 bg-[#151B13] px-3.5 py-3 text-base sm:text-sm text-white placeholder:text-neutral-500 outline-none transition focus:border-[#D5FF40] focus:ring-1 focus:ring-[#D5FF40]/30';
+const inputClass = 'w-full min-h-12 rounded-xl border border-[#C8F040]/15 bg-[#151B13] px-3.5 py-3 text-base sm:text-sm text-white placeholder:text-neutral-500 outline-none transition focus:border-[#C8F040] focus:ring-1 focus:ring-[#C8F040]/30';
 const labelClass = 'mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-neutral-300';
-const panelClass = 'rounded-3xl border border-[#D5FF40]/10 bg-gradient-to-br from-[#22291D] to-[#10150F] p-4 sm:p-6';
+const panelClass = 'rounded-3xl border border-[#C8F040]/10 bg-gradient-to-br from-[#22291D] to-[#10150F] p-4 sm:p-6';
 
 export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) => {
+  const {profile,refreshProfile}=useAuth();
+  const [introStep,setIntroStep]=useState<'goal'|'height'|'form'>('goal');
+  const [heightCm,setHeightCm]=useState(profile?.height_cm||170);
+  const [heightSaving,setHeightSaving]=useState(false);
   const [form, setForm] = useState<Anamnesis>(initialAnamnesis);
   const [step, setStep] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -87,7 +94,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
     let active = true;
     api.getAnamnesis()
       .then((saved) => {
-        if (active && saved) setForm({ ...initialAnamnesis, ...saved });
+        if (active && saved) {setForm({ ...initialAnamnesis, ...saved });setIntroStep('form');}
       })
       .catch((error: any) => {
         if (active) setErrorMsg('Não foi possível carregar a anamnese salva: ' + error.message);
@@ -139,16 +146,67 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
   };
 
   const stepTitles = ['Perfil e objetivo', 'Prioridades e rotina', 'Saúde e recuperação'];
+  const goals=[
+    {value:'Hipertrofia Máxima',label:'Hipertrofia',hint:'Ganhar massa muscular',icon:Dumbbell},
+    {value:'Definição & Emagrecimento',label:'Perda de gordura',hint:'Reduzir o percentual de gordura',icon:Activity},
+    {value:'Condicionamento & Resistência',label:'Performance',hint:'Mais força, resistência e rendimento',icon:Sparkles},
+    {value:'Saúde e qualidade de vida',label:'Saúde e bem-estar',hint:'Rotina ativa e qualidade de vida',icon:ShieldCheck},
+  ];
+  const saveHeight=async()=>{
+    setHeightSaving(true);setErrorMsg(null);
+    try {await api.updateProfile({height_cm:heightCm});await refreshProfile();setIntroStep('form');}
+    catch(e){setErrorMsg('Não conseguimos salvar sua altura: '+(e instanceof Error?e.message:'erro de conexão'));}
+    finally{setHeightSaving(false);}
+  };
+  if(introStep!=='form') return (
+    <div className="foco-v6-onboarding foco-v4-page">
+      <div className="md:hidden"><FocoV6Status/></div>
+      <div className="foco-v6-onboarding-head">
+        <div className="foco-v6-lines" aria-label="Progresso do cadastro">
+          {[0,1,2,3].map(n=><span key={n} className={n<=(introStep==='goal'?0:1)?'is-current':''}/>)}
+        </div>
+        <button type="button" onClick={()=>setIntroStep('form')} className="min-h-11 px-3 text-xs text-[#C2C9BB]">Pular</button>
+      </div>
+      {introStep==='goal'?<>
+        <h1>Qual é o teu <em>objetivo?</em></h1>
+        <p className="foco-v6-onboard-subtitle">Vamos personalizar o FOCO pra tua realidade.</p>
+        <div className="foco-v6-goal-list">
+          {goals.map(goal=><button type="button" className={'foco-v6-goal '+(form.primary_goal===goal.value?'is-selected':'')} key={goal.value}
+            aria-pressed={form.primary_goal===goal.value} onClick={()=>updateField('primary_goal',goal.value)}>
+            <goal.icon size={26} strokeWidth={1.5}/><span className="foco-v6-goal-label"><strong>{goal.label}</strong><small>{goal.hint}</small></span>
+            {form.primary_goal===goal.value&&<span className="foco-v6-goal-check"><Check size={13} strokeWidth={3}/></span>}
+          </button>)}
+        </div>
+        <div className="foco-v6-onboarding-footer"><button type="button" className="foco-v6-primary" onClick={()=>setIntroStep('height')}>Avançar <ArrowRight size={18}/></button></div>
+      </>:<>
+        <button type="button" className="foco-v6-icon-button mb-5" aria-label="Voltar ao objetivo" onClick={()=>setIntroStep('goal')}><ArrowLeft size={18}/></button>
+        <h1>Qual é a tua altura?</h1>
+        <p className="foco-v6-onboard-subtitle">Esta informação nos ajuda a contextualizar tuas metas e treinos.</p>
+        <div className="foco-v6-height-ui">
+          <div className="foco-v6-height-ruler" aria-hidden="true">
+            <strong className="foco-v6-height-number">{heightCm} <small className="text-sm">cm</small></strong>
+            <div className="foco-v6-ruler-track"/>
+          </div>
+          <label className="w-full text-center text-xs text-[#BDC5B8]">Ajustar altura
+            <input type="range" aria-label="Altura em centímetros" min="135" max="215" step="1" value={heightCm} onChange={e=>setHeightCm(Number(e.target.value))}/>
+          </label>
+          <div className="foco-v6-segments w-44"><span className="foco-v6-segment is-active text-center">cm</span><span className="foco-v6-segment text-center opacity-50">ft</span></div>
+        </div>
+        {errorMsg&&<p role="alert" className="mt-4 text-xs text-rose-300">{errorMsg}</p>}
+        <div className="foco-v6-onboarding-footer"><button type="button" className="foco-v6-primary" disabled={heightSaving} onClick={()=>void saveHeight()}>{heightSaving?'Salvando...':'Avançar'} <ArrowRight size={18}/></button></div>
+      </>}
+    </div>
+  );
 
   return (
-    <div className="foco-v5-onboarding mx-auto w-full max-w-4xl space-y-6 pb-32 text-white">
+    <div className="foco-v5-onboarding foco-v4-page mx-auto w-full max-w-4xl space-y-6 pb-32 text-white">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="mb-2 flex items-center gap-2 text-neutral-400">
             <ClipboardList className="h-4 w-4" />
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">Perfil inteligente FOCO</span>
           </div>
-          <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Seu treino. <span className="text-[#D5FF40]">Sua rotina.</span></h1>
+          <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Seu treino. <span className="text-[#C8F040]">Sua rotina.</span></h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-400">
             Responda para a IA considerar sua rotina, objetivos, prioridades musculares, equipamentos e limites individuais.
           </p>
@@ -168,7 +226,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
             key={title}
             type="button"
             onClick={() => { if (index <= step) setStep(index); }}
-            className={`rounded-xl border px-3 py-3 text-left transition ${step === index ? 'border-[#D5FF40] bg-[#D5FF40] text-[#13170D]' : index < step ? 'border-white/30 bg-white/10 text-white' : 'border-white/10 bg-[#111] text-neutral-500'}`}
+            className={`rounded-xl border px-3 py-3 text-left transition ${step === index ? 'border-[#C8F040] bg-[#C8F040] text-[#13170D]' : index < step ? 'border-white/30 bg-white/10 text-white' : 'border-white/10 bg-[#111] text-neutral-500'}`}
             aria-current={step === index ? 'step' : undefined}
           >
             <span className="mb-1 block text-[10px] font-black uppercase tracking-widest">Etapa 0{index + 1}</span>
@@ -201,7 +259,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
           {step === 0 && (
             <section className={`${panelClass} space-y-5`}>
               <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#D5FF40] text-[#13170D]"><Target className="h-5 w-5" /></div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C8F040] text-[#13170D]"><Target className="h-5 w-5" /></div>
                 <div><h2 className="font-black">Seu objetivo e seu histórico</h2><p className="mt-0.5 text-xs text-neutral-400">A base para dimensionar o treino.</p></div>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -250,7 +308,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
           {step === 1 && (
             <section className={`${panelClass} space-y-5`}>
               <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#D5FF40] text-[#13170D]"><Dumbbell className="h-5 w-5" /></div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C8F040] text-[#13170D]"><Dumbbell className="h-5 w-5" /></div>
                 <div><h2 className="font-black">Treino que cabe na sua vida</h2><p className="mt-0.5 text-xs text-neutral-400">A ordem em que você escolhe músculos define a prioridade.</p></div>
               </div>
 
@@ -264,7 +322,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
                     const index = form.priority_muscles.indexOf(muscle);
                     const selected = index >= 0;
                     return (
-                      <button key={muscle} type="button" aria-pressed={selected} onClick={() => toggleList('priority_muscles', muscle)} className={`flex min-h-[58px] items-center justify-between gap-2 rounded-xl border p-3 text-left transition ${selected ? 'border-[#D5FF40] bg-[#D5FF40] text-[#13170D]' : 'border-white/10 bg-[#090909] text-neutral-300 hover:border-white/35'}`}>
+                      <button key={muscle} type="button" aria-pressed={selected} onClick={() => toggleList('priority_muscles', muscle)} className={`flex min-h-[58px] items-center justify-between gap-2 rounded-xl border p-3 text-left transition ${selected ? 'border-[#C8F040] bg-[#C8F040] text-[#13170D]' : 'border-white/10 bg-[#090909] text-neutral-300 hover:border-white/35'}`}>
                         <span className="text-xs font-bold">{muscle}</span>
                         {selected ? <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-black text-white">{index + 1}</span> : <span className="h-4 w-4 rounded-full border border-white/20" />}
                       </button>
@@ -279,7 +337,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
                 <div className="flex flex-wrap gap-2">
                   {dayOptions.map((day) => {
                     const selected = form.preferred_days.includes(day);
-                    return <button key={day} type="button" aria-pressed={selected} onClick={() => toggleList('preferred_days', day)} className={`rounded-full border px-3 py-2 text-xs font-bold transition ${selected ? 'border-[#D5FF40] bg-[#D5FF40] text-[#13170D]' : 'border-white/10 bg-[#090909] text-neutral-400'}`}>{selected && <Check className="mr-1 inline h-3 w-3" />}{day}</button>;
+                    return <button key={day} type="button" aria-pressed={selected} onClick={() => toggleList('preferred_days', day)} className={`rounded-full border px-3 py-2 text-xs font-bold transition ${selected ? 'border-[#C8F040] bg-[#C8F040] text-[#13170D]' : 'border-white/10 bg-[#090909] text-neutral-400'}`}>{selected && <Check className="mr-1 inline h-3 w-3" />}{day}</button>;
                   })}
                 </div>
               </div>
@@ -289,7 +347,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {equipmentOptions.map((equipment) => {
                     const selected = form.equipment_available.includes(equipment);
-                    return <button key={equipment} type="button" aria-pressed={selected} onClick={() => toggleList('equipment_available', equipment)} className={`flex items-center gap-2 rounded-xl border px-3 py-3 text-left text-xs font-bold transition ${selected ? 'border-[#D5FF40] bg-[#D5FF40] text-[#13170D]' : 'border-white/10 bg-[#090909] text-neutral-300'}`}>{selected ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <span className="h-4 w-4 shrink-0 rounded border border-white/20" />}{equipment}</button>;
+                    return <button key={equipment} type="button" aria-pressed={selected} onClick={() => toggleList('equipment_available', equipment)} className={`flex items-center gap-2 rounded-xl border px-3 py-3 text-left text-xs font-bold transition ${selected ? 'border-[#C8F040] bg-[#C8F040] text-[#13170D]' : 'border-white/10 bg-[#090909] text-neutral-300'}`}>{selected ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <span className="h-4 w-4 shrink-0 rounded border border-white/20" />}{equipment}</button>;
                   })}
                 </div>
               </div>
@@ -304,7 +362,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
           {step === 2 && (
             <section className={`${panelClass} space-y-5`}>
               <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#D5FF40] text-[#13170D]"><ShieldCheck className="h-5 w-5" /></div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C8F040] text-[#13170D]"><ShieldCheck className="h-5 w-5" /></div>
                 <div><h2 className="font-black">Limites e recuperação</h2><p className="mt-0.5 text-xs text-neutral-400">Responda apenas o que se sentir confortável em compartilhar.</p></div>
               </div>
 
@@ -320,7 +378,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
 
               {(sensitiveDataFilled || form.consent_health_data) && (
                 <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/30 p-3.5">
-                  <input type="checkbox" className="mt-0.5 h-4 w-4 accent-[#D5FF40]" checked={form.consent_health_data} onChange={(e) => updateField('consent_health_data', e.target.checked)} />
+                  <input type="checkbox" className="mt-0.5 h-4 w-4 accent-[#C8F040]" checked={form.consent_health_data} onChange={(e) => updateField('consent_health_data', e.target.checked)} />
                   <span className="text-xs leading-relaxed text-neutral-300">Autorizo o uso das informações de saúde e limitações que registrei para personalizar sugestões de treino. Entendo que posso revisar ou apagar essas respostas e que a IA não substitui avaliação profissional.</span>
                 </label>
               )}
@@ -350,7 +408,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
               <ArrowLeft className="h-4 w-4" /> Etapa anterior
             </button>
             {step < 2 ? (
-              <button type="button" onClick={() => { setErrorMsg(null); setStep((current) => Math.min(2, current + 1)); }} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#D5FF40] px-5 py-3 text-xs font-black text-[#13170D] transition hover:bg-[#E2FF77]">
+              <button type="button" onClick={() => { setErrorMsg(null); setStep((current) => Math.min(2, current + 1)); }} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#C8F040] px-5 py-3 text-xs font-black text-[#13170D] transition hover:bg-[#E2FF77]">
                 Continuar <ArrowRight className="h-4 w-4" />
               </button>
             ) : (

@@ -1,4 +1,7 @@
+import { FOCO_REFERENCE_BENCH } from '../data/focoReferenceBench';
 import React, { useState, useEffect } from 'react';
+import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
+import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { useAuth } from '../context/AuthContext';
 import { loadWorkoutDraft, saveWorkoutDraft, clearWorkoutDraft } from '../utils/workoutDraft';
 import { api } from '../services/api';
@@ -10,6 +13,8 @@ import { getPreferredTrainingDay, getTrainingDayLabel, savePreferredTrainingDay,
 import {
   Play,
   Pause,
+  ArrowLeft,
+  Minus,
   CheckCircle2,
   Clock,
   Plus,
@@ -56,6 +61,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [activePlan, setActivePlan] = useState<WorkoutPlan | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sessionStarted, setSessionStarted] = useState(false);
+  const [v6SessionMode,setV6SessionMode]=useState('register');
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
@@ -611,8 +617,75 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     );
   }
 
+  const v6ExIndex=focusedExerciseIndex>=0?focusedExerciseIndex:Math.max(0,exerciseLogs.length-1);
+  const v6CurrentExercise=exerciseLogs[v6ExIndex];
+  const v6ReferenceBench=!!v6CurrentExercise && /supinoreto|benchpress/i.test(normalizeExerciseText(v6CurrentExercise.exercise_name));
+  const v6SetIndex=v6CurrentExercise?Math.max(0,v6CurrentExercise.sets.findIndex(set=>!set.completed)):0;
+  const v6CurrentSet=v6CurrentExercise?.sets[v6SetIndex];
+  const v6TracksLoad=v6CurrentExercise?tracksLoad(v6CurrentExercise):false;
+  const v6RestRatio=restTimerActive&&restTotalDuration>0?Math.max(0,Math.min(100,100*(restSecondsRemaining/restTotalDuration))):0;
   return (
-    <div className="foco-v5-session foco-v4-page max-w-3xl space-y-4 pb-20">
+    <div className="foco-v6-session-screen foco-v4-page">
+      <div className="md:hidden"><FocoV6Status/></div>
+      <header className="foco-v6-mobile-title">
+        <div className="foco-v6-title-left">
+          <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Voltar aos treinos"><ArrowLeft size={18}/></button>
+          <div><h1>{sessionStarted?'Treino em andamento':'Pronto para treinar?'}</h1>
+            <p>{exerciseLogs.length?Math.min(v6ExIndex+1,exerciseLogs.length)+'/'+exerciseLogs.length+' exercícios':'Selecione uma ficha'}</p></div>
+        </div>
+        <span className="text-xs font-bold text-[#C8F040]">{formatTime(elapsedSeconds)}</span>
+      </header>
+      {v6CurrentExercise&&<section className="foco-v6-session-photo">
+        {v6ReferenceBench
+          ? <img className="foco-v6-session-bench-photo" src={FOCO_REFERENCE_BENCH} alt="Atleta executando supino reto com barra" loading="eager" decoding="async"/>
+          : <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name} muscleGroup={v6CurrentExercise.muscle_group} className="foco-v6-session-dynamic-illustration h-full w-full" />}
+        <h2>{v6CurrentExercise.exercise_name}</h2>
+      </section>}
+      {v6CurrentExercise&&<div className="flex items-end justify-between">
+        <div><p className="text-[11px] text-[#B6BDB0]">{sessionStarted?'Exercício atual':'Seu primeiro exercício'}</p>
+          <h2 className="mt-1 text-[17px] font-extrabold tracking-[-.05em]">{v6CurrentExercise.exercise_name}</h2>
+          <p className="mt-1 text-xs text-[#BDC4B5]">Série {Math.min(v6SetIndex+1,v6CurrentExercise.sets.length)} de {v6CurrentExercise.sets.length}</p></div>
+        <span className="rounded-full bg-[#C8F040]/10 px-3 py-1.5 text-[10px] font-bold text-[#C8F040]">{Math.round(completionRate)}% concluído</span>
+      </div>}
+      <FocoV6Segment label="Modo do exercício" options={[{value:'register',label:'Registro'},{value:'execution',label:'Execução'},{value:'tips',label:'Dicas'}]} value={v6SessionMode} onChange={setV6SessionMode}/>
+      {v6CurrentExercise&&v6SessionMode==='register'&&v6CurrentSet&&<>
+        <div className="foco-v6-session-controls">
+          {v6TracksLoad&&<label className="foco-v6-stepper"><span>Carga (kg)</span><div className="foco-v6-stepper-row">
+            <button type="button" onClick={()=>handleQuickAddLoad(v6ExIndex,v6SetIndex,-2.5)} aria-label="Diminuir carga em 2,5 kg"><Minus size={17}/></button>
+            <input type="number" inputMode="decimal" min="0" step="0.5" value={v6CurrentSet.load_kg} aria-label="Carga atual em quilogramas" onChange={e=>handleUpdateSet(v6ExIndex,v6SetIndex,'load_kg',Math.max(0,Number(e.target.value)||0))}/>
+            <button type="button" onClick={()=>handleQuickAddLoad(v6ExIndex,v6SetIndex,2.5)} aria-label="Aumentar carga em 2,5 kg">+</button>
+          </div></label>}
+          <label className="foco-v6-stepper"><span>Repetições</span><div className="foco-v6-stepper-row">
+            <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',Math.max(0,v6CurrentSet.repetitions-1))} aria-label="Diminuir repetições"><Minus size={17}/></button>
+            <input type="number" inputMode="numeric" min="0" value={v6CurrentSet.repetitions} aria-label="Repetições da série atual" onChange={e=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',Math.max(0,Number(e.target.value)||0))}/>
+            <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',v6CurrentSet.repetitions+1)} aria-label="Aumentar repetições">+</button>
+          </div></label>
+        </div>
+        {restTimerActive&&<div className="foco-v6-rest">
+          <div className="foco-v6-rest-ring" style={{'--v6-rest-progress':v6RestRatio+'%'} as React.CSSProperties}/>
+          <div><span>Descanso</span><strong className="block">{formatTime(restSecondsRemaining)}</strong></div>
+          <button type="button" onClick={restIsPaused?resumeTimer:pauseTimer} aria-label={restIsPaused?'Retomar descanso':'Pausar descanso'}>{restIsPaused?<Play size={19} fill="currentColor"/>:<Pause size={19} fill="currentColor"/>}</button>
+        </div>}
+        {!sessionStarted?<button type="button" className="foco-v6-primary" onClick={handleStartWorkout}><Play size={17} fill="currentColor"/> Iniciar treino</button>:
+          <div className="grid grid-cols-[1fr_1.35fr] gap-2">
+            <button type="button" className="foco-v6-secondary" onClick={()=>document.getElementById('foco-exercise-card-'+Math.max(0,v6ExIndex-1))?.scrollIntoView({behavior:'smooth'})}>Anterior</button>
+            <button type="button" className="foco-v6-primary" disabled={v6CurrentSet.completed} onClick={()=>handleToggleSetComplete(v6ExIndex,v6SetIndex)}>
+              Concluir série <CheckCircle2 size={17}/>
+            </button>
+          </div>}
+      </>}
+      {v6CurrentExercise&&v6SessionMode==='execution'&&<section className="foco-v6-glass overflow-hidden rounded-2xl">
+        <ExerciseExecutionGuide exerciseName={v6CurrentExercise.exercise_name} muscleGroup={v6CurrentExercise.muscle_group}/>
+      </section>}
+      {v6CurrentExercise&&v6SessionMode==='tips'&&<div className="foco-v6-tip-card">
+        <strong>Dica do FOCO</strong><p>Movimento controlado, amplitude confortável e postura estável. Respeite suas limitações individuais.</p>
+        <button type="button" className="foco-v6-glass-button mt-4" onClick={()=>setV6SessionMode('execution')}>Ver execução</button>
+      </div>}
+      {sessionStarted&&<button type="button" className="foco-v6-glass-button w-full" disabled={isSaving} onClick={handleFinishWorkout}><CheckCircle2 size={16}/> {isSaving?'Salvando...':'Finalizar e salvar treino'}</button>}
+      {errorAlert&&<p role="alert" className="foco-v6-glass rounded-xl p-3 text-xs">{errorAlert}</p>}
+      <details className="foco-v6-glass rounded-2xl p-3">
+        <summary className="cursor-pointer p-2 text-xs font-bold text-[#C8F040]">Ver todas as séries, trocar dia e ajustar descanso</summary>
+      <div className="foco-v5-session foco-v4-page max-w-3xl space-y-4 pb-8">
       <header className="space-y-1">
         <p className="foco-v4-eyebrow">{sessionStarted ? 'Sessão ativa' : 'Sua sessão'}</p>
         <h1 className="foco-v4-heading">{sessionStarted ? 'Treino em andamento' : 'Pronto para treinar?'}</h1>
@@ -631,7 +704,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <Clock className="ml-auto mb-3 h-6 w-6 text-[#D5FF40]" aria-hidden="true"/>
+          <Clock className="ml-auto mb-3 h-6 w-6 text-[#C8F040]" aria-hidden="true"/>
           <span className="block text-[10px] font-bold uppercase tracking-wider text-[#A7B39D]">Tempo</span>
           <span className="foco-v5-session-poster-clock">{formatTime(elapsedSeconds)}</span>
         </div>
@@ -642,7 +715,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-[#D5FF40] animate-ping' : 'bg-neutral-600'}`} />
+              <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-[#C8F040] animate-ping' : 'bg-neutral-600'}`} />
               <span className="text-xs uppercase font-extrabold tracking-wider text-white">
                 {sessionStarted ? 'Treino em Andamento' : 'Sessão Pronta'}
               </span>
@@ -1040,6 +1113,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           </button>
         </div>
       )}
+
+      </div>
+      </details>
 
       {/* Workout Completed Modal (Monochrome Luxury) */}
       {sessionCompletedModal && (

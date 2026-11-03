@@ -1,0 +1,69 @@
+name: FOCO V6 Pull Request Visual QA
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install app dependencies
+        run: npm install
+      - name: Install browser test dependencies
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Build preview from pull request
+        run: npm run build
+      - name: Serve local build
+        run: |
+          (npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/foco-preview.log 2>&1 &)
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:4173/FOCO/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/foco-preview.log
+          exit 1
+      - name: Test public login at five responsive viewports
+        env:
+          FOCO_VISUAL_BASE: http://127.0.0.1:4173/FOCO/
+        run: node scripts/test-visual-public.mjs
+      - name: Test all ten core screens with isolated data fixtures
+        env:
+          FOCO_VISUAL_BASE: http://127.0.0.1:4173/FOCO/
+        run: node scripts/test-visual-internal.mjs
+      - name: Export tiny synthetic-screen previews for design review
+        if: always()
+        run: |
+          python -m pip -q install Pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import io,base64
+          for view in ('dashboard','detalhes','sessao','treinos','progresso','perfil'):
+              path=Path(f'visual-qa/internal/{view}-mobile-390.png')
+              if not path.exists():continue
+              image=Image.open(path).convert('RGB')
+              image.thumbnail((340,750))
+              out=io.BytesIO();image.save(out,'JPEG',quality=50,optimize=True)
+              print('FOCO_SYNTHETIC_PREVIEW_'+view+':'+base64.b64encode(out.getvalue()).decode('ascii'))
+          PY
+      - name: Upload screenshot reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: foco-v6-pr-screenshots
+          path: visual-qa/
+          if-no-files-found: warn

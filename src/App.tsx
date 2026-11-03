@@ -9,9 +9,10 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { RestTimerProvider } from './context/RestTimerContext';
 import { BottomNavBar } from './components/BottomNavBar';
 import { RestTimerHUD } from './components/RestTimerHUD';
-import { FocoSymbol, FocoV5Logo } from './components/FocoBrand';
+import { FocoV6Lockup, FocoV6Mark, V6_IMAGES } from './components/FocoV6UI';
 import { AuthPage } from './pages/AuthPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { WorkoutDetailPage } from './pages/WorkoutDetailPage';
 import { ActiveSessionPage } from './pages/ActiveSessionPage';
 import { CardioPage } from './pages/CardioPage';
 import { ComplementaryPage } from './pages/ComplementaryPage';
@@ -34,7 +35,7 @@ import { AnatomyStudioPage } from './pages/AnatomyStudioPage';
 
 function MainApp() {
   const { user, isAuthenticated, isLoading, authLoadError } = useAuth();
-  const validViews = ['dashboard', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas', 'cardio', 'complementares'];
+  const validViews = ['dashboard', 'detalhes', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas', 'cardio', 'complementares'];
   const [activeTab, setActiveTabState] = useState<string>(() => {
     const view = new URLSearchParams(window.location.search).get('view');
     return view && validViews.includes(view) ? view : 'dashboard';
@@ -72,16 +73,11 @@ function MainApp() {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center p-4">
-        <div className="w-16 h-16 rounded-2xl bg-[#161616] border border-white/20 flex items-center justify-center text-white animate-pulse shadow-2xl mb-4">
-          <FocoSymbol className="w-10 h-10 text-white" />
-        </div>
-        <div className="flex items-center gap-1.5 font-black text-2xl text-white tracking-widest uppercase">
-          <span>FOCO</span>
-        </div>
-        <p className="text-[10px] text-neutral-400 mt-2 font-mono uppercase tracking-widest">
-          FOCO EM EVOLUIR.
-        </p>
+      <div className="foco-v6-splash" role="status" aria-label="Iniciando FOCO">
+        <img className="foco-v6-splash-photo" src={V6_IMAGES.portrait} alt="" aria-hidden="true" />
+        <FocoV6Lockup />
+        <p>TREINO · EVOLUÇÃO · PERFORMANCE</p>
+        <div className="foco-v6-splash-progress" aria-hidden="true" />
       </div>
     );
   }
@@ -90,7 +86,7 @@ function MainApp() {
     return (
       <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center p-6">
         <section className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111111] p-6 text-center">
-          <FocoSymbol className="mx-auto mb-4 h-12 w-12 text-white" />
+          <FocoV6Mark size={46} className="mx-auto mb-4" />
           <h1 className="text-xl font-black tracking-wide">O servidor está demorando</h1>
           <p className="mt-3 text-sm leading-6 text-neutral-400">
             O FOCO não conseguiu validar sua sessão a tempo. Isso não significa que sua conta foi perdida.
@@ -113,6 +109,8 @@ function MainApp() {
 
   const renderActiveView = () => {
     switch (activeTab) {
+      case 'detalhes':
+        return <WorkoutDetailPage setActiveTab={setActiveTab} />;
       case 'dashboard':
         return (
           <DashboardPage
@@ -168,7 +166,7 @@ function MainApp() {
   const avatarInitials = (user?.full_name || 'FOCO').trim().split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
 
   return (
-    <div className="foco-v5-shell foco-v4-shell min-h-screen text-white antialiased flex justify-center">
+    <div className="foco-v6-shell foco-v5-shell foco-v4-shell min-h-screen text-white antialiased flex justify-center">
       <a href="#foco-main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-50 focus:rounded-xl focus:bg-white focus:px-4 focus:py-3 focus:text-sm focus:font-bold focus:text-black">Pular para o conteúdo</a>
       
       {/* Mobile Ergonomic Container Shell (Zero-Overlap Guarantee) */}
@@ -176,10 +174,10 @@ function MainApp() {
         <div className="flex min-h-screen flex-1">
           <DesktopNav activeTab={activeTab} navigate={setActiveTab} />
           <div className="min-w-0 flex flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between bg-[#0A0D0A]/95 px-5 backdrop-blur-xl sm:px-7 md:h-[70px] md:border-b md:border-white/10">
+        <header className="hidden sticky top-0 z-30 md:flex h-[76px] items-center justify-between bg-[#0A0D0A]/95 px-5 backdrop-blur-xl sm:px-7 md:h-[70px] md:border-b md:border-white/10">
           <button type="button" onClick={() => setActiveTab('dashboard')}
             className="inline-flex items-center justify-center md:hidden" aria-label="FOCO — início">
-            <FocoV5Logo className="h-[30px] w-[154px]" />
+            <FocoV6Lockup compact />
           </button>
           <span className="hidden text-[10px] font-bold tracking-[.2em] text-[#D5FF40] md:block">TREINO. EVOLUÇÃO. PERFORMANCE.</span>
           <div className="flex items-center gap-2.5">
@@ -197,7 +195,7 @@ function MainApp() {
         </header>
 
         {/* Viewport Content Area with Protected Bottom Space (pb-32) */}
-        <main id="foco-main-content" tabIndex={-1} className="flex-1 min-w-0 px-4 pb-28 pt-3 sm:px-6 sm:pt-4 lg:px-9 lg:pt-6 md:pb-10">
+        <main id="foco-main-content" tabIndex={-1} className="flex-1 min-w-0 px-[14px] pb-28 pt-0 sm:px-6 sm:pt-3 lg:px-9 lg:pt-6 md:pb-10">
           {renderActiveView()}
         </main>
 

@@ -13,7 +13,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { FocoSymbol, FocoV5Logo } from '../components/FocoBrand';
+import { FocoV6Lockup, FocoV6Mark, V6_IMAGES } from '../components/FocoV6UI';
 import { api, removeStoredToken } from '../services/api';
 import { InstallAppButton } from '../components/InstallAppButton';
 
@@ -172,7 +172,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
   const isReset = mode === 'reset';
 
   return (
-    <main className="foco-v5-auth relative min-h-screen overflow-hidden bg-[#090C09] text-white selection:bg-[#D5FF40] selection:text-black">
+    <main style={{ '--foco-v6-portrait': `url("${V6_IMAGES.portrait}")` } as React.CSSProperties} className="foco-v6-auth foco-v5-auth relative min-h-screen overflow-hidden bg-[#090C09] text-white selection:bg-[#C8F040] selection:text-black">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-36 top-[-10rem] h-[30rem] w-[30rem] rounded-full bg-white/[0.045] blur-[110px]" />
         <div className="absolute -bottom-48 right-[-8rem] h-[32rem] w-[32rem] rounded-full bg-neutral-500/[0.07] blur-[130px]" />
@@ -180,14 +180,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
       </div>
 
       <div className="relative mx-auto grid min-h-screen w-full max-w-[1320px] grid-cols-1 items-center gap-8 px-4 py-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(420px,520px)] lg:gap-14 lg:px-12 lg:py-10">
-        <section className="hidden min-w-0 flex-col justify-between self-stretch py-5 lg:flex">
+        <section className="foco-v6-auth-editorial hidden min-w-0 flex-col justify-between self-stretch py-5 lg:flex">
           <div>
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] p-2.5 shadow-2xl">
-                <FocoSymbol className="h-8 w-8" color="#D5FF40" />
+                <FocoV6Mark size={33}/>
               </div>
               <div>
-                <FocoV5Logo className="h-6 w-[126px]" />
+                <FocoV6Lockup compact />
                 <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">Fitness premium</p>
               </div>
             </div>
@@ -235,13 +235,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
         <section className="mx-auto w-full max-w-[500px]">
           <div className="mb-7 flex flex-col items-center text-center lg:hidden">
             <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] p-3 shadow-xl">
-              <FocoSymbol className="h-9 w-9" color="#D5FF40" />
+              <FocoV6Mark size={38}/>
             </div>
-            <FocoV5Logo className="h-6 w-[120px]" />
+            <FocoV6Lockup compact />
             <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">Fitness premium</p>
           </div>
 
-          <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#111111]/95 shadow-[0_32px_100px_rgba(0,0,0,.5)] backdrop-blur-xl">
+          <div className="foco-v6-auth-card overflow-hidden rounded-[28px] border border-white/10 bg-[#111111]/95 shadow-[0_32px_100px_rgba(0,0,0,.5)] backdrop-blur-xl">
             <div className="border-b border-white/[0.07] px-5 pb-5 pt-6 sm:px-8 sm:pt-8">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
 import { api } from '../services/api';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { getTrainingDayLabel, getCurrentTrainingDay, TRAINING_DAYS } from '../data/exerciseLibrary';
@@ -10,6 +11,8 @@ import {
   Plus,
   Trash2,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ChevronUp,
   Play,
   CheckCircle2,
@@ -24,6 +27,7 @@ interface WorkoutsPageProps {
 export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
   const { user } = useAuth();
   const [plans, setPlans] = useState<WorkoutPlan[]>([]);
+  const [v6Mode, setV6Mode] = useState('week');
   const [isLoading, setIsLoading] = useState(true);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [expandedWeekDay, setExpandedWeekDay] = useState<string>(() => getCurrentTrainingDay());
@@ -172,7 +176,51 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
     setActiveTab('sessao');
   };
 
+  const monday=new Date();monday.setHours(0,0,0,0);monday.setDate(monday.getDate()-((monday.getDay()+6)%7));
+  const sunday=new Date(monday);sunday.setDate(monday.getDate()+6);
+  const fmt=(d:Date)=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
   return (
+    <div className="foco-v6-weekly foco-v4-page">
+      <div className="md:hidden"><FocoV6Status/></div>
+      <header className="foco-v6-mobile-title">
+        <div><h1>Meus treinos</h1><p>Teu plano, no teu ritmo.</p></div>
+        <button type="button" className="foco-v6-icon-button" aria-label="Criar ficha" onClick={()=>setActiveTab('novo-treino')}><Plus size={20}/></button>
+      </header>
+      <FocoV6Segment label="Seções dos treinos" options={[{value:'week',label:'Semana'},{value:'program',label:'Programa'},{value:'history',label:'Histórico'}]} value={v6Mode} onChange={setV6Mode}/>
+      {actionMsg&&<div role={actionMsg.type==='error'?'alert':'status'} className="foco-v6-glass rounded-xl p-3 text-xs">{actionMsg.text}</div>}
+      {v6Mode==='week'&&<section className="space-y-4">
+        <div className="foco-v6-week-dates">
+          <button type="button" onClick={()=>setActiveTab('dashboard')} className="foco-v6-icon-button" aria-label="Voltar para início"><ChevronLeft size={17}/></button>
+          <span>{fmt(monday)} – {fmt(sunday)}</span>
+          <button type="button" onClick={()=>setActiveTab('historico')} className="foco-v6-icon-button" aria-label="Abrir histórico"><ChevronRight size={17}/></button>
+        </div>
+        {isLoading?<p role="status" className="foco-v6-glass rounded-xl p-4 text-xs">Carregando tua semana...</p>:
+        weeklyCards.length?<div className="foco-v6-week-rows">
+          {weeklyCards.map(day=>{
+            const selected=expandedWeekDay===day.value, done=completedPlannedDays.has(day.value);
+            const muscles=[...new Set(day.exercises.map(ex=>ex.muscle_group).filter(Boolean))].join(' + ')||activePlan?.name||'Treino';
+            return <div key={day.value} className={'foco-v6-week-row '+(selected?'is-selected ':'')+(done?'is-done':'')}>
+              <button type="button" className="flex min-w-0 flex-1 items-center gap-3 text-left" onClick={()=>setExpandedWeekDay(day.value)} aria-pressed={selected}>
+                {day.exercises[0]&&<span className="foco-v6-week-thumb"><ExerciseIllustration exerciseName={day.exercises[0].exercise_name} muscleGroup={day.exercises[0].muscle_group} className="h-16 w-16 !rounded-xl"/></span>}
+                <span className="foco-v6-week-row-text"><strong>{day.label}</strong><small>{muscles}</small></span>
+              </button>
+              <button type="button" className="foco-v6-week-row-status" onClick={()=>selectSession(day.value)} aria-label={'Selecionar treino de '+day.label}>
+                {done?<CheckCircle2 size={18}/>:selected?<Play size={15} fill="currentColor"/>:<ChevronRight size={17}/>}
+              </button>
+            </div>;
+          })}
+        </div>:<p className="foco-v6-glass rounded-xl p-4 text-sm">Ainda não há treinos para esta semana.</p>}
+        <button type="button" className="foco-v6-primary" onClick={()=>expandedWeekDay&&weeklyCards.length?selectSession(expandedWeekDay):setActiveTab('novo-treino')}><Play size={15} fill="currentColor"/>{weeklyCards.length?'Selecionar treino':'Criar ficha'}</button>
+        <button type="button" className="foco-v6-glass-button w-full" onClick={()=>setActiveTab('cardio')}><Activity size={16}/> Cardio livre</button>
+      </section>}
+      {v6Mode==='program'&&<section className="foco-v6-glass rounded-2xl p-5">
+        <p className="foco-v4-eyebrow">FICHA ATIVA</p><h2 className="mt-3 text-2xl font-extrabold">{activePlan?.name||'Nenhuma ficha ativa'}</h2>
+        <p className="mt-2 text-xs text-[#ADB5A8]">{activePlan?.exercises?.length||0} exercícios · {activePlan?.weekly_frequency||0} dias por semana</p>
+        <button type="button" className="foco-v6-primary mt-5" onClick={()=>setActiveTab('novo-treino')}><Plus size={16}/> Criar outra ficha</button>
+      </section>}
+      {v6Mode==='history'&&<button type="button" className="foco-v6-glass-button w-full" onClick={()=>setActiveTab('historico')}>Abrir histórico completo <ChevronRight size={17}/></button>}
+      <details className="foco-v6-glass rounded-2xl p-3">
+        <summary className="min-h-10 cursor-pointer list-none px-2 py-2 text-xs font-bold text-[#C8F040]">Gerenciar fichas e exercícios <ChevronDown size={16} className="ml-2 inline"/></summary>
     <div className="foco-v5-workouts foco-v4-page space-y-5 text-white">
       
       {/* Top Header */}
@@ -266,7 +314,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                 const groups = [...new Set(day.exercises.map(ex => ex.muscle_group).filter(Boolean))];
                 const completed = completedPlannedDays.has(day.value);
                 return (
-                  <article key={day.value} className={'min-w-0 overflow-hidden rounded-2xl border bg-[#101010] ' + (expanded ? 'border-[#D5FF40]/70 bg-[#20291A]' : 'border-white/15')}>
+                  <article key={day.value} className={'min-w-0 overflow-hidden rounded-2xl border bg-[#101010] ' + (expanded ? 'border-[#C8F040]/70 bg-[#20291A]' : 'border-white/15')}>
                     <button type="button" aria-expanded={expanded} onClick={() => setExpandedWeekDay(expanded ? '' : day.value)}
                       className="flex w-full items-center gap-3 p-3.5 text-left hover:bg-white/5">
                       {day.exercises[0] && <ExerciseIllustration exerciseName={day.exercises[0].exercise_name}
@@ -511,6 +559,8 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
           })}
         </div>
       )}
+    </div>
+      </details>
     </div>
   );
 };

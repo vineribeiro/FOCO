@@ -1,6 +1,6 @@
-const CACHE_NAME = 'foco-shell-v1';
+const CACHE_NAME = 'foco-shell-v6';
 const APP_ROOT = '/FOCO/';
-const APP_ASSETS = [APP_ROOT, APP_ROOT + 'manifest.webmanifest', APP_ROOT + 'icons/foco-192.png', APP_ROOT + 'icons/foco-512.png'];
+const APP_ASSETS = [APP_ROOT, APP_ROOT + 'manifest.webmanifest', APP_ROOT + 'icons/foco.svg', APP_ROOT + 'assets/brand/foco-v6-reference-vector.svg', APP_ROOT + 'icons/foco-192.png', APP_ROOT + 'icons/foco-512.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
