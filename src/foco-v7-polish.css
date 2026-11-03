@@ -1,0 +1,242 @@
+
+/* FOCO — Fitness editorial quality pass, November 2026.
+   Actual session logic/data remains in React, not in decorative layers. */
+:root {
+  --f7-lime:#C8F040;
+  --f7-paper:#F7F8F2;
+  --f7-muted:#B5BEAF;
+  --f7-line:rgba(230,245,210,.16);
+  --f7-panel:#1B2119;
+  --f7-radius:22px;
+}
+/* HIGH RES LOGIN / IMAGE SYSTEM */
+.foco-v6-auth {isolation:isolate;min-height:100dvh;background:#080B08 !important;}
+.foco-v7-auth-photo {
+  pointer-events:none;position:absolute;z-index:0;inset:0;width:61%;height:100%;
+  object-fit:cover;object-position:50% 26%;
+  filter:contrast(1.14) saturate(.73) brightness(.8);
+  -webkit-mask-image:linear-gradient(90deg,#000 15%,#000 48%,transparent 100%);
+  mask-image:linear-gradient(90deg,#000 15%,#000 48%,transparent 100%);
+}
+.foco-v6-auth::before {
+  background-image:radial-gradient(ellipse 65% 60% at 18% 16%,rgba(178,213,80,.08),transparent 70%) !important;
+}
+.foco-v6-auth-editorial:before {
+  background-image:linear-gradient(90deg,rgba(8,11,7,.43),rgba(8,11,7,.66)),linear-gradient(0deg,rgba(8,11,7,.95),transparent 55%) !important;
+}
+.foco-v7-auth-card {
+  background:linear-gradient(150deg,rgba(34,43,30,.90),rgba(11,15,11,.95) 58%) !important;
+  border:1px solid rgba(210,244,166,.20) !important;
+  box-shadow:0 28px 95px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.14) !important;
+  -webkit-backdrop-filter:blur(25px) saturate(145%);
+  backdrop-filter:blur(25px) saturate(145%);
+}
+.foco-v7-auth-card h2{letter-spacing:-.055em;font-weight:800;}
+.foco-v7-auth-card input{font-size:16px;min-height:50px;}
+.foco-v7-auth-card input:focus-visible{outline-color:var(--f7-lime);}
+.foco-v7-auth-brand {position:relative;isolation:isolate;}
+@media(max-width:1023px){
+  .foco-v7-auth-photo {
+    width:100%;height:355px;object-position:50% 17%;opacity:.88;
+    -webkit-mask-image:linear-gradient(180deg,#000 7%,#000 30%,transparent 98%);
+    mask-image:linear-gradient(180deg,#000 7%,#000 30%,transparent 98%);
+  }
+  .foco-v6-auth > .relative.mx-auto.grid{padding-top:0;}
+  .foco-v7-auth-brand{margin-top:85px !important;margin-bottom:22px !important;}
+  .foco-v7-auth-card{position:relative;}
+}
+@media(max-width:359px){.foco-v7-auth-brand{margin-top:55px !important;}}
+
+/* EXERCISES: readable artwork instead of postage-stamp previews */
+.foco-v7-exercise-visual {
+  background:radial-gradient(ellipse at 65% 30%,rgba(140,160,109,.16),transparent 75%),#232820;
+  border:1px solid rgba(231,247,205,.14);
+  box-shadow:inset 0 1px rgba(255,255,255,.06);
+}
+.foco-v7-exercise-visual img.foco-v7-exercise-image {
+  width:100%;height:100%;object-fit:contain;
+  image-rendering:auto;filter:grayscale(.68) contrast(1.12);
+  transition:transform .2s ease;
+}
+button:hover .foco-v7-exercise-visual img{transform:scale(1.035);}
+.foco-v6-detail .foco-v6-exercise-list{gap:10px;}
+.foco-v6-detail .foco-v6-exercise-row {
+  min-height:118px;padding:9px;gap:13px;align-items:center;
+  border-radius:19px;
+  background:linear-gradient(135deg,rgba(35,42,31,.98),rgba(13,17,12,.98));
+  border:1px solid var(--f7-line);
+  box-shadow:inset 0 1px rgba(255,255,255,.045);
+}
+.foco-v6-detail .foco-v6-exercise-row>.foco-v7-exercise-visual {
+  width:clamp(94px,31%,126px);min-width:94px;height:104px;flex:none;border-radius:14px;
+}
+.foco-v6-detail .foco-v6-exercise-row img {width:100%;height:100%;object-fit:contain;border-radius:8px;filter:grayscale(.70);}
+.foco-v6-detail .foco-v6-exercise-row-text strong{font-size:clamp(12px,3.5vw,15px);line-height:1.29;letter-spacing:-.03em;}
+.foco-v6-detail .foco-v6-exercise-row-text span{font-size:11px;margin-top:7px;line-height:1.4;}
+.foco-v7-exercise-index{display:block;font-size:9px;color:var(--f7-lime);font-weight:800;letter-spacing:.08em;margin-bottom:7px;}
+.foco-v6-weekly .foco-v6-week-row{min-height:104px;padding:7px;gap:12px;border-radius:18px;}
+.foco-v6-weekly .foco-v6-week-thumb{width:108px;height:91px;flex-shrink:0;border-radius:13px;}
+.foco-v6-weekly .foco-v6-week-thumb>div{width:100% !important;height:100% !important;}
+.foco-v6-weekly .foco-v6-week-row-text strong{font-size:14px;line-height:1.3;}
+.foco-v6-weekly .foco-v6-week-row-text small{font-size:11px;line-height:1.4;}
+.foco-v6-weekly .foco-v6-week-row-status{width:34px;height:34px;margin-right:3px;flex-shrink:0;}
+@media(max-width:360px){
+ .foco-v6-weekly .foco-v6-week-thumb{width:86px;height:85px;}
+ .foco-v6-detail .foco-v6-exercise-row>.foco-v7-exercise-visual{min-width:86px;width:86px;height:96px;}
+}
+
+/* REBUILT WORKOUT PLAYER */
+.foco-v6-shell .foco-v7-session-heading {
+  display:flex;align-items:center;gap:12px;min-height:57px;
+  border:0 !important;background:transparent !important;backdrop-filter:none !important;
+}
+.foco-v7-session-heading-text{min-width:0;flex:1;}
+.foco-v7-session-heading-text p{font-size:9px;letter-spacing:.13em;color:var(--f7-lime);font-weight:800;}
+.foco-v7-session-heading-text h1{
+  font-size:21px;font-weight:800;letter-spacing:-.055em;line-height:1.16;margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.foco-v7-session-stopwatch{display:flex;flex-direction:column;align-items:end;gap:3px;color:var(--f7-lime);}
+.foco-v7-session-stopwatch svg{width:15px;}
+.foco-v7-session-stopwatch strong{font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;}
+.foco-v6-session-screen{gap:12px !important;padding-top:5px;}
+.foco-v7-exercise-progress{display:flex;gap:5px;margin-top:3px;margin-bottom:1px;}
+.foco-v7-exercise-progress button{
+ height:5px;min-width:11px;flex:1;border-radius:999px;
+ background:rgba(226,237,203,.17);border:0;transition:background .2s ease;
+}
+.foco-v7-exercise-progress button.is-complete{background:#8EBA37;}
+.foco-v7-exercise-progress button.is-current{background:var(--f7-lime);box-shadow:0 0 14px rgba(200,240,64,.22);}
+.foco-v7-exercise-progress button:focus-visible{outline:2px solid var(--f7-lime);outline-offset:4px;}
+.foco-v7-session-stage {
+  height:clamp(265px,38dvh,390px);position:relative;overflow:hidden;isolation:isolate;
+  display:flex;align-items:end;border-radius:25px;border:1px solid rgba(230,249,206,.20);
+  background:radial-gradient(ellipse at 100% 15%,#3D442E 0%,#161D15 50%,#0B100B 100%);
+  box-shadow:inset 0 1px rgba(255,255,255,.08),0 24px 42px rgba(0,0,0,.26);
+}
+.foco-v7-session-stage:after{
+  content:"";position:absolute;z-index:1;inset:0;pointer-events:none;
+  background:linear-gradient(0deg,rgba(7,10,7,.97) 0%,rgba(7,10,7,.67) 18%,transparent 65%),
+    radial-gradient(ellipse at 85% 0%,rgba(190,239,64,.10),transparent 63%);
+}
+.foco-v7-stage-photo{
+  position:absolute;z-index:0;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:50% 43%;
+  filter:contrast(1.11) saturate(.75) brightness(.84);
+}
+.foco-v7-stage-illustration{
+  position:absolute !important;inset:0;width:100% !important;height:100% !important;
+  border:0 !important;border-radius:0 !important;background:#20251C !important;
+}
+.foco-v7-stage-illustration>div:first-of-type {padding:0 !important;inset:0 !important;}
+.foco-v7-stage-illustration img{width:100%;height:100%;object-fit:contain !important;}
+.foco-v7-stage-illustration>div:has(strong),.foco-v7-stage-illustration>div:first-child>span {display:none;}
+.foco-v7-session-stage .foco-v7-stage-tag {
+  position:absolute;z-index:3;top:16px;left:15px;
+  font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--f7-lime);
+  padding:9px 11px;border-radius:99px;border:1px solid rgba(223,248,179,.16);
+  background:rgba(10,13,10,.61);backdrop-filter:blur(16px);
+}
+.foco-v7-stage-footer{position:relative;z-index:3;width:100%;padding:21px 18px 20px;}
+.foco-v7-stage-footer h2{font-size:clamp(25px,7.4vw,39px);font-weight:800;letter-spacing:-.065em;line-height:1.04;text-wrap:balance;max-width:93%;}
+.foco-v7-stage-footer span{display:block;margin-top:10px;color:#CFD6C8;font-size:12px;}
+.foco-v7-stage-expand{
+ position:absolute;z-index:4;top:13px;right:13px;width:40px;height:40px;
+ border:1px solid rgba(255,255,255,.25);border-radius:50%;
+ background:rgba(20,26,19,.66);backdrop-filter:blur(18px);
+ display:grid;place-items:center;color:var(--f7-paper);
+}
+.foco-v7-stage-expand:hover{border-color:var(--f7-lime);color:var(--f7-lime);}
+.foco-v7-session-series{padding:1px 3px 2px;}
+.foco-v7-series-copy{display:flex;align-items:end;justify-content:space-between;gap:8px;}
+.foco-v7-series-copy>div:first-child span{font-size:9px;color:var(--f7-lime);font-weight:800;letter-spacing:.1em;}
+.foco-v7-series-copy>div:first-child strong{display:block;margin-top:4px;font-size:18px;font-weight:800;letter-spacing:-.045em;}
+.foco-v7-series-percentage{text-align:right;white-space:nowrap;}
+.foco-v7-series-percentage strong{display:block;font-size:19px;color:var(--f7-lime);font-variant-numeric:tabular-nums;}
+.foco-v7-series-percentage small{display:block;font-size:10px;color:var(--f7-muted);}
+.foco-v7-series-dots{display:flex;gap:5px;margin-top:11px;}
+.foco-v7-series-dots span{height:5px;border-radius:99px;flex:1;background:#343B31;}
+.foco-v7-series-dots span.is-current{background:#8B9C65;}
+.foco-v7-series-dots span.is-complete{background:var(--f7-lime);}
+.foco-v6-session-screen>.foco-v6-segments{margin:2px 0;}
+.foco-v7-session-adjusters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.foco-v7-session-adjusters.single-control{grid-template-columns:1fr;}
+.foco-v7-adjuster {
+ display:block;padding:12px 10px 13px;min-width:0;border-radius:19px;
+ border:1px solid rgba(227,244,200,.14);
+ background:linear-gradient(150deg,#262B22,#181D18);
+ box-shadow:inset 0 1px rgba(255,255,255,.06);
+}
+.foco-v7-adjuster>span{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:750;color:#D1D8C9;letter-spacing:.035em;}
+.foco-v7-adjuster>span>svg{color:var(--f7-lime);}
+.foco-v7-adjuster>span>small{font-size:9px;color:#A4B29B;}
+.foco-v7-adjuster>div{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;margin-top:12px;gap:2px;}
+.foco-v7-adjuster button{
+ min-height:42px;min-width:0;border-radius:12px;background:rgba(226,244,209,.08);
+ display:grid;place-items:center;color:var(--f7-paper);font-size:23px;line-height:1;
+}
+.foco-v7-adjuster button:active{background:rgba(200,240,64,.24);}
+.foco-v7-adjuster input{
+ width:100%;min-width:0;max-width:100%;border:0;outline:0;background:transparent;
+ font-size:clamp(21px,6vw,29px);line-height:1;text-align:center;font-variant-numeric:tabular-nums;
+ font-weight:800;letter-spacing:-.07em;color:#F7F9F1;
+}
+.foco-v7-adjuster input::-webkit-inner-spin-button{-webkit-appearance:none;appearance:none;}
+.foco-v7-adjuster input:focus-visible{outline:2px solid var(--f7-lime);outline-offset:3px;border-radius:6px;}
+.foco-v7-rest-panel{
+ min-height:76px;border-radius:20px;display:flex;align-items:center;gap:13px;padding:10px 13px;
+ background:linear-gradient(125deg,rgba(34,40,31,.94),rgba(18,22,17,.95));
+ border:1px solid rgba(228,246,208,.12);
+}
+.foco-v7-rest-panel.is-running{border-color:rgba(200,240,64,.30);}
+.foco-v7-rest-ring{
+ width:52px;height:52px;flex-shrink:0;display:grid;place-items:center;position:relative;border-radius:50%;
+ background:conic-gradient(var(--f7-lime) var(--v6-rest-progress,0%),rgba(236,255,218,.12) 0);
+}
+.foco-v7-rest-ring:before{content:"";position:absolute;inset:7px;border-radius:50%;background:#192019;}
+.foco-v7-rest-ring svg{position:relative;z-index:1;color:var(--f7-lime);}
+.foco-v7-rest-info{flex:1;min-width:0;}
+.foco-v7-rest-info span{display:block;font-size:9px;letter-spacing:.09em;font-weight:800;color:var(--f7-muted);}
+.foco-v7-rest-info strong{font-size:23px;line-height:1.2;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums;}
+.foco-v7-rest-control{width:45px;height:45px;border-radius:50%;background:var(--f7-lime);color:#11150D;display:grid;place-items:center;flex-shrink:0;}
+.foco-v7-session-actions{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr);gap:9px;}
+.foco-v7-session-actions .foco-v6-primary{min-height:53px;}
+.foco-v7-previous{
+ min-height:53px;display:flex;align-items:center;justify-content:center;gap:6px;
+ background:rgba(255,255,255,.07);border:1px solid rgba(243,253,230,.15);
+ border-radius:99px;font-size:12px;font-weight:750;color:var(--f7-paper);
+}
+.foco-v7-previous:disabled,.foco-v7-next-exercise:disabled{opacity:.36;cursor:not-allowed;}
+.foco-v7-session-start{min-height:54px;}
+.foco-v7-next-exercise{
+ width:100%;min-height:33px;display:flex;align-items:center;justify-content:center;gap:6px;
+ font-size:11px;color:#C8D5BC;font-weight:650;
+}
+.foco-v7-guide-panel{border-radius:22px;background:linear-gradient(125deg,#242B1F,#131813);border:1px solid var(--f7-line);overflow:hidden;}
+.foco-v7-guide-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 15px 0;}
+.foco-v7-guide-heading>span,.foco-v7-guide-label{font-size:10px;font-weight:800;letter-spacing:.09em;color:var(--f7-lime);}
+.foco-v7-guide-heading button{font-size:11px;color:#D7E3C9;text-decoration:underline;}
+.foco-v7-finish{
+ width:100%;display:flex;align-items:center;justify-content:center;gap:7px;
+ min-height:47px;border-radius:99px;border:1px solid rgba(231,255,204,.20);
+ background:rgba(33,42,26,.38);color:#E4F4D5;font-size:12px;font-weight:700;
+}
+.foco-v6-session-screen>details{margin-top:6px;padding:11px !important;border-color:var(--f7-line);}
+.foco-v6-session-screen>details summary{font-size:12px;line-height:1.4;}
+.foco-v6-session-screen>details[open]{background:#101510;}
+.foco-v6-session-screen>details .foco-v4-page{padding:18px 2px 22px;}
+@media(min-width:768px){
+ .foco-v7-session-stage{height:clamp(350px,49vh,460px);}
+ .foco-v6-session-screen{max-width:740px !important;}
+ .foco-v7-session-adjusters{gap:14px;}
+ .foco-v7-adjuster>div{grid-template-columns:52px minmax(0,1fr) 52px;}
+}
+@media(max-width:360px){
+ .foco-v7-session-stage{height:265px;}
+ .foco-v7-session-heading-text h1{font-size:18px;}
+ .foco-v7-adjuster{padding:11px 7px;}
+ .foco-v7-adjuster>div{grid-template-columns:34px minmax(0,1fr) 34px;}
+ .foco-v7-adjuster button{min-height:38px;}
+ .foco-v7-adjuster input{font-size:21px;}
+}
+@media(prefers-reduced-motion:reduce){.foco-v7-exercise-visual img{transition:none;}}
