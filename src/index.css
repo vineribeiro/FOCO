@@ -535,3 +535,28 @@ body { background: var(--foco-ink); font-family: Poppins, "Plus Jakarta Sans", s
 .foco-v5-session-poster-total{font-size:clamp(23px,5.6vw,39px);color:#C6D0BA;}
 .foco-v5-session-poster-clock{font-size:22px;font-weight:700;letter-spacing:-.04em;font-variant-numeric:tabular-nums;}
 @media(max-width:370px){.foco-v5-session-poster{padding:18px 17px;}.foco-v5-session-poster-number{font-size:55px;}}
+
+/* Finish the visual system on secondary screens and desktop without changing routes. */
+.foco-v5-sidebar .foco-nav-item-active {background:#D5FF40;color:#10160A;box-shadow:0 8px 22px rgba(213,255,64,.12);}
+.foco-v5-sidebar .foco-nav-item-active:hover {background:#E1FF76;color:#10160A;}
+.foco-v5-sidebar .foco-nav-item:not(.foco-nav-item-active):hover {background:rgba(213,255,64,.07);color:#F4F8F0;}
+.foco-v5-sidebar .foco-eyebrow {color:#A8B59A;}
+.foco-v5-onboarding > div:first-child {padding-top:12px;}
+.foco-v5-onboarding h1 {font-size:clamp(28px,5vw,45px);font-weight:800;letter-spacing:-.065em;line-height:1.1;}
+.foco-v5-onboarding button[aria-current="step"],.foco-v5-onboarding button[aria-pressed="true"] {background:#D5FF40;color:#11160C;border-color:#D5FF40;}
+.foco-v5-onboarding button:focus-visible {outline-color:#D5FF40;}
+.foco-v5-onboarding input[type="checkbox"] {accent-color:#D5FF40;}
+.foco-v5-profile input:focus-visible {border-color:#D5FF40;}
+.foco-v5-evolution .foco-v4-heading {margin-top:5px;}
+.foco-v5-evolution .foco-v4-stat {min-height:140px;}
+.foco-v5-evolution .recharts-tooltip-cursor {fill:rgba(213,255,64,.06) !important;}
+.foco-v5-shell .foco-v4-tabbar {padding-bottom:max(env(safe-area-inset-bottom,0px),4px);}
+.foco-v5-shell .foco-v4-tab:focus-visible {outline:2px solid #D5FF40;outline-offset:-3px;border-radius:12px;}
+.foco-v5-shell .foco-v4-stat,.foco-v5-shell .foco-v4-day,.foco-v5-shell .foco-v4-quick {transition:border-color .15s,transform .15s,background .15s;}
+.foco-v5-shell .foco-v4-quick:active,.foco-v5-shell .foco-v4-day:active {transform:scale(.985);}
+@media (min-width:768px){
+  .foco-v5-shell .foco-v4-tabbar {display:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  .foco-v5-shell .foco-v4-stat,.foco-v5-shell .foco-v4-day,.foco-v5-shell .foco-v4-quick {transition:none;}
+}
