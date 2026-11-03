@@ -1,3 +1,4 @@
+import { conciseWorkoutName } from '../utils/workoutTitles';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Activity, ArrowRight, CalendarDays, ChevronRight, Clock3, Dumbbell, Menu, Play, ScanLine, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -18,20 +19,6 @@ const WEEK=[
 ];
 const toMondayIndex=(d:Date)=>(d.getDay()+6)%7;
 const normalize=(value:string)=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-const prettyTitle=(str:string)=>str.replace(/\s+/g,' ').trim().replace(/(^|\s)\S/g,l=>l.toUpperCase());
-const conciseWorkoutName=(groups:string[],fallback:string)=>{
-  if(!groups.length)return fallback;
-  const normalized=groups.map(normalize);
-  const upper=normalized.some(g=>/(peit|cost|dorsa|omb|bicep|tricep|deltoid|braco)/.test(g));
-  const lower=normalized.some(g=>/(quadr|perna|glute|posterior|panturr|coxa|adutor|abdutor)/.test(g));
-  const core=normalized.some(g=>/(core|abd[oô]m|abdom|lombar)/.test(g));
-  if(upper&&lower)return 'Corpo inteiro';
-  if(upper)return 'Superiores';
-  if(lower)return 'Inferiores';
-  if(core)return 'Core e mobilidade';
-  return prettyTitle(groups.slice(0,2).join(' + '));
-};
-
 export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setActiveTab}) => {
   const {user}=useAuth();
   const [plan,setPlan]=useState<WorkoutPlan|null>(null);
