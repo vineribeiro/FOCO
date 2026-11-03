@@ -106,6 +106,38 @@ try{
     const screenshot=out+'/'+view+'-'+size.name+'.png';
     await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
     const issue=overflow>2?'horizontal overflow '+overflow+' px':!check.title?'page heading missing':jsErrors.length?'JS errors '+jsErrors.join('; '):'';
+    // Synthetic, local-only interaction smoke: exercises are editable and route transitions are real.
+    if(!issue && size.name==='mobile-390'){
+      if(view==='dashboard'){
+        await page.getByRole('button',{name:/Visualizar os exercícios do dia/}).click();
+        await page.locator('.foco-v6-detail h1').first().waitFor({timeout:4000});
+        assert.match(await page.locator('.foco-v6-detail').innerText(),/Supino reto/i);
+        await page.getByRole('button',{name:/Iniciar treino/}).click();
+        await page.locator('.foco-v6-session-screen').waitFor({timeout:4000});
+      }else if(view==='sessao'){
+        const reps=page.getByRole('spinbutton',{name:'Repetições da série atual'});
+        await reps.fill('12');
+        assert.equal(await reps.inputValue(),'12');
+        const load=page.getByRole('spinbutton',{name:'Carga atual em quilogramas'});
+        await load.fill('40');
+        assert.equal(await load.inputValue(),'40');
+        await page.getByRole('button',{name:'Iniciar treino',exact:true}).click();
+        await page.getByRole('button',{name:/Concluir série/}).first().click();
+        await page.getByText(/Série 2 de 3/).first().waitFor({timeout:4000});
+        await page.getByRole('button',{name:'Execução',exact:true}).click();
+        await page.getByRole('button',{name:'Registro',exact:true}).click();
+      }else if(view==='progresso'){
+        await page.getByRole('button',{name:'90 dias'}).click();
+        assert.equal(await page.getByRole('button',{name:'90 dias'}).getAttribute('aria-pressed'),'true');
+      }else if(view==='perfil'){
+        await page.getByRole('button',{name:'Metas e objetivos'}).click();
+        await page.locator('.foco-v4-page').first().waitFor({timeout:4000});
+      }else if(view==='treinos'){
+        await page.getByRole('button',{name:'Programa',exact:true}).click();
+        assert.equal(await page.getByRole('button',{name:'Programa',exact:true}).getAttribute('aria-pressed'),'true');
+        await page.getByRole('button',{name:'Semana',exact:true}).click();
+      }
+    }
     const result={viewport:size.name,view,layout_view:'synthetic fixtures',heading:check.title,overflow_px:overflow,status:issue?'FAIL':'PASS',error:issue||undefined,screenshot};
     results.push(result);
     if(issue)failed=true;
