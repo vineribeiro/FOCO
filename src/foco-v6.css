@@ -265,3 +265,31 @@ body {font-family:Inter,Poppins,'Plus Jakarta Sans',system-ui,sans-serif;backgro
 .foco-v6-home-header .foco-v6-brand img{width:104px;}
 .foco-v6-splash .foco-v6-brand img{width:min(66vw,260px);max-width:none;}
 .foco-v6-splash .foco-v6-brand{transform:none;}
+
+/* Login / account creation uses the same cinematic photography + translucent material */
+.foco-v6-auth {background:#090C08!important;}
+.foco-v6-auth:before {content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(0deg,rgba(7,9,6,.98) 8%,rgba(7,9,6,.88) 50%,rgba(7,9,6,.6)),
+    url('https://images.unsplash.com/photo-1613845205719-8c87760ab728?auto=format&fit=crop&w=1200&q=82') center 25%/cover;
+  opacity:.63;
+}
+.foco-v6-auth-editorial {position:relative;isolation:isolate;padding:24px!important;}
+.foco-v6-auth-editorial:before {content:"";position:absolute;inset:0;z-index:-1;border-radius:28px;
+ background:linear-gradient(0deg,#0B0D09,rgba(8,10,7,.34) 80%),
+ url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1200&q=88') center 26%/cover;
+ border:1px solid rgba(213,255,64,.15);filter:saturate(.85);
+}
+.foco-v6-auth-card {background:linear-gradient(155deg,rgba(39,46,31,.88),rgba(11,15,10,.92))!important;
+ border-color:rgba(223,251,176,.2)!important;backdrop-filter:blur(26px) saturate(150%);
+ -webkit-backdrop-filter:blur(26px) saturate(150%);box-shadow:inset 0 1px rgba(255,255,255,.12),0 35px 90px rgba(0,0,0,.55)!important;}
+.foco-v6-auth-card input {background:rgba(5,8,5,.52)!important;border-color:rgba(235,249,212,.16)!important;}
+.foco-v6-auth-card input:focus-visible {outline-color:#D5FF40;border-color:#D5FF40!important;}
+.foco-v6-auth-card [role="tab"][aria-selected="true"] {background:#D5FF40!important;color:#10140D!important;border-radius:10px;}
+.foco-v6-auth-card button.bg-white {background:#D5FF40!important;color:#10140D!important;}
+@media(max-width:767px) {.foco-v6-auth .foco-v6-brand.compact img{width:135px;}.foco-v6-auth-card{border-radius:24px;}}
+/* Desktop width specificity after legacy V4 shell */
+.foco-v6-shell .foco-v6-dashboard,.foco-v6-shell .foco-v6-weekly,.foco-v6-shell .foco-v6-detail,.foco-v6-shell .foco-v6-profile,.foco-v6-shell .foco-v6-session-screen {width:100%;max-width:470px;}
+@media(min-width:768px){
+.foco-v6-shell .foco-v6-dashboard,.foco-v6-shell .foco-v6-weekly,.foco-v6-shell .foco-v6-detail,.foco-v6-shell .foco-v6-profile,.foco-v6-shell .foco-v6-session-screen{max-width:800px;}
+.foco-v6-shell .foco-v6-progress{max-width:800px;}
+}
