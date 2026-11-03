@@ -619,7 +619,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
   const v6ExIndex=focusedExerciseIndex>=0?focusedExerciseIndex:Math.max(0,exerciseLogs.length-1);
   const v6CurrentExercise=exerciseLogs[v6ExIndex];
-  const v6ReferenceBench=!!v6CurrentExercise && /supino reto|bench press/i.test(normalizeExerciseText(v6CurrentExercise.exercise_name));
+  const v6ReferenceBench=!!v6CurrentExercise && /supinoreto|benchpress/i.test(normalizeExerciseText(v6CurrentExercise.exercise_name));
   const v6SetIndex=v6CurrentExercise?Math.max(0,v6CurrentExercise.sets.findIndex(set=>!set.completed)):0;
   const v6CurrentSet=v6CurrentExercise?.sets[v6SetIndex];
   const v6TracksLoad=v6CurrentExercise?tracksLoad(v6CurrentExercise):false;
