@@ -178,12 +178,12 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         <div className="foco-v6-progress-value">{heroValue}</div>
         {numericSeries.length>=2?<svg className="foco-v6-progress-svg" viewBox="0 0 300 106" preserveAspectRatio="none" role="img" aria-label="Tendência do peso no período">
           <defs><linearGradient id="v6-weight-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#D5FF40" stopOpacity=".32"/><stop offset="100%" stopColor="#D5FF40" stopOpacity="0"/>
+            <stop offset="0%" stopColor="#C8F040" stopOpacity=".32"/><stop offset="100%" stopColor="#C8F040" stopOpacity="0"/>
           </linearGradient></defs>
           <path d={'M'+pathPoints.replaceAll(' ',' L')+' L294 104 L6 104Z'} fill="url(#v6-weight-gradient)"/>
-          <polyline points={pathPoints} fill="none" stroke="#D5FF40" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/>
-          {svgPoints.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===svgPoints.length-1?3.6:2.2} fill="#D5FF40"/>)}
-        </svg>:<div className="my-5 flex h-[92px] items-center justify-center rounded-xl border border-dashed border-[#D5FF40]/15 text-center text-xs text-[#A5B09E]">
+          <polyline points={pathPoints} fill="none" stroke="#C8F040" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/>
+          {svgPoints.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===svgPoints.length-1?3.6:2.2} fill="#C8F040"/>)}
+        </svg>:<div className="my-5 flex h-[92px] items-center justify-center rounded-xl border border-dashed border-[#C8F040]/15 text-center text-xs text-[#A5B09E]">
           {isLoading?'Consultando dados...':'Adicione duas avaliações para visualizar sua tendência.'}
         </div>}
         {numericSeries.length>=2&&<div className="flex justify-between text-[10px] text-[#B0B8AB]"><span>{numericSeries[0].date}</span><span>{numericSeries[numericSeries.length-1].date}</span></div>}
@@ -201,14 +201,14 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         Ver relatório completo <TrendingUp size={15}/>
       </button>
       <details ref={reportRef} id="foco-v6-report" className="foco-v6-glass rounded-2xl p-3">
-        <summary className="cursor-pointer px-2 py-3 text-sm font-bold text-[#D5FF40]">Histórico, gráficos e ajustes</summary>
+        <summary className="cursor-pointer px-2 py-3 text-sm font-bold text-[#C8F040]">Histórico, gráficos e ajustes</summary>
     <div className="foco-v5-evolution foco-v4-page space-y-5">
       
       {/* Header */}
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <span className="foco-v4-eyebrow">EVOLUÇÃO / SEUS DADOS</span>
-          <h1 className="foco-v4-heading">Minha <span className="text-[#D5FF40]">evolução.</span></h1>
+          <h1 className="foco-v4-heading">Minha <span className="text-[#C8F040]">evolução.</span></h1>
           <p className="mt-2 text-sm text-neutral-400">Acompanhe sua composição corporal OKOK, seus treinos e as medidas registradas.</p>
         </div>
         <label className="flex flex-col gap-1.5 text-xs font-semibold text-neutral-300">
@@ -277,8 +277,8 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
               <AreaChart data={visibleWeightData}>
                 <defs>
                   <linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#D5FF40" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#D5FF40" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#C8F040" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#C8F040" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#303030" />
@@ -302,7 +302,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                   type="monotone"
                   dataKey="peso"
                   name="Peso (kg)"
-                  stroke="#D5FF40"
+                  stroke="#C8F040"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#monoGrad)"
@@ -350,7 +350,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                 <Bar
                   dataKey="tonelagem"
                   name="Tonelagem (kg)"
-                  fill="#D5FF40"
+                  fill="#C8F040"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
