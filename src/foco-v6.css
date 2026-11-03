@@ -257,3 +257,11 @@ body {font-family:Inter,Poppins,'Plus Jakarta Sans',system-ui,sans-serif;backgro
  .foco-v6-wordmark {font-size:27px;}
 }
 @media(prefers-reduced-motion:reduce) {*,*::before,*::after {scroll-behavior:auto !important;animation-duration:.01ms !important;transition-duration:0ms !important;}}
+
+/* Official user-provided FOCO vector, traced for exact brand proportions. */
+.foco-v6-brand{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.foco-v6-brand img{display:block;width:215px;height:auto;max-width:min(100%,215px);object-fit:contain;}
+.foco-v6-brand.compact img{width:132px;max-width:132px;height:auto;}
+.foco-v6-home-header .foco-v6-brand img{width:104px;}
+.foco-v6-splash .foco-v6-brand img{width:min(66vw,260px);max-width:none;}
+.foco-v6-splash .foco-v6-brand{transform:none;}
