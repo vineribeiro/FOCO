@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { ShieldAlert, CheckCircle2, AlertCircle, Save, Trash2, X, Settings2 } from 'lucide-react';
+import { ShieldAlert, CheckCircle2, AlertCircle, Save, Trash2, X, Settings2, ChevronRight, UserRound, Bell, Target, SlidersHorizontal, ScanLine, Activity, CalendarDays } from 'lucide-react';
+import { FocoV6Status } from '../components/FocoV6UI';
 
 interface ProfilePageProps { setActiveTab: (tab: string) => void; }
 export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
   const { user, profile, refreshProfile, deleteAccount } = useAuth();
 
+  const [trainingSummary,setTrainingSummary]=useState<{completed:number;consistency:number|null;weeks:number}|null>(null);
+  useEffect(()=>{let active=true;Promise.all([api.getSessions(),api.getActiveWorkout()]).then(([list,plan])=>{
+    if(!active)return;
+    const completed=list.filter(s=>s.status==='completed');
+    const weeks=new Set(completed.map(s=>{const date=new Date(s.started_at);date.setHours(0,0,0,0);date.setDate(date.getDate()-((date.getDay()+6)%7));return date.toISOString().slice(0,10);})).size;
+    const cutoff=Date.now()-28*86400000;
+    const last28=completed.filter(s=>new Date(s.started_at).getTime()>=cutoff).length;
+    const target=plan?.weekly_frequency||0;
+    setTrainingSummary({completed:completed.length,weeks,consistency:target?Math.min(100,Math.round(last28/(target*4)*100)):null});
+  }).catch(()=>{});return()=>{active=false;};},[]);
   const [fullName, setFullName] = useState(profile?.full_name || user?.full_name || '');
   const [birthDate, setBirthDate] = useState(profile?.birth_date || '');
   const [heightCm, setHeightCm] = useState(profile?.height_cm?.toString() || '');
@@ -68,7 +79,39 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
     }
   };
 
+  const initials=(fullName||user?.full_name||'F').trim().split(/\s+/).slice(0,2).map(part=>part[0]?.toUpperCase()).join('');
+  const routes=[
+    {label:'Meus dados corporais',icon:ScanLine,tab:'arquivos'},
+    {label:'Metas e objetivos',icon:Target,tab:'objetivos'},
+    {label:'Preferências de treino',icon:SlidersHorizontal,tab:'anamnese'},
+    {label:'Integrações',icon:Activity,tab:'configuracoes'},
+    {label:'Notificações',icon:Bell,tab:'configuracoes'},
+  ];
   return (
+    <div className="foco-v6-profile foco-v4-page">
+      <div className="md:hidden"><FocoV6Status/></div>
+      <header className="foco-v6-profile-top">
+        <h1>Perfil</h1><button className="foco-v6-icon-button" type="button" onClick={()=>setActiveTab('configuracoes')} aria-label="Abrir configurações"><Settings2 size={19}/></button>
+      </header>
+      <section className="foco-v6-profile-card">
+        <div className="foco-v6-profile-avatar grid place-items-center">
+          <span className="grid h-full w-full place-items-center rounded-full bg-gradient-to-br from-[#303B23] to-[#0C100B] text-2xl font-black text-[#D5FF40]">{initials}</span>
+        </div>
+        <h2>{fullName||user?.full_name||'Atleta FOCO'}</h2>
+        <span className="mt-1 rounded-full bg-[#D5FF40]/10 px-3 py-1 text-[10px] font-bold text-[#D5FF40]">Plano pessoal</span>
+      </section>
+      <div className="foco-v6-profile-kpis">
+        <div className="foco-v6-profile-kpi"><strong>{trainingSummary?.completed??'—'}</strong><p>Treinos</p></div>
+        <div className="foco-v6-profile-kpi"><strong>{trainingSummary?.consistency===null?'—':trainingSummary?.consistency===undefined?'—':trainingSummary.consistency+'%'}</strong><p>Consistência (28 dias)</p></div>
+        <div className="foco-v6-profile-kpi"><strong>{trainingSummary?.weeks??'—'}</strong><p>Semanas ativas</p></div>
+      </div>
+      <nav className="grid gap-2" aria-label="Preferências do perfil">
+        {routes.map(route=><button key={route.label} type="button" className="foco-v6-profile-item" onClick={()=>setActiveTab(route.tab)}>
+          <route.icon size={17}/><span>{route.label}</span><ChevronRight size={16}/>
+        </button>)}
+      </nav>
+      <details className="foco-v6-glass rounded-2xl p-3">
+        <summary className="cursor-pointer px-2 py-2 text-sm font-bold text-[#D5FF40]">Editar meus dados <ChevronRight size={16} className="ml-2 inline"/></summary>
     <div className="foco-v5-profile foco-v4-page max-w-3xl space-y-5 text-white">
       
       <header className="flex items-start justify-between gap-3">
@@ -263,6 +306,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
           </div>
         </div>
       )}
+    </div>
+      </details>
     </div>
   );
 };
