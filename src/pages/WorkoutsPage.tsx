@@ -220,7 +220,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
       </section>}
       {v6Mode==='history'&&<button type="button" className="foco-v6-glass-button w-full" onClick={()=>setActiveTab('historico')}>Abrir histórico completo <ChevronRight size={17}/></button>}
       <details className="foco-v6-glass rounded-2xl p-3">
-        <summary className="min-h-10 cursor-pointer list-none px-2 py-2 text-xs font-bold text-[#D5FF40]">Gerenciar fichas e exercícios <ChevronDown size={16} className="ml-2 inline"/></summary>
+        <summary className="min-h-10 cursor-pointer list-none px-2 py-2 text-xs font-bold text-[#C8F040]">Gerenciar fichas e exercícios <ChevronDown size={16} className="ml-2 inline"/></summary>
     <div className="foco-v5-workouts foco-v4-page space-y-5 text-white">
       
       {/* Top Header */}
@@ -314,7 +314,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                 const groups = [...new Set(day.exercises.map(ex => ex.muscle_group).filter(Boolean))];
                 const completed = completedPlannedDays.has(day.value);
                 return (
-                  <article key={day.value} className={'min-w-0 overflow-hidden rounded-2xl border bg-[#101010] ' + (expanded ? 'border-[#D5FF40]/70 bg-[#20291A]' : 'border-white/15')}>
+                  <article key={day.value} className={'min-w-0 overflow-hidden rounded-2xl border bg-[#101010] ' + (expanded ? 'border-[#C8F040]/70 bg-[#20291A]' : 'border-white/15')}>
                     <button type="button" aria-expanded={expanded} onClick={() => setExpandedWeekDay(expanded ? '' : day.value)}
                       className="flex w-full items-center gap-3 p-3.5 text-left hover:bg-white/5">
                       {day.exercises[0] && <ExerciseIllustration exerciseName={day.exercises[0].exercise_name}
