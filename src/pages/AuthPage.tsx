@@ -173,6 +173,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
 
   return (
     <main style={{ '--foco-v6-portrait': `url("${V6_IMAGES.portrait}")` } as React.CSSProperties} className="foco-v6-auth foco-v5-auth relative min-h-screen overflow-hidden bg-[#090C09] text-white selection:bg-[#C8F040] selection:text-black">
+      <img className="foco-v7-auth-photo" src={V6_IMAGES.login} alt="" aria-hidden="true"
+        loading="eager" decoding="async" fetchPriority="high"
+        onError={(event)=>{ if(event.currentTarget.src!==V6_IMAGES.portrait) event.currentTarget.src=V6_IMAGES.portrait; }} />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-36 top-[-10rem] h-[30rem] w-[30rem] rounded-full bg-white/[0.045] blur-[110px]" />
         <div className="absolute -bottom-48 right-[-8rem] h-[32rem] w-[32rem] rounded-full bg-neutral-500/[0.07] blur-[130px]" />
@@ -233,7 +236,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
         </section>
 
         <section className="mx-auto w-full max-w-[500px]">
-          <div className="mb-7 flex flex-col items-center text-center lg:hidden">
+          <div className="foco-v7-auth-brand mb-7 flex flex-col items-center text-center lg:hidden">
             <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] p-3 shadow-xl">
               <FocoV6Mark size={38}/>
             </div>
@@ -241,7 +244,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
             <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">Fitness premium</p>
           </div>
 
-          <div className="foco-v6-auth-card overflow-hidden rounded-[28px] border border-white/10 bg-[#111111]/95 shadow-[0_32px_100px_rgba(0,0,0,.5)] backdrop-blur-xl">
+          <div className="foco-v7-auth-card foco-v6-auth-card overflow-hidden rounded-[28px] border border-white/10 bg-[#111111]/95 shadow-[0_32px_100px_rgba(0,0,0,.5)] backdrop-blur-xl">
             <div className="border-b border-white/[0.07] px-5 pb-5 pt-6 sm:px-8 sm:pt-8">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">
