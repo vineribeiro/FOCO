@@ -32,9 +32,9 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
     <div className="foco-v6-muscle-hero">
       <img src={V6_IMAGES.muscle} alt="" loading="lazy"/>
       <div className="foco-v6-muscle-hero-content">
-        <p className="text-[10px] font-bold tracking-[.12em] text-[#D5FF40] uppercase">{getTrainingDayLabel(day)}</p>
+        <p className="text-[10px] font-bold tracking-[.12em] text-[#C8F040] uppercase">{getTrainingDayLabel(day)}</p>
         <h1 className="mt-3 max-w-[67%]">{title}</h1>
-        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#D5FF40]/10 px-3 py-1.5 text-[11px] text-[#D5FF40]"><Clock3 size={13}/> {today.length} exercícios</p>
+        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#C8F040]/10 px-3 py-1.5 text-[11px] text-[#C8F040]"><Clock3 size={13}/> {today.length} exercícios</p>
       </div>
     </div>
     <FocoV6Segment label="Informações do treino" options={[{value:'exercises',label:'Exercícios'},{value:'details',label:'Detalhes'},{value:'substitutions',label:'Substituições'}]} value={tab} onChange={setTab}/>
@@ -59,7 +59,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
       <button type="button" className="foco-v6-glass-button mt-4 w-full" onClick={()=>setActiveTab('treinos')}>Trocar treino da semana <CalendarDays size={15}/></button>
     </div>}
     {tab==='substitutions'&&<div className="foco-v6-glass rounded-2xl p-4">
-      <RotateCcw size={23} className="text-[#D5FF40]"/>
+      <RotateCcw size={23} className="text-[#C8F040]"/>
       <h2 className="mt-2 font-bold">Substituir um exercício</h2>
       <p className="mt-2 text-xs leading-5 text-[#C2C8BE]">Consulte equipamentos alternativos e personalize sua ficha sem perder seu histórico.</p>
       <button type="button" onClick={()=>setActiveTab('biblioteca')} className="foco-v6-glass-button mt-4 w-full">Abrir biblioteca <ChevronRight size={15}/></button>
