@@ -293,3 +293,21 @@ body {font-family:Inter,Poppins,'Plus Jakarta Sans',system-ui,sans-serif;backgro
 .foco-v6-shell .foco-v6-dashboard,.foco-v6-shell .foco-v6-weekly,.foco-v6-shell .foco-v6-detail,.foco-v6-shell .foco-v6-profile,.foco-v6-shell .foco-v6-session-screen{max-width:800px;}
 .foco-v6-shell .foco-v6-progress{max-width:800px;}
 }
+
+/* Exercise-specific media, rather than a misleading stock bench image on every set. */
+.foco-v6-session-photo>.foco-v6-session-dynamic-illustration {
+  position:absolute;inset:0;border:0;border-radius:0;background:#10140E;
+}
+.foco-v6-session-dynamic-illustration>img,
+.foco-v6-session-dynamic-illustration img {
+  width:100%;height:100%;object-fit:contain;object-position:center;
+}
+.foco-v6-session-photo>.foco-v6-session-dynamic-illustration:after {
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(0deg,rgba(8,11,7,.92),transparent 50%);
+}
+.foco-v6-session-photo>h2 {z-index:3;position:absolute;}
+/* Keep brand photography relative to the deployed base path, not a hard-coded domain route. */
+.foco-v6-auth:before,.foco-v6-auth-editorial:before {background-image:none;}
+.foco-v6-auth:before {background-image:linear-gradient(0deg,rgba(7,9,6,.98) 8%,rgba(7,9,6,.88) 50%,rgba(7,9,6,.6)),url('./assets/models/foco-portrait-ref.jpg');}
+.foco-v6-auth-editorial:before {background-image:linear-gradient(0deg,#0B0D09,rgba(8,10,7,.34) 80%),url('./assets/models/foco-portrait-ref.jpg');}
