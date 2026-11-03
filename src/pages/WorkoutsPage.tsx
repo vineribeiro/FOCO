@@ -201,7 +201,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
             const muscles=[...new Set(day.exercises.map(ex=>ex.muscle_group).filter(Boolean))].join(' + ')||activePlan?.name||'Treino';
             return <div key={day.value} className={'foco-v6-week-row '+(selected?'is-selected ':'')+(done?'is-done':'')}>
               <button type="button" className="flex min-w-0 flex-1 items-center gap-3 text-left" onClick={()=>setExpandedWeekDay(day.value)} aria-pressed={selected}>
-                {day.exercises[0]&&<span className="foco-v6-week-thumb"><ExerciseIllustration exerciseName={day.exercises[0].exercise_name} muscleGroup={day.exercises[0].muscle_group} className="h-16 w-16 !rounded-xl"/></span>}
+                {day.exercises[0]&&<span className="foco-v6-week-thumb"><ExerciseIllustration exerciseName={day.exercises[0].exercise_name} muscleGroup={day.exercises[0].muscle_group} className="h-full w-full !rounded-xl" presentation="editorial"/></span>}
                 <span className="foco-v6-week-row-text"><strong>{day.label}</strong><small>{muscles}</small></span>
               </button>
               <button type="button" className="foco-v6-week-row-status" onClick={()=>selectSession(day.value)} aria-label={'Selecionar treino de '+day.label}>
@@ -318,7 +318,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                     <button type="button" aria-expanded={expanded} onClick={() => setExpandedWeekDay(expanded ? '' : day.value)}
                       className="flex w-full items-center gap-3 p-3.5 text-left hover:bg-white/5">
                       {day.exercises[0] && <ExerciseIllustration exerciseName={day.exercises[0].exercise_name}
-                        muscleGroup={day.exercises[0].muscle_group} className="h-16 w-16 shrink-0" />}
+                        muscleGroup={day.exercises[0].muscle_group} className="h-[100px] w-[112px] shrink-0 !rounded-xl" presentation="editorial" />}
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-neutral-400">
                           <CalendarDays className="h-3.5 w-3.5" /> {day.label}
@@ -509,7 +509,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                             <tr key={idx} className="hover:bg-white/5 transition-colors">
                               <td className="py-2.5 px-2 font-sans font-bold text-white">
                                 <div className="flex min-w-[190px] items-center gap-2.5">
-                                  <ExerciseIllustration exerciseName={ex.exercise_name} muscleGroup={ex.muscle_group} className="h-16 w-16 shrink-0" />
+                                  <ExerciseIllustration exerciseName={ex.exercise_name} muscleGroup={ex.muscle_group} className="h-[100px] w-[112px] shrink-0 !rounded-xl" presentation="editorial" />
                                   <span>
                                     <span className="block">{ex.exercise_name}</span>
                                     <span className="mt-1 block text-[9px] font-bold uppercase tracking-wider text-neutral-500">{getTrainingDayLabel(ex.training_day)}</span>
