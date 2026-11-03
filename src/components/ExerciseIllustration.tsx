@@ -11,6 +11,7 @@ interface ExerciseIllustrationProps {
   imagePaths?: string[];
   className?: string;
   showCaption?: boolean;
+  presentation?: 'standard' | 'editorial';
 }
 const muscleTargets: Record<string, string> = {
   chest: 'Peitoral', shoulders: 'Deltoides', biceps: 'Bíceps', triceps: 'Tríceps',
@@ -20,7 +21,7 @@ const muscleTargets: Record<string, string> = {
 };
 
 export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
-  exerciseName, exerciseId, muscleGroup, imagePaths = [], className = 'h-64 w-full', showCaption = false,
+  exerciseName, exerciseId, muscleGroup, imagePaths = [], className = 'h-64 w-full', showCaption = false, presentation = 'standard',
 }) => {
   const [phase, setPhase] = useState(0);
   const [legacyPaths, setLegacyPaths] = useState<string[]>([]);
@@ -75,15 +76,15 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
     else dialogRef.current?.showModal();
   };
   return (
-    <div className={'relative isolate overflow-hidden rounded-2xl border border-black/10 bg-[#F5F5F5] ' + className}>
+    <div className={'relative isolate overflow-hidden rounded-2xl ' + (presentation === 'editorial' ? 'foco-v7-exercise-visual ' : 'border border-black/10 bg-[#F5F5F5] ') + className}>
       {!compact && <div className="absolute left-3 top-3 z-10 rounded-full border border-black/10 bg-white/95 px-3 py-2 text-[11px] font-bold text-neutral-900 shadow-sm">
         {isAtlas ? 'FOCO · Atlas anatômico' : isRepDB ? 'RepDB · Execução ilustrada' : 'Foto de referência'}
       </div>}
       {visible ? (
-        <div className={'absolute inset-0 flex items-center justify-center ' + (compact ? 'p-1' : 'px-2 pb-12 pt-12 sm:px-4')}>
+        <div className={'absolute inset-0 flex items-center justify-center ' + (presentation === 'editorial' ? 'p-0' : compact ? 'p-1' : 'px-2 pb-12 pt-12 sm:px-4')}>
           {compact ? (
             <img src={sources[phase]} loading="lazy" alt={exerciseName + (isAtlas ? ' — atlas anatômico' : ' — referência fotográfica')}
-              className="h-full w-full object-contain" style={isAtlas || isRepDB ? undefined : {filter:'grayscale(1)'}}
+              className="h-full w-full object-contain foco-v7-exercise-image" style={isAtlas || isRepDB ? undefined : {filter:'grayscale(1)'}}
               onError={onImageError} />
           ) : (
             <button type="button" onClick={toggleZoom}

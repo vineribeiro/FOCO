@@ -118,10 +118,10 @@ try{
       assert.ok(hero.loaded,'FOCO hero athlete media must decode, not show a broken-image icon');
     }
     if(view==='sessao'){
-      const photo=page.locator('.foco-v6-session-bench-photo');
+      const photo=page.locator('.foco-v7-stage-photo');
       await photo.first().waitFor({timeout:7000});
       const photoLoaded=await photo.first().evaluate(img=>img.complete&&img.naturalWidth>100);
-      assert.ok(photoLoaded,'Supino active session must render the approved photographic asset');
+      assert.ok(photoLoaded,'Supino active session must render an exercise-specific photographic asset');
     }
     const screenshot=out+'/'+view+'-'+size.name+'.png';
     await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});

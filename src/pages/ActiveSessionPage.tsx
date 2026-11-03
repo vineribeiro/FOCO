@@ -1,8 +1,9 @@
 import { FOCO_REFERENCE_BENCH } from '../data/focoReferenceBench';
 import React, { useState, useEffect } from 'react';
-import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
+import { FocoV6Status, FocoV6Segment, V6_IMAGES } from '../components/FocoV6UI';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { useAuth } from '../context/AuthContext';
+import { conciseWorkoutName } from '../utils/workoutTitles';
 import { loadWorkoutDraft, saveWorkoutDraft, clearWorkoutDraft } from '../utils/workoutDraft';
 import { api } from '../services/api';
 import { WorkoutPlan, WorkoutExercise } from '../types';
@@ -62,6 +63,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [isLoading, setIsLoading] = useState(true);
   const [sessionStarted, setSessionStarted] = useState(false);
   const [v6SessionMode,setV6SessionMode]=useState('register');
+  const [v7ManualExerciseIndex,setV7ManualExerciseIndex]=useState<number | null>(null);
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
@@ -617,74 +619,134 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     );
   }
 
-  const v6ExIndex=focusedExerciseIndex>=0?focusedExerciseIndex:Math.max(0,exerciseLogs.length-1);
+  const suggestedExerciseIndex=focusedExerciseIndex>=0?focusedExerciseIndex:Math.max(0,exerciseLogs.length-1);
+  const v6ExIndex=v7ManualExerciseIndex===null ? suggestedExerciseIndex : Math.max(0,Math.min(exerciseLogs.length-1,v7ManualExerciseIndex));
   const v6CurrentExercise=exerciseLogs[v6ExIndex];
   const v6ReferenceBench=!!v6CurrentExercise && /supinoreto|benchpress/i.test(normalizeExerciseText(v6CurrentExercise.exercise_name));
   const v6SetIndex=v6CurrentExercise?Math.max(0,v6CurrentExercise.sets.findIndex(set=>!set.completed)):0;
   const v6CurrentSet=v6CurrentExercise?.sets[v6SetIndex];
   const v6TracksLoad=v6CurrentExercise?tracksLoad(v6CurrentExercise):false;
   const v6RestRatio=restTimerActive&&restTotalDuration>0?Math.max(0,Math.min(100,100*(restSecondsRemaining/restTotalDuration))):0;
+  const v7CompletedInExercise=v6CurrentExercise?.sets.filter(set=>set.completed).length||0;
+  const v7WorkoutTitle=conciseWorkoutName([...new Set(exerciseLogs.map(ex=>ex.muscle_group).filter(Boolean))],activePlan?.name||'Meu treino');
+  const v7ActiveRestSeconds=restTimerActive?restSecondsRemaining:(v6CurrentExercise?.rest_seconds||90);
+  const v7GoExercise=(offset:number)=>{
+    if(!exerciseLogs.length)return;
+    setV7ManualExerciseIndex(Math.max(0,Math.min(exerciseLogs.length-1,v6ExIndex+offset)));
+    setV6SessionMode('register');
+  };
   return (
     <div className="foco-v6-session-screen foco-v4-page">
       <div className="md:hidden"><FocoV6Status/></div>
-      <header className="foco-v6-mobile-title">
-        <div className="foco-v6-title-left">
-          <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Voltar aos treinos"><ArrowLeft size={18}/></button>
-          <div><h1>{sessionStarted?'Treino em andamento':'Pronto para treinar?'}</h1>
-            <p>{exerciseLogs.length?Math.min(v6ExIndex+1,exerciseLogs.length)+'/'+exerciseLogs.length+' exercícios':'Selecione uma ficha'}</p></div>
+      <header className="foco-v7-session-heading">
+        <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Voltar aos treinos"><ArrowLeft size={19}/></button>
+        <div className="foco-v7-session-heading-text">
+          <p>{sessionStarted?'TREINO EM ANDAMENTO':'PRONTO PARA TREINAR'}</p>
+          <h1>{v7WorkoutTitle}</h1>
         </div>
-        <span className="text-xs font-bold text-[#C8F040]">{formatTime(elapsedSeconds)}</span>
+        <div className="foco-v7-session-stopwatch" aria-label={'Tempo de treino '+formatTime(elapsedSeconds)}>
+          <Clock size={15}/><strong>{formatTime(elapsedSeconds)}</strong>
+        </div>
       </header>
-      {v6CurrentExercise&&<section className="foco-v6-session-photo">
+      <nav className="foco-v7-exercise-progress" aria-label="Navegar entre exercícios">
+        {exerciseLogs.map((ex,index)=><button key={index} type="button" aria-label={'Ver exercício '+(index+1)+': '+ex.exercise_name}
+          aria-current={index===v6ExIndex?'step':undefined}
+          onClick={()=>{setV7ManualExerciseIndex(index);setV6SessionMode('register');}}
+          className={(ex.sets.length>0&&ex.sets.every(set=>set.completed)?'is-complete ':'')+(index===v6ExIndex?'is-current':'')} />)}
+      </nav>
+      {v6CurrentExercise&&<section className="foco-v7-session-stage" aria-label={'Exercício atual: '+v6CurrentExercise.exercise_name}>
         {v6ReferenceBench
-          ? <img className="foco-v6-session-bench-photo" src={FOCO_REFERENCE_BENCH} alt="Atleta executando supino reto com barra" loading="eager" decoding="async"/>
-          : <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name} muscleGroup={v6CurrentExercise.muscle_group} className="foco-v6-session-dynamic-illustration h-full w-full" />}
-        <h2>{v6CurrentExercise.exercise_name}</h2>
+          ? <img className="foco-v7-stage-photo" src={V6_IMAGES.bench} alt="Execução de supino reto com barra"
+              fetchPriority="high" loading="eager" decoding="async"
+              onError={e=>{if(e.currentTarget.src!==FOCO_REFERENCE_BENCH)e.currentTarget.src=FOCO_REFERENCE_BENCH;}}/>
+          : <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name}
+              muscleGroup={v6CurrentExercise.muscle_group} className="foco-v7-stage-illustration h-full w-full" />}
+        <span className="foco-v7-stage-tag">EXERCÍCIO {String(v6ExIndex+1).padStart(2,'0')} / {String(exerciseLogs.length).padStart(2,'0')}</span>
+        <div className="foco-v7-stage-footer">
+          <h2>{v6CurrentExercise.exercise_name}</h2>
+          <span>{v6CurrentExercise.muscle_group || 'Treinamento'} · {v6CurrentExercise.sets.length} séries</span>
+        </div>
+        <button type="button" className="foco-v7-stage-expand" aria-label="Ver demonstração completa"
+          onClick={()=>setV6SessionMode('execution')}><ChevronRight size={20}/></button>
       </section>}
-      {v6CurrentExercise&&<div className="flex items-end justify-between">
-        <div><p className="text-[11px] text-[#B6BDB0]">{sessionStarted?'Exercício atual':'Seu primeiro exercício'}</p>
-          <h2 className="mt-1 text-[17px] font-extrabold tracking-[-.05em]">{v6CurrentExercise.exercise_name}</h2>
-          <p className="mt-1 text-xs text-[#BDC4B5]">Série {Math.min(v6SetIndex+1,v6CurrentExercise.sets.length)} de {v6CurrentExercise.sets.length}</p></div>
-        <span className="rounded-full bg-[#C8F040]/10 px-3 py-1.5 text-[10px] font-bold text-[#C8F040]">{Math.round(completionRate)}% concluído</span>
-      </div>}
+      {v6CurrentExercise&&<section className="foco-v7-session-series" aria-label="Progresso das séries">
+        <div className="foco-v7-series-copy">
+          <div><span>SÉRIE ATUAL</span><strong>Série {Math.min(v6SetIndex+1,v6CurrentExercise.sets.length)} de {v6CurrentExercise.sets.length}</strong></div>
+          <div className="foco-v7-series-percentage"><strong>{completionRate}%</strong><small>da sessão</small></div>
+        </div>
+        <div className="foco-v7-series-dots" aria-label={v7CompletedInExercise+' séries concluídas neste exercício'}>
+          {v6CurrentExercise.sets.map((set,index)=><span key={index} className={(set.completed?'is-complete ':'')+(index===v6SetIndex?'is-current':'')}/>)}
+        </div>
+      </section>}
       <FocoV6Segment label="Modo do exercício" options={[{value:'register',label:'Registro'},{value:'execution',label:'Execução'},{value:'tips',label:'Dicas'}]} value={v6SessionMode} onChange={setV6SessionMode}/>
       {v6CurrentExercise&&v6SessionMode==='register'&&v6CurrentSet&&<>
-        <div className="foco-v6-session-controls">
-          {v6TracksLoad&&<label className="foco-v6-stepper"><span>Carga (kg)</span><div className="foco-v6-stepper-row">
-            <button type="button" onClick={()=>handleQuickAddLoad(v6ExIndex,v6SetIndex,-2.5)} aria-label="Diminuir carga em 2,5 kg"><Minus size={17}/></button>
-            <input type="number" inputMode="decimal" min="0" step="0.5" value={v6CurrentSet.load_kg} aria-label="Carga atual em quilogramas" onChange={e=>handleUpdateSet(v6ExIndex,v6SetIndex,'load_kg',Math.max(0,Number(e.target.value)||0))}/>
-            <button type="button" onClick={()=>handleQuickAddLoad(v6ExIndex,v6SetIndex,2.5)} aria-label="Aumentar carga em 2,5 kg">+</button>
-          </div></label>}
-          <label className="foco-v6-stepper"><span>Repetições</span><div className="foco-v6-stepper-row">
-            <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',Math.max(0,v6CurrentSet.repetitions-1))} aria-label="Diminuir repetições"><Minus size={17}/></button>
-            <input type="number" inputMode="numeric" min="0" value={v6CurrentSet.repetitions} aria-label="Repetições da série atual" onChange={e=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',Math.max(0,Number(e.target.value)||0))}/>
-            <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',v6CurrentSet.repetitions+1)} aria-label="Aumentar repetições">+</button>
-          </div></label>
-        </div>
-        {restTimerActive&&<div className="foco-v6-rest">
-          <div className="foco-v6-rest-ring" style={{'--v6-rest-progress':v6RestRatio+'%'} as React.CSSProperties}/>
-          <div><span>Descanso</span><strong className="block">{formatTime(restSecondsRemaining)}</strong></div>
-          <button type="button" onClick={restIsPaused?resumeTimer:pauseTimer} aria-label={restIsPaused?'Retomar descanso':'Pausar descanso'}>{restIsPaused?<Play size={19} fill="currentColor"/>:<Pause size={19} fill="currentColor"/>}</button>
+        <section className={'foco-v7-session-adjusters '+(!v6TracksLoad?'single-control':'')} aria-label="Registrar série">
+          {v6TracksLoad&&<label className="foco-v7-adjuster">
+            <span><Dumbbell size={16}/> CARGA <small>kg</small></span>
+            <div>
+              <button type="button" onClick={()=>handleQuickAddLoad(v6ExIndex,v6SetIndex,-2.5)} aria-label="Diminuir carga em 2,5 kg"><Minus size={19}/></button>
+              <input type="number" inputMode="decimal" min="0" step="0.5" value={v6CurrentSet.load_kg}
+                aria-label="Carga atual em quilogramas"
+                onChange={e=>handleUpdateSet(v6ExIndex,v6SetIndex,'load_kg',Math.max(0,Number(e.target.value)||0))}/>
+              <button type="button" onClick={()=>handleQuickAddLoad(v6ExIndex,v6SetIndex,2.5)} aria-label="Aumentar carga em 2,5 kg">+</button>
+            </div>
+          </label>}
+          <label className="foco-v7-adjuster">
+            <span><CheckCircle2 size={16}/> REPETIÇÕES</span>
+            <div>
+              <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',Math.max(0,v6CurrentSet.repetitions-1))}
+                aria-label="Diminuir repetições"><Minus size={19}/></button>
+              <input type="number" inputMode="numeric" min="0" value={v6CurrentSet.repetitions}
+                aria-label="Repetições da série atual"
+                onChange={e=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',Math.max(0,Number(e.target.value)||0))}/>
+              <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',v6CurrentSet.repetitions+1)}
+                aria-label="Aumentar repetições">+</button>
+            </div>
+          </label>
+        </section>
+        <section className={'foco-v7-rest-panel '+(restTimerActive?'is-running':'')} aria-label="Controle de descanso">
+          <span className="foco-v7-rest-ring" style={{'--v6-rest-progress':v6RestRatio+'%'} as React.CSSProperties}>
+            <Clock size={17}/>
+          </span>
+          <div className="foco-v7-rest-info"><span>{restTimerActive?'DESCANSO EM ANDAMENTO':'DESCANSO PROGRAMADO'}</span>
+            <strong>{formatTime(v7ActiveRestSeconds)}</strong></div>
+          <button type="button" className="foco-v7-rest-control"
+            aria-label={restTimerActive?(restIsPaused?'Retomar descanso':'Pausar descanso'):'Iniciar descanso'}
+            onClick={()=>restTimerActive?(restIsPaused?resumeTimer:pauseTimer) : startTimer(v7ActiveRestSeconds,v6CurrentExercise.exercise_name,Math.min(v6SetIndex+1,v6CurrentExercise.sets.length))}>
+            {!restTimerActive||restIsPaused?<Play size={18} fill="currentColor"/>:<Pause size={18} fill="currentColor"/>}
+          </button>
+        </section>
+        {!sessionStarted?<button type="button" className="foco-v6-primary foco-v7-session-start" onClick={handleStartWorkout}>
+          Iniciar treino <Play size={17} fill="currentColor"/>
+        </button>:
+        <div className="foco-v7-session-actions">
+          <button type="button" className="foco-v7-previous" disabled={v6ExIndex===0} onClick={()=>v7GoExercise(-1)}>
+            <ArrowLeft size={16}/> Anterior
+          </button>
+          <button type="button" className="foco-v6-primary" disabled={v6CurrentSet.completed}
+            onClick={()=>{handleToggleSetComplete(v6ExIndex,v6SetIndex);setV7ManualExerciseIndex(null);}}>
+            Concluir série <CheckCircle2 size={18}/>
+          </button>
         </div>}
-        {!sessionStarted?<button type="button" className="foco-v6-primary" onClick={handleStartWorkout}><Play size={17} fill="currentColor"/> Iniciar treino</button>:
-          <div className="grid grid-cols-[1fr_1.35fr] gap-2">
-            <button type="button" className="foco-v6-secondary" onClick={()=>document.getElementById('foco-exercise-card-'+Math.max(0,v6ExIndex-1))?.scrollIntoView({behavior:'smooth'})}>Anterior</button>
-            <button type="button" className="foco-v6-primary" disabled={v6CurrentSet.completed} onClick={()=>handleToggleSetComplete(v6ExIndex,v6SetIndex)}>
-              Concluir série <CheckCircle2 size={17}/>
-            </button>
-          </div>}
+        <button type="button" className="foco-v7-next-exercise" onClick={()=>v7GoExercise(1)}
+          disabled={v6ExIndex>=exerciseLogs.length-1}>Próximo exercício <ChevronRight size={17}/></button>
       </>}
-      {v6CurrentExercise&&v6SessionMode==='execution'&&<section className="foco-v6-glass overflow-hidden rounded-2xl">
+      {v6CurrentExercise&&v6SessionMode==='execution'&&<section className="foco-v7-guide-panel">
+        <div className="foco-v7-guide-heading"><span>EXECUÇÃO CORRETA</span><button type="button" onClick={()=>setV6SessionMode('register')}>Voltar ao registro</button></div>
         <ExerciseExecutionGuide exerciseName={v6CurrentExercise.exercise_name} muscleGroup={v6CurrentExercise.muscle_group}/>
       </section>}
-      {v6CurrentExercise&&v6SessionMode==='tips'&&<div className="foco-v6-tip-card">
-        <strong>Dica do FOCO</strong><p>Movimento controlado, amplitude confortável e postura estável. Respeite suas limitações individuais.</p>
-        <button type="button" className="foco-v6-glass-button mt-4" onClick={()=>setV6SessionMode('execution')}>Ver execução</button>
-      </div>}
-      {sessionStarted&&<button type="button" className="foco-v6-glass-button w-full" disabled={isSaving} onClick={handleFinishWorkout}><CheckCircle2 size={16}/> {isSaving?'Salvando...':'Finalizar e salvar treino'}</button>}
-      {errorAlert&&<p role="alert" className="foco-v6-glass rounded-xl p-3 text-xs">{errorAlert}</p>}
+      {v6CurrentExercise&&v6SessionMode==='tips'&&<section className="foco-v7-guide-panel p-5">
+        <p className="foco-v7-guide-label">DICA DO FOCO</p>
+        <h3 className="mt-3 text-xl font-bold">Controle antes de carga.</h3>
+        <p className="mt-2 text-sm leading-relaxed text-[#B8C1B4]">Execute com amplitude confortável, postura estável e movimento controlado. Ajuste a carga às suas condições.</p>
+        <button type="button" className="foco-v6-glass-button mt-5 w-full" onClick={()=>setV6SessionMode('execution')}>Ver execução completa <ChevronRight size={16}/></button>
+      </section>}
+      {sessionStarted&&<button type="button" className="foco-v7-finish" disabled={isSaving} onClick={handleFinishWorkout}>
+        <CheckCircle2 size={17}/>{isSaving?'Salvando sessão...':'Finalizar e salvar treino'}
+      </button>}
+      {errorAlert&&<p role="alert" className="foco-v6-glass rounded-xl p-3 text-sm">{errorAlert}</p>}
       <details className="foco-v6-glass rounded-2xl p-3">
-        <summary className="cursor-pointer p-2 text-xs font-bold text-[#C8F040]">Ver todas as séries, trocar dia e ajustar descanso</summary>
+        <summary className="cursor-pointer p-2 text-xs font-bold text-[#C8F040]">Ficha completa e ajustes avançados</summary>
       <div className="foco-v5-session foco-v4-page max-w-3xl space-y-4 pb-8">
       <header className="space-y-1">
         <p className="foco-v4-eyebrow">{sessionStarted ? 'Sessão ativa' : 'Sua sessão'}</p>

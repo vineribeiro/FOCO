@@ -6,7 +6,8 @@ import { BatteryFull, Signal, Wifi, Dumbbell, CalendarDays, ArrowLeft, Menu, Use
 export const V6_IMAGES = {
   portrait: FOCO_REFERENCE_ATHLETE,
   athlete: FOCO_REFERENCE_ATHLETE,
-  bench: 'https://images.unsplash.com/photo-1690731033723-ad718c6e585a?auto=format&fit=crop&w=1100&q=88',
+  login: 'https://images.unsplash.com/photo-1637651684506-07e16fcf7b06?auto=format&fit=crop&w=2000&q=88',
+  bench: 'https://images.unsplash.com/photo-1690731033723-ad718c6e585a?auto=format&fit=crop&w=1800&q=88',
   muscle: 'https://images.unsplash.com/photo-1601113329251-0aebe217bdbe?auto=format&fit=crop&w=1000&q=88',
   training: 'https://images.unsplash.com/photo-1704223523325-f4e3257d6fca?auto=format&fit=crop&w=1000&q=88',
 };

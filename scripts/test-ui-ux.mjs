@@ -10,7 +10,7 @@ const session=read("src/pages/ActiveSessionPage.tsx");
 const dashboard=read("src/pages/DashboardPage.tsx");
 const details=read("src/pages/WorkoutDetailPage.tsx");
 const workout=read("src/pages/WorkoutsPage.tsx");
-const css=read("src/index.css")+"\n"+read("src/foco-v6.css");
+const css=read("src/index.css")+"\n"+read("src/foco-v6.css")+"\n"+read("src/foco-v7-polish.css");
 
 for(const id of ["dashboard","sessao","progresso","treinos","perfil"]){
  assert.match(mobile,new RegExp("id:\\s*'"+id+"'"),"Mobile menu missing "+id);
@@ -40,7 +40,8 @@ assert.match(dashboard,/getActiveWorkout/);
 assert.match(dashboard,/getSessions/);
 assert.match(details,/getActiveWorkout/);
 assert.match(details,/getPreferredTrainingDay/);
-assert.match(session,/foco-v6-session-photo/);
+assert.match(session,/foco-v7-session-stage/);
+assert.match(session,/foco-v7-session-adjusters/);
 assert.match(session,/handleToggleSetComplete\(v6ExIndex,v6SetIndex\)/);
 assert.match(session,/handleUpdateSet\(v6ExIndex,v6SetIndex/);
 assert.match(session,/min-h-12/);
