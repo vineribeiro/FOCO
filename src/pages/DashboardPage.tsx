@@ -19,6 +19,18 @@ const WEEK=[
 const toMondayIndex=(d:Date)=>(d.getDay()+6)%7;
 const normalize=(value:string)=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const prettyTitle=(str:string)=>str.replace(/\s+/g,' ').trim().replace(/(^|\s)\S/g,l=>l.toUpperCase());
+const conciseWorkoutName=(groups:string[],fallback:string)=>{
+  if(!groups.length)return fallback;
+  const normalized=groups.map(normalize);
+  const upper=normalized.some(g=>/(peit|cost|dorsa|omb|bicep|tricep|deltoid|braco)/.test(g));
+  const lower=normalized.some(g=>/(quadr|perna|glute|posterior|panturr|coxa|adutor|abdutor)/.test(g));
+  const core=normalized.some(g=>/(core|abd[oô]m|abdom|lombar)/.test(g));
+  if(upper&&lower)return 'Corpo inteiro';
+  if(upper)return 'Superiores';
+  if(lower)return 'Inferiores';
+  if(core)return 'Core e mobilidade';
+  return prettyTitle(groups.slice(0,2).join(' + '));
+};
 
 export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setActiveTab}) => {
   const {user}=useAuth();
@@ -40,7 +52,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
   const hasDaySplit=exercises.some(ex=>!!ex.training_day);
   const selectedExercises=hasDaySplit?exercises.filter(ex=>!ex.training_day||ex.training_day===today.day):exercises;
   const muscles=[...new Set(selectedExercises.map(ex=>ex.muscle_group).filter(Boolean))];
-  const title=muscles.length?prettyTitle(muscles.slice(0,2).join(' + ')):plan?.name||'Seu próximo nível começa aqui';
+  const title=conciseWorkoutName(muscles,plan?.name||'Seu próximo nível começa aqui');
   const weekStart=useMemo(()=>{
     const start=new Date();start.setHours(0,0,0,0);start.setDate(start.getDate()-toMondayIndex(start));return start;
   },[]);
@@ -73,7 +85,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
     <header className="foco-v6-home-header">
       <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('configuracoes')} aria-label="Abrir menu e configurações"><Menu size={20}/></button>
       <FocoV6Lockup compact />
-      <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Abrir calendário"><CalendarDays size={19}/></button>
+      <span aria-hidden="true" className="block h-[42px] w-[42px] shrink-0"/>
     </header>
     <div className="foco-v6-home-intro">
       <div><p>{greeting},</p><h1>{firstName}<span className="text-[#C8F040]">.</span></h1></div>
@@ -85,6 +97,9 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
     </div>}
     <section className="foco-v6-hero" aria-labelledby="foco-v6-workout-title">
       <img src={V6_IMAGES.athlete} alt="" loading="eager" decoding="async"/>
+      {plan && selectedExercises.length>0&&<button type="button" onClick={()=>handleDetail(today.day)}
+        aria-label="Visualizar os exercícios do dia" title="Visualizar os exercícios do dia"
+        className="foco-v6-hero-detail"><ArrowRight size={17}/></button>}
       <div className="foco-v6-hero-body">
         <p className="foco-v6-hero-eyebrow">{plan?'TREINO DO DIA':'SEU TREINO, SUA JORNADA'}</p>
         <h2 id="foco-v6-workout-title">{loading?'Preparando sua jornada':plan?(selectedExercises.length?title:'Recuperação ativa'):'Sua evolução começa aqui.'}</h2>
@@ -99,8 +114,6 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
         </button>
       </div>
     </section>
-    {plan && selectedExercises.length>0&&<button type="button" onClick={()=>handleDetail(today.day)}
-      className="foco-v6-glass-button w-full"><Dumbbell size={15} className="text-[#C8F040]"/> Visualizar os exercícios do dia <ArrowRight size={15}/></button>}
     <section aria-label="Frequência dos treinos" className="space-y-2">
       <div className="foco-v6-week-heading">
         <h2>Sua semana</h2>
