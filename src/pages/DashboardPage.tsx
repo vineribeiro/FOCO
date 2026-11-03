@@ -76,12 +76,12 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
       <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Abrir calendário"><CalendarDays size={19}/></button>
     </header>
     <div className="foco-v6-home-intro">
-      <div><p>{greeting},</p><h1>{firstName}<span className="text-[#D5FF40]">.</span></h1></div>
+      <div><p>{greeting},</p><h1>{firstName}<span className="text-[#C8F040]">.</span></h1></div>
       {plan && <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Ver meu calendário"><CalendarDays size={18}/></button>}
     </div>
     {loadError && <div role="alert" className="foco-v6-glass rounded-2xl p-4 text-sm">
       Não conseguimos consultar seus treinos. Os dados não foram alterados.
-      <button type="button" onClick={()=>window.location.reload()} className="ml-2 text-[#D5FF40] underline">Recarregar</button>
+      <button type="button" onClick={()=>window.location.reload()} className="ml-2 text-[#C8F040] underline">Recarregar</button>
     </div>}
     <section className="foco-v6-hero" aria-labelledby="foco-v6-workout-title">
       <img src={V6_IMAGES.athlete} alt="" loading="eager" decoding="async"/>
@@ -100,7 +100,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
       </div>
     </section>
     {plan && selectedExercises.length>0&&<button type="button" onClick={()=>handleDetail(today.day)}
-      className="foco-v6-glass-button w-full"><Dumbbell size={15} className="text-[#D5FF40]"/> Visualizar os exercícios do dia <ArrowRight size={15}/></button>}
+      className="foco-v6-glass-button w-full"><Dumbbell size={15} className="text-[#C8F040]"/> Visualizar os exercícios do dia <ArrowRight size={15}/></button>}
     <section aria-label="Frequência dos treinos" className="space-y-2">
       <div className="foco-v6-week-heading">
         <h2>Sua semana</h2>
@@ -120,7 +120,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
       </button>
     </div>
     <button type="button" onClick={()=>setActiveTab('progresso')} className="foco-v6-glass-button w-full justify-between">
-      <span className="flex items-center gap-2"><Clock3 size={15} className="text-[#D5FF40]"/> Ver minha evolução</span><ChevronRight size={17}/>
+      <span className="flex items-center gap-2"><Clock3 size={15} className="text-[#C8F040]"/> Ver minha evolução</span><ChevronRight size={17}/>
     </button>
   </div>;
 };
