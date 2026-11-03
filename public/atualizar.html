@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#090C09"/>
+  <title>Atualizar FOCO</title>
+  <style>
+    :root{color-scheme:dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at 100% 0%,#26321a 0%,#0b0e0a 55%);color:#f5f7f1;display:grid;place-items:center;padding:22px}
+    main{width:min(100%,420px);padding:27px;border:1px solid #425137;border-radius:28px;background:linear-gradient(145deg,#21291c,#101510);box-shadow:0 28px 70px #0008}
+    .brand{font-weight:900;font-style:italic;letter-spacing:-.07em;font-size:40px;line-height:1;color:#f9fbf5}.brand span{color:#d5ff40}
+    .eyebrow{margin-top:32px;color:#d5ff40;font-size:11px;letter-spacing:.11em;font-weight:800}
+    h1{font-size:clamp(28px,7vw,36px);letter-spacing:-.065em;line-height:1.06;margin:12px 0 13px}
+    p{color:#b9c4b0;line-height:1.6;font-size:14px}
+    button{border:0;background:#d5ff40;color:#10160d;min-height:56px;width:100%;border-radius:999px;font-size:14px;font-weight:800;cursor:pointer;margin-top:18px}
+    button:focus-visible{outline:3px solid white;outline-offset:4px}
+    button:disabled{opacity:.6;cursor:wait}
+    #status{min-height:25px;font-size:12px;margin-top:13px}
+    small{display:block;margin-top:15px;color:#86947b;font-size:11px;line-height:1.6}
+  </style>
+</head>
+<body>
+<main>
+  <div class="brand"><span>↗</span> FOCO</div>
+  <p class="eyebrow">MANUTENÇÃO DA VERSÃO</p>
+  <h1>Ver a versão mais recente.</h1>
+  <p>Vamos limpar somente arquivos temporários e caches da interface para carregar o design atualizado. Sua conta, histórico e dados no servidor não serão apagados.</p>
+  <button id="refresh" type="button">Atualizar FOCO agora</button>
+  <p id="status" role="status" aria-live="polite"></p>
+  <small>Antes de atualizar, finalize ou salve um treino em andamento. Dados ainda não salvos em formulários podem ser perdidos ao recarregar.</small>
+</main>
+<script>
+(() => {
+  const button = document.getElementById('refresh');
+  const status = document.getElementById('status');
+  button.addEventListener('click', async () => {
+    if (!navigator.onLine) {
+      status.textContent = 'Conecte-se à internet antes de atualizar.';
+      return;
+    }
+    button.disabled = true;
+    status.textContent = 'Verificando a versão e limpando o cache visual...';
+    try {
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.filter(reg => {
+          try { return new URL(reg.scope).pathname.startsWith('/FOCO/'); } catch { return false; }
+        }).map(reg => reg.unregister()));
+      }
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.filter(key => key.startsWith('foco-shell-')).map(key => caches.delete(key)));
+      }
+      status.textContent = 'Atualização preparada. Abrindo o FOCO...';
+      const dest = new URL('/FOCO/', location.origin);
+      dest.searchParams.set('foco_refresh', '20261103-1');
+      dest.searchParams.set('nocache', String(Date.now()));
+      location.replace(dest.href);
+    } catch (err) {
+      status.textContent = 'Não foi possível concluir automaticamente. Abra o FOCO pelo navegador e tente novamente.';
+      button.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
