@@ -69,7 +69,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="foco-v4-page max-w-3xl space-y-5 text-white">
+    <div className="foco-v5-profile foco-v4-page max-w-3xl space-y-5 text-white">
       
       <header className="flex items-start justify-between gap-3">
         <div>

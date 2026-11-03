@@ -179,3 +179,15 @@ export const FocoLogoVertical: React.FC<{
     </div>
   );
 };
+
+
+/** FOCO V5 editorial lockup. Reuses the vector brand geometry so scaling stays crisp. */
+export const FocoV5Logo: React.FC<{ className?: string; light?: boolean }> = ({
+  className = 'h-8 w-40',
+  light = true,
+}) => (
+  <span className={`foco-v5-logo relative inline-flex shrink-0 items-center ${className}`}>
+    <FocoLettering className="h-full w-full" color={light ? '#F8F8F4' : '#111610'} />
+    <span aria-hidden="true" className="foco-v5-logo-stripes"><i /><i /></span>
+  </span>
+);

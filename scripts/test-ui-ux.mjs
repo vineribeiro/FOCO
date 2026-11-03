@@ -12,7 +12,7 @@ const dashboard = read("src/pages/DashboardPage.tsx");
 const css = read("src/index.css");
 
 // Mobile uses "Treinos" as the canonical entry for the workout and cardio flows.
-const mobileNavigation = ["dashboard", "treinos", "progresso", "biblioteca", "perfil"];
+const mobileNavigation = ["dashboard", "treinos", "progresso", "complementares", "perfil"];
 const desktopNavigation = ["dashboard", "sessao", "progresso", "biblioteca", "perfil"];
 for (const id of mobileNavigation) {
   assert.match(mobile, new RegExp("id: '" + id + "'"), "Mobile menu missing " + id);
@@ -56,6 +56,10 @@ assert.match(session, /Preferências de descanso e som/);
 assert.match(session, /aria-label="Progresso de séries concluídas"/);
 assert.match(session, /aria-label=\{set\.completed \?/);
 assert.match(dashboard, /foco-v4-week/);
+assert.match(dashboard, /setActiveTab\(\x27biblioteca\x27\)/);
+assert.match(dashboard, /foco-v5-feature/);
+assert.match(session, /foco-v5-session-poster/);
+assert.match(css, /--foco-accent: #D5FF40/);
 assert.match(css, /safe-area-inset-bottom/);
 assert.match(css, /prefers-reduced-motion/);
 assert.match(css, /:focus-visible/);

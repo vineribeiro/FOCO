@@ -26,7 +26,6 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeTab, setActive
           const selected = activeTab === id
             || (id === 'treinos' && ['sessao', 'novo-treino', 'revisao', 'cardio'].includes(activeTab))
             || (id === 'progresso' && ['arquivos', 'historico'].includes(activeTab))
-            || (id === 'biblioteca' && ['musculos', 'atlas'].includes(activeTab))
             || (id === 'perfil' && ['configuracoes', 'anamnese', 'objetivos'].includes(activeTab));
           return (
             <button type="button" key={id} aria-current={selected ? 'page' : undefined}

@@ -135,13 +135,13 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
   const weightDelta = visibleWeightData.length >= 2 ? visibleWeightData[visibleWeightData.length - 1].peso - visibleWeightData[0].peso : null;
 
   return (
-    <div className="foco-v4-page space-y-5">
+    <div className="foco-v5-evolution foco-v4-page space-y-5">
       
       {/* Header */}
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <span className="foco-v4-eyebrow">Métricas registradas</span>
-          <h1 className="foco-v4-heading">Minha evolução</h1>
+          <span className="foco-v4-eyebrow">EVOLUÇÃO / SEUS DADOS</span>
+          <h1 className="foco-v4-heading">Minha <span className="text-[#D5FF40]">evolução.</span></h1>
           <p className="mt-2 text-sm text-neutral-400">Acompanhe sua composição corporal OKOK, seus treinos e as medidas registradas.</p>
         </div>
         <label className="flex flex-col gap-1.5 text-xs font-semibold text-neutral-300">
@@ -210,8 +210,8 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
               <AreaChart data={visibleWeightData}>
                 <defs>
                   <linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#D5FF40" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#D5FF40" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#303030" />
@@ -224,8 +224,8 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#171717',
-                    borderColor: 'rgba(255,255,255,0.2)',
+                    backgroundColor: '#1A2116',
+                    borderColor: 'rgba(213,255,64,0.22)',
                     borderRadius: '12px',
                     fontSize: '11px',
                     color: '#FFF',
@@ -235,7 +235,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                   type="monotone"
                   dataKey="peso"
                   name="Peso (kg)"
-                  stroke="#FFFFFF"
+                  stroke="#D5FF40"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#monoGrad)"
@@ -283,7 +283,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                 <Bar
                   dataKey="tonelagem"
                   name="Tonelagem (kg)"
-                  fill="#FFFFFF"
+                  fill="#D5FF40"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>

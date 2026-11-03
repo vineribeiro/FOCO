@@ -173,7 +173,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="foco-v4-page space-y-5 text-white">
+    <div className="foco-v5-workouts foco-v4-page space-y-5 text-white">
       
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -215,6 +215,25 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
       )}
 
 
+
+      {!isLoading && activePlan && weeklyCards.length > 0 && (
+        <section className="foco-v5-workouts-feature" aria-label="Destaque do seu plano">
+          <div className="foco-v5-workouts-feature-art" aria-hidden="true"><Dumbbell size={120} strokeWidth={.65}/></div>
+          <div className="relative z-10 min-w-0">
+            <p className="foco-v5-kicker">PLANEJAMENTO DA SEMANA</p>
+            <h2 className="mt-3 text-[clamp(28px,6vw,46px)] font-extrabold leading-[1.04] tracking-[-.065em]">{activePlan.name}</h2>
+            <div className="mt-4 flex flex-wrap gap-2 text-xs text-white/75">
+              <span className="rounded-full border border-white/15 bg-black/30 px-3 py-2">{weeklyCards.length} dias com treino</span>
+              <span className="rounded-full border border-white/15 bg-black/30 px-3 py-2">{activePlan.exercises?.length || 0} exercícios na ficha</span>
+            </div>
+            <button type="button" className="foco-v5-primary mt-5 max-w-[330px] w-full"
+              onClick={() => selectSession(expandedWeekDay && weeklyCards.some(day => day.value === expandedWeekDay) ? expandedWeekDay : weeklyCards[0].value)}>
+              <Play size={16} fill="currentColor"/> Escolher treino
+            </button>
+          </div>
+        </section>
+      )}
+
       <section className="foco-v4-panel flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10"><Activity className="h-5 w-5" /></span>
@@ -247,7 +266,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                 const groups = [...new Set(day.exercises.map(ex => ex.muscle_group).filter(Boolean))];
                 const completed = completedPlannedDays.has(day.value);
                 return (
-                  <article key={day.value} className={'min-w-0 overflow-hidden rounded-2xl border bg-[#101010] ' + (expanded ? 'border-white/45' : 'border-white/15')}>
+                  <article key={day.value} className={'min-w-0 overflow-hidden rounded-2xl border bg-[#101010] ' + (expanded ? 'border-[#D5FF40]/70 bg-[#20291A]' : 'border-white/15')}>
                     <button type="button" aria-expanded={expanded} onClick={() => setExpandedWeekDay(expanded ? '' : day.value)}
                       className="flex w-full items-center gap-3 p-3.5 text-left hover:bg-white/5">
                       {day.exercises[0] && <ExerciseIllustration exerciseName={day.exercises[0].exercise_name}
@@ -283,7 +302,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                           ))}
                         </ol>
                         <button type="button" onClick={() => selectSession(day.value)}
-                          className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-black text-black active:scale-[.98]">
+                          className="foco-v5-primary mt-4 w-full">
                           <Play className="h-4 w-4 fill-current" /> Escolher este treino
                         </button>
                         <p className="mt-2 text-center text-[11px] leading-relaxed text-neutral-400">

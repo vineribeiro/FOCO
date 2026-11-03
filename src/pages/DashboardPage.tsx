@@ -5,7 +5,7 @@ import { isCardioSession } from '../utils/cardio';
 import { savePreferredTrainingDay } from '../data/exerciseLibrary';
 import type { AIRecommendation, UploadedFile, WorkoutPlan, WorkoutSession } from '../types';
 import {
-  Activity, ArrowRight, BarChart3, BellRing, BookOpen, CalendarDays,
+  Activity, ArrowRight, BarChart3, BellRing, BookOpen, CalendarDays, Play,
   CheckCircle2, ChevronRight, ClipboardList, Clock3, Dumbbell, FilePlus2,
   FileUp, ScanLine, Sparkles, TrendingUp,
 } from 'lucide-react';
@@ -129,9 +129,16 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
           <button type="button" onClick={() => {setShowWorkoutPreview(false);openScheduledWorkout(todayKey);}} className="foco-v4-action mt-5 w-full justify-center">Ir para iniciar treino <ChevronRight className="h-5 w-5" /></button>
         </section>
       </div>}
-      <header className="pb-1">
-        <h1 className="foco-v4-heading">{greeting}, <span className="font-extrabold">{firstName}</span></h1>
-        <p className="mt-2 text-sm text-neutral-300">Disciplina hoje, resultado sempre.</p>
+      <header className="foco-v5-welcome">
+        <div className="min-w-0">
+          <p className="foco-v5-kicker mb-2">FOCO / SUA JORNADA</p>
+          <h1 className="foco-v5-welcome-name">{greeting}, {firstName}<span className="text-[#D5FF40]">.</span></h1>
+          <p className="foco-v5-welcome-sub">Um treino de cada vez. Evolução de verdade.</p>
+        </div>
+        <button type="button" onClick={() => setActiveTab('perfil')} aria-label="Abrir meu perfil"
+          className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-[#D5FF40]/40 bg-[#242D1D] font-black text-[#D5FF40] shadow-[0_0_20px_rgba(213,255,64,.09)]">
+          {(user?.full_name || 'FOCO').trim().split(/\s+/).slice(0,2).map(part=>part[0]).join('').toUpperCase()}
+        </button>
       </header>
 
       {planUnavailable && <div role="alert" className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-4">
@@ -139,32 +146,49 @@ export const DashboardPage: React.FC<DashboardProps> = ({ setActiveTab }) => {
         <button type="button" onClick={() => window.location.reload()} className="foco-v4-secondary">Tentar novamente</button>
       </div>}
 
-      {activePlan ? (
-        <section className="foco-v4-hero cursor-pointer" aria-labelledby="foco-workout-hero" role="button" tabIndex={0} aria-label="Ver detalhes do treino de hoje" onClick={() => { if (todayExercises.length) setShowWorkoutPreview(true); else setActiveTab("treinos"); }} onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); if (todayExercises.length) setShowWorkoutPreview(true); else setActiveTab("treinos"); } }}>
-          <div className="foco-v4-hero-content relative z-10 space-y-3">
-            <p className="foco-v4-eyebrow !text-neutral-300">{todayExercises.length ? "Treino de hoje" : "Dia de recuperação"}</p>
-            <h2 id="foco-workout-hero" className="max-w-[430px] text-[29px] font-extrabold leading-[1.13] tracking-[-.055em] sm:text-[37px]">{todayExercises.length ? heroTitle : 'Recuperação também faz parte.'}</h2>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-neutral-200">
-              <span className="inline-flex items-center gap-1.5"><Dumbbell className="h-3.5 w-3.5" />{todayExercises.length ? todayExercises.length + ' exercícios' : 'Sem exercício atribuído a hoje'}</span>
-              <span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{activePlan.weekly_frequency} dias por semana</span>
-            </div>
-            <button type="button" onClick={() => todayExercises.length ? setShowWorkoutPreview(true) : setActiveTab("treinos")} className="foco-v4-action !mt-4 w-fit">
-              <span>{todayExercises.length ? "Ver treino de hoje" : "Ver meu plano"}</span><span className="foco-v4-cta-arrow"><ChevronRight className="h-5 w-5" /></span>
-            </button>
+      {!planUnavailable && <section className="foco-v5-feature" aria-labelledby="foco-editorial-workout">
+        <img className="foco-v5-feature-photo" aria-hidden="true"
+          src="https://images.unsplash.com/photo-1653773869760-5b0f846231fb?auto=format&fit=crop&w=1400&q=85"
+          alt="" loading="eager" decoding="async" />
+        <div className="foco-v5-feature-top">
+          <span className="foco-v5-feature-pill">{todayExercises.length ? 'Treino do dia' : 'Seu próximo passo'}</span>
+          <span className="rounded-full border border-white/20 bg-black/40 px-3 py-2 text-[10px] font-semibold text-white/90 backdrop-blur-md">{DAYS[todayIndex].short} • {now.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})}</span>
+        </div>
+        <div className="foco-v5-feature-content">
+          <p className="foco-v5-kicker mb-3">{activePlan ? activePlan.name : 'Feito para seu objetivo'}</p>
+          <h2 id="foco-editorial-workout" className="foco-v5-feature-title">
+            {activePlan ? todayExercises.length ? heroTitle : 'Seu descanso importa.' : 'Seu próximo nível começa aqui.'}
+          </h2>
+          <div className="foco-v5-feature-meta">
+            {activePlan && <span><Dumbbell className="h-3.5 w-3.5 text-[#D5FF40]"/>{todayExercises.length} exercícios</span>}
+            {activePlan && <span><CalendarDays className="h-3.5 w-3.5 text-[#D5FF40]"/>{activePlan.weekly_frequency} dias / semana</span>}
+            {!activePlan && <span><Sparkles className="h-3.5 w-3.5 text-[#D5FF40]"/>Plano personalizado</span>}
           </div>
-        </section>
-      ) : !planUnavailable ? (
-        <section className="foco-v4-hero" aria-labelledby="foco-onboarding">
-          <div className="foco-v4-hero-content relative z-10 space-y-3">
-            <p className="foco-v4-eyebrow !text-neutral-300">Comece com FOCO IA</p>
-            <h2 id="foco-onboarding" className="text-[29px] font-extrabold tracking-tight sm:text-[37px]">Seu plano começa aqui.</h2>
-            <p className="max-w-[360px] text-xs leading-relaxed text-neutral-200">Informe seus objetivos, escolha os grupos prioritários e gere uma ficha personalizada.</p>
-            <button type="button" onClick={() => setActiveTab('anamnese')} className="foco-v4-action !mt-4">
-              <span>Configurar meu treino</span><span className="foco-v4-cta-arrow"><ChevronRight className="h-5 w-5" /></span>
+          <div className="foco-v5-feature-actions">
+            <button type="button" className="foco-v5-primary" onClick={() => {
+              if (!activePlan) setActiveTab('anamnese');
+              else if (todayExercises.length) openScheduledWorkout(todayKey);
+              else setActiveTab('cardio');
+            }}>
+              <Play className="h-4 w-4 fill-current" />
+              {activePlan ? todayExercises.length ? 'Ir para treino' : 'Fazer cardio' : 'Criar meu plano'}
             </button>
+            {activePlan && todayExercises.length > 0 && <button type="button" className="foco-v5-ghost"
+              onClick={() => setShowWorkoutPreview(true)}>Ver detalhes</button>}
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>}
+
+      {activePlan && !sessionsUnavailable && targetPerWeek > 0 && <section className="foco-v5-progress" aria-label="Seu progresso desta semana">
+        <div>
+          <p className="foco-v5-kicker mb-1.5">Sua semana</p>
+          <strong>{Math.min(strengthSessions.length,targetPerWeek)} de {targetPerWeek} treinos</strong>
+          <p className="mt-1 text-xs leading-relaxed text-[#AAB2A3]">Cada sessão concluída conta para sua meta.</p>
+        </div>
+        <div className="foco-v5-progress-ring" style={{'--foco-progress': Math.min(100,Math.round(strengthSessions.length / targetPerWeek * 100)) + '%'} as React.CSSProperties}>
+          <span>{Math.min(100,Math.round(strengthSessions.length / targetPerWeek * 100))}%</span>
+        </div>
+      </section>}
 
       <button type="button" onClick={() => setActiveTab('cardio')}
         className="foco-v4-panel flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition hover:border-white/35 sm:px-6">

@@ -6,8 +6,8 @@
   "scope": "/FOCO/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0A0A0A",
-  "theme_color": "#0A0A0A",
+  "background_color": "#090C09",
+  "theme_color": "#090C09",
   "icons": [
     {
       "src": "/FOCO/icons/foco-192.png",
