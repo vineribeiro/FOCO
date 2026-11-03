@@ -103,6 +103,20 @@ try{
       text:document.querySelector('.foco-v4-page')?.textContent?.slice(0,200)||'',
     }));
     const overflow=Math.max(check.body,check.doc)-check.viewport;
+    // Critical visual gate: a CSS shell with a broken photo is not an acceptable
+    // implementation of the reference's cinematic hero.
+    if(view==='dashboard'){
+      await page.locator('.foco-v6-hero img').first().waitFor({timeout:6000});
+      await page.waitForFunction(()=>{
+        const img=document.querySelector('.foco-v6-hero img');
+        return img && (img.complete || img.naturalWidth>0);
+      },{timeout:7000});
+      const hero=await page.locator('.foco-v6-hero img').first().evaluate(img=>({
+        loaded:img.complete&&img.naturalWidth>100&&img.naturalHeight>100,
+        width:img.naturalWidth,height:img.naturalHeight,
+      }));
+      assert.ok(hero.loaded,'FOCO hero athlete media must decode, not show a broken-image icon');
+    }
     const screenshot=out+'/'+view+'-'+size.name+'.png';
     await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
     const issue=overflow>2?'horizontal overflow '+overflow+' px':!check.title?'page heading missing':jsErrors.length?'JS errors '+jsErrors.join('; '):'';
