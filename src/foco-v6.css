@@ -270,13 +270,13 @@ body {font-family:Inter,Poppins,'Plus Jakarta Sans',system-ui,sans-serif;backgro
 .foco-v6-auth {background:#090C08!important;}
 .foco-v6-auth:before {content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(0deg,rgba(7,9,6,.98) 8%,rgba(7,9,6,.88) 50%,rgba(7,9,6,.6)),
-    url('https://images.unsplash.com/photo-1613845205719-8c87760ab728?auto=format&fit=crop&w=1200&q=82') center 25%/cover;
+    url('/FOCO/assets/models/foco-portrait-ref.jpg') center 25%/cover;
   opacity:.63;
 }
 .foco-v6-auth-editorial {position:relative;isolation:isolate;padding:24px!important;}
 .foco-v6-auth-editorial:before {content:"";position:absolute;inset:0;z-index:-1;border-radius:28px;
  background:linear-gradient(0deg,#0B0D09,rgba(8,10,7,.34) 80%),
- url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1200&q=88') center 26%/cover;
+ url('/FOCO/assets/models/foco-portrait-ref.jpg') center 26%/cover;
  border:1px solid rgba(213,255,64,.15);filter:saturate(.85);
 }
 .foco-v6-auth-card {background:linear-gradient(155deg,rgba(39,46,31,.88),rgba(11,15,10,.92))!important;
