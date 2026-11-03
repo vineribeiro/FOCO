@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
+import { getOkokAssessments, getOkokTrend, type OkokAssessment } from '../utils/okokMetrics';
 import { api } from '../services/api';
 import { OkokEvolutionSection } from '../components/OkokEvolutionSection';
 import { BodyMeasurement, WorkoutSession } from '../types';
@@ -30,7 +32,9 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dataUnavailable, setDataUnavailable] = useState(false);
-  const [period, setPeriod] = useState<'30' | '90' | 'all'>('90');
+  const [period, setPeriod] = useState<'7' | '30' | '90' | '365' | 'all'>('30');
+  const [assessments, setAssessments] = useState<OkokAssessment[]>([]);
+  const reportRef=useRef<HTMLDetailsElement>(null);
 
   // New measurement form
   const [measurementType, setMeasurementType] = useState('peso');
@@ -43,10 +47,12 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
     setIsLoading(true);
     setDataUnavailable(false);
     try {
-      const [m, s] = await Promise.all([
+      const [m, s, f] = await Promise.all([
         api.getMeasurements(),
         api.getSessions(),
+        api.getFiles().catch(()=>[]),
       ]);
+      setAssessments(getOkokAssessments(f));
       setMeasurements(m);
       setSessions(s);
     } catch (e: any) {
@@ -134,7 +140,68 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
   const latestWeight = weightData.length ? weightData[weightData.length - 1].peso : null;
   const weightDelta = visibleWeightData.length >= 2 ? visibleWeightData[visibleWeightData.length - 1].peso - visibleWeightData[0].peso : null;
 
+  const latestAssessment=assessments[assessments.length-1];
+  const metric=(prefix:string)=>latestAssessment?.metrics.find(m=>m.key.startsWith(prefix+':'));
+  const prior=assessments[assessments.length-2];
+  const deltaFor=(prefix:string)=>{
+    const current=metric(prefix);
+    const previous=prior?.metrics.find(m=>m.key===current?.key);
+    return current?.numericValue!=null && previous?.numericValue!=null ? current.numericValue-previous.numericValue:null;
+  };
+  const heroMetric=metric('peso');
+  const heroValue=heroMetric?.value || (latestWeight!==null?latestWeight.toLocaleString('pt-BR')+' kg':'—');
+  const series=heroMetric?getOkokTrend(assessments,heroMetric.key).filter(p=>p.timestamp>=cutoff)
+    :visibleWeightData.map(p=>({value:p.peso,date:p.date,timestamp:p.timestamp,unit:'kg',assessmentId:p.date}));
+  const numericSeries=series.filter(p=>Number.isFinite(p.value));
+  const lo=numericSeries.length?Math.min(...numericSeries.map(p=>p.value))-0.5:0;
+  const hi=numericSeries.length?Math.max(...numericSeries.map(p=>p.value))+0.5:1;
+  const svgPoints=numericSeries.map((p,i)=>{
+    const x=6+(numericSeries.length===1?.5:i/(numericSeries.length-1))*288;
+    const y=90-(p.value-lo)/Math.max(.01,hi-lo)*72;
+    return [x,y] as const;
+  });
+  const pathPoints=svgPoints.map(p=>p.join(',')).join(' ');
+  const tiles=[
+    {label:'Gordura corporal',key:'gordura_corporal'},
+    {label:'Massa muscular',key:metric('musculo_esqueletico')?'musculo_esqueletico':'massa_muscular'},
+    {label:'Gordura visceral',key:'gordura_visceral'},
+    {label:'IMC',key:'imc'},
+  ];
   return (
+    <div className="foco-v6-progress foco-v4-page">
+      <div className="md:hidden"><FocoV6Status/></div>
+      <header className="foco-v6-mobile-title"><h1>Minha evolução</h1></header>
+      <FocoV6Segment label="Período de evolução" options={[{value:'7',label:'7 dias'},{value:'30',label:'30 dias'},{value:'90',label:'90 dias'},{value:'365',label:'1 ano'}]}
+        value={period} onChange={value=>setPeriod(value as '7'|'30'|'90'|'365')}/>
+      <section className="foco-v6-progress-hero">
+        <p>Peso corporal</p>
+        <div className="foco-v6-progress-value">{heroValue}</div>
+        {numericSeries.length>=2?<svg className="foco-v6-progress-svg" viewBox="0 0 300 106" preserveAspectRatio="none" role="img" aria-label="Tendência do peso no período">
+          <defs><linearGradient id="v6-weight-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#D5FF40" stopOpacity=".32"/><stop offset="100%" stopColor="#D5FF40" stopOpacity="0"/>
+          </linearGradient></defs>
+          <path d={'M'+pathPoints.replaceAll(' ',' L')+' L294 104 L6 104Z'} fill="url(#v6-weight-gradient)"/>
+          <polyline points={pathPoints} fill="none" stroke="#D5FF40" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/>
+          {svgPoints.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===svgPoints.length-1?3.6:2.2} fill="#D5FF40"/>)}
+        </svg>:<div className="my-5 flex h-[92px] items-center justify-center rounded-xl border border-dashed border-[#D5FF40]/15 text-center text-xs text-[#A5B09E]">
+          {isLoading?'Consultando dados...':'Adicione duas avaliações para visualizar sua tendência.'}
+        </div>}
+        {numericSeries.length>=2&&<div className="flex justify-between text-[10px] text-[#B0B8AB]"><span>{numericSeries[0].date}</span><span>{numericSeries[numericSeries.length-1].date}</span></div>}
+      </section>
+      <div className="foco-v6-progress-tiles">
+        {tiles.map(tile=>{
+          const value=metric(tile.key), delta=deltaFor(tile.key);
+          return <div className="foco-v6-progress-tile" key={tile.key}>
+            <p>{tile.label}</p><strong>{value?.value||'—'}</strong>
+            {delta!==null&&<em>{delta>0?'+':''}{delta.toLocaleString('pt-BR',{maximumFractionDigits:2})} {value?.unit||''} desde o relatório anterior</em>}
+          </div>;
+        })}
+      </div>
+      <button type="button" className="foco-v6-glass-button w-full" onClick={()=>{reportRef.current?.setAttribute('open','');reportRef.current?.scrollIntoView({behavior:'smooth',block:'start'});}}>
+        Ver relatório completo <TrendingUp size={15}/>
+      </button>
+      <details ref={reportRef} id="foco-v6-report" className="foco-v6-glass rounded-2xl p-3">
+        <summary className="cursor-pointer px-2 py-3 text-sm font-bold text-[#D5FF40]">Histórico, gráficos e ajustes</summary>
     <div className="foco-v5-evolution foco-v4-page space-y-5">
       
       {/* Header */}
@@ -146,14 +213,14 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         </div>
         <label className="flex flex-col gap-1.5 text-xs font-semibold text-neutral-300">
           Período dos gráficos
-          <select aria-label="Período dos gráficos" className="foco-v4-field !min-h-11 !py-2" value={period} onChange={event => setPeriod(event.target.value as '30' | '90' | 'all')}>
+          <select aria-label="Período dos gráficos" className="foco-v4-field !min-h-11 !py-2" value={period} onChange={event => setPeriod(event.target.value as '7' | '30' | '90' | '365' | 'all')}>
             <option value="30">Últimos 30 dias</option>
             <option value="90">Últimos 90 dias</option>
             <option value="all">Todo o histórico</option>
           </select>
         </label>
       </header>
-      <OkokEvolutionSection period={period} onOpenAssessment={openOkok} />
+      <OkokEvolutionSection period={period==='7'?'30':period==='365'?'all':period} onOpenAssessment={openOkok} />
 
       {isLoading && <div role="status" className="foco-v4-panel p-4 text-sm text-neutral-300">Atualizando seus registros...</div>}
       {dataUnavailable && !isLoading && <div className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-4" role="alert">
@@ -408,6 +475,8 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
           )}
         </div>
       </div>}
+    </div>
+      </details>
     </div>
   );
 };
