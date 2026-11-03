@@ -240,3 +240,21 @@ button:hover .foco-v7-exercise-visual img{transform:scale(1.035);}
  .foco-v7-adjuster input{font-size:21px;}
 }
 @media(prefers-reduced-motion:reduce){.foco-v7-exercise-visual img{transition:none;}}
+
+/* Primary workout actions must remain reachable above mobile tab navigation. */
+.foco-v6-session-screen{padding-bottom:154px !important;}
+.foco-v7-session-start,.foco-v7-session-actions {
+  position:sticky;bottom:calc(87px + env(safe-area-inset-bottom,0px));z-index:24;
+  border-radius:999px;box-shadow:0 13px 32px rgba(0,0,0,.45);
+}
+.foco-v7-session-start{box-shadow:0 0 0 7px rgba(9,13,8,.83),0 13px 32px rgba(0,0,0,.4);}
+.foco-v7-session-actions{padding:5px;background:rgba(11,16,11,.96);backdrop-filter:blur(18px);border:1px solid rgba(200,240,64,.12);}
+@media(min-width:768px){
+ .foco-v7-session-start,.foco-v7-session-actions{bottom:18px;}
+ .foco-v6-session-screen{padding-bottom:80px !important;}
+}
+@media(max-height:780px) and (max-width:767px){
+ .foco-v7-session-stage{height:clamp(245px,34dvh,305px);}
+ .foco-v7-session-stage .foco-v7-stage-footer{padding:14px 16px;}
+ .foco-v6-session-screen{gap:9px !important;}
+}
