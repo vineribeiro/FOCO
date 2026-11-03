@@ -180,7 +180,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
   const sunday=new Date(monday);sunday.setDate(monday.getDate()+6);
   const fmt=(d:Date)=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
   return (
-    <div className="foco-v6-weekly">
+    <div className="foco-v6-weekly foco-v4-page">
       <div className="md:hidden"><FocoV6Status/></div>
       <header className="foco-v6-mobile-title">
         <div><h1>Meus treinos</h1><p>Teu plano, no teu ritmo.</p></div>
