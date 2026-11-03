@@ -3,8 +3,8 @@ import { BatteryFull, Signal, Wifi, Dumbbell, CalendarDays, ArrowLeft, Menu, Use
 
 /** FOCO V6 reference assets: licensed Unsplash photographs + application exercise catalog. */
 export const V6_IMAGES = {
-  portrait: 'https://images.unsplash.com/photo-1613845205719-8c87760ab728?auto=format&fit=crop&w=1100&q=88',
-  athlete: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1000&q=88',
+  portrait: import.meta.env.BASE_URL + 'assets/models/foco-portrait-ref.jpg',
+  athlete: import.meta.env.BASE_URL + 'assets/models/foco-portrait-ref.jpg',
   bench: 'https://images.unsplash.com/photo-1690731033723-ad718c6e585a?auto=format&fit=crop&w=1100&q=88',
   muscle: 'https://images.unsplash.com/photo-1601113329251-0aebe217bdbe?auto=format&fit=crop&w=1000&q=88',
   training: 'https://images.unsplash.com/photo-1704223523325-f4e3257d6fca?auto=format&fit=crop&w=1000&q=88',
