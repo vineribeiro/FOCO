@@ -313,3 +313,194 @@ button.foco-v4-stat:hover,button.foco-v4-stat:focus-visible {border-color:rgba(2
 .foco-v4-tabbar {padding-bottom:max(env(safe-area-inset-bottom,0px),4px)}
 @media(max-width:374px){.foco-v4-stat-value{font-size:clamp(20px,6vw,26px)}.foco-v4-tab{font-size:10px}.foco-v4-heading{font-size:clamp(27px,8vw,35px)}}
 @media(prefers-reduced-motion:reduce){.foco-v4-stat,.foco-v4-day{transition:none}}
+
+
+/* ===============================================================
+   FOCO V5 — PERFORMANCE EDITORIAL
+   Real product UI: photographic surfaces + high-contrast logging.
+   The training engine and data layer are deliberately unchanged.
+   =============================================================== */
+:root {
+  --foco-accent: #D5FF40;
+  --foco-accent-dark: #17200A;
+  --foco-ink: #090C09;
+  --foco-glass: rgba(28, 33, 25, .83);
+  --foco-border: rgba(218, 237, 186, .115);
+  --foco-v4-bg: #0A0D0A;
+  --foco-v4-panel: #181B17;
+  --foco-v4-raised: #242923;
+  --foco-v4-stroke: var(--foco-border);
+  --foco-v4-subdued: #ABB0A5;
+  --color-primary: var(--foco-accent);
+  --color-primary-text: #10140D;
+}
+body { background: var(--foco-ink); font-family: Poppins, "Plus Jakarta Sans", sans-serif; }
+::selection { background: var(--foco-accent); color: #10140D; }
+:focus-visible { outline-color: var(--foco-accent); }
+.foco-v5-shell {
+  min-height: 100dvh;
+  background: radial-gradient(ellipse 700px 460px at 105% -130px,rgba(173,215,43,.11),transparent 80%),
+    radial-gradient(ellipse 570px 440px at -30% 65%,rgba(66,84,29,.06),transparent 80%),
+    #090C09;
+  color: #F8F8F4;
+  letter-spacing: -.015em;
+}
+.foco-v5-shell header {
+  background: rgba(9,12,9,.86) !important;
+  border-color: var(--foco-border);
+  backdrop-filter: blur(24px) saturate(1.1);
+}
+.foco-v5-shell .foco-v4-page { max-width: 1090px; padding-bottom: 65px; }
+.foco-v5-shell .foco-v4-heading { font-size: clamp(1.95rem,5vw,3.15rem); font-weight: 800; letter-spacing:-.065em; line-height:1.08; }
+.foco-v5-shell .foco-v4-section-title { font-size:clamp(1.03rem,2vw,1.36rem); letter-spacing:-.045em; }
+.foco-v5-shell .foco-v4-eyebrow { color:var(--foco-accent); font-size:10px; font-family:Poppins,sans-serif; font-weight:700; letter-spacing:.105em; }
+.foco-v5-shell .foco-v4-panel {
+  background: linear-gradient(135deg,rgba(36,41,32,.92),rgba(17,20,17,.95));
+  border:1px solid var(--foco-border);
+  border-radius:24px;
+  box-shadow: inset 0 1px rgba(255,255,255,.03),0 18px 45px rgba(0,0,0,.14);
+}
+.foco-v5-shell .foco-v4-panel-soft { background:#181c17; border-color:var(--foco-border); }
+.foco-v5-shell .foco-v4-action,
+.foco-v5-shell button.bg-white.text-black,
+.foco-v5-auth button.bg-white.text-black {
+  background:var(--foco-accent) !important; color:#11160B !important;
+  border-color:transparent;
+  box-shadow: 0 6px 22px rgba(181,220,48,.13),inset 0 1px rgba(255,255,255,.35);
+}
+.foco-v5-shell .foco-v4-action:hover,
+.foco-v5-shell button.bg-white.text-black:hover,
+.foco-v5-auth button.bg-white.text-black:hover {background:#E2FF77 !important;}
+.foco-v5-shell .foco-v4-action:focus-visible,
+.foco-v5-shell button:focus-visible,
+.foco-v5-auth button:focus-visible {outline:2px solid var(--foco-accent);outline-offset:3px;}
+.foco-v5-shell .foco-v4-cta-arrow {background:#161C09;color:var(--foco-accent);}
+.foco-v5-shell .foco-v4-secondary {border-color:rgba(224,243,189,.18);background:rgba(246,255,225,.045);color:#F3F5EE;}
+.foco-v5-shell .foco-v4-stat {
+  min-height:130px;
+  border:1px solid var(--foco-border);
+  border-radius:20px;
+  background:linear-gradient(145deg,rgba(39,44,36,.87),rgba(22,25,21,.97));
+  padding:18px;
+}
+.foco-v5-shell .foco-v4-stat-value {font-size:clamp(25px,5vw,35px);letter-spacing:-.075em;color:#FAFAF5;}
+.foco-v5-shell .foco-v4-stat-icon {color:var(--foco-accent);}
+.foco-v5-shell button.foco-v4-stat:hover {border-color:rgba(213,255,64,.6);background:#242C1B;}
+.foco-v5-shell .foco-v4-info-icon {background:rgba(216,255,89,.075);border-color:rgba(216,255,89,.11);color:var(--foco-accent);}
+.foco-v5-shell .foco-v4-quick {background:#181C17;border-color:var(--foco-border);border-radius:18px;}
+.foco-v5-shell .foco-v4-quick:hover {border-color:rgba(213,255,64,.46);background:#21271C;}
+.foco-v5-shell .foco-v4-progress-track {background:rgba(255,255,255,.12);}
+.foco-v5-shell .foco-v4-progress-fill {background:var(--foco-accent);}
+.foco-v5-shell .foco-v4-field,
+.foco-v5-shell .foco-field {background:#171B15;border-color:rgba(224,243,189,.17);}
+.foco-v5-shell input:focus-visible,
+.foco-v5-shell select:focus-visible,
+.foco-v5-shell textarea:focus-visible {outline:2px solid var(--foco-accent);outline-offset:2px;border-color:var(--foco-accent);}
+.foco-v5-shell .foco-v4-data-tile {background:linear-gradient(145deg,#22291D,#141813);border-color:var(--foco-border);}
+.foco-v5-shell .foco-v4-steps>li:before {background:var(--foco-accent);color:#111;}
+.foco-v5-shell .foco-v4-day {background:#1B2019;border-color:var(--foco-border);}
+.foco-v5-shell .foco-v4-day-today {border-color:var(--foco-accent);background:#252D1D;box-shadow:inset 0 0 0 1px rgba(213,255,64,.12);}
+.foco-v5-shell .foco-v4-day:focus-visible,
+.foco-v5-shell .foco-v4-quick:focus-visible {outline-color:var(--foco-accent);}
+.foco-v5-shell .foco-v4-hero {
+  min-height:340px;border-radius:29px;border-color:rgba(214,236,166,.2);
+  background:#24291C;
+}
+.foco-v5-shell .foco-v4-hero:before {filter:grayscale(.38) brightness(.72) contrast(1.12);background-position:72% 28%;}
+.foco-v5-shell .foco-v4-hero:after {background:linear-gradient(90deg,rgba(7,10,7,.97),rgba(7,10,7,.66) 53%,rgba(7,10,7,.15)),linear-gradient(0deg,rgba(7,10,7,.85),transparent 65%);}
+.foco-v5-shell .foco-v4-hero-content {padding:clamp(22px,5vw,42px);}
+
+/* Studio: photographic daily workout hero. Actual exercise details remain data-driven. */
+.foco-v5-welcome {display:flex;align-items:end;justify-content:space-between;gap:15px;padding:6px 3px 2px;}
+.foco-v5-welcome-name {font-size:clamp(25px,4.9vw,36px);font-weight:800;letter-spacing:-.067em;line-height:1.1;}
+.foco-v5-welcome-sub {font-size:12px;line-height:1.6;color:#A8AEA4;margin-top:8px;}
+.foco-v5-kicker {color:var(--foco-accent);font-size:10px;font-weight:700;letter-spacing:.095em;text-transform:uppercase;}
+.foco-v5-feature {
+  position:relative;overflow:hidden;isolation:isolate;display:flex;align-items:end;
+  min-height:450px;border:1px solid rgba(231,255,190,.14);border-radius:30px;
+  background:#111810;
+  box-shadow:inset 0 1px rgba(255,255,255,.12),0 22px 62px rgba(0,0,0,.31);
+}
+.foco-v5-feature-photo {
+  z-index:-3;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:66% 36%;
+  filter:contrast(1.08) saturate(.67) brightness(.75);
+}
+.foco-v5-feature:before {
+  z-index:-2;content:"";position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(7,10,7,.98) 1%,rgba(7,10,7,.66) 34%,rgba(7,10,7,.02) 87%),
+    linear-gradient(90deg,rgba(7,10,7,.35),transparent 70%);
+}
+.foco-v5-feature:after {
+  z-index:-1;content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 75% at 110% 45%,rgba(199,255,75,.17),transparent 79%);
+}
+.foco-v5-feature-content {width:100%;position:relative;padding:25px;}
+.foco-v5-feature-top {display:flex;align-items:center;justify-content:space-between;gap:8px;position:absolute;top:24px;left:25px;right:25px;}
+.foco-v5-feature-pill {border-radius:999px;border:1px solid rgba(213,255,64,.19);background:rgba(12,17,10,.67);backdrop-filter:blur(14px);padding:8px 13px;color:var(--foco-accent);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.foco-v5-feature-title {font-size:clamp(37px,7vw,68px);max-width:490px;line-height:.99;font-weight:800;letter-spacing:-.074em;text-wrap:balance;text-shadow:0 3px 16px rgba(0,0,0,.4);}
+.foco-v5-feature-meta {display:flex;flex-wrap:wrap;gap:9px;margin:16px 0 22px;}
+.foco-v5-feature-meta span {display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:99px;background:rgba(10,14,10,.62);border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(10px);font-size:11px;color:#F0F3EB;}
+.foco-v5-feature-actions {display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;}
+.foco-v5-primary {display:flex;align-items:center;justify-content:center;gap:10px;min-height:53px;background:var(--foco-accent);border-radius:100px;color:#10160A;font-size:13px;font-weight:800;transition:transform .18s,background .18s;}
+.foco-v5-primary:hover {background:#E0FF78;transform:translateY(-1px);}
+.foco-v5-ghost {min-height:53px;padding:0 18px;color:white;font-size:12px;font-weight:700;border-radius:100px;border:1px solid rgba(255,255,255,.22);background:rgba(18,24,17,.63);backdrop-filter:blur(14px);}
+.foco-v5-ghost:hover {background:rgba(255,255,255,.16);}
+.foco-v5-progress {border:1px solid var(--foco-border);border-radius:23px;padding:19px 20px;background:linear-gradient(135deg,#232A1D,#151B14);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:15px;}
+.foco-v5-progress strong {font-size:25px;letter-spacing:-.07em;font-weight:800;}
+.foco-v5-progress-ring {height:65px;width:65px;display:grid;place-items:center;border-radius:50%;background:conic-gradient(var(--foco-accent) var(--foco-progress,0%),rgba(255,255,255,.12) 0);position:relative;}
+.foco-v5-progress-ring:before {content:"";position:absolute;inset:7px;border-radius:50%;background:#1B2217;}
+.foco-v5-progress-ring span {z-index:1;font-size:13px;font-weight:800;color:#fff;}
+
+/* Poster mode: live session gets clear, bold controls, never fake figures. */
+.foco-v5-session .foco-v4-heading {font-size:clamp(28px,6vw,48px);}
+.foco-v5-session .foco-v4-panel:has(.foco-v4-progress-track) {background:linear-gradient(145deg,#222B1B,#10140F);}
+.foco-v5-session .foco-v4-panel:has(.foco-v4-progress-track) .foco-v4-progress-fill {box-shadow:0 0 20px rgba(213,255,64,.34);}
+.foco-v5-session .foco-v4-panel:has(button) button:active {transform:scale(.99);}
+.foco-v5-session .foco-v4-eyebrow {color:var(--foco-accent);}
+.foco-v5-evolution .foco-v4-stat:first-child {background:radial-gradient(ellipse at 100% 0%,rgba(213,255,64,.10),transparent 68%),#1B201A;}
+.foco-v5-workouts .foco-v4-panel:first-of-type {background:linear-gradient(115deg,#262E1E,#141813);}
+
+/* Native-feeling floating bottom navigation, safe-area aware. */
+.foco-v5-shell .foco-v4-tabbar {
+  left:50%;right:auto;bottom:10px;transform:translateX(-50%);
+  width:calc(100% - 22px);max-width:500px;overflow:hidden;
+  border:1px solid rgba(220,255,172,.16);border-radius:24px;
+  background:rgba(20,25,19,.92);backdrop-filter:blur(25px) saturate(1.3);
+  box-shadow:0 18px 44px rgba(0,0,0,.5);
+  padding-bottom:max(env(safe-area-inset-bottom,0px),2px);
+}
+.foco-v5-shell .foco-v4-tab {color:#969F90;min-height:68px;}
+.foco-v5-shell .foco-v4-tab-active {color:var(--foco-accent);}
+.foco-v5-shell .foco-v4-tab-active:after {background:var(--foco-accent);}
+.foco-v5-shell .foco-v4-tab svg {height:21px;width:21px;}
+
+/* Accessible login: photographic editorial header is possible without changing auth logic. */
+.foco-v5-auth {background:radial-gradient(ellipse 570px 440px at -10% 30%,rgba(184,225,50,.09),transparent),#090C09 !important;}
+.foco-v5-auth h1 {letter-spacing:-.065em;}
+.foco-v5-auth [role="tablist"] button[aria-selected="true"] {background:var(--foco-accent);color:#111;}
+.foco-v5-auth input:focus-visible {outline:2px solid var(--foco-accent);outline-offset:2px;}
+.foco-v5-auth .foco-v4-eyebrow {color:var(--foco-accent);}
+
+/* Responsive editorial hierarchy */
+@media(min-width:768px) {
+  .foco-v5-feature {min-height:440px;}
+  .foco-v5-feature-content {padding:34px;}
+  .foco-v5-feature-top {top:32px;left:34px;right:34px;}
+  .foco-v5-feature-actions {max-width:460px;}
+}
+@media(max-width:520px) {
+  .foco-v5-feature {min-height:465px;border-radius:26px;}
+  .foco-v5-feature-photo {object-position:62% 40%;}
+  .foco-v5-feature-content {padding:19px;}
+  .foco-v5-feature-top {top:19px;left:19px;right:19px;}
+  .foco-v5-feature-title {font-size:clamp(34px,10vw,46px);}
+  .foco-v5-feature-meta {margin:13px 0 16px;gap:6px;}
+  .foco-v5-feature-meta span {padding:7px 10px;font-size:10px;}
+  .foco-v5-feature-actions {grid-template-columns:1fr;}
+  .foco-v5-ghost {min-height:43px;}
+  .foco-v5-shell .foco-v4-page {padding-bottom:60px;}
+  .foco-v5-progress {padding:16px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .foco-v5-primary,.foco-v5-shell .foco-v4-stat,.foco-v5-shell .foco-v4-quick {transition:none !important;}
+}
