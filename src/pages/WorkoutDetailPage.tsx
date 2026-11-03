@@ -1,3 +1,4 @@
+import { conciseWorkoutName } from '../utils/workoutTitles';
 import React, {useEffect,useState} from 'react';
 import {ArrowLeft,ArrowRight,CalendarDays,ChevronRight,Clock3,Dumbbell,Play,RotateCcw} from 'lucide-react';
 import {api} from '../services/api';
@@ -18,7 +19,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
   const isSplit=exercises.some(ex=>!!ex.training_day);
   const today=isSplit?exercises.filter(ex=>!ex.training_day||ex.training_day===day):exercises;
   const muscles=[...new Set(today.map(ex=>ex.muscle_group).filter(Boolean))];
-  const title=muscles.slice(0,2).join(' + ')||plan?.name||'Seu treino';
+  const title=conciseWorkoutName(muscles,plan?.name||'Seu treino');
   const start=()=>{savePreferredTrainingDay(day);setActiveTab('sessao');};
   return <div className="foco-v6-detail foco-v4-page">
     <div className="md:hidden"><FocoV6Status/></div>
