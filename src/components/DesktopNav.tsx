@@ -1,6 +1,6 @@
 import React from 'react';
 import { BookOpen, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, FileUp, House, ScanLine, Settings2, Sparkles, Target, UserRound, Activity } from 'lucide-react';
-import { FocoLogoVertical } from './FocoBrand';
+import { FocoV5Logo } from './FocoBrand';
 
 interface DesktopNavProps {
   activeTab: string;
@@ -23,8 +23,8 @@ const tools = [
 ];
 
 export const DesktopNav: React.FC<DesktopNavProps> = ({ activeTab, navigate }) => (
-  <aside aria-label="Navegação do FOCO" className="hidden md:sticky md:top-0 md:flex md:h-screen md:overflow-y-auto w-60 shrink-0 flex-col border-r border-white/10 bg-[#0D0D0D] px-4 py-6 lg:w-64">
-    <div className="mb-10 px-2"><FocoLogoVertical symbolSize="w-11 h-10" showSlogan /></div>
+  <aside aria-label="Navegação do FOCO" className="foco-v5-sidebar hidden md:sticky md:top-0 md:flex md:h-screen md:overflow-y-auto w-60 shrink-0 flex-col border-r border-[#D5FF40]/10 bg-[#0C100C] px-4 py-6 lg:w-64">
+    <div className="mb-10 flex flex-col gap-2 px-2"><FocoV5Logo className="h-8 w-[166px]" /><span className="text-[9px] font-bold tracking-[.16em] text-[#AEBDA0]">TREINO. EVOLUÇÃO. PERFORMANCE.</span></div>
     <nav aria-label="Principal" className="space-y-1">
       {primary.map(({ id, label, icon: Icon }) => {
         const selected = activeTab === id
