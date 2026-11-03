@@ -20,7 +20,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
   const muscles=[...new Set(today.map(ex=>ex.muscle_group).filter(Boolean))];
   const title=muscles.slice(0,2).join(' + ')||plan?.name||'Seu treino';
   const start=()=>{savePreferredTrainingDay(day);setActiveTab('sessao');};
-  return <div className="foco-v6-detail">
+  return <div className="foco-v6-detail foco-v4-page">
     <div className="md:hidden"><FocoV6Status/></div>
     <div className="foco-v6-mobile-title">
       <div className="foco-v6-title-left">
