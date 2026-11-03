@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 
 // UI-only fixtures. All requests to the production API are intercepted.
 // No real user is authenticated and NO request reaches data mutation endpoints.
-const base = 'https://vineribeiro.github.io/FOCO/';
+const base = process.env.FOCO_VISUAL_BASE || 'https://vineribeiro.github.io/FOCO/';
 const out = 'visual-qa/internal';
 mkdirSync(out, { recursive: true });
 const date = (daysAgo = 0) => new Date(Date.now() - daysAgo * 86400000).toISOString();
@@ -71,7 +71,7 @@ const responses = {
 };
 const viewports=[{name:'mobile-320',width:320,height:720},{name:'mobile-390',width:390,height:844},
  {name:'tablet-768',width:768,height:1024},{name:'desktop-1440',width:1440,height:900}];
-const views=['dashboard','sessao','progresso','arquivos','novo-treino','biblioteca'];
+const views=['dashboard','detalhes','sessao','treinos','progresso','perfil','anamnese','arquivos','novo-treino','biblioteca'];
 const browser=await chromium.launch({headless:true});
 let failed=false; const results=[];
 try{
