@@ -68,7 +68,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
     savePreferredTrainingDay(today.day);
     setActiveTab('sessao');
   };
-  return <div className="foco-v6-dashboard">
+  return <div className="foco-v6-dashboard foco-v4-page">
     <div className="md:hidden"><FocoV6Status/></div>
     <header className="foco-v6-home-header">
       <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('configuracoes')} aria-label="Abrir menu e configurações"><Menu size={20}/></button>
