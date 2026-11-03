@@ -360,3 +360,13 @@ body {font-family:Inter,Poppins,'Plus Jakarta Sans',system-ui,sans-serif;backgro
 .foco-v6-hero h2 {max-width:100%;text-wrap:balance;}
 .foco-v6-week-day{min-height:54px;}
 @media(max-width:360px){.foco-v6-hero-detail{top:10px;right:10px;}}
+
+/* Isolate the V6 transparent headers from legacy V5's global header material.
+   The old selector left opaque rectangles behind the FOCO wordmark and titles. */
+.foco-v6-shell header.foco-v6-home-header,
+.foco-v6-shell header.foco-v6-mobile-title,
+.foco-v6-shell header.foco-v6-profile-top {
+ background:transparent !important;border-color:transparent !important;
+ backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+ box-shadow:none !important;
+}
