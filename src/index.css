@@ -504,3 +504,10 @@ body { background: var(--foco-ink); font-family: Poppins, "Plus Jakarta Sans", s
 @media(prefers-reduced-motion:reduce){
   .foco-v5-primary,.foco-v5-shell .foco-v4-stat,.foco-v5-shell .foco-v4-quick {transition:none !important;}
 }
+
+/* FOCO V5 vector brand accents */
+.foco-v5-logo {overflow:visible;vertical-align:middle;}
+.foco-v5-logo-stripes {position:absolute;right:9%;top:-14%;display:flex;gap:4px;transform:skewX(-25deg);height:18%;pointer-events:none;}
+.foco-v5-logo-stripes i {display:block;width:10px;height:100%;background:#D5FF40;border-radius:1px;}
+.foco-v5-logo-stripes i:last-child {width:7px;opacity:.8;}
+@media(max-width:360px){.foco-v5-logo-stripes{right:8%;}}
