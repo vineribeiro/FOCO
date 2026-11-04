@@ -11,6 +11,7 @@ interface ExerciseIllustrationProps {
   imagePaths?: string[];
   className?: string;
   showCaption?: boolean;
+  thumbnail?: boolean;
   presentation?: 'standard' | 'editorial';
 }
 const muscleTargets: Record<string, string> = {
@@ -21,7 +22,7 @@ const muscleTargets: Record<string, string> = {
 };
 
 export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
-  exerciseName, exerciseId, muscleGroup, imagePaths = [], className = 'h-64 w-full', showCaption = false, presentation = 'standard',
+  exerciseName, exerciseId, muscleGroup, imagePaths = [], className = 'h-64 w-full', showCaption = false, thumbnail = false, presentation = 'standard',
 }) => {
   const [phase, setPhase] = useState(0);
   const [legacyPaths, setLegacyPaths] = useState<string[]>([]);
@@ -29,7 +30,7 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
   const [repdbPaths, setRepdbPaths] = useState<string[]>([]);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
-  const compact = /\bh-(14|16|20)\b/.test(className);
+  const compact = thumbnail || /\bh-(14|16|20)\b/.test(className);
   const supplied = useMemo(() => imagePaths.filter(Boolean).slice(0, 2), [imagePaths.join('|')]);
 
   useEffect(() => {
