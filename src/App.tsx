@@ -35,7 +35,7 @@ import { AnatomyStudioPage } from './pages/AnatomyStudioPage';
 
 function MainApp() {
   const { user, isAuthenticated, isLoading, authLoadError } = useAuth();
-  const validViews = ['dashboard', 'detalhes', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas', 'cardio', 'complementares'];
+  const validViews = ['dashboard', 'detalhes', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas', 'cardio', 'complementares', 'em-casa'];
   const [activeTab, setActiveTabState] = useState<string>(() => {
     const view = new URLSearchParams(window.location.search).get('view');
     return view && validViews.includes(view) ? view : 'dashboard';
@@ -123,7 +123,9 @@ function MainApp() {
       case 'atlas':
         return <AnatomyStudioPage setActiveTab={setActiveTab} />;
       case 'complementares':
-        return <ComplementaryPage />;
+        return <ComplementaryPage mode="exercicios" />;
+      case 'em-casa':
+        return <ComplementaryPage mode="aulas" />;
       case 'cardio':
         return <CardioPage setActiveTab={setActiveTab} />;
       case 'sessao':
