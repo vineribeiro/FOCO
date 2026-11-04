@@ -1,0 +1,67 @@
+/* FOCO V8 targeted media/title fixes. Artboard comes from actual workout data.
+ * Scoped after V6/V7 overrides: no new top-level theme or backend changes. */
+.foco-v6-week-row .foco-v6-week-row-text {display:flex;flex-direction:column;justify-content:center;gap:1px}
+.foco-v6-week-row .foco-v6-week-row-text strong {
+  display:block;margin:3px 0;font-size:clamp(14px,3.8vw,17px);
+  line-height:1.2;font-weight:850;letter-spacing:-.035em;
+  overflow-wrap:anywhere;color:#F7F9F3
+}
+.foco-v6-week-row .foco-v6-week-row-text .foco-v8-week-day{
+  display:block;margin:0;color:#C8F040;font-size:10px;font-weight:800;letter-spacing:.1em;
+}
+.foco-v6-week-row .foco-v6-week-row-text small:not(.foco-v8-week-day){
+  font-size:11px;line-height:1.4;color:#BDC7B2;
+}
+.foco-v6-weekly .foco-v6-week-row{min-height:114px;}
+.foco-v6-weekly .foco-v6-week-thumb{width:111px;height:99px;}
+.foco-v6-week-thumb .foco-v7-exercise-visual,
+.foco-v8-exercise-thumb .foco-v7-exercise-visual{height:100% !important;width:100% !important;border:0;}
+/* An image in a small card is not a full gallery with layered captions/links. */
+.foco-v8-exercise-row{display:flex;align-items:center;gap:12px;padding:9px;min-height:120px;}
+.foco-v8-exercise-thumb{
+  position:relative;display:block;flex:0 0 120px;width:120px;height:104px;
+  overflow:hidden;border-radius:14px;background:#222A1F;
+  border:1px solid rgba(225,251,201,.15);
+}
+.foco-v8-exercise-thumb img{height:100% !important;width:100% !important;object-fit:contain !important;display:block;}
+.foco-v8-exercise-thumb:focus-visible,
+.foco-v8-exercise-info:focus-visible{outline:2px solid #C8F040;outline-offset:3px;}
+.foco-v8-exercise-play{
+  position:absolute;z-index:2;right:7px;bottom:7px;display:grid;
+  place-items:center;width:29px;height:29px;border-radius:50%;
+  background:#C8F040;color:#10140F;box-shadow:0 6px 12px #0008;
+}
+.foco-v8-exercise-info{
+  display:flex;align-items:center;gap:5px;flex:1;min-width:0;
+  text-align:left;min-height:84px;color:#F6F7F4;
+}
+.foco-v8-exercise-info .foco-v6-exercise-row-text{min-width:0;flex:1}
+.foco-v8-exercise-info .foco-v6-exercise-row-text strong{font-size:clamp(13px,3.6vw,16px);line-height:1.27;}
+.foco-v8-exercise-info .foco-v6-exercise-row-text span{font-size:11px;margin-top:7px;}
+.foco-v8-exercise-info .foco-v8-exercise-number{display:block;margin-bottom:7px;color:#C8F040;letter-spacing:.075em;font-size:9px;font-weight:800;}
+.foco-v8-exercise-info>svg{flex:0 0 auto;color:#C8F040;margin-right:0 !important;}
+/* Native modal: correct focus, Escape handling and viewport-constrained scrolling. */
+.foco-v8-demo-dialog {max-height:94dvh;overflow:hidden;box-shadow:0 24px 85px #000b;}
+.foco-v8-demo-dialog::backdrop {background:rgba(0,0,0,.87);backdrop-filter:blur(9px);}
+.foco-v8-demo-header{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:16px 18px;border-bottom:1px solid rgba(240,252,220,.14);
+  background:linear-gradient(125deg,#26301F,#141C12);
+}
+.foco-v8-demo-header p{color:#C8F040;font-size:10px;font-weight:800;letter-spacing:.11em;}
+.foco-v8-demo-header h2{margin-top:4px;font-size:clamp(17px,4.5vw,23px);line-height:1.2;font-weight:800;letter-spacing:-.035em;}
+.foco-v8-demo-header button{
+  flex:0 0 45px;height:45px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+}
+.foco-v8-demo-content{overflow-y:auto;overscroll-behavior:contain;max-height:calc(94dvh - 82px);}
+@media(max-width:375px){
+  .foco-v6-weekly .foco-v6-week-thumb{width:87px;height:86px;}
+  .foco-v8-exercise-thumb{flex-basis:92px;width:92px;height:96px;}
+  .foco-v8-exercise-row{gap:9px;}
+}
+
+.foco-v8-gallery-dialog{max-height:95dvh;overflow-y:auto;box-shadow:0 20px 85px #000c;}
+.foco-v8-gallery-dialog::backdrop{background:rgba(0,0,0,.88);backdrop-filter:blur(10px);}
+.foco-v8-dialog-close{flex:0 0 44px;height:44px;border:1px solid #ffffff33;border-radius:99px;background:#ffffff10;display:grid;place-items:center;}
+.foco-v8-dialog-step{min-height:44px;display:flex;align-items:center;gap:5px;border:1px solid #e8ffc43a;border-radius:99px;padding:7px 12px;font-size:12px;font-weight:700;}

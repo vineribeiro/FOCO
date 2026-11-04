@@ -1,12 +1,13 @@
-import { FOCO_REFERENCE_ATHLETE } from '../data/focoReferencePortrait';
 import React from 'react';
 import { BatteryFull, Signal, Wifi, Dumbbell, CalendarDays, ArrowLeft, Menu, UserRound, ChartNoAxesColumnIncreasing, House } from 'lucide-react';
 
-/** FOCO V6 reference assets: licensed Unsplash photographs + application exercise catalog. */
+/** Full-resolution photographic image — never stretch the tiny 3 KB preview
+ * formerly embedded in focoReferencePortrait. */
+const ATHLETE_HERO_QUALITY='https://images.unsplash.com/photo-1637651684506-07e16fcf7b06?auto=format&fit=crop&w=2400&q=90';
 export const V6_IMAGES = {
-  portrait: FOCO_REFERENCE_ATHLETE,
-  athlete: FOCO_REFERENCE_ATHLETE,
-  login: 'https://images.unsplash.com/photo-1637651684506-07e16fcf7b06?auto=format&fit=crop&w=2000&q=88',
+  portrait: ATHLETE_HERO_QUALITY,
+  athlete: ATHLETE_HERO_QUALITY,
+  login: ATHLETE_HERO_QUALITY,
   bench: 'https://images.unsplash.com/photo-1690731033723-ad718c6e585a?auto=format&fit=crop&w=1800&q=88',
   muscle: 'https://images.unsplash.com/photo-1601113329251-0aebe217bdbe?auto=format&fit=crop&w=1000&q=88',
   training: 'https://images.unsplash.com/photo-1704223523325-f4e3257d6fca?auto=format&fit=crop&w=1000&q=88',
