@@ -1,3 +1,4 @@
+import { conciseWorkoutName } from '../utils/workoutTitles';
 import React, { useState, useEffect } from 'react';
 import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
 import { api } from '../services/api';
@@ -198,11 +199,16 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
         weeklyCards.length?<div className="foco-v6-week-rows">
           {weeklyCards.map(day=>{
             const selected=expandedWeekDay===day.value, done=completedPlannedDays.has(day.value);
-            const muscles=[...new Set(day.exercises.map(ex=>ex.muscle_group).filter(Boolean))].join(' + ')||activePlan?.name||'Treino';
+            const groups=[...new Set(day.exercises.map(ex=>ex.muscle_group).filter(Boolean))];
+            const focus=conciseWorkoutName(groups,activePlan?.name||'Treino');
             return <div key={day.value} className={'foco-v6-week-row '+(selected?'is-selected ':'')+(done?'is-done':'')}>
               <button type="button" className="flex min-w-0 flex-1 items-center gap-3 text-left" onClick={()=>setExpandedWeekDay(day.value)} aria-pressed={selected}>
                 {day.exercises[0]&&<span className="foco-v6-week-thumb"><ExerciseIllustration exerciseName={day.exercises[0].exercise_name} muscleGroup={day.exercises[0].muscle_group} className="h-full w-full !rounded-xl" presentation="editorial"/></span>}
-                <span className="foco-v6-week-row-text"><strong>{day.label}</strong><small>{muscles}</small></span>
+                <span className="foco-v6-week-row-text">
+                  <small className="foco-v8-week-day">{day.label.toUpperCase()}</small>
+                  <strong>{focus}</strong>
+                  <small>{day.exercises.length} exercícios {done?'· Concluído':'· Toque para selecionar'}</small>
+                </span>
               </button>
               <button type="button" className="foco-v6-week-row-status" onClick={()=>selectSession(day.value)} aria-label={'Selecionar treino de '+day.label}>
                 {done?<CheckCircle2 size={18}/>:selected?<Play size={15} fill="currentColor"/>:<ChevronRight size={17}/>}
