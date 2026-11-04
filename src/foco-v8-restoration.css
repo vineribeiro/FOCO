@@ -1,0 +1,30 @@
+/* FOCO — accepted mockup: compact workout player and complete series table */
+.foco-v6-session-screen .foco-v7-session-stage{height:176px;min-height:176px;background:#0B1419;border-radius:20px;border-color:rgba(205,225,225,.12)}
+.foco-v6-session-screen .foco-v7-session-stage:after{background:linear-gradient(90deg,rgba(9,17,22,.95) 0%,rgba(9,17,22,.65) 43%,rgba(9,17,22,.12) 100%)}
+.foco-v6-session-screen .foco-v7-stage-photo{left:auto;right:0;width:65%;object-position:center}
+.foco-v6-session-screen .foco-v7-stage-footer{width:83%;padding:16px 15px 13px}
+.foco-v6-session-screen .foco-v7-stage-footer h2{font-size:clamp(20px,5.7vw,28px);letter-spacing:-.045em;line-height:1.1}
+.foco-v6-session-screen .foco-v7-stage-footer span{font-size:11px;margin-top:7px}
+.foco-v6-session-screen .foco-v7-stage-tag{top:11px;left:13px;padding:6px 9px}
+.foco-v6-session-screen .foco-v7-stage-expand{height:36px;width:36px;top:11px;right:11px}
+.foco-v6-session-screen .foco-v7-session-series{display:none}
+.foco-v7-session-adjusters.foco-v8-series-table{display:block;padding:0;min-width:0}
+.foco-v8-series-grid{display:grid;grid-template-columns:46px minmax(0,1fr) minmax(0,1fr) 44px;align-items:center;gap:5px}
+.foco-v8-series-grid.without-load{grid-template-columns:46px minmax(0,1fr) 44px}
+.foco-v8-header{padding:3px 3px 8px;color:#BFCBD0;font-size:11px;text-align:center;letter-spacing:.015em}
+.foco-v8-header span:first-child{text-align:left;padding-left:7px}
+.foco-v8-series-row{min-height:48px;margin-bottom:5px;padding:5px 4px;border-radius:11px;background:#172228;border:1px solid rgba(220,240,238,.07)}
+.foco-v8-series-row.is-active{border-color:rgba(103,226,159,.34);background:#1D2B30}
+.foco-v8-series-row.is-complete{background:#172922}
+.foco-v8-series-number{color:#FAFFFF;font-size:13px;font-weight:700;text-align:center}
+.foco-v8-series-row input{display:block;width:100%;min-width:0;min-height:37px;padding:5px 3px;border:1px solid rgba(220,240,238,.05);border-radius:9px;background:#27343B;color:white;text-align:center;font-size:16px;font-variant-numeric:tabular-nums;font-weight:700}
+.foco-v8-series-row input:focus-visible{outline:2px solid #67E2A2;outline-offset:2px}
+.foco-v8-series-row input::-webkit-inner-spin-button{-webkit-appearance:none;appearance:none}
+.foco-v8-series-check{display:grid;place-items:center;min-height:39px;width:39px;margin:auto;color:#8B9A9F}
+.foco-v8-series-check>span{width:22px;height:22px;border-radius:50%;border:2px solid currentColor}
+.foco-v8-series-check[aria-pressed="true"]{color:#67E2A2}
+.foco-v8-series-check[aria-pressed="true"] svg{stroke:#102019}
+.foco-v8-series-check:disabled{opacity:.5}
+.foco-v8-no-load{font-size:11px;line-height:1.5;color:#B4CDC2;margin:9px 3px 0}
+.foco-v6-session-screen .foco-v7-session-actions .foco-v6-primary,.foco-v6-session-screen .foco-v7-session-start{background:#67E2A2;color:#071711}
+@media(max-width:360px){.foco-v8-series-grid{grid-template-columns:35px minmax(0,1fr) minmax(0,1fr) 38px;gap:3px}.foco-v8-series-grid.without-load{grid-template-columns:35px minmax(0,1fr) 38px}.foco-v8-series-check{width:36px}.foco-v8-header{font-size:10px}}
