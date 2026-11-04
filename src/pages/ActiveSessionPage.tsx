@@ -680,29 +680,32 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       </section>}
       <FocoV6Segment label="Modo do exercício" options={[{value:'register',label:'Registro'},{value:'execution',label:'Execução'},{value:'tips',label:'Dicas'}]} value={v6SessionMode} onChange={setV6SessionMode}/>
       {v6CurrentExercise&&v6SessionMode==='register'&&v6CurrentSet&&<>
-        <section className={'foco-v7-session-adjusters '+(!v6TracksLoad?'single-control':'')} aria-label="Registrar série">
-          {v6TracksLoad&&<label className="foco-v7-adjuster">
-            <span><Dumbbell size={16}/> CARGA <small>kg</small></span>
-            <div>
-              <button type="button" onClick={()=>handleQuickAddLoad(v6ExIndex,v6SetIndex,-2.5)} aria-label="Diminuir carga em 2,5 kg"><Minus size={19}/></button>
-              <input type="number" inputMode="decimal" min="0" step="0.5" value={v6CurrentSet.load_kg}
-                aria-label="Carga atual em quilogramas"
-                onChange={e=>handleUpdateSet(v6ExIndex,v6SetIndex,'load_kg',Math.max(0,Number(e.target.value)||0))}/>
-              <button type="button" onClick={()=>handleQuickAddLoad(v6ExIndex,v6SetIndex,2.5)} aria-label="Aumentar carga em 2,5 kg">+</button>
+        <section className="foco-v7-session-adjusters foco-v8-series-table" aria-label="Registrar todas as séries">
+          <div className={'foco-v8-series-grid foco-v8-header '+(!v6TracksLoad?'without-load':'')} aria-hidden="true">
+            <span>Série</span>
+            {v6TracksLoad && <span>Peso (kg)</span>}
+            <span>Repetições</span>
+            <span>Feito</span>
+          </div>
+          {v6CurrentExercise.sets.map((set, index) => (
+            <div key={index} className={'foco-v8-series-grid foco-v8-series-row '+(!v6TracksLoad?'without-load ':'')+(set.completed?'is-complete ':'')+(index===v6SetIndex?'is-active':'')}>
+              <span className="foco-v8-series-number">{index+1}</span>
+              {v6TracksLoad&&<input type="number" inputMode="decimal" min="0" step="0.5"
+                aria-label={'Peso da série '+(index+1)+' em kg'} value={set.load_kg}
+                onChange={e=>handleUpdateSet(v6ExIndex,index,'load_kg',Math.max(0,Number(e.target.value)||0))}/>}
+              <input type="number" inputMode="numeric" min="0"
+                aria-label={'Repetições da série '+(index+1)} value={set.repetitions}
+                onChange={e=>handleUpdateSet(v6ExIndex,index,'repetitions',Math.max(0,Number(e.target.value)||0))}/>
+              <button type="button" className="foco-v8-series-check"
+                disabled={!sessionStarted}
+                aria-label={(set.completed?'Desmarcar':'Concluir')+' série '+(index+1)}
+                aria-pressed={set.completed}
+                onClick={()=>handleToggleSetComplete(v6ExIndex,index)}>
+                {set.completed?<CheckCircle2 size={22} fill="currentColor"/>:<span aria-hidden="true"/>}
+              </button>
             </div>
-          </label>}
-          <label className="foco-v7-adjuster">
-            <span><CheckCircle2 size={16}/> REPETIÇÕES</span>
-            <div>
-              <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',Math.max(0,v6CurrentSet.repetitions-1))}
-                aria-label="Diminuir repetições"><Minus size={19}/></button>
-              <input type="number" inputMode="numeric" min="0" value={v6CurrentSet.repetitions}
-                aria-label="Repetições da série atual"
-                onChange={e=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',Math.max(0,Number(e.target.value)||0))}/>
-              <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'repetitions',v6CurrentSet.repetitions+1)}
-                aria-label="Aumentar repetições">+</button>
-            </div>
-          </label>
+          ))}
+          {!v6TracksLoad&&<p className="foco-v8-no-load">Exercício sem carga: registra apenas as repetições.</p>}
         </section>
         <section className={'foco-v7-rest-panel '+(restTimerActive?'is-running':'')} aria-label="Controle de descanso">
           <span className="foco-v7-rest-ring" style={{'--v6-rest-progress':v6RestRatio+'%'} as React.CSSProperties}>
