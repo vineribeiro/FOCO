@@ -119,7 +119,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
       </button>
     </div>
     <section aria-label="Outras modalidades" className="grid grid-cols-2 gap-2">
-      <button type="button" onClick={()=>setActiveTab('complementares')} className="foco-v6-mini-panel foco-v6-glass text-left">
+      <button type="button" onClick={()=>setActiveTab('em-casa')} className="foco-v6-mini-panel foco-v6-glass text-left">
         <span><strong>FOCO em Casa</strong><p>Treinos guiados sem academia</p></span><House size={20}/>
       </button>
       <button type="button" onClick={()=>setActiveTab('complementares')} className="foco-v6-mini-panel foco-v6-glass text-left">
