@@ -42,10 +42,11 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
     {error && <p role="alert" className="foco-v6-glass rounded-xl p-4 text-sm">Não foi possível consultar o treino. Tente novamente.</p>}
     {!loading&&!error&&tab==='exercises'&&<div className="foco-v6-exercise-list">
       {today.length ? today.map((ex,i)=><button type="button" key={ex.id||ex.exercise_name+i} className="foco-v6-exercise-row" onClick={()=>setChosen(chosen?.exercise_name===ex.exercise_name?null:ex)} aria-expanded={chosen?.exercise_name===ex.exercise_name}>
-        <ExerciseIllustration exerciseName={ex.exercise_name} muscleGroup={ex.muscle_group} className="h-[102px] w-[120px] shrink-0 !rounded-[14px]" presentation="editorial" />
+        <ExerciseIllustration exerciseName={ex.exercise_name} muscleGroup={ex.muscle_group} className="h-[102px] w-[120px] shrink-0 !rounded-[14px]" presentation="editorial" thumbnail />
         <span className="foco-v6-exercise-row-text"><strong>{ex.exercise_name}</strong><span>{ex.sets} séries · {ex.reps_min}{ex.reps_max&&ex.reps_max!==ex.reps_min?'-'+ex.reps_max:''} reps</span></span><ChevronRight size={17}/>
       </button>):<p className="foco-v6-glass rounded-xl p-4 text-sm">Dia sem exercícios programados. Escolhe outro treino na semana ou faz cardio livre.</p>}
       {chosen&&<section className="foco-v6-glass mt-1 rounded-2xl p-4">
+        <ExerciseIllustration key={chosen.exercise_name} exerciseName={chosen.exercise_name} muscleGroup={chosen.muscle_group} className="mb-4 h-[250px] w-full !rounded-2xl" presentation="editorial" />
         <h3 className="font-bold">{chosen.exercise_name}</h3>
         <p className="mt-2 text-xs text-[#BDC3B9]">{chosen.muscle_group} · {chosen.sets} séries · descanso {chosen.rest_seconds||60}s</p>
         {chosen.notes&&<p className="mt-3 text-xs leading-5 text-white/80">{chosen.notes}</p>}
