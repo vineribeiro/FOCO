@@ -27,12 +27,8 @@ export const FocoV6Lockup: React.FC<{ compact?: boolean; className?: string }> =
   </span>
 );
 
-export const FocoV6Status: React.FC = () => {
-  const time = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit',minute:'2-digit' });
-  return <div className="foco-v6-status" aria-hidden="true">
-    <span>{time}</span><span className="foco-v6-status-icons"><Signal size={13} fill="currentColor"/><Wifi size={13}/><BatteryFull size={15}/></span>
-  </div>;
-};
+// The operating system owns the status bar; never draw a duplicate inside FOCO.
+export const FocoV6Status: React.FC = () => null;
 
 export const FocoV6MobileTitle: React.FC<{
   title:string; subtitle?:string; onBack?:()=>void; action?:React.ReactNode
