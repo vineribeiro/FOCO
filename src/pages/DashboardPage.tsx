@@ -1,11 +1,11 @@
 import { conciseWorkoutName } from '../utils/workoutTitles';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowRight, CalendarDays, ChevronRight, Clock3, Dumbbell, Menu, Play, ScanLine, Sparkles } from 'lucide-react';
+import { Activity, ArrowRight, CalendarDays, ChevronRight, Clock3, Dumbbell, House, Menu, Play, ScanLine, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { savePreferredTrainingDay } from '../data/exerciseLibrary';
 import type { WorkoutPlan, WorkoutSession } from '../types';
-import { FocoV6Lockup, FocoV6Status, FocoV6WeekStrip, V6_IMAGES } from '../components/FocoV6UI';
+import { FocoV6Lockup, FocoV6WeekStrip, V6_IMAGES } from '../components/FocoV6UI';
 import { isCardioSession } from '../utils/cardio';
 
 const WEEK=[
@@ -68,7 +68,6 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
     setActiveTab('sessao');
   };
   return <div className="foco-v6-dashboard foco-v4-page">
-    <div className="md:hidden"><FocoV6Status/></div>
     <header className="foco-v6-home-header">
       <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('configuracoes')} aria-label="Abrir menu e configurações"><Menu size={20}/></button>
       <FocoV6Lockup compact />
@@ -119,6 +118,14 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
         <span><strong>Avaliação OKOK</strong><p>Atualizar medidas</p></span><ScanLine size={20}/>
       </button>
     </div>
+    <section aria-label="Outras modalidades" className="grid grid-cols-2 gap-2">
+      <button type="button" onClick={()=>setActiveTab('complementares')} className="foco-v6-mini-panel foco-v6-glass text-left">
+        <span><strong>FOCO em Casa</strong><p>Treinos guiados sem academia</p></span><House size={20}/>
+      </button>
+      <button type="button" onClick={()=>setActiveTab('complementares')} className="foco-v6-mini-panel foco-v6-glass text-left">
+        <span><strong>Exercícios complementares</strong><p>Core, mobilidade e extras</p></span><Dumbbell size={20}/>
+      </button>
+    </section>
     <button type="button" onClick={()=>setActiveTab('progresso')} className="foco-v6-glass-button w-full justify-between">
       <span className="flex items-center gap-2"><Clock3 size={15} className="text-[#C8F040]"/> Ver minha evolução</span><ChevronRight size={17}/>
     </button>
