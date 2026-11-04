@@ -29,7 +29,9 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
   const [repdbPaths, setRepdbPaths] = useState<string[]>([]);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
-  const compact = /\bh-(14|16|20)\b/.test(className);
+  // Editorial thumbnails are SMALL even with arbitrary Tailwind dimensions; never
+  // nest a zoom button, link, phase switcher or caption over their image.
+  const compact = presentation === 'editorial' || /\\bh-(14|16|20)\\b/.test(className);
   const supplied = useMemo(() => imagePaths.filter(Boolean).slice(0, 2), [imagePaths.join('|')]);
 
   useEffect(() => {
