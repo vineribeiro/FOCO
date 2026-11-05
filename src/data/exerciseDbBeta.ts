@@ -142,47 +142,54 @@ export function safeExerciseDBGif(url:unknown):string|null{
 export function isExerciseDBBetaAllowed():boolean{
  return import.meta.env?.VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA==='true' && import.meta.env?.VITE_FOCO_COMMERCIAL_MODE!=='true';
 }
-const cache=new Map<string,{expires:number,result:ExerciseDBPreviewResult}>();
+// Provider caching rights are plan-specific. Do not persist ANY response,
+// GIF URL, ID or negative result, including through an in-memory result cache.
+// Only keep the unresolved request so rapid double taps do not duplicate traffic.
 const pending=new Map<string,Promise<ExerciseDBPreviewResult>>();
 let lastRequest=0;
+
 export async function getExerciseDBGifPreview(exerciseName:string):Promise<ExerciseDBPreviewResult>{
  if(!isExerciseDBBetaAllowed())return {state:'disabled'};
  const candidates=candidateExerciseDBNames(exerciseName);
  if(!candidates.length)return {state:'no_match'};
  const key=normalizeExerciseDBName(exerciseName);
- const cached=cache.get(key);
- if(cached&&cached.expires>Date.now())return cached.result;
  if(pending.has(key))return pending.get(key)!;
- // Free API has strict rate limits. No automatic retries, batches or pagination.
+ // Deliberate, user-initiated calls only. No prefetch or catalogue crawling.
  if(Date.now()-lastRequest<1400)return {state:'rate_limited'};
  lastRequest=Date.now();
  const task=(async():Promise<ExerciseDBPreviewResult>=>{
-  const controller=new AbortController();
-  const timeout=setTimeout(()=>controller.abort(),8500);
-  try{
-   const res=await fetch(SEARCH_URL+'?search='+encodeURIComponent(candidates[0]),{
-     signal:controller.signal,headers:{Accept:'application/json'},cache:'no-store'
-   });
-   if(res.status===429)return {state:'rate_limited'};
-   if(!res.ok)return {state:'unavailable'};
-   const body:unknown=await res.json();
-   const data=body&&typeof body==='object'&&'data' in body?(body as {data:unknown}).data:null;
-   for(const record of (Array.isArray(data)?data.slice(0,60):[])){
-     if(!acceptedExerciseDBName(record,candidates))continue;
-     const item=record as Item,gifUrl=safeExerciseDBGif(item.gifUrl);
-     if(gifUrl&&typeof item.name==='string'&&typeof item.exerciseId==='string')
-       return {state:'matched',id:item.exerciseId,name:item.name,gifUrl};
-   }
-   return {state:'no_match'};
-  }catch{return {state:'unavailable'};}
-  finally{clearTimeout(timeout);}
+  // Two *explicitly approved names* at most. No fuzzy substitution:
+  // the API's fuzzy suggestions are only candidates, not identity.
+  const approvedTerms=[...new Set(candidates)].slice(0,2);
+  for(let index=0;index<approvedTerms.length;index++){
+   if(index>0)await new Promise(resolve=>setTimeout(resolve,1500));
+   const term=approvedTerms[index];
+   const controller=new AbortController();
+   const timeout=setTimeout(()=>controller.abort(),8500);
+   try{
+    const res=await fetch(SEARCH_URL+'?search='+encodeURIComponent(term),{
+      signal:controller.signal,headers:{Accept:'application/json'},
+      cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'
+    });
+    if(res.status===429)return {state:'rate_limited'};
+    if(!res.ok)return {state:'unavailable'};
+    const body:unknown=await res.json();
+    const data=body&&typeof body==='object'&&'data' in body?(body as {data:unknown}).data:null;
+    for(const record of (Array.isArray(data)?data.slice(0,60):[])){
+      if(!acceptedExerciseDBName(record,candidates))continue;
+      const item=record as Item,gifUrl=safeExerciseDBGif(item.gifUrl);
+      if(gifUrl&&typeof item.name==='string'&&typeof item.exerciseId==='string')
+        return {state:'matched',id:item.exerciseId,name:item.name,gifUrl};
+    }
+   }catch{return {state:'unavailable'};}
+   finally{clearTimeout(timeout);}
+  }
+  return {state:'no_match'};
  })();
  pending.set(key,task);
- try{
-  const result=await task;
-  if(result.state==='matched'||result.state==='no_match')
-    cache.set(key,{expires:Date.now()+600_000,result});
-  return result;
- }finally{pending.delete(key);}
+ try{return await task;}
+ finally{pending.delete(key);}
 }
-export function clearExerciseDBPreviewCacheForTests(){cache.clear();pending.clear();lastRequest=0;}
+
+/** Keeps the existing unit-test helper name without retaining API data. */
+export function clearExerciseDBPreviewCacheForTests(){pending.clear();lastRequest=0;}

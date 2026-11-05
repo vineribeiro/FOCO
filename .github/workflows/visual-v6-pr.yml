@@ -27,8 +27,9 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Build preview from pull request
         env:
-          # ExerciseDB is only used by the noncommercial integration PR's mock QA.
-          VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA: ${{ github.head_ref == 'feat/exercisedb-noncommercial-preview' && 'true' || 'false' }}
+          # CI uses only intercepted synthetic ExerciseDB replies (no third-party traffic).
+          # Enable the beta component in every PR to keep its regression test meaningful.
+          VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA: 'true'
           VITE_FOCO_COMMERCIAL_MODE: 'false'
         run: npm run build
       - name: Serve local build

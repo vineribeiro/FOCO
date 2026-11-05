@@ -56,7 +56,7 @@ export const ExerciseDBPreview: React.FC<Props> = ({ exerciseName, compact = fal
     {state?.state === 'matched' && !imgFailed &&
       <div className="mt-3 overflow-hidden rounded-xl border border-white/15 bg-[#0A0E0A] p-2">
         <img src={state.gifUrl} alt={'GIF experimental de '+exerciseName+' — fonte externa ExerciseDB'}
-          loading="lazy" decoding="async" onError={()=>setImgFailed(true)}
+          loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={()=>setImgFailed(true)}
           className="mx-auto aspect-square max-h-[320px] w-full max-w-[320px] object-contain" />
         <p className="mt-2 text-center text-[11px] text-neutral-300">Exercício identificado: {state.name}. Confira se equipamento e variação coincidem com sua ficha.</p>
       </div>}

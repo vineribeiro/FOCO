@@ -47,5 +47,10 @@ assert.match(read('src/components/ExerciseDBPreview.tsx'),/Créditos: AscendAPI 
 assert.match(read('src/components/ExerciseDBPreview.tsx'),/else void request\(\)/);
 assert.match(read('src/components/ExerciseDBPreview.tsx'),/Ocultar GIF/);
 assert.match(read('src/data/exerciseDbBeta.ts'),/VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA==='true'/);
+assert.match(read('src/data/exerciseDbBeta.ts'),/cache:'no-store'/);
+assert.ok(!read('src/data/exerciseDbBeta.ts').includes('cache.set('),'Provider responses must not be cached without licensed rights');
+assert.ok(!read('src/data/exerciseDbBeta.ts').includes('cached.expires'),'No persistent/temporary response cache');
+assert.ok(read('src/data/exerciseDbBeta.ts').includes('[...new Set(candidates)].slice(0,2)'), 'At most two explicitly approved names per user request');
+assert.match(read('src/data/exerciseDbBeta.ts'),/credentials:'omit'/);
 assert.match(read('.github/workflows/deploy.yml'),/VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA: 'true'/);
 console.log('ExerciseDB beta: exact-name match, URL allowlist, attribution, opt-in and commercial guard verified.');
