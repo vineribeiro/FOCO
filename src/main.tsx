@@ -5,6 +5,7 @@ import './index.css';
 import './foco-v6.css';
 import './foco-v7-polish.css';
 import './foco-v8-fidelity.css';
+import './foco-motion.css';
 
 class AppErrorBoundary extends React.Component<React.PropsWithChildren, { hasError: boolean }> {
   state = { hasError: false };

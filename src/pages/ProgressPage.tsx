@@ -168,7 +168,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
     {label:'IMC',key:'imc'},
   ];
   return (
-    <div className="foco-v6-progress foco-v4-page">
+    <div className="foco-v6-progress foco-v4-page foco-motion-progress">
       <div className="md:hidden"><FocoV6Status/></div>
       <header className="foco-v6-mobile-title"><h1>Minha evolução</h1></header>
       <FocoV6Segment label="Período de evolução" options={[{value:'7',label:'7 dias'},{value:'30',label:'30 dias'},{value:'90',label:'90 dias'},{value:'365',label:'1 ano'}]}

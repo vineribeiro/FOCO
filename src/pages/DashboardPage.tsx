@@ -81,7 +81,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
       Não conseguimos consultar seus treinos. Os dados não foram alterados.
       <button type="button" onClick={()=>window.location.reload()} className="ml-2 text-[#C8F040] underline">Recarregar</button>
     </div>}
-    <section className="foco-v6-hero" aria-labelledby="foco-v6-workout-title">
+    <section className="foco-v6-hero foco-motion-hero" aria-labelledby="foco-v6-workout-title">
       <img src={V6_IMAGES.athlete} alt="" loading="eager" decoding="async"/>
       {plan && selectedExercises.length>0&&<button type="button" onClick={()=>handleDetail(today.day)}
         aria-label="Visualizar os exercícios do dia" title="Visualizar os exercícios do dia"
@@ -100,7 +100,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
         </button>
       </div>
     </section>
-    <section aria-label="Frequência dos treinos" className="space-y-2">
+    <section aria-label="Frequência dos treinos" className="space-y-2 foco-motion-week">
       <div className="foco-v6-week-heading">
         <h2>Sua semana</h2>
         <p>{loading?'—':loadError?'Indisponível':target?Math.min(completed.length,target)+'/'+target+' treinos':'Sem meta semanal'}</p>
@@ -110,7 +110,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
         onSelect={day=>plan?handleDetail(day):setActiveTab('anamnese')}
       />
     </section>
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-2 gap-2 foco-motion-shortcuts">
       <button type="button" onClick={()=>setActiveTab('cardio')} className="foco-v6-mini-panel foco-v6-glass text-left">
         <span><strong>Cardio livre</strong><p>{cardioMins} min nesta semana</p></span><Activity size={20}/>
       </button>
@@ -118,7 +118,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
         <span><strong>Avaliação OKOK</strong><p>Atualizar medidas</p></span><ScanLine size={20}/>
       </button>
     </div>
-    <section aria-label="Outras modalidades" className="grid grid-cols-2 gap-2">
+    <section aria-label="Outras modalidades" className="grid grid-cols-2 gap-2 foco-motion-shortcuts">
       <button type="button" onClick={()=>setActiveTab('em-casa')} className="foco-v6-mini-panel foco-v6-glass text-left">
         <span><strong>FOCO em Casa</strong><p>Treinos guiados sem academia</p></span><House size={20}/>
       </button>

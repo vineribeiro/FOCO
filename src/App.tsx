@@ -198,7 +198,7 @@ function MainApp() {
 
         {/* Viewport Content Area with Protected Bottom Space (pb-32) */}
         <main id="foco-main-content" tabIndex={-1} className="flex-1 min-w-0 px-[14px] pb-28 pt-0 sm:px-6 sm:pt-3 lg:px-9 lg:pt-6 md:pb-10">
-          {renderActiveView()}
+          <div key={activeTab} className="foco-motion-view">{renderActiveView()}</div>
         </main>
 
         {/* Global Floating Rest Timer HUD */}

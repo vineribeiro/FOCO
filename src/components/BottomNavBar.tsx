@@ -16,7 +16,7 @@ export const BottomNavBar:React.FC<BottomNavBarProps>=({activeTab,setActiveTab})
     {id:'perfil',label:'Perfil',icon:UserRound},
   ] as const;
   const route=(tab:string)=>setActiveTab(tab);
-  return <nav aria-label="Navegação principal" className="foco-v4-tabbar md:hidden">
+  return <nav aria-label="Navegação principal" className="foco-v4-tabbar foco-motion-nav md:hidden">
     <div className="mx-auto grid max-w-xl grid-cols-5 gap-0.5 px-1">
       {tabs.map(({id,label,icon:Icon})=>{
         const selected=activeTab===id ||

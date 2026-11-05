@@ -48,7 +48,7 @@ export const RestTimerHUD: React.FC = () => {
   return (
     <aside
       aria-label="Cronômetro de descanso"
-      className={`fixed left-2 right-2 max-w-md mx-auto z-40 transition-all duration-300 ease-out ${
+      className={`foco-motion-rest-hud fixed left-2 right-2 max-w-md mx-auto z-40 transition-all duration-300 ease-out ${
         isExpanded ? 'bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))] md:bottom-5' : 'bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))] md:bottom-5'
       }`}
     >
