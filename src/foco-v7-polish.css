@@ -109,7 +109,7 @@ button:hover .foco-v7-exercise-visual img{transform:scale(1.035);}
 .foco-v7-exercise-progress button.is-current{background:var(--f7-lime);box-shadow:0 0 14px rgba(200,240,64,.22);}
 .foco-v7-exercise-progress button:focus-visible{outline:2px solid var(--f7-lime);outline-offset:4px;}
 .foco-v7-session-stage {
-  height:clamp(265px,38dvh,390px);position:relative;overflow:hidden;isolation:isolate;
+  position:relative;overflow:hidden;isolation:isolate;
   display:flex;align-items:end;border-radius:25px;border:1px solid rgba(230,249,206,.20);
   background:radial-gradient(ellipse at 100% 15%,#3D442E 0%,#161D15 50%,#0B100B 100%);
   box-shadow:inset 0 1px rgba(255,255,255,.08),0 24px 42px rgba(0,0,0,.26);
@@ -226,13 +226,10 @@ button:hover .foco-v7-exercise-visual img{transform:scale(1.035);}
 .foco-v6-session-screen>details[open]{background:#101510;}
 .foco-v6-session-screen>details .foco-v4-page{padding:18px 2px 22px;}
 @media(min-width:768px){
- .foco-v7-session-stage{height:clamp(350px,49vh,460px);}
- .foco-v6-session-screen{max-width:740px !important;}
  .foco-v7-session-adjusters{gap:14px;}
  .foco-v7-adjuster>div{grid-template-columns:52px minmax(0,1fr) 52px;}
 }
 @media(max-width:360px){
- .foco-v7-session-stage{height:265px;}
  .foco-v7-session-heading-text h1{font-size:18px;}
  .foco-v7-adjuster{padding:11px 7px;}
  .foco-v7-adjuster>div{grid-template-columns:34px minmax(0,1fr) 34px;}
@@ -244,17 +241,15 @@ button:hover .foco-v7-exercise-visual img{transform:scale(1.035);}
 /* Primary workout actions must remain reachable above mobile tab navigation. */
 .foco-v6-session-screen{padding-bottom:154px !important;}
 .foco-v7-session-start,.foco-v7-session-actions {
-  position:sticky;bottom:calc(87px + env(safe-area-inset-bottom,0px));z-index:24;
+  position:static;bottom:auto;
   border-radius:999px;box-shadow:0 13px 32px rgba(0,0,0,.45);
 }
 .foco-v7-session-start{box-shadow:0 0 0 7px rgba(9,13,8,.83),0 13px 32px rgba(0,0,0,.4);}
 .foco-v7-session-actions{padding:5px;background:rgba(11,16,11,.96);backdrop-filter:blur(18px);border:1px solid rgba(200,240,64,.12);}
 @media(min-width:768px){
- .foco-v7-session-start,.foco-v7-session-actions{bottom:18px;}
  .foco-v6-session-screen{padding-bottom:80px !important;}
 }
 @media(max-height:780px) and (max-width:767px){
- .foco-v7-session-stage{height:clamp(245px,34dvh,305px);}
  .foco-v7-session-stage .foco-v7-stage-footer{padding:14px 16px;}
  .foco-v6-session-screen{gap:9px !important;}
 }

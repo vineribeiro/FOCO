@@ -24,7 +24,7 @@
 <body>
 <main>
   <div class="brand"><span>↗</span> FOCO</div>
-  <p class="eyebrow">MANUTENÇÃO DA VERSÃO</p>
+  <p class="eyebrow">MANUTENÇÃO DA VERSÃO · FOCO 2.2</p>
   <h1>Ver a versão mais recente.</h1>
   <p>Vamos limpar somente arquivos temporários e caches da interface para carregar o design atualizado. Sua conta, histórico e dados no servidor não serão apagados.</p>
   <button id="refresh" type="button">Atualizar FOCO agora</button>
@@ -55,7 +55,7 @@
       }
       status.textContent = 'Atualização preparada. Abrindo o FOCO...';
       const dest = new URL('/FOCO/', location.origin);
-      dest.searchParams.set('foco_refresh', '20261105-v21');
+      dest.searchParams.set('foco_refresh', '20261105-v22');
       dest.searchParams.set('nocache', String(Date.now()));
       location.replace(dest.href);
     } catch (err) {

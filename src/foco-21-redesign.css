@@ -109,16 +109,16 @@
 .foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel strong{font-size:14px;line-height:1.15;letter-spacing:-.02em;display:block;}
 .foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel p{font-size:11px;line-height:1.4;margin-top:5px;color:var(--f21-quiet);}
 /* Session: actual new composition, distinct readable media, separated controls. */
-.foco-v6-shell .foco-21-session{max-width:550px;gap:14px !important;padding-top:10px;}
-.foco-v6-shell .foco-21-session .foco-v7-session-heading{min-height:77px;gap:13px;}
-.foco-v6-shell .foco-21-session .foco-v7-session-heading .foco-v6-icon-button{width:49px;height:49px;flex:0 0 49px;border-color:var(--f21-stroke);background:#182318;}
+.foco-v6-shell .foco-21-session{max-width:500px;min-width:0;gap:10px !important;padding-top:4px;}
+.foco-v6-shell .foco-21-session .foco-v7-session-heading{min-height:60px;gap:10px;}
+.foco-v6-shell .foco-21-session .foco-v7-session-heading .foco-v6-icon-button{width:44px;height:44px;flex:0 0 44px;border-color:var(--f21-stroke);background:#182318;}
 .foco-v6-shell .foco-21-session .foco-v7-session-heading-text p{display:flex;flex-wrap:wrap;gap:7px;align-items:center;font-size:10px;letter-spacing:.11em;}
-.foco-v6-shell .foco-21-session .foco-v7-session-heading-text h1{font-size:clamp(25px,7.5vw,37px);margin-top:4px;letter-spacing:-.06em;}
+.foco-v6-shell .foco-21-session .foco-v7-session-heading-text h1{font-size:clamp(20px,5.6vw,27px);margin-top:3px;letter-spacing:-.045em;}
 .foco-v6-shell .foco-21-session-mark{display:inline-flex;align-items:center;border:1px solid rgba(200,240,64,.44);border-radius:7px;background:#233421;padding:3px 5px;color:var(--f21-accent);font-size:8px;font-weight:850;letter-spacing:.035em;}
-.foco-v6-shell .foco-21-session .foco-v7-session-stopwatch strong{font-size:17px;letter-spacing:-.04em;}
+.foco-v6-shell .foco-21-session .foco-v7-session-stopwatch strong{font-size:14px;letter-spacing:-.04em;}
 .foco-v6-shell .foco-21-session .foco-v7-exercise-progress{margin:0 0 2px;gap:8px;}
 .foco-v6-shell .foco-21-session .foco-v7-session-stage{
-  height:clamp(330px,44dvh,470px);border-radius:30px;
+  height:clamp(218px,30dvh,290px);border-radius:23px;
   border:1px solid rgba(214,248,148,.58);
   background:radial-gradient(ellipse at 85% 17%,#526941 0%,#253323 38%,#101C14 73%,#090E0A 100%);
   box-shadow:inset 0 1px rgba(255,255,255,.14),0 21px 46px rgba(0,0,0,.4);
@@ -134,7 +134,7 @@
 }
 .foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-v7-exercise-image{
   box-sizing:border-box;display:block;width:100%!important;height:100%!important;
-  object-fit:contain!important;object-position:center 28%;padding:36px 22px 108px;background:transparent!important;
+  object-fit:contain!important;object-position:center 28%;padding:16px 12px 72px;background:transparent!important;
 }
 .foco-v6-shell .foco-21-session .foco-v7-stage-illustration[data-foco-media-source="repdb"] img,
 .foco-v6-shell .foco-21-session .foco-v7-stage-illustration[data-foco-media-source="atlas"] img{
@@ -145,73 +145,73 @@
   radial-gradient(ellipse 70% 40% at 75% 10%,rgba(200,240,64,.13),transparent);
 }
 .foco-v6-shell .foco-21-session .foco-v7-stage-tag{
-  top:16px;left:16px;padding:11px 13px;font-size:10px;border-color:rgba(225,255,179,.32);
+  top:12px;left:12px;padding:8px 10px;font-size:9px;border-color:rgba(225,255,179,.32);
   background:rgba(10,21,11,.78);color:var(--f21-accent);
 }
-.foco-v6-shell .foco-21-session .foco-v7-stage-footer{padding:25px 20px 25px;position:relative;z-index:3;}
+.foco-v6-shell .foco-21-session .foco-v7-stage-footer{padding:18px 15px 15px;position:relative;z-index:3;}
 .foco-v6-shell .foco-21-art-kicker{
   display:block;margin-bottom:7px!important;color:var(--f21-accent)!important;
   font-size:10px!important;font-weight:850;letter-spacing:.15em;
 }
 .foco-v6-shell .foco-21-session .foco-v7-stage-footer h2{
-  max-width:95%;font-size:clamp(30px,8.4vw,47px);line-height:1.01;letter-spacing:-.06em;text-wrap:balance;
+  max-width:100%;font-size:clamp(22px,6vw,29px);line-height:1.08;letter-spacing:-.045em;text-wrap:balance;
   text-shadow:0 2px 17px rgba(0,0,0,.55);
 }
 .foco-v6-shell .foco-21-session .foco-v7-stage-footer>span:last-child{font-size:12px;margin-top:10px;}
 .foco-v6-shell .foco-21-session .foco-v7-stage-expand{
-  top:14px;right:14px;min-width:47px;min-height:47px;display:flex;align-items:center;justify-content:center;
-  gap:6px;padding:0 12px;width:auto;height:47px;border-radius:16px;background:rgba(15,25,15,.84);
+  top:10px;right:10px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;
+  gap:4px;padding:0 9px;width:auto;height:44px;border-radius:13px;background:rgba(15,25,15,.84);
   border-color:rgba(235,255,207,.28);font-size:10px;font-weight:800;color:#F6FAEC;
 }
 .foco-v6-shell .foco-21-session .foco-21-series{
   border-radius:20px;background:linear-gradient(145deg,#212C20,#121B14);border:1px solid var(--f21-stroke);
-  padding:15px 16px 17px;box-shadow:inset 0 1px rgba(255,255,255,.05);
+  padding:11px 13px 12px;box-shadow:inset 0 1px rgba(255,255,255,.05);
 }
 .foco-v6-shell .foco-21-series .foco-v7-series-copy>div:first-child span{font-size:10px;letter-spacing:.12em;}
-.foco-v6-shell .foco-21-series .foco-v7-series-copy>div:first-child strong{font-size:24px;margin-top:5px;}
-.foco-v6-shell .foco-21-series .foco-v7-series-percentage strong{font-size:31px;line-height:1;}
-.foco-v6-shell .foco-21-series .foco-v7-series-dots{margin-top:13px;gap:6px;}
-.foco-v6-shell .foco-21-series .foco-v7-series-dots span{height:7px;}
+.foco-v6-shell .foco-21-series .foco-v7-series-copy>div:first-child strong{font-size:18px;margin-top:4px;}
+.foco-v6-shell .foco-21-series .foco-v7-series-percentage strong{font-size:23px;line-height:1;}
+.foco-v6-shell .foco-21-series .foco-v7-series-dots{margin-top:9px;gap:6px;}
+.foco-v6-shell .foco-21-series .foco-v7-series-dots span{height:5px;}
 .foco-v6-shell .foco-21-session>.foco-v6-segments{margin:1px 0!important;border-radius:18px;padding:5px;background:#1C271C;border:1px solid rgba(223,247,197,.22);}
-.foco-v6-shell .foco-21-session>.foco-v6-segments .foco-v6-segment{min-height:46px;border-radius:14px;font-size:12px;font-weight:760;}
+.foco-v6-shell .foco-21-session>.foco-v6-segments .foco-v6-segment{min-height:44px;border-radius:13px;font-size:11px;font-weight:760;}
 .foco-v6-shell .foco-21-session>.foco-v6-segments .foco-v6-segment.is-active{background:var(--f21-accent);color:#101A10;}
-.foco-v6-shell .foco-21-adjusters{gap:11px;}
+.foco-v6-shell .foco-21-adjusters{gap:8px;}
 .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster{
-  padding:16px 13px 15px;border-radius:22px;border:1px solid rgba(233,255,202,.27);
+  padding:12px 9px 10px;border-radius:17px;border:1px solid rgba(233,255,202,.27);
   background:linear-gradient(142deg,#2D3C29,#182319 90%);
   box-shadow:inset 0 1px rgba(255,255,255,.1),0 12px 26px rgba(0,0,0,.18);
 }
 .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster>span{font-size:11px;letter-spacing:.07em;gap:8px;}
-.foco-v6-shell .foco-21-adjusters .foco-v7-adjuster>div{grid-template-columns:44px minmax(0,1fr) 44px;gap:4px;margin-top:15px;}
+.foco-v6-shell .foco-21-adjusters .foco-v7-adjuster>div{grid-template-columns:44px minmax(0,1fr) 44px;gap:2px;margin-top:9px;}
 .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster button{
-  width:44px;height:52px;border-radius:14px;background:rgba(0,0,0,.32);border:1px solid rgba(225,248,204,.14);
+  width:44px;height:44px;border-radius:12px;background:rgba(0,0,0,.32);border:1px solid rgba(225,248,204,.14);
 }
-.foco-v6-shell .foco-21-adjusters .foco-v7-adjuster input{font-size:clamp(29px,7vw,36px);font-weight:900;letter-spacing:-.07em;}
+.foco-v6-shell .foco-21-adjusters .foco-v7-adjuster input{font-size:clamp(20px,5.5vw,27px);font-weight:850;letter-spacing:-.05em;}
 .foco-v6-shell .foco-21-rest{
-  padding:15px 17px;min-height:92px;border-radius:22px;
+  padding:10px 12px;min-height:71px;border-radius:17px;
   border:1px solid rgba(200,240,64,.35);background:linear-gradient(125deg,#304329,#151E16);
 }
-.foco-v6-shell .foco-21-rest .foco-v7-rest-ring{width:57px;height:57px;}
+.foco-v6-shell .foco-21-rest .foco-v7-rest-ring{width:46px;height:46px;}
 .foco-v6-shell .foco-21-rest .foco-v7-rest-info span{font-size:10px;letter-spacing:.1em;}
-.foco-v6-shell .foco-21-rest .foco-v7-rest-info strong{font-size:30px;line-height:1.12;margin-top:3px;display:block;}
+.foco-v6-shell .foco-21-rest .foco-v7-rest-info strong{font-size:23px;line-height:1.12;margin-top:3px;display:block;}
 .foco-v6-shell .foco-21-rest .foco-v7-rest-control{
-  width:54px;height:54px;background:var(--f21-accent);border-radius:16px;box-shadow:0 7px 23px rgba(200,240,64,.12);
+  width:44px;height:44px;background:var(--f21-accent);border-radius:13px;box-shadow:0 7px 23px rgba(200,240,64,.12);
 }
 .foco-v6-shell .foco-21-session .foco-v7-session-start{
-  min-height:64px;border-radius:20px;font-size:15px;font-weight:890;
+  min-height:52px;border-radius:16px;font-size:14px;font-weight:850;
   background:var(--f21-accent);box-shadow:0 13px 28px rgba(179,231,53,.16);
 }
 .foco-v6-shell .foco-21-session .foco-v7-session-actions{border-radius:20px;}
 @media(max-width:370px){
   .foco-v6-shell .foco-21-week-pulse-values{gap:6px;}
   .foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel{padding:13px;min-height:144px;}
-  .foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-v7-exercise-image{padding:24px 8px 106px;}
-  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster{padding:12px 7px;}
-  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster>div{grid-template-columns:42px minmax(0,1fr) 42px;gap:2px;}
-  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster button{width:42px;min-height:44px;}
+  .foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-v7-exercise-image{padding:12px 6px 68px;}
+  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster{padding:10px 6px;}
+  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster>div{grid-template-columns:40px minmax(0,1fr) 40px;gap:2px;}
+  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster button{width:40px;min-height:44px;}
 }
 @media(min-width:768px){
-  .foco-v6-shell .foco-21-session .foco-v7-session-stage{height:clamp(390px,51vh,520px);}
+  .foco-v6-shell .foco-21-session .foco-v7-session-stage{height:clamp(285px,38vh,380px);}
   .foco-v6-shell .foco-v6-hero{min-height:490px;}
 }
 @media(prefers-reduced-motion:reduce){
@@ -234,7 +234,7 @@ html[data-foco-glass="reduced"] .foco-v6-shell .foco-v6-hero{
   object-fit:contain!important;
   object-position:center 30%!important;
   box-sizing:border-box;
-  padding:40px 7px 104px;
+  padding:14px 6px 72px;
   width:100%;height:100%;
   filter:none!important;
   mix-blend-mode:normal;
@@ -242,6 +242,23 @@ html[data-foco-glass="reduced"] .foco-v6-shell .foco-v6-hero{
 }
 @media(max-width:370px) {
   .foco-v6-shell .foco-21-session .foco-v7-stage-photo.foco-21-local-art{
-    padding:32px 0 99px;
+    padding:11px 0 66px;
+  }
+}
+
+/* 2.2: single size owner for compact session mode, never bigger than standard. */
+html[data-foco-density="compact"] .foco-v6-shell .foco-21-session .foco-v7-session-stage{height:clamp(195px,26dvh,248px);}
+@media(min-width:768px){
+ html[data-foco-density="compact"] .foco-v6-shell .foco-21-session .foco-v7-session-stage{height:clamp(260px,34vh,340px);}
+}
+
+/* iOS WebKit magnifies the entire viewport when an input smaller than 16px
+ * receives focus. Preserve large workout numeric inputs via their more specific rules. */
+@media(max-width:767px){
+  .foco-v6-shell .foco-21-session input:not([type="checkbox"]):not([type="radio"]),
+  .foco-v6-shell .foco-21-session select,
+  .foco-v6-shell .foco-21-session textarea {font-size:16px;}
+  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster input{
+    font-size:clamp(20px,5.5vw,27px);
   }
 }

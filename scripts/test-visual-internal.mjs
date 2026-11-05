@@ -119,7 +119,7 @@ try{
       // A visible release badge and new composition are required; a CSS-only deploy
       // that leaves the previous Home unchanged is not sufficient for this beta.
       const visualRelease=page.locator('.foco-21-version-pill');
-      assert.ok((await visualRelease.innerText()).includes('V2.1'),'FOCO 2.1 release badge must be visible');
+      assert.ok((await visualRelease.innerText()).includes('V2.2'),'FOCO 2.2 release badge must be visible');
       await page.locator('.foco-21-week-pulse').waitFor({timeout:4000});
       const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>({
         radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
@@ -132,13 +132,37 @@ try{
       await photo.first().waitFor({timeout:7000});
       const photoLoaded=await photo.first().evaluate(img=>img.complete&&img.naturalWidth>100);
       assert.ok(photoLoaded,'Supino active session must render an exercise-specific photographic asset');
-      assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.1'),'FOCO 2.1 session marker must be visible');
+      assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.2'),'FOCO 2.2 session marker must be visible');
       await page.locator('.foco-21-exercise-media').waitFor({timeout:4000});
-      const stage=await page.locator('.foco-v7-session-stage').evaluate(el=>({
-        radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
-      }));
-      assert.ok(stage.radius.includes('30px'),'FOCO V2.1 stage must have new 30px geometry');
-      assert.ok(stage.height>=325,'FOCO V2.1 exercise card must be visibly larger than prior layout');
+      const sessionLayout=await page.evaluate(()=>{
+        const stage=document.querySelector('.foco-v7-session-stage');
+        const screen=document.querySelector('.foco-21-session');
+        const header=document.querySelector('.foco-v7-session-heading-text h1');
+        const title=document.querySelector('.foco-v7-stage-footer h2');
+        const input=document.querySelector('.foco-v7-adjuster input');
+        const viewport=window.visualViewport;
+        const style=el=>getComputedStyle(el);
+        return {
+          stageHeight:stage.getBoundingClientRect().height,
+          stageWidth:stage.getBoundingClientRect().width,
+          screenWidth:screen.getBoundingClientRect().width,
+          stageRadius:style(stage).borderRadius,
+          headerFont:parseFloat(style(header).fontSize),
+          titleFont:parseFloat(style(title).fontSize),
+          inputFont:input?parseFloat(style(input).fontSize):null,
+          visualScale:viewport?.scale??1,
+        };
+      });
+      assert.ok(sessionLayout.stageRadius.includes('23px'),'Session must use the controlled 2.2 radius');
+      assert.ok(sessionLayout.screenWidth<=Math.min(size.width,505),'Workout cannot expand past its intended width');
+      assert.ok(sessionLayout.stageWidth<=sessionLayout.screenWidth+1,'Exercise hero cannot overrun session container');
+      assert.ok(sessionLayout.headerFont<=28&&sessionLayout.titleFont<=30,'Training headings must not be zoomed');
+      assert.ok(sessionLayout.inputFont===null||(sessionLayout.inputFont>=16&&sessionLayout.inputFont<=28),'Workout input font must be ergonomic without triggering browser auto-zoom');
+      assert.ok(sessionLayout.visualScale<=1.01,'No accidental browser viewport magnification');
+      assert.ok(size.width<768
+        ? sessionLayout.stageHeight>=210&&sessionLayout.stageHeight<=305
+        : sessionLayout.stageHeight>=275&&sessionLayout.stageHeight<=390,
+        'Workout hero must stay proportional at '+size.name+': '+JSON.stringify(sessionLayout));
       if(size.width<768){
         const overlap=await page.evaluate(()=>{
           const rest=document.querySelector('.foco-21-rest');

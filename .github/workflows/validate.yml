@@ -38,6 +38,8 @@ jobs:
         run: npm run test:pro-quality
       - name: FOCO 2.0 interaction, skill and data-truth regression
         run: npm run test:v2
+      - name: FOCO 2.2 training scale and PWA freshness guardrails
+        run: npm run test:session-contract
       - name: ExerciseDB noncommercial licence and exercise match regression (offline)
         run: npm run test:edb
       - name: FOCO noncommercial Exercise Atlas pagination and gallery regression
