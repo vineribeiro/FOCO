@@ -18,10 +18,14 @@ interface HistoryProps {
 export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadSessions() {
+      setIsLoading(true);
+      setLoadError(false);
       try {
         const data = await api.getSessions();
         setSessions(data);
@@ -30,12 +34,13 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
         }
       } catch (e) {
         console.error('Error fetching sessions:', e);
+        setLoadError(true);
       } finally {
         setIsLoading(false);
       }
     }
     loadSessions();
-  }, []);
+  }, [reloadKey]);
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-32 text-white">
@@ -61,6 +66,12 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
         <div className="py-16 text-center text-xs text-neutral-500 font-mono">
           Carregando histórico de sessões...
         </div>
+      ) : loadError ? (
+        <section role="alert" className="rounded-2xl border border-amber-200/30 bg-[#1C1C13] p-6">
+          <h3 className="text-base font-bold">Histórico indisponível</h3>
+          <p className="mt-2 text-sm leading-relaxed text-neutral-300">Não foi possível consultar as sessões salvas. Seus registros não foram apagados.</p>
+          <button type="button" onClick={()=>setReloadKey(n=>n+1)} className="mt-4 min-h-11 rounded-xl bg-[#C8F040] px-5 text-sm font-bold text-black">Tentar novamente</button>
+        </section>
       ) : sessions.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-[#141414] border border-dashed border-white/10 space-y-3">
           <History className="w-10 h-10 text-neutral-500 mx-auto" />
@@ -86,9 +97,12 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                 className="rounded-2xl bg-[#141414] border border-white/10 overflow-hidden transition-all"
               >
                 {/* Header Row */}
-                <div
+                <button
+                  type="button"
+                  aria-expanded={isExpanded}
+                  aria-controls={'foco-history-details-'+sess.id}
                   onClick={() => setExpandedSessionId(isExpanded ? null : sess.id)}
-                  className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:bg-white/5 transition-colors"
+                  className="w-full p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer text-left hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#C8F040] transition-colors"
                 >
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white shrink-0">
@@ -116,15 +130,15 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                       </span>
                     </div>
 
-                    <button className="p-1 text-neutral-400 hover:text-white">
+                    <span className="p-1 text-neutral-400" aria-hidden="true">
                       {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </button>
+                    </span>
                   </div>
-                </div>
+                </button>
 
                 {/* Expanded Sets Details */}
                 {isExpanded && (
-                  <div className="px-5 pb-5 pt-2 border-t border-white/10 space-y-3">
+                  <div id={'foco-history-details-'+sess.id} className="px-5 pb-5 pt-2 border-t border-white/10 space-y-3">
                     {sess.notes && (
                       <p className="text-xs text-neutral-300 bg-[#0A0A0A] p-3 rounded-xl border border-white/10">
                         <span className="font-bold text-white uppercase text-[10px]">Anotações:</span> {sess.notes}
