@@ -4,7 +4,7 @@
 - Um componente reutilizável `ExerciseDBPreview` disponível em **todos os exercícios das telas de detalhes** na Biblioteca, na aba **Execução** de treinos e nos **Exercícios complementares** expandidos.
 - Não adiciona GIFs em todas as miniaturas (economia de memória, dados móveis e requisições). Só faz a consulta após o toque em **Ver demonstração GIF**.
 - Um resultado só é mostrado quando o **nome da variação** corresponde exatamente a um alias inglês explícito ou ao mapeamento RepDB já curado. Movimento parecido não é suficiente. GIF ausente, bloqueio de CORS, `429` ou erro de rede preservam as imagens e instruções atuais.
-- API: `GET https://oss.exercisedb.dev/api/v1/exercises/search?search=...` (1 consulta por toque, cache temporário em memória, sem armazenamento permanente de material externo).
+- API: `GET https://oss.exercisedb.dev/api/v1/exercises/search?search=...` (1 consulta inicial por toque, com no máximo 1 segunda consulta para uma variação aprovada; **sem guardar respostas, IDs de terceiros ou URLs de GIF**, nem em memória após o término da consulta).
 - GIF: permitido somente do host `https://static.exercisedb.dev`, no caminho `/media/<id>.gif`.
 - Atribuição explícita para AscendAPI / ExerciseDB ao lado da demonstração. GIF 180p, **não** ilustração premium validada ou orientação técnica profissional.
 - Não altera os 254 IDs curados, backend, catálogo original, histórico, prescrição, músculos, treinamento por IA, nem fotos anatômicas próprias.
@@ -16,10 +16,12 @@ Documentação oficial: https://oss.exercisedb.dev/docs
 - O workflow de deploy **beta não comercial** passa `VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA=true`.
 - Qualquer ambiente pago precisa definir `VITE_FOCO_COMMERCIAL_MODE=true` (desabilita o recurso mesmo se o outro flag estiver presente) e retirar o flag beta do deploy.
 - Antes de 2027 remover o flag de `.github/workflows/deploy.yml` e revisar termos, preço, armazenamento de mídia e permissão comercial. Isso deve fazer parte do gate de release.
-- Não faça download em massa de GIFs e não os inclua no repositório.
+- **Não faça download em massa de GIFs e não os inclua no repositório.**
+- A política oficial de [cache](https://docs.ascendapi.com/guides/caching) exige que o plano autorize armazenamento. A integração usa `cache: no-store` para buscas, não grava respostas nem URLs de mídia no FOCO e evita pré-carregamento. A cache HTTP interna do navegador segue os cabeçalhos do CDN e não é implementada pelo aplicativo.
+- Caso o provedor altere termos, CORS ou disponibilidade do endpoint gratuito, desligar a feature beta em vez de buscar alternativas não licenciadas.
 
 ## Cobertura real
-O botão está disponível para **cada exercício com visualização detalhada**. Os **254 exercícios curados têm nomes de consulta configurados**, e uma regressão offline garante essa cobertura de candidatos. Porém **não existem 254 GIFs homologados**: só uma correspondência exata confirmada na API permite exibir a mídia. O motor consulta o provedor e aceita só equivalências exatas. Os primeiros mapeamentos manuais cobrem movimentos frequentes; os demais aproveitam slugs já curados do RepDB, quando disponíveis. Não mostrar GIF para variação distinta e nem criar conteúdo fictício.
+O botão está disponível para **cada exercício com visualização detalhada**, mas o usuário deve tocar para consultar. Ele aparece nos painéis de Biblioteca, Execução e Complementares; não ativa GIF em miniaturas nem pré-carrega uma lista inteira. Os **254 exercícios curados têm nomes de consulta configurados**, e uma regressão offline garante essa cobertura de candidatos. Porém **não existem 254 GIFs homologados**: só uma correspondência exata confirmada na API permite exibir a mídia. O motor consulta o provedor e aceita só equivalências exatas. Os primeiros mapeamentos manuais cobrem movimentos frequentes; os demais aproveitam slugs já curados do RepDB, quando disponíveis. Não mostrar GIF para variação distinta e nem criar conteúdo fictício.
 O endpoint gratuito tem limites e pode estar temporariamente indisponível. A execução do FOCO nunca depende dele.
 
 ## Comandos
