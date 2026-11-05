@@ -1,156 +1,155 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Dumbbell, LoaderCircle, Play, Search, X } from 'lucide-react';
-import { AccessibleDialog } from './AccessibleDialog';
-import { browseExerciseDB, EXERCISEDB_PAGE_SIZE, type ExternalExercise, type ExternalExercisePage } from '../data/exerciseDbCatalog';
-import { candidateExerciseDBNames, normalizeExerciseDBName } from '../data/exerciseDbBeta';
-import type { ExerciseCatalogItem } from '../data/exerciseLibrary';
+import React,{useEffect,useMemo,useRef,useState} from 'react';
+import {ArrowLeft,ArrowRight,Dumbbell,LoaderCircle,Play,Search,X,Plus} from 'lucide-react';
+import {AccessibleDialog} from './AccessibleDialog';
+import {browseExerciseDB,EXERCISEDB_PAGE_SIZE,type ExternalExercise,type ExternalExercisePage} from '../data/exerciseDbCatalog';
+import {candidateExerciseDBNames} from '../data/exerciseDbBeta';
 
-type Props = { curated: ExerciseCatalogItem[]; onOpenCurated: (exercise: ExerciseCatalogItem) => void };
-const BODY_PT: Record<string,string> = {
-  chest:'Peito', back:'Costas', shoulders:'Ombros', waist:'Abdômen',
-  'upper arms':'Braços', 'lower arms':'Antebraços', 'upper legs':'Pernas',
-  'lower legs':'Panturrilhas', cardio:'Cardio', neck:'Pescoço',
+interface Props { onUseExercise:(exercise:ExternalExercise)=>void }
+const BODY_PT:Record<string,string>={
+  chest:'Peito',back:'Costas',shoulders:'Ombros',waist:'Abdômen','upper arms':'Braços',
+  'lower arms':'Antebraços','upper legs':'Pernas','lower legs':'Panturrilhas',
+  cardio:'Cardio',neck:'Pescoço'
 };
-const pt = (name: string) => BODY_PT[name.toLowerCase()] || name;
+const pt=(name:string)=>BODY_PT[name.toLowerCase()]||name;
 
-export const ExerciseDBCatalogBrowser: React.FC<Props> = ({ curated, onOpenCurated }) => {
-  const [search,setSearch] = useState('');
-  const [query,setQuery] = useState('');
-  const [list,setList] = useState<Extract<ExternalExercisePage,{state:'ok'}>|null>(null);
-  const [page,setPage] = useState(1);
-  const [cursors,setCursors] = useState<Array<string|null>>([null]);
-  const [muscle,setMuscle] = useState('all');
-  const [loading,setLoading] = useState(false);
-  const [error,setError] = useState('');
-  const [detail,setDetail] = useState<ExternalExercise|null>(null);
-  const [showGif,setShowGif] = useState(false);
-  const [gifFailed,setGifFailed] = useState(false);
-  const seq=useRef(0), active=useRef<AbortController|null>(null);
+/** Sole visual exercise catalogue. Third-party content stays in component memory only. */
+export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
+  const [search,setSearch]=useState('');
+  const [query,setQuery]=useState('');
+  const [list,setList]=useState<Extract<ExternalExercisePage,{state:'ok'}>|null>(null);
+  const [page,setPage]=useState(1);
+  const [cursors,setCursors]=useState<Array<string|null>>([null]);
+  const [muscle,setMuscle]=useState('all');
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState('');
+  const [detail,setDetail]=useState<ExternalExercise|null>(null);
+  const [showGif,setShowGif]=useState(false);
+  const [gifFailed,setGifFailed]=useState(false);
+  const [viewKey,setViewKey]=useState(0);
+  const requestId=useRef(0),controller=useRef<AbortController|null>(null);
 
-  useEffect(()=>()=>{seq.current++;active.current?.abort();},[]);
-  const fetchPage = async (term: string, after: string | null, requestedPage: number) => {
-    const id=++seq.current;
-    active.current?.abort();
-    const controller=new AbortController();
-    active.current=controller;
+  useEffect(()=>()=>{requestId.current++;controller.current?.abort();},[]);
+  const fetchPage=async(term:string,after:string|null,targetPage:number)=>{
+    const id=++requestId.current;
+    controller.current?.abort();
+    const request=new AbortController();
+    controller.current=request;
     setLoading(true);setError('');
-    const result=await browseExerciseDB({query:term,after,signal:controller.signal});
-    if(id!==seq.current||controller.signal.aborted)return;
+    const result=await browseExerciseDB({query:term,after,signal:request.signal});
+    if(id!==requestId.current||request.signal.aborted)return;
     setLoading(false);
     if(result.state!=='ok'){
       setError(result.state==='rate_limited'
-        ? 'O limite da API gratuita foi atingido. Aguarde antes de consultar novamente.'
-        : 'Não foi possível consultar a ExerciseDB. A biblioteca do FOCO permanece disponível.');
+        ? 'A ExerciseDB atingiu o limite de consultas. Tenta novamente depois.'
+        : 'Não foi possível acessar a ExerciseDB agora. Verifica tua conexão ou tenta novamente.');
       return;
     }
-    if(requestedPage>1&&result.exercises.length>0&&result.exercises[0].exerciseId===list?.exercises[0]?.exerciseId){
-      setError('O servidor repetiu a página anterior; a navegação foi interrompida para evitar resultados duplicados.');
+    if(targetPage>1&&result.exercises[0]?.exerciseId===list?.exercises[0]?.exerciseId){
+      setError('O servidor repetiu a página anterior. A navegação foi interrompida para evitar duplicação.');
       return;
     }
-    setList(result);setPage(requestedPage);setQuery(term);setMuscle('all');setDetail(null);
-    setCursors(current => {
-      const visited = requestedPage === 1 ? [null] : current.slice(0, requestedPage);
-      visited[requestedPage] = result.nextCursor;
-      return visited;
+    setList(result);setQuery(term);setPage(targetPage);setMuscle('all');setViewKey(k=>k+1);
+    setDetail(null);setShowGif(false);
+    setCursors(current=>{
+      const next=targetPage===1?[null]:current.slice(0,targetPage);
+      next[targetPage]=result.nextCursor;
+      return next;
     });
   };
-  const submit = (event: React.FormEvent) => {
+  const submit=(event:React.FormEvent)=>{
     event.preventDefault();
     const term=search.trim();
-    // Only well-reviewed names from the FOCO catalogue get an English alias.
-    const resolved=term ? candidateExerciseDBNames(term)[0]||term : '';
+    const resolved=term?candidateExerciseDBNames(term)[0]||term:'';
     void fetchPage(resolved,null,1);
   };
-  const muscles=useMemo(()=>list?[...new Set(list.exercises.flatMap(e=>e.bodyParts))]
-    .sort((a,b)=>a.localeCompare(b)):[],[list]);
-  const filtered=list?.exercises.filter(e=>muscle==='all'||e.bodyParts.includes(muscle))||[];
-  const matchingFOCO=useMemo(()=>{
-    if(!detail)return null;
-    const target=normalizeExerciseDBName(detail.name);
-    const matches=curated.filter(x=>candidateExerciseDBNames(x.name)
-      .some(name=>normalizeExerciseDBName(name)===target));
-    return matches.length===1?matches[0]:null;
-  },[detail,curated]);
-
-  return <section className="foco-atlas-external" aria-label="Explorar catálogo ExerciseDB">
+  const muscles=useMemo(()=>list?[...new Set(list.exercises.flatMap(e=>e.bodyParts))].sort():[],[list]);
+  const shown=list?.exercises.filter(e=>muscle==='all'||e.bodyParts.includes(muscle))||[];
+  return <section className="foco-atlas-external foco-atlas-single" aria-label="Biblioteca ExerciseDB">
     <div className="foco-atlas-external-top">
-      <div>
-        <span className="foco-atlas-kicker">EXERCISEDB / ASCENDAPI</span>
-        <h2>Explore novos movimentos</h2>
-        <p>Catálogo externo em inglês. Consultas ao vivo, sem copiar GIFs ou alterar o histórico do FOCO.</p>
+      <div><span className="foco-atlas-kicker">CATÁLOGO DE MOVIMENTOS / ASCENDAPI</span>
+        <h2>ExerciseDB</h2>
+        <p>Uma biblioteca única para consultar execução, músculos e equipamentos. Busca ao vivo, sem duplicar imagens.</p>
       </div>
-      <span className="foco-atlas-beta-pill">BETA PESSOAL</span>
+      <span className="foco-atlas-beta-pill">USO NÃO COMERCIAL</span>
     </div>
     <form className="foco-atlas-search" onSubmit={submit} role="search">
-      <Search size={18} aria-hidden="true"/>
+      <Search size={19} aria-hidden="true"/>
       <input aria-label="Buscar exercícios na ExerciseDB" value={search} maxLength={80}
-        onChange={event=>setSearch(event.target.value)} placeholder="Ex.: leg press, barbell curl..."/>
+        onChange={e=>setSearch(e.target.value)} placeholder="Ex.: supino reto, leg press, squat..." />
       {search&&<button type="button" onClick={()=>setSearch('')} aria-label="Limpar pesquisa"><X size={17}/></button>}
-      <button className="foco-atlas-search-submit" disabled={loading} type="submit">Buscar</button>
+      <button type="submit" className="foco-atlas-search-submit" disabled={loading}>Buscar</button>
     </form>
     {!list&&!loading&&!error&&<div className="foco-atlas-first">
       <div className="foco-atlas-first-icon"><Dumbbell size={31}/></div>
-      <h3>Uma biblioteca inteira para explorar</h3>
-      <p>Toque em explorar para consultar a primeira página. Use a busca para encontrar exercícios específicos.</p>
-      <button type="button" onClick={()=>void fetchPage('',null,1)}>Explorar ExerciseDB <ArrowRight size={16}/></button>
+      <h3>Explore todos os exercícios</h3>
+      <p>Consulta o catálogo completo por páginas. Pesquisa por nome, inclusive alguns nomes em português.</p>
+      <button type="button" onClick={()=>void fetchPage('',null,1)}>Explorar ExerciseDB <ArrowRight size={17}/></button>
     </div>}
-    {error&&<div role="alert" className="foco-atlas-alert"><span>{error}</span><button type="button" onClick={()=>void fetchPage(query,cursors[page-1]||null,page)}>Tentar novamente</button></div>}
-    {loading&&<div role="status" className="foco-atlas-loading"><LoaderCircle size={23} className="animate-spin"/> Consultando a ExerciseDB...</div>}
+    {error&&<div className="foco-atlas-alert" role="alert"><span>{error}</span>
+      <button type="button" onClick={()=>void fetchPage(query,cursors[page-1]||null,page)}>Tentar novamente</button></div>}
+    {loading&&<div className="foco-atlas-loading" role="status"><LoaderCircle size={22} className="animate-spin"/> Carregando exercícios...</div>}
     {list&&<>
       <div className="foco-atlas-results-heading">
-        <div><strong>{list.total===null?'Resultados da página':list.total.toLocaleString('pt-BR')+' exercícios no resultado'}</strong>
-          <span>Página {page} · até {EXERCISEDB_PAGE_SIZE} por consulta</span></div>
-        <span className="foco-atlas-remote-label">Fonte externa</span>
+        <div><strong>{list.total===null?'Catálogo ExerciseDB':list.total.toLocaleString('pt-BR')+' exercícios encontrados'}</strong>
+          <span>Página {page} · até {EXERCISEDB_PAGE_SIZE} movimentos</span></div>
+        <span className="foco-atlas-remote-label">Dados em tempo real</span>
       </div>
-      {muscles.length>1&&<div className="foco-atlas-filters" role="group" aria-label="Filtrar resultados da página por região corporal">
-        <button type="button" aria-pressed={muscle==='all'} onClick={()=>setMuscle('all')}>Todos nesta página</button>
-        {muscles.map(part=><button type="button" key={part} aria-pressed={muscle===part} onClick={()=>setMuscle(part)}>{pt(part)}</button>)}
+      {muscles.length>1&&<div role="group" aria-label="Filtrar grupo muscular nesta página" className="foco-atlas-filters">
+        <button type="button" onClick={()=>setMuscle('all')} aria-pressed={muscle==='all'}>Todos nesta página</button>
+        {muscles.map(m=><button type="button" key={m} aria-pressed={muscle===m} onClick={()=>setMuscle(m)}>{pt(m)}</button>)}
       </div>}
-      {filtered.length===0?<div className="foco-atlas-empty">Não há exercícios neste filtro. Escolha outro grupo ou página.</div>:
-      <div className="foco-atlas-external-grid">
-        {filtered.map(item=><article key={item.exerciseId} className="foco-atlas-exercise-card">
-          <button type="button" onClick={()=>{setDetail(item);setShowGif(false);setGifFailed(false);}}
-            className="foco-atlas-card-open" aria-label={'Abrir exercício '+item.name}>
-            <span className="foco-atlas-media-placeholder"><Dumbbell size={39} strokeWidth={1.4} aria-hidden="true"/><span>DEMONSTRAÇÃO DISPONÍVEL NO DETALHE</span></span>
+      {shown.length===0?<div className="foco-atlas-empty">Nenhum exercício neste filtro. Seleciona outro grupo ou página.</div>:
+      <div className="foco-atlas-external-grid" key={viewKey}>
+        {shown.map(item=><article key={item.exerciseId} className="foco-atlas-exercise-card">
+          <button type="button" className="foco-atlas-card-open"
+            onClick={()=>{setDetail(item);setShowGif(false);setGifFailed(false);}}
+            aria-label={'Abrir exercício '+item.name}>
+            <span className="foco-atlas-media-placeholder"><Dumbbell size={39} strokeWidth={1.35} aria-hidden="true"/>
+              <span>GIF DISPONÍVEL NOS DETALHES</span></span>
             <span className="foco-atlas-card-copy"><span>{item.bodyParts.map(pt).join(' · ')||'Exercício'}</span>
-              <strong>{item.name}</strong><small>{item.equipments.join(' · ')||'Equipamento não informado'}</small>
-            </span>
+              <strong>{item.name}</strong>
+              <small>{item.equipments.join(' · ')||'Equipamento não informado'}</small></span>
           </button>
         </article>)}
       </div>}
-      <div className="foco-atlas-pagination">
-        <button type="button" disabled={loading||page<=1} onClick={()=>void fetchPage(query,cursors[page-2]||null,page-1)}><ArrowLeft size={16}/> Anterior</button>
+      <nav className="foco-atlas-pagination" aria-label="Paginação ExerciseDB">
+        <button type="button" disabled={loading||page<=1}
+          onClick={()=>void fetchPage(query,cursors[page-2]||null,page-1)}><ArrowLeft size={16}/> Anterior</button>
         <span aria-live="polite">Página {page}</span>
-        <button type="button" disabled={loading||!list.hasNext} onClick={()=>void fetchPage(query,list.nextCursor,page+1)}>Próxima <ArrowRight size={16}/></button>
-      </div>
+        <button type="button" disabled={loading||!list.hasNext}
+          onClick={()=>void fetchPage(query,list.nextCursor,page+1)}>Próxima <ArrowRight size={16}/></button>
+      </nav>
     </>}
-    <p className="foco-atlas-credit">Exercícios e GIFs por <a href="https://oss.exercisedb.dev/docs" target="_blank" rel="noreferrer noopener">ExerciseDB / AscendAPI</a>. Uso pessoal não comercial. A qualidade técnica das demonstrações deve ser conferida antes do treino.</p>
-    {detail&&<AccessibleDialog size="lg" title={'ExerciseDB: '+detail.name} onClose={()=>setDetail(null)}>
+    <p className="foco-atlas-credit">Dados, descrições e mídia: <a href="https://oss.exercisedb.dev/docs" target="_blank" rel="noopener noreferrer">ExerciseDB / AscendAPI</a>. Uso não comercial. GIFs carregados somente por solicitação, sem armazenamento permanente.</p>
+    {detail&&<AccessibleDialog size="lg" title={'ExerciseDB: '+detail.name} onClose={()=>{setDetail(null);setShowGif(false);}}>
       <div className="foco-atlas-modal">
-        <div className="foco-atlas-modal-head"><div><span className="foco-atlas-kicker">EXERCISEDB / DEMONSTRAÇÃO</span><h2>{detail.name}</h2></div>
-          <button type="button" onClick={()=>setDetail(null)} aria-label="Fechar exercício"><X size={20}/></button></div>
+        <div className="foco-atlas-modal-head">
+          <div><span className="foco-atlas-kicker">EXERCISEDB / MOVIMENTO</span><h2>{detail.name}</h2></div>
+          <button type="button" onClick={()=>{setDetail(null);setShowGif(false);}} aria-label="Fechar exercício"><X size={19}/></button>
+        </div>
         <div className="foco-atlas-media-detail">
           {!showGif?<button type="button" className="foco-atlas-play" disabled={!detail.gifUrl}
-            onClick={()=>{setShowGif(true);setGifFailed(false);}}><Play size={20} fill="currentColor"/>
+            onClick={()=>{setShowGif(true);setGifFailed(false);}}><Play size={19} fill="currentColor"/>
             {detail.gifUrl?'Carregar GIF de demonstração':'GIF não disponível'}</button>
-            :gifFailed?<div role="status">O GIF não carregou. <button type="button" onClick={()=>{setShowGif(false);setGifFailed(false);}}>Tentar novamente</button></div>
-            :<><img src={detail.gifUrl||''} alt={'Animação da ExerciseDB: '+detail.name}
+          :gifFailed?<div role="status">O GIF não carregou.
+            <button type="button" onClick={()=>{setShowGif(false);setGifFailed(false);}}>Tentar novamente</button></div>
+          :<><img src={detail.gifUrl||''} alt={'Demonstração animada de '+detail.name}
               referrerPolicy="no-referrer" decoding="async" onError={()=>setGifFailed(true)}/>
-              <button type="button" className="foco-atlas-hide" onClick={()=>setShowGif(false)}>Ocultar GIF</button></>}
+            <button className="foco-atlas-hide" type="button" onClick={()=>setShowGif(false)}>Ocultar GIF</button></>}
         </div>
         <div className="foco-atlas-meta">
           <div><span>Região</span><strong>{detail.bodyParts.map(pt).join(', ')||'Não informada'}</strong></div>
           <div><span>Músculos</span><strong>{detail.targetMuscles.join(', ')||'Não informados'}</strong></div>
           <div><span>Equipamento</span><strong>{detail.equipments.join(', ')||'Não informado'}</strong></div>
         </div>
-        <section className="foco-atlas-steps"><h3>Orientações originais (inglês)</h3>
-          {detail.instructions.length>0?<ol>{detail.instructions.map((s,i)=><li key={i}>{s}</li>)}</ol>
-            :<p>O fornecedor não forneceu instruções para este exercício.</p>}
+        <section className="foco-atlas-steps"><h3>Instruções fornecidas pela ExerciseDB (inglês)</h3>
+          {detail.instructions.length?<ol>{detail.instructions.map((line,i)=><li key={i}>{line}</li>)}</ol>
+            :<p>Sem instruções disponíveis para este movimento.</p>}
         </section>
-        {matchingFOCO?<button type="button" className="foco-atlas-open-foco" onClick={()=>{onOpenCurated(matchingFOCO);setDetail(null);}}>
-          Ver versão revisada no FOCO <ArrowRight size={16}/></button>
-          :<p className="foco-atlas-no-import">Este movimento ainda não foi incorporado ao catálogo curado do FOCO. Para respeitar os termos do fornecedor, não armazenamos nomes, GIFs ou instruções externas nas fichas.</p>}
-        <p className="foco-atlas-credit">Fonte: <a href="https://oss.exercisedb.dev/docs" target="_blank" rel="noreferrer noopener">ExerciseDB / AscendAPI</a> · GIF externo de 180p.</p>
+        <button type="button" className="foco-atlas-open-foco" onClick={()=>{onUseExercise(detail);setDetail(null);setShowGif(false);}}>
+          <Plus size={17}/> Usar como referência para minha ficha
+        </button>
+        <p className="foco-atlas-credit">Fonte: <a href="https://oss.exercisedb.dev/docs" target="_blank" rel="noopener noreferrer">ExerciseDB / AscendAPI</a> · GIF externo 180p.</p>
       </div>
     </AccessibleDialog>}
   </section>;
