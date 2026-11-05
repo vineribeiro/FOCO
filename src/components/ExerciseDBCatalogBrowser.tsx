@@ -56,6 +56,7 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
       return next;
     });
   };
+  useEffect(()=>{void fetchPage('',null,1);},[]);
   const submit=(event:React.FormEvent)=>{
     event.preventDefault();
     const term=search.trim();
