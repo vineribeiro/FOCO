@@ -1,0 +1,13 @@
+/* FOCO PRO beta: rest timer remains operable on compact phones.
+ * Instead of shrinking touch targets, wrap controls onto a second row. */
+.foco-motion-rest-hud .foco-rest-actions > button { min-width: 40px; }
+.foco-motion-rest-hud .foco-rest-actions > button[title="Mais ajustes"],
+.foco-motion-rest-hud .foco-rest-actions > button[title="Recolher detalhes"] { min-width: 44px; min-height: 44px; }
+@media (max-width: 420px) {
+  .foco-motion-rest-hud .foco-rest-layout { flex-wrap: wrap; row-gap: 12px; }
+  .foco-motion-rest-hud .foco-rest-context { flex: 1 1 100%; }
+  .foco-motion-rest-hud .foco-rest-actions { width: 100%; justify-content: space-between; }
+  .foco-motion-rest-hud .foco-rest-actions > button { min-height: 44px; }
+}
+/* Keep browser focus visible in the compact two-row HUD. */
+.foco-motion-rest-hud button:focus-visible { outline: 2px solid var(--foco-pro-accent); outline-offset: 2px; }

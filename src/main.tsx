@@ -2,10 +2,12 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import './foco-pro-tokens.css';
 import './foco-v6.css';
 import './foco-v7-polish.css';
 import './foco-v8-fidelity.css';
 import './foco-motion.css';
+import './foco-pro-responsive.css';
 
 class AppErrorBoundary extends React.Component<React.PropsWithChildren, { hasError: boolean }> {
   state = { hasError: false };

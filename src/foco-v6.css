@@ -1,14 +1,14 @@
 /* FOCO V6 — faithful mobile composition derived from the approved 10-screen reference.
    Product controls remain native HTML with actual data and state. */
 :root {
- --v6-accent:#C8F040;
- --v6-black:#080A07;
- --v6-panel:#171B16;
- --v6-ink:#F7F8F4;
+ --v6-accent:var(--foco-pro-accent,#C8F040);
+ --v6-black:var(--foco-pro-canvas,#080A07);
+ --v6-panel:var(--foco-pro-panel,#171B16);
+ --v6-ink:var(--foco-pro-ink,#F7F8F4);
  --v6-muted:#9CA399;
- --v6-rim:rgba(226,244,196,.15);
- --v6-liquid:rgba(30,34,26,.64);
- --v6-radius:21px;
+ --v6-rim:var(--foco-pro-border,rgba(226,244,196,.15));
+ --v6-liquid:var(--foco-pro-liquid,rgba(30,34,26,.64));
+ --v6-radius:var(--foco-pro-radius-card,21px);
 }
 html {background:#080A07;}
 body {font-family:Inter,Poppins,'Plus Jakarta Sans',system-ui,sans-serif;background:#080A07;color:#F7F8F4;}

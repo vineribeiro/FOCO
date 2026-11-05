@@ -71,9 +71,9 @@ export const RestTimerHUD: React.FC = () => {
 
         {/* Main Bar Content */}
         <div className="p-3">
-          <div className="flex items-center justify-between gap-3">
+          <div className="foco-rest-layout flex items-center justify-between gap-3">
             {/* Left: Countdown Display & Context */}
-            <div className="flex items-center gap-3 min-w-0">
+            <div className="foco-rest-context flex items-center gap-3 min-w-0">
               {/* Circular Mini Visualizer */}
               <div
                 className={`relative w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border transition-all ${
@@ -105,7 +105,7 @@ export const RestTimerHUD: React.FC = () => {
             </div>
 
             {/* Right: Quick Action Controls */}
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="foco-rest-actions flex items-center gap-1 shrink-0">
               {/* Quick +/- 15s */}
               <button
                 onClick={() => addSeconds(-15)}
@@ -116,7 +116,7 @@ export const RestTimerHUD: React.FC = () => {
               </button>
               <button
                 onClick={() => addSeconds(15)}
-                className="px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white text-[11px] font-mono font-bold border border-white/10 transition-colors cursor-pointer"
+                className="min-h-11 px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white text-[11px] font-mono font-bold border border-white/10 transition-colors cursor-pointer"
                 title="Aumentar 15s"
               >
                 +15s
@@ -179,7 +179,7 @@ export const RestTimerHUD: React.FC = () => {
                   <button
                     key={presetSecs}
                     onClick={() => startTimer(presetSecs, exerciseName, setNumber)}
-                    className={`py-1.5 rounded-lg font-mono text-[11px] font-black border transition-colors cursor-pointer ${
+                    className={`min-h-11 py-1.5 rounded-lg font-mono text-[11px] font-black border transition-colors cursor-pointer ${
                       totalDuration === presetSecs
                         ? 'bg-white text-black border-white'
                         : 'bg-[#141414] text-neutral-300 border-white/10 hover:border-white/30 hover:text-white'
