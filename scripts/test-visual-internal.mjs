@@ -150,12 +150,18 @@ try{
       // Regression from beta device report: non-bench hero must never render the
       // full image gallery's white caption strip, zoom button or phase switches.
       await page.getByRole('button',{name:/Ver exercício 3:/}).click();
-      await page.locator('.foco-v7-stage-illustration.foco-v7-exercise-visual').waitFor({timeout:6000});
+      await page.locator('.foco-21-local-art').first().waitFor({timeout:6000});
+      const legPressArt=await page.locator('.foco-21-local-art').first().evaluate(img=>({
+        loaded:img.complete&&img.naturalWidth>=640,
+        filename:new URL(img.src).pathname.split('/').pop(),
+      }));
+      assert.ok(legPressArt.loaded,'Leg Press artwork must be a decoded local asset');
+      assert.equal(legPressArt.filename,'legpress-45-foco.svg','Leg Press must use its matching illustration');
       // The 2026-11-05 beta screenshot was specifically of Leg press 45 graus.
       assert.match(await page.locator('.foco-v7-stage-footer h2').innerText(),/Leg press 45 graus/i);
       await page.screenshot({path:out+'/legpress-'+size.name+'.png',fullPage:false,animations:'disabled'});
-      assert.equal(await page.locator('.foco-v7-stage-illustration button').count(),0,'Stage preview must not inject nested image controls');
-      assert.equal(await page.locator('.foco-v7-stage-illustration [class*="bg-white"]').count(),0,'No white gallery overlays in stage');
+      assert.equal(await page.locator('.foco-21-exercise-media button').count(),0,'Exercise hero must not contain nested media controls');
+      assert.equal(await page.locator('.foco-21-exercise-media [class*="bg-white"]').count(),0,'No white gallery overlays in stage');
       await page.getByRole('button',{name:/Ver exercício 1:/}).click();
     }
     const screenshot=out+'/'+view+'-'+size.name+'.png';
