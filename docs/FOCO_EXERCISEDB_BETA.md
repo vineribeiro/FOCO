@@ -36,3 +36,13 @@ O endpoint gratuito tem limites e pode estar temporariamente indisponível. A ex
 3. Validar técnica e correspondência com profissional antes de usar ilustração para instruir execução.
 4. Testar `429`, falha de CORS, rede offline e usuários com preferência por movimento reduzido.
 5. Revalidar licença, segurança e infraestrutura antes de monetizar.
+
+## Verificação real do endpoint (05/11/2026)
+Consulta pontual de metadados efetuada no GitHub Actions, execução [#42082901557](https://github.com/vineribeiro/FOCO/actions/runs/42082901557), sem baixar nem armazenar GIFs:
+- `barbell bench press`: HTTP **200**, CORS `*`, 7 resultados; variação exata retornada.
+- `sled 45 degree leg press`: HTTP **200**, CORS `*`, 7 resultados; nome `sled 45° leg press` retornado, equivalente via normalização.
+- `leg press`: HTTP **200**, CORS `*`; retornou variações diferentes, que o match estrito **não pode aceitar**.
+- `leg extension`: HTTP **503** no momento do teste, sem resultado garantido.
+
+Isso confirma **acesso real e duas correspondências**, mas não prova que todos os 254 exercícios tenham GIF, nem garante estabilidade futura da API. A integração mantém o fallback local/RepDB.
+O diagnóstico live deve ser executado **somente manualmente quando necessário** (`npm run test:edb:live`); não se faz polling externo em cada PR para respeitar limites do serviço.
