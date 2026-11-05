@@ -146,7 +146,15 @@ export function isExerciseDBBetaAllowed():boolean{
 // GIF URL, ID or negative result, including through an in-memory result cache.
 // Only keep the unresolved request so rapid double taps do not duplicate traffic.
 const pending=new Map<string,Promise<ExerciseDBPreviewResult>>();
-let lastRequest=0;
+// Reserve a provider request slot instead of discarding quick training navigation.
+let nextProviderRequestAt=0;
+function waitForProviderSlot():Promise<void>{
+ const now=Date.now();
+ const scheduled=Math.max(now,nextProviderRequestAt);
+ nextProviderRequestAt=scheduled+1750;
+ const delay=scheduled-now;
+ return delay>0?new Promise(resolve=>setTimeout(resolve,delay)):Promise.resolve();
+}
 
 export async function getExerciseDBGifPreview(exerciseName:string):Promise<ExerciseDBPreviewResult>{
  if(!isExerciseDBBetaAllowed())return {state:'disabled'};
@@ -154,15 +162,13 @@ export async function getExerciseDBGifPreview(exerciseName:string):Promise<Exerc
  if(!candidates.length)return {state:'no_match'};
  const key=normalizeExerciseDBName(exerciseName);
  if(pending.has(key))return pending.get(key)!;
- // Deliberate, user-initiated calls only. No prefetch or catalogue crawling.
- if(Date.now()-lastRequest<1400)return {state:'rate_limited'};
- lastRequest=Date.now();
+ // Keep only one live lookup per exercise and queue distinct rapid selections.
  const task=(async():Promise<ExerciseDBPreviewResult>=>{
   // Two *explicitly approved names* at most. No fuzzy substitution:
   // the API's fuzzy suggestions are only candidates, not identity.
   const approvedTerms=[...new Set(candidates)].slice(0,2);
   for(let index=0;index<approvedTerms.length;index++){
-   if(index>0)await new Promise(resolve=>setTimeout(resolve,1500));
+   await waitForProviderSlot();
    const term=approvedTerms[index];
    const controller=new AbortController();
    const timeout=setTimeout(()=>controller.abort(),8500);
@@ -172,7 +178,10 @@ export async function getExerciseDBGifPreview(exerciseName:string):Promise<Exerc
       cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'
     });
     if(res.status===429)return {state:'rate_limited'};
-    if(!res.ok)return {state:'unavailable'};
+    if(!res.ok){
+      if(res.status>=500&&index<approvedTerms.length-1)continue;
+      return {state:'unavailable'};
+    }
     const body:unknown=await res.json();
     const data=body&&typeof body==='object'&&'data' in body?(body as {data:unknown}).data:null;
     for(const record of (Array.isArray(data)?data.slice(0,60):[])){
@@ -181,7 +190,7 @@ export async function getExerciseDBGifPreview(exerciseName:string):Promise<Exerc
       if(gifUrl&&typeof item.name==='string'&&typeof item.exerciseId==='string')
         return {state:'matched',id:item.exerciseId,name:item.name,gifUrl};
     }
-   }catch{return {state:'unavailable'};}
+   }catch{if(index===approvedTerms.length-1)return {state:'unavailable'};}
    finally{clearTimeout(timeout);}
   }
   return {state:'no_match'};
@@ -192,4 +201,4 @@ export async function getExerciseDBGifPreview(exerciseName:string):Promise<Exerc
 }
 
 /** Keeps the existing unit-test helper name without retaining API data. */
-export function clearExerciseDBPreviewCacheForTests(){pending.clear();lastRequest=0;}
+export function clearExerciseDBPreviewCacheForTests(){pending.clear();nextProviderRequestAt=0;}

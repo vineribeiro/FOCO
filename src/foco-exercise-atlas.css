@@ -178,3 +178,17 @@
  .foco-v6-shell .foco-atlas-beta-pill{white-space:normal;}
  .foco-atlas-meta{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
+
+/* ExerciseDB retry in active training: a media failure must be recoverable. */
+.foco-v6-shell .foco-21-session .foco-v7-stage-illustration{pointer-events:auto;}
+.foco-v6-shell .foco-21-session .foco-edb-stage-status{top:20%;gap:9px;}
+.foco-v6-shell .foco-21-session .foco-edb-retry{
+  position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;
+  min-height:42px;padding:9px 13px;margin-top:4px;border:1px solid #C8F040;
+  background:#C8F040;color:#13200C;border-radius:12px;font-size:11px;font-weight:850;
+  cursor:pointer;pointer-events:auto;
+}
+.foco-v6-shell .foco-21-session .foco-edb-direct{
+  color:#D9F5A4;text-decoration:underline;text-underline-offset:3px;
+  font-size:10px;line-height:1.35;pointer-events:auto;position:relative;z-index:2;
+}

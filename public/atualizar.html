@@ -55,7 +55,7 @@
       }
       status.textContent = 'Atualização preparada. Abrindo o FOCO...';
       const dest = new URL('/FOCO/', location.origin);
-      dest.searchParams.set('foco_refresh', '20261105-v23');
+      dest.searchParams.set('foco_refresh', '20261105-v23-media3');
       dest.searchParams.set('nocache', String(Date.now()));
       location.replace(dest.href);
     } catch (err) {

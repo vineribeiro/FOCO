@@ -30,6 +30,7 @@ export const ExerciseIllustration: React.FC<Props> = ({
   const [preview, setPreview] = useState<ExerciseDBPreviewResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [failedImage, setFailedImage] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
   const allowed = isExerciseDBBetaAllowed();
 
   useEffect(() => {
@@ -47,7 +48,7 @@ export const ExerciseIllustration: React.FC<Props> = ({
       .catch(() => { if (!cancelled) setPreview({ state: 'unavailable' }); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [exerciseName, activeStage, allowed]);
+  }, [exerciseName, activeStage, allowed, retryKey]);
 
   const compact = activeStage || /\bh-(14|16|20)\b/.test(className);
   const gif = activeStage && !loading && !failedImage && preview?.state === 'matched'
@@ -69,11 +70,18 @@ export const ExerciseIllustration: React.FC<Props> = ({
         className="foco-edb-stage-gif" loading="eager" decoding="async" referrerPolicy="no-referrer"
         onError={() => setFailedImage(true)} />
       <span className="foco-edb-stage-attribution">EXERCISEDB</span>
-    </> : activeStage ? <div className="foco-edb-stage-status" role="status">
+    </> : activeStage ? <div className="foco-edb-stage-status" role="status" aria-live="polite">
       {loading ? <LoaderCircle size={26} className="animate-spin" aria-hidden="true" /> :
         <Dumbbell size={29} strokeWidth={1.35} aria-hidden="true" />}
       <span>{status}</span>
-      {!loading && <small>Abra Execução para consultar a demonstração</small>}
+      {!loading && allowed && <button type="button" className="foco-edb-retry"
+        onClick={() => setRetryKey(current => current + 1)} aria-label={'Tentar novamente imagem de ' + exerciseName}>
+        Tentar imagem novamente
+      </button>}
+      {!loading && failedImage && preview?.state === 'matched' &&
+        <a className="foco-edb-direct" href={preview.gifUrl} target="_blank" rel="noopener noreferrer">
+          Ver GIF original no navegador
+        </a>}
     </div> : <>
       <Dumbbell className="foco-edb-tile-icon" size={compact ? 27 : 47} strokeWidth={1.35} aria-hidden="true" />
       {!compact && <><strong className="foco-edb-tile-name">{exerciseName}</strong>
