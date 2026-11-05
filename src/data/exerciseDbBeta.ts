@@ -160,7 +160,10 @@ export async function getExerciseDBGifPreview(exerciseName:string):Promise<Exerc
  const task=(async():Promise<ExerciseDBPreviewResult>=>{
   // Two *explicitly approved names* at most. No fuzzy substitution:
   // the API's fuzzy suggestions are only candidates, not identity.
-  for(const term of [...new Set(candidates)].slice(0,2)){
+  const approvedTerms=[...new Set(candidates)].slice(0,2);
+  for(let index=0;index<approvedTerms.length;index++){
+   if(index>0)await new Promise(resolve=>setTimeout(resolve,1500));
+   const term=approvedTerms[index];
    const controller=new AbortController();
    const timeout=setTimeout(()=>controller.abort(),8500);
    try{
@@ -180,8 +183,6 @@ export async function getExerciseDBGifPreview(exerciseName:string):Promise<Exerc
     }
    }catch{return {state:'unavailable'};}
    finally{clearTimeout(timeout);}
-   // Give the strict OSS rate limiter breathing room between approved variants.
-   if(candidates.length>1)await new Promise(resolve=>setTimeout(resolve,1500));
   }
   return {state:'no_match'};
  })();
