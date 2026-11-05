@@ -10,6 +10,7 @@ import './foco-v8-fidelity.css';
 import './foco-motion.css';
 import './foco-pro-responsive.css';
 import './foco-v2-experience.css';
+import './foco-21-redesign.css';
 
 class AppErrorBoundary extends React.Component<React.PropsWithChildren, { hasError: boolean }> {
   state = { hasError: false };

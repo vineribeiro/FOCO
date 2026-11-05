@@ -1,4 +1,5 @@
 import { FOCO_REFERENCE_BENCH } from '../data/focoReferenceBench';
+import { FOCO_VISUAL_RELEASE } from '../utils/release';
 import React, { useState, useEffect } from 'react';
 import { FocoV6Status, FocoV6Segment, V6_IMAGES } from '../components/FocoV6UI';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
@@ -658,12 +659,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     setV6SessionMode('register');
   };
   return (
-    <div className="foco-v6-session-screen foco-v4-page">
+    <div className="foco-v6-session-screen foco-v4-page foco-21-session">
       <div className="md:hidden"><FocoV6Status/></div>
       <header className="foco-v7-session-heading">
         <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Voltar aos treinos"><ArrowLeft size={19}/></button>
         <div className="foco-v7-session-heading-text">
-          <p>{sessionStarted?'TREINO EM ANDAMENTO':'PRONTO PARA TREINAR'}</p>
+          <p>{sessionStarted?'TREINO EM ANDAMENTO':'PRONTO PARA TREINAR'} <span className="foco-21-session-mark">FOCO {FOCO_VISUAL_RELEASE}</span></p>
           <h1>{v7WorkoutTitle}</h1>
         </div>
         <div className="foco-v7-session-stopwatch" aria-label={'Tempo de treino '+formatTime(elapsedSeconds)}>
@@ -677,21 +678,25 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           className={(ex.sets.length>0&&ex.sets.every(set=>set.completed)?'is-complete ':'')+(index===v6ExIndex?'is-current':'')} />)}
       </nav>
       {v6CurrentExercise&&<section className="foco-v7-session-stage" aria-label={'Exercício atual: '+v6CurrentExercise.exercise_name}>
+        <div className="foco-21-art-surface" aria-hidden="true"/>
+        <div className="foco-21-exercise-media">
         {v6ReferenceBench
           ? <img className="foco-v7-stage-photo" src={V6_IMAGES.bench} alt="Execução de supino reto com barra"
               fetchPriority="high" loading="eager" decoding="async"
               onError={e=>{if(e.currentTarget.src!==FOCO_REFERENCE_BENCH)e.currentTarget.src=FOCO_REFERENCE_BENCH;}}/>
           : <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name}
               muscleGroup={v6CurrentExercise.muscle_group} presentation="editorial" className="foco-v7-stage-illustration h-full w-full" />}
+        </div>
         <span className="foco-v7-stage-tag">EXERCÍCIO {String(v6ExIndex+1).padStart(2,'0')} / {String(exerciseLogs.length).padStart(2,'0')}</span>
         <div className="foco-v7-stage-footer">
+          <span className="foco-21-art-kicker">SEU MOVIMENTO</span>
           <h2>{v6CurrentExercise.exercise_name}</h2>
           <span>{v6CurrentExercise.muscle_group || 'Treinamento'} · {v6CurrentExercise.sets.length} séries</span>
         </div>
         <button type="button" className="foco-v7-stage-expand" aria-label="Ver demonstração completa"
-          onClick={()=>setV6SessionMode('execution')}><ChevronRight size={20}/></button>
+          onClick={()=>setV6SessionMode('execution')}><ChevronRight size={20}/><span>Execução</span></button>
       </section>}
-      {v6CurrentExercise&&<section className="foco-v7-session-series" aria-label="Progresso das séries">
+      {v6CurrentExercise&&<section className="foco-v7-session-series foco-21-series" aria-label="Progresso das séries">
         <div className="foco-v7-series-copy">
           <div><span>SÉRIE ATUAL</span><strong>Série {Math.min(v6SetIndex+1,v6CurrentExercise.sets.length)} de {v6CurrentExercise.sets.length}</strong></div>
           <div className="foco-v7-series-percentage"><strong>{completionRate}%</strong><small>da sessão</small></div>
@@ -702,7 +707,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       </section>}
       <FocoV6Segment label="Modo do exercício" options={[{value:'register',label:'Registro'},{value:'execution',label:'Execução'},{value:'tips',label:'Dicas'}]} value={v6SessionMode} onChange={setV6SessionMode}/>
       {v6CurrentExercise&&v6SessionMode==='register'&&v6CurrentSet&&<>
-        <section className={'foco-v7-session-adjusters '+(!v6TracksLoad?'single-control':'')} aria-label="Registrar série">
+        <section className={'foco-v7-session-adjusters foco-21-adjusters '+(!v6TracksLoad?'single-control':'')} aria-label="Registrar série">
           {v6TracksLoad&&<label className="foco-v7-adjuster">
             <span><Dumbbell size={16}/> CARGA <small>kg</small></span>
             <div>
@@ -732,7 +737,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             Usar carga anterior
           </button>
         </div>}
-        <section className={'foco-v7-rest-panel '+(restTimerActive?'is-running':'')} aria-label="Controle de descanso">
+        <section className={'foco-v7-rest-panel foco-21-rest '+(restTimerActive?'is-running':'')} aria-label="Controle de descanso">
           <span className="foco-v7-rest-ring" style={{'--v6-rest-progress':v6RestRatio+'%'} as React.CSSProperties}>
             <Clock size={17}/>
           </span>

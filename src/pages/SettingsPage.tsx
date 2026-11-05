@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InstallAppButton } from '../components/InstallAppButton';
 import { soundEngine } from '../utils/soundEngine';
+import { FOCO_VISUAL_RELEASE, FOCO_VISUAL_DATE } from '../utils/release';
 import { useAuth } from '../context/AuthContext';
 import { applyUiPreferences, readUiPreferences, saveUiPreferences, type FocoUiPreferences } from '../utils/uiPreferences';
 import {
@@ -74,7 +75,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
       <section className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-5" aria-label="Atualizar FOCO">
         <div>
           <h2 className="text-sm font-extrabold">Atualizações do FOCO</h2>
-          <p className="mt-1 text-xs text-neutral-400">Versão visual 2026.11.03 · Se o design antigo aparecer, atualize os arquivos sem excluir seus treinos.</p>
+          <p className="mt-1 text-xs text-neutral-400">FOCO Visual {FOCO_VISUAL_RELEASE} · {FOCO_VISUAL_DATE}. Se a interface anterior aparecer, atualize os arquivos sem excluir o histórico salvo.</p>
         </div>
         <a href={import.meta.env.BASE_URL + 'atualizar.html'}
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#D5FF40] px-4 text-xs font-extrabold text-[#10160D]">
