@@ -18,7 +18,7 @@ const ALIASES:Record<string,readonly string[]>={
  supinoretocombarra:['barbell bench press','barbell flat bench press'],
  supinoretocomhalteres:['dumbbell bench press','dumbbell flat bench press'],
  supinoinclinadocombarra:['barbell incline bench press'],
- supinoinclinadocomhalteres:['dumbbell incline bench press'],
+ supinoinclinadocomhalteres:['dumbbell incline bench press','incline dumbbell bench press'],
  supinodeclinadocombarra:['barbell decline bench press'],
  agachamentolivrecombarra:['barbell squat','barbell full squat'],
  agachamentofrontal:['barbell front squat'],
