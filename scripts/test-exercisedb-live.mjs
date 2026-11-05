@@ -1,28 +1,21 @@
-/** One-time ExerciseDB V1 search contract probe for this integration PR only.
- * At most 4 rate-spaced metadata-only requests, never fetch any GIF media.
- */
-const base='https://oss.exercisedb.dev/api/v1/';
-const variants=[
- ['q','exercises/search?q=barbell%20bench%20press'],
- ['name','exercises/search?name=barbell%20bench%20press'],
- ['query','exercises/search?query=barbell%20bench%20press'],
- ['search','exercises/search?search=barbell%20bench%20press'],
+/** PR-only one-off ExerciseDB search contract, metadata only; never request GIF bytes. */
+const cases=[
+ ['supino','barbell bench press'],
+ ['legpress_precise','sled 45 degree leg press'],
+ ['legpress_general','leg press'],
+ ['extensora','leg extension'],
 ];
-for(const [kind,path] of variants){
- const controller=new AbortController();
- const timer=setTimeout(()=>controller.abort(),7000);
+for(const [label,term] of cases){
+ const abort=new AbortController(),timer=setTimeout(()=>abort.abort(),7000);
  try{
-  const response=await fetch(base+path,{signal:controller.signal,headers:{Accept:'application/json'}});
-  const body=await response.json().catch(()=>null);
-  const data=body?.data;
-  console.log(JSON.stringify({kind,status:response.status,keys:body&&typeof body==='object'?Object.keys(body):null,
-    dataType:Array.isArray(data)?'array':typeof data,
-    count:Array.isArray(data)?data.length:null,
-    example:Array.isArray(data)?data.slice(0,2).map(e=>({name:e?.name,exerciseId:e?.exerciseId,gifUrl:e?.gifUrl})):null,
-    preview:JSON.stringify(body).slice(0,600)
-  }));
-  if(response.status===429){console.log('Free API rate limit; no more probes.');break;}
- }catch(error){console.log(JSON.stringify({kind,error:String(error).slice(0,180)}));}
+  const url='https://oss.exercisedb.dev/api/v1/exercises/search?search='+encodeURIComponent(term);
+  const response=await fetch(url,{signal:abort.signal,headers:{Accept:'application/json'}});
+  const json=await response.json().catch(()=>null);
+  const data=Array.isArray(json?.data)?json.data:[];
+  console.log(JSON.stringify({label,term,status:response.status,success:json?.success,
+    returned:data.length,results:data.slice(0,12).map(x=>({id:x.exerciseId,name:x.name}))}));
+  if(response.status===429){console.log('Rate limit: stop probes.');break;}
+ }catch(e){console.log(JSON.stringify({label,error:String(e).slice(0,160)}));}
  finally{clearTimeout(timer);}
  await new Promise(resolve=>setTimeout(resolve,1500));
 }
