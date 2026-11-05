@@ -66,7 +66,7 @@ assert.match(css,/:focus-visible/);
 const worker = read("public/sw.js");
 const updater = read("public/atualizar.html");
 const main = read("src/main.tsx");
-assert.match(worker, /foco-shell-20261103-refresh1/, "PWA cache must change when shell changes");
+assert.match(worker, /foco-shell-20261105-v21/, "PWA cache must change when shell changes");
 assert.match(worker, /cache: 'no-store'/, "Navigations must bypass stale browser HTML cache");
 assert.match(updater, /serviceWorker\.getRegistrations/);
 assert.match(updater, /key\.startsWith\('foco-shell-'\)/);

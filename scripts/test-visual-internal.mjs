@@ -13,7 +13,7 @@ const profile = { id: user.id, full_name: user.full_name, current_weight_kg: 76.
 const days = ['segunda','terca','quarta','quinta','sexta','sabado'];
 const lifts = [
   ['Supino reto com barra','Peitoral'],['Puxada frontal na polia','Costas'],
-  ['Agachamento livre com barra','Quadríceps'],['Mesa flexora','Posteriores'],
+  ['Leg press 45 graus','Quadríceps'],['Mesa flexora','Posteriores'],
   ['Prancha abdominal','Core'],
 ];
 const exercises = days.flatMap(day => lifts.map(([exercise_name,muscle_group],i) => ({
@@ -116,18 +116,54 @@ try{
         width:img.naturalWidth,height:img.naturalHeight,
       }));
       assert.ok(hero.loaded,'FOCO hero athlete media must decode, not show a broken-image icon');
+      // A visible release badge and new composition are required; a CSS-only deploy
+      // that leaves the previous Home unchanged is not sufficient for this beta.
+      const visualRelease=page.locator('.foco-21-version-pill');
+      assert.ok((await visualRelease.innerText()).includes('V2.1'),'FOCO 2.1 release badge must be visible');
+      await page.locator('.foco-21-week-pulse').waitFor({timeout:4000});
+      const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>({
+        radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
+      }));
+      assert.ok(homeStyle.radius.includes('30px'),'FOCO V2.1 hero should have the new 30px corner radius');
+      assert.ok(homeStyle.height>=380,'FOCO V2.1 hero must be visually larger than V2.0');
     }
     if(view==='sessao'){
       const photo=page.locator('.foco-v7-stage-photo');
       await photo.first().waitFor({timeout:7000});
       const photoLoaded=await photo.first().evaluate(img=>img.complete&&img.naturalWidth>100);
       assert.ok(photoLoaded,'Supino active session must render an exercise-specific photographic asset');
+      assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.1'),'FOCO 2.1 session marker must be visible');
+      await page.locator('.foco-21-exercise-media').waitFor({timeout:4000});
+      const stage=await page.locator('.foco-v7-session-stage').evaluate(el=>({
+        radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
+      }));
+      assert.ok(stage.radius.includes('30px'),'FOCO V2.1 stage must have new 30px geometry');
+      assert.ok(stage.height>=325,'FOCO V2.1 exercise card must be visibly larger than prior layout');
+      if(size.width<768){
+        const overlap=await page.evaluate(()=>{
+          const rest=document.querySelector('.foco-21-rest');
+          const cta=document.querySelector('.foco-v7-session-start');
+          return rest&&cta?{rest:rest.getBoundingClientRect().bottom,cta:cta.getBoundingClientRect().top,position:getComputedStyle(cta).position}:null;
+        });
+        assert.ok(overlap&&overlap.position==='static'&&overlap.rest<=overlap.cta+1,'Start CTA must not obscure rest controls');
+      }
       // Regression from beta device report: non-bench hero must never render the
       // full image gallery's white caption strip, zoom button or phase switches.
       await page.getByRole('button',{name:/Ver exercício 3:/}).click();
-      await page.locator('.foco-v7-stage-illustration.foco-v7-exercise-visual').waitFor({timeout:6000});
-      assert.equal(await page.locator('.foco-v7-stage-illustration button').count(),0,'Stage preview must not inject nested image controls');
-      assert.equal(await page.locator('.foco-v7-stage-illustration [class*="bg-white"]').count(),0,'No white gallery overlays in stage');
+      const legPressImage=page.locator('.foco-21-local-art[src$="legpress-45-foco.svg"]').first();
+      await legPressImage.waitFor({timeout:10000});
+      await legPressImage.evaluate(img=>img.decode());
+      const legPressArt=await legPressImage.evaluate(img=>({
+        loaded:img.complete&&img.naturalWidth>=640,
+        filename:new URL(img.src).pathname.split('/').pop(),
+      }));
+      assert.ok(legPressArt.loaded,'Leg Press artwork must be a decoded local asset');
+      assert.equal(legPressArt.filename,'legpress-45-foco.svg','Leg Press must use its matching illustration');
+      // The 2026-11-05 beta screenshot was specifically of Leg press 45 graus.
+      assert.match(await page.locator('.foco-v7-stage-footer h2').innerText(),/Leg press 45 graus/i);
+      await page.screenshot({path:out+'/legpress-'+size.name+'.png',fullPage:false,animations:'disabled'});
+      assert.equal(await page.locator('.foco-21-exercise-media button').count(),0,'Exercise hero must not contain nested media controls');
+      assert.equal(await page.locator('.foco-21-exercise-media [class*="bg-white"]').count(),0,'No white gallery overlays in stage');
       await page.getByRole('button',{name:/Ver exercício 1:/}).click();
     }
     const screenshot=out+'/'+view+'-'+size.name+'.png';

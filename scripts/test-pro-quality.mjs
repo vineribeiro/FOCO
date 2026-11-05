@@ -35,4 +35,16 @@ for(const route of ["cardio","complementares","em-casa","sessao"]){
  assert.match(app,new RegExp("case '"+route+"'"));
 }
 assert.match(read('src/foco-motion.css'),/prefers-reduced-motion:\s*reduce/);
-console.log('FOCO PRO: product contract, skill hierarchy, tokens and compact rest controls verified.');
+assert.ok(read('src/main.tsx').includes("import './foco-21-redesign.css'"));
+assert.match(read('src/pages/DashboardPage.tsx'),/foco-21-week-pulse/);
+assert.match(read('src/pages/DashboardPage.tsx'),/FOCO_VISUAL_RELEASE/);
+assert.match(read('src/pages/ActiveSessionPage.tsx'),/foco-21-exercise-media/);
+assert.match(read('src/pages/SettingsPage.tsx'),/FOCO_VISUAL_DATE/);
+assert.match(read('src/foco-21-redesign.css'),/mix-blend-mode:multiply/);
+assert.ok(read('src/foco-21-redesign.css').includes("min-height:clamp(390px,51dvh,520px)"));
+assert.ok(read('src/pages/ActiveSessionPage.tsx').includes('legpress-45-foco.svg'));
+assert.ok(read('src/pages/ActiveSessionPage.tsx').includes('supino-reto-foco.svg'));
+assert.match(read('public/assets/exercises/legpress-45-foco.svg'),/Leg press 45 graus/);
+assert.match(read('public/assets/exercises/supino-reto-foco.svg'),/Supino reto com barra/);
+assert.match(read('public/sw.js'),/foco-shell-20261105-v21/);
+console.log('FOCO PRO: product contract, skill hierarchy, 2.1 visual release and beta QA verified.');

@@ -1,0 +1,247 @@
+/* FOCO Visual 2.1 — perceptible redesign, not another color overlay.
+   Owner: DESIGN.md + foco-pro; scoped to Home and Workout.
+   Loaded last: consolidates V6 / V7 / V8 without changing data or routes. */
+.foco-v6-shell {
+  --f21-accent: var(--foco-pro-accent, #C8F040);
+  --f21-stroke: rgba(227,247,198,.21);
+  --f21-ink: #F7FAF1;
+  --f21-quiet: #BFC9B6;
+  background:radial-gradient(ellipse 420px 380px at 100% 8%,rgba(174,223,52,.11),transparent 76%),
+    linear-gradient(165deg,#080C08 5%,#080B08 65%,#11190F 100%);
+}
+/* Home: new editorial rhythm, visible version and activity snapshot. */
+.foco-v6-shell .foco-v6-dashboard {gap:20px;max-width:520px;padding-top:15px;}
+.foco-v6-shell .foco-v6-home-header {
+  min-height:64px;padding:0 2px 12px;gap:14px;
+  border-bottom:1px solid rgba(238,255,217,.14);
+}
+.foco-v6-shell .foco-21-brand-block {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:0;
+}
+.foco-v6-shell .foco-21-brand-block .foco-v6-brand {margin:0;}
+.foco-v6-shell .foco-21-brand-tagline {
+  font-size:8px;line-height:1;font-weight:750;color:var(--f21-accent);
+  letter-spacing:.18em;white-space:nowrap;
+}
+.foco-v6-shell .foco-21-version-pill{
+  min-height:42px;min-width:58px;display:flex;align-items:center;justify-content:center;
+  gap:6px;border-radius:13px;background:#202C1C;border:1px solid rgba(200,240,64,.34);
+  color:var(--f21-accent);font-size:11px;font-weight:850;letter-spacing:.02em;
+}
+.foco-v6-shell .foco-21-version-dot {display:block;width:6px;height:6px;background:currentColor;border-radius:50%;box-shadow:0 0 11px rgba(200,240,64,.55);}
+.foco-v6-shell .foco-v6-home-intro {margin-top:2px;align-items:center;gap:12px;}
+.foco-v6-shell .foco-v6-home-intro p {
+  color:var(--f21-accent);font-weight:760;letter-spacing:.11em;font-size:11px;text-transform:uppercase;
+}
+.foco-v6-shell .foco-v6-home-intro h1{
+  font-size:clamp(37px,10.5vw,54px);line-height:.98;font-weight:900;letter-spacing:-.075em;margin-top:6px;
+}
+.foco-v6-shell .foco-21-week-pulse {
+  background:linear-gradient(105deg,rgba(50,69,33,.85),rgba(18,27,17,.95) 68%);
+  border:1px solid rgba(200,240,64,.38);border-left:3px solid var(--f21-accent);
+  border-radius:19px;padding:14px 15px 15px;box-shadow:inset 0 1px rgba(255,255,255,.09),0 16px 28px rgba(0,0,0,.17);
+}
+.foco-v6-shell .foco-21-week-pulse-label{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--f21-accent);font-size:9px;font-weight:850;letter-spacing:.14em;}
+.foco-v6-shell .foco-21-week-pulse-label span:last-child {color:#C0D0B0;font-weight:650;letter-spacing:.08em;}
+.foco-v6-shell .foco-21-week-pulse-values{display:grid;grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr) 1px minmax(0,1fr);align-items:center;gap:10px;margin-top:13px;}
+.foco-v6-shell .foco-21-week-pulse-values>div{min-width:0;display:flex;flex-direction:column;gap:3px;}
+.foco-v6-shell .foco-21-week-pulse-values strong{font-size:29px;font-weight:900;letter-spacing:-.06em;line-height:1;font-variant-numeric:tabular-nums;}
+.foco-v6-shell .foco-21-week-pulse-values span:not(.foco-21-week-pulse-divider){font-size:10px;color:#C3CEB8;white-space:normal;line-height:1.2;}
+.foco-v6-shell .foco-21-week-pulse-divider{height:30px;background:rgba(233,253,209,.21);}
+.foco-v6-shell .foco-v6-hero {
+  min-height:clamp(390px,51dvh,520px);border-radius:30px;
+  border:1px solid rgba(215,250,137,.5);padding:20px;align-items:end;
+  background:radial-gradient(ellipse at 90% 20%,#52643C 0%,#1B2A1D 47%,#090E0A 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 24px 50px rgba(0,0,0,.4),0 0 0 1px rgba(200,240,64,.09);
+}
+.foco-v6-shell .foco-v6-hero::before {
+  background:linear-gradient(0deg,rgba(3,7,5,1) 0%,rgba(5,9,6,.97) 21%,rgba(7,11,7,.44) 54%,transparent 83%),
+    linear-gradient(90deg,rgba(5,9,6,.18),transparent 75%);
+}
+.foco-v6-shell .foco-v6-hero::after {background:radial-gradient(ellipse 80% 45% at 80% 20%,rgba(200,240,64,.22),transparent 78%);}
+.foco-v6-shell .foco-v6-hero img{
+  left:auto;right:0;top:0;width:84%;height:78%;
+  object-fit:cover;object-position:53% 24%;filter:saturate(.77) contrast(1.17) brightness(.89);
+}
+.foco-v6-shell .foco-21-hero-topline{
+  position:absolute;top:19px;left:19px;z-index:3;max-width:75%;
+  color:#F4FFD9;font-size:9px;font-weight:850;letter-spacing:.14em;text-shadow:0 2px 9px #080A07;
+}
+.foco-v6-shell .foco-21-hero-topline span{color:var(--f21-accent);margin-inline:4px;}
+.foco-v6-shell .foco-v6-hero-body{position:relative;z-index:2;padding:4px 2px 1px;}
+.foco-v6-shell .foco-v6-hero-eyebrow{font-size:11px;letter-spacing:.16em;margin-bottom:8px;}
+.foco-v6-shell .foco-v6-hero h2{font-size:clamp(34px,9vw,53px);font-weight:930;line-height:.99;letter-spacing:-.063em;max-width:100%;margin-bottom:14px;}
+.foco-v6-shell .foco-v6-pill {background:rgba(15,24,14,.74);border-color:rgba(218,251,177,.23);font-size:10px;padding:8px 11px;}
+.foco-v6-shell .foco-v6-hero .foco-v6-primary {
+  min-height:59px;margin-top:17px;border-radius:18px;font-size:14px;font-weight:850;
+  box-shadow:0 11px 28px rgba(183,232,43,.17),inset 0 1px 0 rgba(255,255,255,.38);
+}
+.foco-v6-shell .foco-v6-hero-detail{top:53px;right:18px;border-color:rgba(213,250,127,.5);}
+.foco-v6-shell .foco-21-week-section{
+  padding:18px 16px 15px;border:1px solid var(--f21-stroke);border-radius:22px;
+  background:linear-gradient(135deg,rgba(42,51,34,.56),rgba(13,18,13,.87));
+}
+.foco-v6-shell .foco-v6-week-heading h2{font-size:18px;font-weight:850;letter-spacing:-.045em;}
+.foco-v6-shell .foco-v6-week-heading p{font-weight:740;color:var(--f21-accent);}
+.foco-v6-shell .foco-v6-week-strip{gap:8px;}
+.foco-v6-shell .foco-v6-week-day {
+  min-height:65px;border-radius:14px;background:#151E15;
+  border-color:rgba(232,249,211,.15);font-size:10px;
+}
+.foco-v6-shell .foco-v6-week-day.is-current{border-color:var(--f21-accent);background:#2A3C20;color:var(--f21-accent);}
+.foco-v6-shell .foco-21-section-heading{margin-bottom:-7px;display:flex;align-items:end;justify-content:space-between;gap:12px;}
+.foco-v6-shell .foco-21-section-heading>span{font-size:9px;letter-spacing:.12em;color:var(--f21-accent);font-weight:850;}
+.foco-v6-shell .foco-21-section-heading h2{font-size:17px;font-weight:800;letter-spacing:-.04em;}
+.foco-v6-shell .foco-21-shortcut-grid{gap:11px;}
+.foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel {
+  min-height:146px;border-radius:23px;padding:16px;flex-direction:column-reverse;
+  align-items:flex-start;justify-content:space-between;gap:17px;
+  border:1px solid rgba(228,248,199,.2);
+  background:linear-gradient(145deg,rgba(46,55,38,.9),rgba(15,21,15,.91));
+}
+.foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel:nth-child(even){
+  background:linear-gradient(145deg,rgba(29,39,27,.88),rgba(12,18,13,.96));
+}
+.foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel svg{
+  width:43px;height:43px;padding:11px;box-sizing:border-box;border-radius:14px;
+  background:#334628;border:1px solid rgba(200,240,64,.2);color:var(--f21-accent);
+}
+.foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel strong{font-size:14px;line-height:1.15;letter-spacing:-.02em;display:block;}
+.foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel p{font-size:11px;line-height:1.4;margin-top:5px;color:var(--f21-quiet);}
+/* Session: actual new composition, distinct readable media, separated controls. */
+.foco-v6-shell .foco-21-session{max-width:550px;gap:14px !important;padding-top:10px;}
+.foco-v6-shell .foco-21-session .foco-v7-session-heading{min-height:77px;gap:13px;}
+.foco-v6-shell .foco-21-session .foco-v7-session-heading .foco-v6-icon-button{width:49px;height:49px;flex:0 0 49px;border-color:var(--f21-stroke);background:#182318;}
+.foco-v6-shell .foco-21-session .foco-v7-session-heading-text p{display:flex;flex-wrap:wrap;gap:7px;align-items:center;font-size:10px;letter-spacing:.11em;}
+.foco-v6-shell .foco-21-session .foco-v7-session-heading-text h1{font-size:clamp(25px,7.5vw,37px);margin-top:4px;letter-spacing:-.06em;}
+.foco-v6-shell .foco-21-session-mark{display:inline-flex;align-items:center;border:1px solid rgba(200,240,64,.44);border-radius:7px;background:#233421;padding:3px 5px;color:var(--f21-accent);font-size:8px;font-weight:850;letter-spacing:.035em;}
+.foco-v6-shell .foco-21-session .foco-v7-session-stopwatch strong{font-size:17px;letter-spacing:-.04em;}
+.foco-v6-shell .foco-21-session .foco-v7-exercise-progress{margin:0 0 2px;gap:8px;}
+.foco-v6-shell .foco-21-session .foco-v7-session-stage{
+  height:clamp(330px,44dvh,470px);border-radius:30px;
+  border:1px solid rgba(214,248,148,.58);
+  background:radial-gradient(ellipse at 85% 17%,#526941 0%,#253323 38%,#101C14 73%,#090E0A 100%);
+  box-shadow:inset 0 1px rgba(255,255,255,.14),0 21px 46px rgba(0,0,0,.4);
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.foco-v6-shell .foco-21-art-surface{position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(135deg,rgba(234,255,213,.025) 0px,rgba(234,255,213,.025) 1px,transparent 1px,transparent 30px);
+}
+.foco-v6-shell .foco-21-exercise-media{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.foco-v6-shell .foco-21-exercise-media .foco-v7-stage-photo{width:100%;height:100%;object-position:center 39%;}
+.foco-v6-shell .foco-21-session .foco-v7-stage-illustration.foco-v7-exercise-visual{
+  position:absolute !important;inset:0 !important;overflow:hidden;border:0!important;background:transparent!important;pointer-events:none;
+}
+.foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-v7-exercise-image{
+  box-sizing:border-box;display:block;width:100%!important;height:100%!important;
+  object-fit:contain!important;object-position:center 28%;padding:36px 22px 108px;background:transparent!important;
+}
+.foco-v6-shell .foco-21-session .foco-v7-stage-illustration[data-foco-media-source="repdb"] img,
+.foco-v6-shell .foco-21-session .foco-v7-stage-illustration[data-foco-media-source="atlas"] img{
+  mix-blend-mode:multiply;filter:contrast(1.15) saturate(.88) brightness(1.05)!important;
+}
+.foco-v6-shell .foco-21-session .foco-v7-session-stage::after{
+  z-index:1;background:linear-gradient(0deg,rgba(3,8,5,.99) 0%,rgba(4,9,5,.93) 21%,rgba(7,13,8,.56) 39%,rgba(8,13,8,.07) 70%,transparent 100%),
+  radial-gradient(ellipse 70% 40% at 75% 10%,rgba(200,240,64,.13),transparent);
+}
+.foco-v6-shell .foco-21-session .foco-v7-stage-tag{
+  top:16px;left:16px;padding:11px 13px;font-size:10px;border-color:rgba(225,255,179,.32);
+  background:rgba(10,21,11,.78);color:var(--f21-accent);
+}
+.foco-v6-shell .foco-21-session .foco-v7-stage-footer{padding:25px 20px 25px;position:relative;z-index:3;}
+.foco-v6-shell .foco-21-art-kicker{
+  display:block;margin-bottom:7px!important;color:var(--f21-accent)!important;
+  font-size:10px!important;font-weight:850;letter-spacing:.15em;
+}
+.foco-v6-shell .foco-21-session .foco-v7-stage-footer h2{
+  max-width:95%;font-size:clamp(30px,8.4vw,47px);line-height:1.01;letter-spacing:-.06em;text-wrap:balance;
+  text-shadow:0 2px 17px rgba(0,0,0,.55);
+}
+.foco-v6-shell .foco-21-session .foco-v7-stage-footer>span:last-child{font-size:12px;margin-top:10px;}
+.foco-v6-shell .foco-21-session .foco-v7-stage-expand{
+  top:14px;right:14px;min-width:47px;min-height:47px;display:flex;align-items:center;justify-content:center;
+  gap:6px;padding:0 12px;width:auto;height:47px;border-radius:16px;background:rgba(15,25,15,.84);
+  border-color:rgba(235,255,207,.28);font-size:10px;font-weight:800;color:#F6FAEC;
+}
+.foco-v6-shell .foco-21-session .foco-21-series{
+  border-radius:20px;background:linear-gradient(145deg,#212C20,#121B14);border:1px solid var(--f21-stroke);
+  padding:15px 16px 17px;box-shadow:inset 0 1px rgba(255,255,255,.05);
+}
+.foco-v6-shell .foco-21-series .foco-v7-series-copy>div:first-child span{font-size:10px;letter-spacing:.12em;}
+.foco-v6-shell .foco-21-series .foco-v7-series-copy>div:first-child strong{font-size:24px;margin-top:5px;}
+.foco-v6-shell .foco-21-series .foco-v7-series-percentage strong{font-size:31px;line-height:1;}
+.foco-v6-shell .foco-21-series .foco-v7-series-dots{margin-top:13px;gap:6px;}
+.foco-v6-shell .foco-21-series .foco-v7-series-dots span{height:7px;}
+.foco-v6-shell .foco-21-session>.foco-v6-segments{margin:1px 0!important;border-radius:18px;padding:5px;background:#1C271C;border:1px solid rgba(223,247,197,.22);}
+.foco-v6-shell .foco-21-session>.foco-v6-segments .foco-v6-segment{min-height:46px;border-radius:14px;font-size:12px;font-weight:760;}
+.foco-v6-shell .foco-21-session>.foco-v6-segments .foco-v6-segment.is-active{background:var(--f21-accent);color:#101A10;}
+.foco-v6-shell .foco-21-adjusters{gap:11px;}
+.foco-v6-shell .foco-21-adjusters .foco-v7-adjuster{
+  padding:16px 13px 15px;border-radius:22px;border:1px solid rgba(233,255,202,.27);
+  background:linear-gradient(142deg,#2D3C29,#182319 90%);
+  box-shadow:inset 0 1px rgba(255,255,255,.1),0 12px 26px rgba(0,0,0,.18);
+}
+.foco-v6-shell .foco-21-adjusters .foco-v7-adjuster>span{font-size:11px;letter-spacing:.07em;gap:8px;}
+.foco-v6-shell .foco-21-adjusters .foco-v7-adjuster>div{grid-template-columns:44px minmax(0,1fr) 44px;gap:4px;margin-top:15px;}
+.foco-v6-shell .foco-21-adjusters .foco-v7-adjuster button{
+  width:44px;height:52px;border-radius:14px;background:rgba(0,0,0,.32);border:1px solid rgba(225,248,204,.14);
+}
+.foco-v6-shell .foco-21-adjusters .foco-v7-adjuster input{font-size:clamp(29px,7vw,36px);font-weight:900;letter-spacing:-.07em;}
+.foco-v6-shell .foco-21-rest{
+  padding:15px 17px;min-height:92px;border-radius:22px;
+  border:1px solid rgba(200,240,64,.35);background:linear-gradient(125deg,#304329,#151E16);
+}
+.foco-v6-shell .foco-21-rest .foco-v7-rest-ring{width:57px;height:57px;}
+.foco-v6-shell .foco-21-rest .foco-v7-rest-info span{font-size:10px;letter-spacing:.1em;}
+.foco-v6-shell .foco-21-rest .foco-v7-rest-info strong{font-size:30px;line-height:1.12;margin-top:3px;display:block;}
+.foco-v6-shell .foco-21-rest .foco-v7-rest-control{
+  width:54px;height:54px;background:var(--f21-accent);border-radius:16px;box-shadow:0 7px 23px rgba(200,240,64,.12);
+}
+.foco-v6-shell .foco-21-session .foco-v7-session-start{
+  min-height:64px;border-radius:20px;font-size:15px;font-weight:890;
+  background:var(--f21-accent);box-shadow:0 13px 28px rgba(179,231,53,.16);
+}
+.foco-v6-shell .foco-21-session .foco-v7-session-actions{border-radius:20px;}
+@media(max-width:370px){
+  .foco-v6-shell .foco-21-week-pulse-values{gap:6px;}
+  .foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel{padding:13px;min-height:144px;}
+  .foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-v7-exercise-image{padding:24px 8px 106px;}
+  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster{padding:12px 7px;}
+  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster>div{grid-template-columns:42px minmax(0,1fr) 42px;gap:2px;}
+  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster button{width:42px;min-height:44px;}
+}
+@media(min-width:768px){
+  .foco-v6-shell .foco-21-session .foco-v7-session-stage{height:clamp(390px,51vh,520px);}
+  .foco-v6-shell .foco-v6-hero{min-height:490px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .foco-v6-shell .foco-21-week-pulse,
+  .foco-v6-shell .foco-21-session .foco-v7-session-stage,
+  .foco-v6-shell .foco-21-session .foco-v7-stage-illustration img{
+    animation:none!important;transition:none!important;
+  }
+}
+/* Honor user preferences, and avoid expensive blurs on reduced-transparency devices. */
+html[data-foco-glass="reduced"] .foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel,
+html[data-foco-glass="reduced"] .foco-v6-shell .foco-21-week-section,
+html[data-foco-glass="reduced"] .foco-v6-shell .foco-v6-hero{
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+
+/* Offline-stable, original schematic hero media for the exact verified variants.
+ * Technical instruction remains in the Execução tab and must be expert-reviewed. */
+.foco-v6-shell .foco-21-session .foco-v7-stage-photo.foco-21-local-art {
+  object-fit:contain!important;
+  object-position:center 30%!important;
+  box-sizing:border-box;
+  padding:40px 7px 104px;
+  width:100%;height:100%;
+  filter:none!important;
+  mix-blend-mode:normal;
+  background:transparent!important;
+}
+@media(max-width:370px) {
+  .foco-v6-shell .foco-21-session .foco-v7-stage-photo.foco-21-local-art{
+    padding:32px 0 99px;
+  }
+}
