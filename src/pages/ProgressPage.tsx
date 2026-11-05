@@ -4,6 +4,7 @@ import { getOkokAssessments, getOkokTrend, type OkokAssessment } from '../utils/
 import { api } from '../services/api';
 import { OkokEvolutionSection } from '../components/OkokEvolutionSection';
 import { BodyMeasurement, WorkoutSession } from '../types';
+import { summarizeTrainingHistory } from '../utils/trainingInsights';
 import {
   AreaChart,
   Area,
@@ -42,6 +43,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
   const [measurementUnit, setMeasurementUnit] = useState('kg');
   const [isSaving, setIsSaving] = useState(false);
   const [actionMsg, setActionMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [shareMessage, setShareMessage] = useState('');
 
   const loadData = async () => {
     setIsLoading(true);
@@ -140,6 +142,22 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
   const latestWeight = weightData.length ? weightData[weightData.length - 1].peso : null;
   const weightDelta = visibleWeightData.length >= 2 ? visibleWeightData[visibleWeightData.length - 1].peso - visibleWeightData[0].peso : null;
 
+  const insights = summarizeTrainingHistory(sessions);
+  const shareTrainingSummary = async () => {
+    const shareText = 'Meu FOCO · últimos 30 dias\n'+
+      insights.workouts+' treinos concluídos ('+insights.strengthSessions+' musculação, '+insights.cardioSessions+' cardio)\n'+
+      insights.completedSets+' séries registradas · '+insights.totalMinutes+' minutos\nFOCO: evolução registrada, um treino de cada vez.';
+    setShareMessage('');
+    try {
+      if (navigator.share) await navigator.share({title:'Minha evolução no FOCO',text:shareText});
+      else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareText);
+        setShareMessage('Resumo copiado. Escolha onde deseja compartilhar.');
+      } else setShareMessage('Compartilhamento indisponível neste navegador.');
+    } catch (error) {
+      if ((error as Error)?.name !== 'AbortError') setShareMessage('Não foi possível compartilhar agora.');
+    }
+  };
   const latestAssessment=assessments[assessments.length-1];
   const metric=(prefix:string)=>latestAssessment?.metrics.find(m=>m.key.startsWith(prefix+':'));
   const prior=assessments[assessments.length-2];
@@ -187,6 +205,22 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
           {isLoading?'Consultando dados...':'Adicione duas avaliações para visualizar sua tendência.'}
         </div>}
         {numericSeries.length>=2&&<div className="flex justify-between text-[10px] text-[#B0B8AB]"><span>{numericSeries[0].date}</span><span>{numericSeries[numericSeries.length-1].date}</span></div>}
+      </section>
+      <section className="foco-v2-insights" aria-labelledby="foco-v2-insights-title">
+        <div className="foco-v2-insights-head">
+          <div><p>FOCO Intelligence · seus registros</p><h2 id="foco-v2-insights-title">Últimos 30 dias</h2></div>
+          {!isLoading && !dataUnavailable && insights.workouts > 0 && <button type="button" onClick={()=>void shareTrainingSummary()} className="foco-v2-insights-share">Compartilhar</button>}
+        </div>
+        {isLoading ? <p role="status">Consultando sessões salvas...</p>
+          : dataUnavailable ? <p role="status">Os dados das sessões estão indisponíveis. Nenhum resultado foi presumido.</p>
+          : insights.workouts===0 ? <p>Quando concluir sessões, o FOCO mostrará um resumo dos registros reais aqui.</p>
+          : <div className="foco-v2-insights-stats">
+              <div><strong>{insights.workouts}</strong><span>Treinos concluídos</span></div>
+              <div><strong>{insights.completedSets}</strong><span>Séries concluídas</span></div>
+              <div><strong>{insights.totalMinutes}</strong><span>Minutos registrados</span></div>
+            </div>}
+        {shareMessage && <p role="status" className="foco-v2-insights-message">{shareMessage}</p>}
+        <p className="foco-v2-insights-note">Resumo calculado das sessões salvas, incluindo cardio. Não estima recuperação muscular nem substitui orientação profissional.</p>
       </section>
       <div className="foco-v6-progress-tiles">
         {tiles.map(tile=>{
