@@ -18,6 +18,7 @@ export const ExerciseDBCatalogBrowser: React.FC<Props> = ({ curated, onOpenCurat
   const [query,setQuery] = useState('');
   const [list,setList] = useState<Extract<ExternalExercisePage,{state:'ok'}>|null>(null);
   const [page,setPage] = useState(1);
+  const [cursors,setCursors] = useState<Array<string|null>>([null]);
   const [muscle,setMuscle] = useState('all');
   const [loading,setLoading] = useState(false);
   const [error,setError] = useState('');
@@ -27,13 +28,13 @@ export const ExerciseDBCatalogBrowser: React.FC<Props> = ({ curated, onOpenCurat
   const seq=useRef(0), active=useRef<AbortController|null>(null);
 
   useEffect(()=>()=>{seq.current++;active.current?.abort();},[]);
-  const fetchPage = async (term: string, requestedPage: number) => {
+  const fetchPage = async (term: string, after: string | null, requestedPage: number) => {
     const id=++seq.current;
     active.current?.abort();
     const controller=new AbortController();
     active.current=controller;
     setLoading(true);setError('');
-    const result=await browseExerciseDB({query:term,page:requestedPage,signal:controller.signal});
+    const result=await browseExerciseDB({query:term,after,signal:controller.signal});
     if(id!==seq.current||controller.signal.aborted)return;
     setLoading(false);
     if(result.state!=='ok'){
@@ -47,13 +48,18 @@ export const ExerciseDBCatalogBrowser: React.FC<Props> = ({ curated, onOpenCurat
       return;
     }
     setList(result);setPage(requestedPage);setQuery(term);setMuscle('all');setDetail(null);
+    setCursors(current => {
+      const visited = requestedPage === 1 ? [null] : current.slice(0, requestedPage);
+      visited[requestedPage] = result.nextCursor;
+      return visited;
+    });
   };
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     const term=search.trim();
     // Only well-reviewed names from the FOCO catalogue get an English alias.
     const resolved=term ? candidateExerciseDBNames(term)[0]||term : '';
-    void fetchPage(resolved,1);
+    void fetchPage(resolved,null,1);
   };
   const muscles=useMemo(()=>list?[...new Set(list.exercises.flatMap(e=>e.bodyParts))]
     .sort((a,b)=>a.localeCompare(b)):[],[list]);
@@ -86,9 +92,9 @@ export const ExerciseDBCatalogBrowser: React.FC<Props> = ({ curated, onOpenCurat
       <div className="foco-atlas-first-icon"><Dumbbell size={31}/></div>
       <h3>Uma biblioteca inteira para explorar</h3>
       <p>Toque em explorar para consultar a primeira página. Use a busca para encontrar exercícios específicos.</p>
-      <button type="button" onClick={()=>void fetchPage('',1)}>Explorar ExerciseDB <ArrowRight size={16}/></button>
+      <button type="button" onClick={()=>void fetchPage('',null,1)}>Explorar ExerciseDB <ArrowRight size={16}/></button>
     </div>}
-    {error&&<div role="alert" className="foco-atlas-alert"><span>{error}</span><button type="button" onClick={()=>void fetchPage(query,page)}>Tentar novamente</button></div>}
+    {error&&<div role="alert" className="foco-atlas-alert"><span>{error}</span><button type="button" onClick={()=>void fetchPage(query,cursors[page-1]||null,page)}>Tentar novamente</button></div>}
     {loading&&<div role="status" className="foco-atlas-loading"><LoaderCircle size={23} className="animate-spin"/> Consultando a ExerciseDB...</div>}
     {list&&<>
       <div className="foco-atlas-results-heading">
@@ -113,9 +119,9 @@ export const ExerciseDBCatalogBrowser: React.FC<Props> = ({ curated, onOpenCurat
         </article>)}
       </div>}
       <div className="foco-atlas-pagination">
-        <button type="button" disabled={loading||page<=1} onClick={()=>void fetchPage(query,page-1)}><ArrowLeft size={16}/> Anterior</button>
+        <button type="button" disabled={loading||page<=1} onClick={()=>void fetchPage(query,cursors[page-2]||null,page-1)}><ArrowLeft size={16}/> Anterior</button>
         <span aria-live="polite">Página {page}</span>
-        <button type="button" disabled={loading||!list.hasNext} onClick={()=>void fetchPage(query,page+1)}>Próxima <ArrowRight size={16}/></button>
+        <button type="button" disabled={loading||!list.hasNext} onClick={()=>void fetchPage(query,list.nextCursor,page+1)}>Próxima <ArrowRight size={16}/></button>
       </div>
     </>}
     <p className="foco-atlas-credit">Exercícios e GIFs por <a href="https://oss.exercisedb.dev/docs" target="_blank" rel="noreferrer noopener">ExerciseDB / AscendAPI</a>. Uso pessoal não comercial. A qualidade técnica das demonstrações deve ser conferida antes do treino.</p>

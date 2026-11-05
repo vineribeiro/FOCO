@@ -12,7 +12,7 @@ export interface ExternalExercise {
   instructions: string[];
 }
 export type ExternalExercisePage =
-  | { state: 'ok'; exercises: ExternalExercise[]; total: number | null; hasNext: boolean }
+  | { state: 'ok'; exercises: ExternalExercise[]; total: number | null; hasNext: boolean; nextCursor: string | null }
   | { state: 'rate_limited' | 'unavailable' | 'disabled' | 'invalid_response' };
 
 export const EXERCISEDB_PAGE_SIZE = 12;
@@ -37,26 +37,22 @@ export function sanitizeExternalExercise(value: unknown): ExternalExercise | nul
   };
 }
 
-export function makeExerciseDBBrowseUrl(query = '', page = 1): string {
+export function makeExerciseDBBrowseUrl(query = '', after: string | null = null): string {
   const term = query.trim().slice(0, 80);
-  const n = Math.max(1, Math.min(200, Math.floor(Number(page) || 1)));
-  const path = term ? '/api/v1/exercises/search' : '/api/v1/exercises';
-  const url = new URL(path, ROOT);
+  const url = new URL(term ? '/api/v1/exercises/search' : '/api/v1/exercises', ROOT);
   if (term) url.searchParams.set('search', term);
   url.searchParams.set('limit', String(EXERCISEDB_PAGE_SIZE));
-  // Supports public-API offset pagination and page-based implementations;
-  // a repetition guard in the caller prevents looping if a param is ignored.
-  url.searchParams.set('page', String(n));
-  url.searchParams.set('offset', String((n - 1) * EXERCISEDB_PAGE_SIZE));
+  // The provider uses opaque, server-issued cursors; never calculate an offset.
+  if (after && /^[A-Za-z0-9_-]{3,96}$/.test(after)) url.searchParams.set('after', after);
   return url.href;
 }
 
 export async function browseExerciseDB(
-  { query = '', page = 1, signal }: { query?: string; page?: number; signal?: AbortSignal } = {}
+  { query = '', after = null, signal }: { query?: string; after?: string | null; signal?: AbortSignal } = {}
 ): Promise<ExternalExercisePage> {
   if (!isExerciseDBBetaAllowed()) return { state: 'disabled' };
   try {
-    const response = await fetch(makeExerciseDBBrowseUrl(query, page), {
+    const response = await fetch(makeExerciseDBBrowseUrl(query, after), {
       signal, cache: 'no-store', credentials: 'omit',
       referrerPolicy: 'no-referrer', headers: { Accept: 'application/json' },
     });
@@ -69,12 +65,11 @@ export async function browseExerciseDB(
     const exercises = root.data.slice(0, EXERCISEDB_PAGE_SIZE).map(sanitizeExternalExercise)
       .filter((v): v is ExternalExercise => v !== null);
     const meta = (root.meta && typeof root.meta === 'object') ? root.meta as Record<string, unknown> : null;
-    const pages = meta && typeof meta.totalPages === 'number' ? meta.totalPages : null;
     const total = meta && typeof meta.total === 'number' && Number.isFinite(meta.total) ? meta.total : null;
-    const hasNext = pages !== null ? page < pages : meta?.hasNextPage === false
-      ? false : total !== null ? page * EXERCISEDB_PAGE_SIZE < total
-      : root.data.length >= EXERCISEDB_PAGE_SIZE;
-    return { state: 'ok', exercises, total, hasNext };
+    const nextCursor = meta && meta.hasNextPage === true
+      && typeof meta.nextCursor === 'string'
+      && /^[A-Za-z0-9_-]{3,96}$/.test(meta.nextCursor) ? meta.nextCursor : null;
+    return { state: 'ok', exercises, total, nextCursor, hasNext: nextCursor !== null };
   } catch {
     return { state: 'unavailable' };
   }
