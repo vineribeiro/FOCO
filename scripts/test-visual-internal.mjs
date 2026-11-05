@@ -122,6 +122,13 @@ try{
       await photo.first().waitFor({timeout:7000});
       const photoLoaded=await photo.first().evaluate(img=>img.complete&&img.naturalWidth>100);
       assert.ok(photoLoaded,'Supino active session must render an exercise-specific photographic asset');
+      // Regression from beta device report: non-bench hero must never render the
+      // full image gallery's white caption strip, zoom button or phase switches.
+      await page.getByRole('button',{name:/Ver exercício 3:/}).click();
+      await page.locator('.foco-v7-stage-illustration.foco-v7-exercise-visual').waitFor({timeout:6000});
+      assert.equal(await page.locator('.foco-v7-stage-illustration button').count(),0,'Stage preview must not inject nested image controls');
+      assert.equal(await page.locator('.foco-v7-stage-illustration [class*="bg-white"]').count(),0,'No white gallery overlays in stage');
+      await page.getByRole('button',{name:/Ver exercício 1:/}).click();
     }
     const screenshot=out+'/'+view+'-'+size.name+'.png';
     await page.screenshot({path:screenshot,fullPage:false,animations:'disabled'});
