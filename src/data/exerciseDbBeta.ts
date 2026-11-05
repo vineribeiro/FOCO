@@ -28,7 +28,7 @@ const ALIASES:Record<string,readonly string[]>={
  levantamentoterraconvencional:['barbell deadlift'],
  levantamentoterraromeno:['barbell romanian deadlift','romanian deadlift'],
  stiffcombarra:['barbell stiff leg deadlift'],
- cadeiraextensora:['lever leg extension','leg extension'],
+ cadeiraextensora:['machine leg extension','lever leg extension','leg extension'],
  mesaflexora:['lever lying leg curl','lying leg curl'],
  cadeiraflexora:['lever seated leg curl','seated leg curl'],
  flexaodebracos:['push up','push-up'],
