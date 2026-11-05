@@ -58,6 +58,14 @@
 .foco-v6-shell .foco-atlas-card-open{display:flex;flex-direction:column;width:100%;text-align:left;}
 .foco-v6-shell .foco-atlas-media-placeholder{height:126px;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;background:radial-gradient(ellipse at 65% 25%,#3A5230,#1C2A1A 65%,#141B14);color:#C8F040;}
 .foco-v6-shell .foco-atlas-media-placeholder>span{font-size:8px;line-height:1.3;letter-spacing:.08em;font-weight:800;text-align:center;padding:0 8px;color:#B8CD99;}
+/* ExerciseDB media: render the provider's actual GIF rather than a placeholder.
+   Lazy loading keeps offscreen media deferred; no media is copied to FOCO. */
+.foco-v6-shell .foco-atlas-media-placeholder{position:relative;overflow:hidden;}
+.foco-v6-shell .foco-atlas-card-gif{display:block;width:100%;height:100%;object-fit:contain;background:#F4F4F2;}
+.foco-v6-shell .foco-atlas-image-unavailable{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px;color:#C8F040;text-align:center;}
+.foco-v6-shell .foco-atlas-image-unavailable[hidden]{display:none;}
+.foco-v6-shell .foco-atlas-image-unavailable span{font-size:10px;line-height:1.4;letter-spacing:.02em;font-weight:700;color:#B8CD99;}
+
 .foco-v6-shell .foco-atlas-card-copy{min-height:130px;display:flex;flex-direction:column;gap:6px;padding:13px;}
 .foco-v6-shell .foco-atlas-card-copy>span{font-size:10px;color:#C8F040;line-height:1.25;}
 .foco-v6-shell .foco-atlas-card-copy strong{font-size:13px;font-weight:850;line-height:1.25;overflow-wrap:anywhere;}
