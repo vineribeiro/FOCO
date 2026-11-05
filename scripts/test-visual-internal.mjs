@@ -116,12 +116,37 @@ try{
         width:img.naturalWidth,height:img.naturalHeight,
       }));
       assert.ok(hero.loaded,'FOCO hero athlete media must decode, not show a broken-image icon');
+      // A visible release badge and new composition are required; a CSS-only deploy
+      // that leaves the previous Home unchanged is not sufficient for this beta.
+      const visualRelease=page.locator('.foco-21-version-pill');
+      assert.match(await visualRelease.innerText(),/V2\\.1/);
+      await page.locator('.foco-21-week-pulse').waitFor({timeout:4000});
+      const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>({
+        radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
+      }));
+      assert.ok(homeStyle.radius.includes('30px'),'FOCO V2.1 hero should have the new 30px corner radius');
+      assert.ok(homeStyle.height>=380,'FOCO V2.1 hero must be visually larger than V2.0');
     }
     if(view==='sessao'){
       const photo=page.locator('.foco-v7-stage-photo');
       await photo.first().waitFor({timeout:7000});
       const photoLoaded=await photo.first().evaluate(img=>img.complete&&img.naturalWidth>100);
       assert.ok(photoLoaded,'Supino active session must render an exercise-specific photographic asset');
+      assert.match(await page.locator('.foco-21-session-mark').innerText(),/FOCO 2\\.1/);
+      await page.locator('.foco-21-exercise-media').waitFor({timeout:4000});
+      const stage=await page.locator('.foco-v7-session-stage').evaluate(el=>({
+        radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
+      }));
+      assert.ok(stage.radius.includes('30px'),'FOCO V2.1 stage must have new 30px geometry');
+      assert.ok(stage.height>=325,'FOCO V2.1 exercise card must be visibly larger than prior layout');
+      if(size.width<768){
+        const overlap=await page.evaluate(()=>{
+          const rest=document.querySelector('.foco-21-rest');
+          const cta=document.querySelector('.foco-v7-session-start');
+          return rest&&cta?{rest:rest.getBoundingClientRect().bottom,cta:cta.getBoundingClientRect().top,position:getComputedStyle(cta).position}:null;
+        });
+        assert.ok(overlap&&overlap.position==='static'&&overlap.rest<=overlap.cta+1,'Start CTA must not obscure rest controls');
+      }
       // Regression from beta device report: non-bench hero must never render the
       // full image gallery's white caption strip, zoom button or phase switches.
       await page.getByRole('button',{name:/Ver exercício 3:/}).click();
