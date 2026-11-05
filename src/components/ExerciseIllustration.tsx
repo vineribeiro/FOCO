@@ -1,23 +1,84 @@
-import React from 'react';
-import {Dumbbell,PlayCircle} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Dumbbell, LoaderCircle, PlayCircle } from 'lucide-react';
+import {
+  getExerciseDBGifPreview,
+  isExerciseDBBetaAllowed,
+  type ExerciseDBPreviewResult,
+} from '../data/exerciseDbBeta';
 
 /**
- * Consistent ExerciseDB-only preview surface. Deliberately does NOT load third-party
- * media for list thumbnails: the provider forbids bulk downloads/caching.
- * The GIF is available on request from ExerciseDBPreview in the execution detail.
- * Legacy props are accepted to keep saved workouts and route contracts intact.
+ * Cards do not fetch remote media in bulk. The single active workout exercise
+ * (editorial presentation) attempts an exact ExerciseDB GIF when it is shown.
+ * External URLs are not persisted or cached by FOCO.
  */
 interface Props {
- exerciseName:string;exerciseId?:string;muscleGroup?:string;imagePaths?:string[];
- className?:string;showCaption?:boolean;presentation?:'standard'|'editorial';
+  exerciseName: string;
+  exerciseId?: string;
+  muscleGroup?: string;
+  imagePaths?: string[];
+  className?: string;
+  showCaption?: boolean;
+  presentation?: 'standard' | 'editorial';
 }
-export const ExerciseIllustration:React.FC<Props>=({exerciseName,muscleGroup,className='h-64 w-full',presentation='standard'})=>{
- const compact=presentation==='editorial'||/\bh-(14|16|20)\b/.test(className);
- return <div data-foco-media-source="exercisedb" aria-label={'ExerciseDB: '+exerciseName}
-  className={'foco-edb-tile relative flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-2xl border border-[#C8F040]/20 bg-[#182317] text-center '+className}>
-   <Dumbbell className="foco-edb-tile-icon" size={compact?27:47} strokeWidth={1.35} aria-hidden="true"/>
-   {!compact&&<><strong className="foco-edb-tile-name">{exerciseName}</strong>
-    {muscleGroup&&<span className="foco-edb-tile-subtitle">{muscleGroup}</span>}</>}
-   <span className="foco-edb-tile-credit"><PlayCircle size={compact?11:14} aria-hidden="true"/> EXERCISEDB</span>
- </div>;
+export const ExerciseIllustration: React.FC<Props> = ({
+  exerciseName,
+  muscleGroup,
+  className = 'h-64 w-full',
+  presentation = 'standard',
+}) => {
+  const activeStage = presentation === 'editorial';
+  const [preview, setPreview] = useState<ExerciseDBPreviewResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [failedImage, setFailedImage] = useState(false);
+  const allowed = isExerciseDBBetaAllowed();
+
+  useEffect(() => {
+    let cancelled = false;
+    setPreview(null);
+    setFailedImage(false);
+    setLoading(false);
+
+    // Never turn ordinary exercise lists into N simultaneous API/GIF requests.
+    // An active session shows only one exercise at a time.
+    if (!activeStage || !allowed || !exerciseName.trim()) return;
+    setLoading(true);
+    void getExerciseDBGifPreview(exerciseName)
+      .then(value => { if (!cancelled) setPreview(value); })
+      .catch(() => { if (!cancelled) setPreview({ state: 'unavailable' }); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [exerciseName, activeStage, allowed]);
+
+  const compact = activeStage || /\bh-(14|16|20)\b/.test(className);
+  const gif = activeStage && !loading && !failedImage && preview?.state === 'matched'
+    ? preview.gifUrl : null;
+
+  const status = !allowed ? 'Demonstração não habilitada'
+    : loading ? 'Carregando demonstração'
+    : failedImage ? 'Imagem externa não carregou'
+    : preview?.state === 'no_match' ? 'Sem GIF para esta variação'
+    : preview?.state === 'rate_limited' ? 'Limite temporário de consultas'
+    : 'Imagem temporariamente indisponível';
+
+  return <div data-foco-media-source="exercisedb"
+    data-foco-media-status={gif ? 'image' : loading ? 'loading' : 'unavailable'}
+    aria-label={'Demonstração do exercício: ' + exerciseName}
+    className={'foco-edb-tile relative flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-2xl border border-[#C8F040]/20 bg-[#182317] text-center ' + className}>
+    {gif ? <>
+      <img key={gif} src={gif} alt={'Demonstração de ' + exerciseName + ' — ExerciseDB'}
+        className="foco-edb-stage-gif" loading="eager" decoding="async" referrerPolicy="no-referrer"
+        onError={() => setFailedImage(true)} />
+      <span className="foco-edb-stage-attribution">EXERCISEDB</span>
+    </> : activeStage ? <div className="foco-edb-stage-status" role="status">
+      {loading ? <LoaderCircle size={26} className="animate-spin" aria-hidden="true" /> :
+        <Dumbbell size={29} strokeWidth={1.35} aria-hidden="true" />}
+      <span>{status}</span>
+      {!loading && <small>Abra Execução para consultar a demonstração</small>}
+    </div> : <>
+      <Dumbbell className="foco-edb-tile-icon" size={compact ? 27 : 47} strokeWidth={1.35} aria-hidden="true" />
+      {!compact && <><strong className="foco-edb-tile-name">{exerciseName}</strong>
+        {muscleGroup && <span className="foco-edb-tile-subtitle">{muscleGroup}</span>}</>}
+      <span className="foco-edb-tile-credit"><PlayCircle size={compact ? 11 : 14} aria-hidden="true" /> EXERCISEDB</span>
+    </>}
+  </div>;
 };
