@@ -34,7 +34,8 @@ assert.match(read('src/components/ExerciseExecutionGuide.tsx'),/ExerciseDBPrevie
 assert.match(read('src/pages/ExerciseLibraryPage.tsx'),/ExerciseDBPreview exerciseName/g);
 assert.match(read('src/pages/ComplementaryPage.tsx'),/ExerciseDBPreview exerciseName/);
 assert.match(read('src/components/ExerciseDBPreview.tsx'),/Créditos: AscendAPI \/ ExerciseDB/);
-assert.match(read('src/components/ExerciseDBPreview.tsx'),/onClick=\{\(\)=>void request\(\)\}/);
+assert.match(read('src/components/ExerciseDBPreview.tsx'),/else void request\(\)/);
+assert.match(read('src/components/ExerciseDBPreview.tsx'),/Ocultar GIF/);
 assert.match(read('src/data/exerciseDbBeta.ts'),/VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA==='true'/);
 assert.match(read('.github/workflows/deploy.yml'),/VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA: 'true'/);
 console.log('ExerciseDB beta: exact-name match, URL allowlist, attribution, opt-in and commercial guard verified.');
