@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import { applyUiPreferences, readUiPreferences } from './utils/uiPreferences';
+import { FOCO_BUILD_ID } from './utils/release';
 import './index.css';
 import './foco-pro-tokens.css';
 import './foco-v6.css';
@@ -74,6 +75,29 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
     document.body.append(notice);
   };
 
+  // Unlike Service Worker updates, this also detects a newly deployed HTML shell
+  // when sw.js is unchanged. No auto-reload: an active workout may contain unsaved data.
+  let lastVersionCheck = 0;
+  const verifyPublishedRelease = async () => {
+    if (Date.now() - lastVersionCheck < 120_000) return;
+    lastVersionCheck = Date.now();
+    const htmlRelease = document.querySelector('meta[name="foco-release"]')?.getAttribute('content');
+    if (htmlRelease && htmlRelease !== FOCO_BUILD_ID) {
+      showUpdateNotice();
+      return;
+    }
+    try {
+      const remoteUrl = new URL(import.meta.env.BASE_URL + 'index.html?foco_release_check=1', window.location.origin);
+      const remote = await fetch(remoteUrl, { cache: 'no-store', credentials: 'omit' });
+      if (!remote.ok) return;
+      const html = await remote.text();
+      const match = html.match(/<meta\\s+name=["']foco-release["']\\s+content=["']([^"']+)["']/);
+      if (match && match[1] !== FOCO_BUILD_ID) showUpdateNotice();
+    } catch {
+      // Offline/temporary outage is not evidence of an app update.
+    }
+  };
+
   const registerFocoWorker = async () => {
     try {
       const reg = await navigator.serviceWorker.register(
@@ -94,8 +118,12 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
         if (alreadyControlled) showUpdateNotice();
       });
       await reg.update();
+      void verifyPublishedRelease();
       document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') void reg.update().catch(() => {});
+        if (document.visibilityState === 'visible') {
+          void reg.update().catch(() => {});
+          void verifyPublishedRelease();
+        }
       });
     } catch {
       // Website continues to operate when service workers are unsupported.
