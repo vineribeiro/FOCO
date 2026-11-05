@@ -2,9 +2,9 @@
 /* FOCO — Fitness editorial quality pass, November 2026.
    Actual session logic/data remains in React, not in decorative layers. */
 :root {
-  --f7-lime:#C8F040;
+  --f7-lime:var(--foco-pro-accent,#C8F040);
   --f7-paper:#F7F8F2;
-  --f7-muted:#B5BEAF;
+  --f7-muted:var(--foco-pro-muted,#B5BEAF);
   --f7-line:rgba(230,245,210,.16);
   --f7-panel:#1B2119;
   --f7-radius:22px;

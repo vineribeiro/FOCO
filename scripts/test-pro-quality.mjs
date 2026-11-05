@@ -1,0 +1,38 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+const read = path => readFileSync(new URL('../' + path, import.meta.url),'utf8');
+const product = read('PRODUCT.md');
+const design = read('DESIGN.md');
+const agent = read('AGENTS.md');
+const decisions = read('docs/FOCO_SKILLS_DECISIONS.md');
+const matrix = read('docs/FOCO_PRO_TEST_MATRIX.md');
+const css = read('src/foco-pro-tokens.css');
+const main = read('src/main.tsx');
+const hud = read('src/components/RestTimerHUD.tsx');
+const hudCss = read('src/foco-pro-responsive.css');
+const app = read('src/App.tsx');
+const skill = read('.agents/skills/foco-pro/SKILL.md');
+const ui = read('.agents/skills/better-interface/SKILL.md');
+assert.match(product,/comercialização pretendida para 2027/i);
+assert.match(product,/dados pessoais/i);
+assert.match(design,/Design System Canônico/);
+assert.match(decisions,/Craftwork Wizard/);
+assert.match(matrix,/AUTH-04/);
+assert.match(matrix,/SESSION-02/);
+assert.match(agent,/PRODUCT\.md/);
+assert.match(skill,/FOCO PRO/);
+assert.match(ui,/name: better-interface/);
+assert.match(css,/--foco-pro-accent:\s*#C8F040/);
+assert.match(css,/--foco-pro-tap-target:\s*44px/);
+assert.match(main,/import '\.\/foco-pro-tokens\.css'/);
+assert.match(main,/import '\.\/foco-pro-responsive\.css'/);
+assert.match(hud,/foco-rest-layout/);
+assert.match(hud,/foco-rest-context/);
+assert.match(hud,/foco-rest-actions/);
+assert.match(hudCss,/max-width:\s*420px/);
+assert.match(hudCss,/min-height:\s*44px/);
+for(const route of ["cardio","complementares","em-casa","sessao"]){
+ assert.match(app,new RegExp("case '"+route+"'"));
+}
+assert.match(read('src/foco-motion.css'),/prefers-reduced-motion:\s*reduce/);
+console.log('FOCO PRO: product contract, skill hierarchy, tokens and compact rest controls verified.');

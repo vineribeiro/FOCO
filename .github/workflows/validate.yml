@@ -34,6 +34,8 @@ jobs:
         run: npm run test:ui-ux
       - name: Motion design accessibility and navigation regression
         run: npm run test:motion
+      - name: FOCO PRO product design and beta readiness guardrails
+        run: npm run test:pro-quality
       - name: Exercise image catalog audit
         run: npm run audit:images
       - name: Anatomy atlas manifest integrity

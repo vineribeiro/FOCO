@@ -1,0 +1,21 @@
+/* FOCO PRO — tokens semânticos canônicos.
+ * Migração incremental; valores 2026 aprovados preservados, sem trocar paleta por uma skill. */
+:root {
+  --foco-pro-canvas: #080A07;
+  --foco-pro-panel: #171B16;
+  --foco-pro-panel-raised: #20241B;
+  --foco-pro-accent: #C8F040;
+  --foco-pro-ink: #F7F8F4;
+  --foco-pro-muted: #B5BEAF;
+  --foco-pro-border: rgba(226,244,196,.15);
+  --foco-pro-liquid: rgba(30,34,26,.64);
+  --foco-pro-radius-card: 21px;
+  --foco-pro-radius-control: 999px;
+  --foco-pro-tap-target: 44px;
+  --foco-pro-motion-fast: 140ms;
+  --foco-pro-motion-standard: 260ms;
+  --foco-pro-motion-slow: 420ms;
+  --foco-pro-font-body: 'Plus Jakarta Sans',Poppins,system-ui,sans-serif;
+  --foco-pro-font-display: Poppins,'Plus Jakarta Sans',system-ui,sans-serif;
+  --foco-pro-font-metric: 'JetBrains Mono',ui-monospace,monospace;
+}

@@ -19,7 +19,8 @@
     "test:okok": "tsx scripts/test-okok-metrics.ts",
     "test:ui-ux": "node scripts/test-ui-ux.mjs",
     "audit:anatomy-review-public": "node scripts/audit-anatomy-review-public.mjs",
-    "test:motion": "node scripts/test-motion-system.mjs"
+    "test:motion": "node scripts/test-motion-system.mjs",
+    "test:pro-quality": "node scripts/test-pro-quality.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

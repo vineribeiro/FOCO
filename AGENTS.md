@@ -1,5 +1,34 @@
-# Diretrizes de interface do FOCO
+# FOCO — Regra de desenvolvimento para agentes
 
-Para modificar UI, interação, transições ou efeitos, consulte `.agents/skills/motion-design/SKILL.md` e `docs/FOCO_MOTION_SYSTEM.md`.
+Leia `PRODUCT.md` e `DESIGN.md` antes de propor mudanças. O FOCO está em **beta real** com comercialização pretendida para 2027; não declarar pronto para venda sem os gates de `docs/FOCO_PRO_2027.md`.
 
-Priorize movimento funcional e contido, identidade Premium, `prefers-reduced-motion`, boa performance móvel e estabilidade dos controles no treino. Não altere autenticação, API, persistência, treino ou valores apresentados por razões puramente visuais.
+## Skill principal e arbitragem
+- **FOCO PRO (obrigatória neste projeto):** `.agents/skills/foco-pro/SKILL.md`. Ela escolhe as disciplinas e impede regras conflitantes.
+- **Auditoria de interface:** `.agents/skills/better-interface/SKILL.md`.
+- **Acessibilidade:** `.agents/skills/better-accessibility/SKILL.md`, antes de efeitos.
+- **Layout:** `.agents/skills/better-layout/SKILL.md`.
+- **Tipografia:** `.agents/skills/better-typography/SKILL.md`.
+- **Cores e contraste:** `.agents/skills/better-colors/SKILL.md`.
+- **Copy e erros:** `.agents/skills/better-writing/SKILL.md`.
+- **Superfícies, ícones e polimento:** `.agents/skills/better-ui/SKILL.md`.
+- **Reprodução de referências aprovadas:** `.agents/skills/build-design/SKILL.md`.
+- **Estados e stress:** `.agents/skills/state-machine/SKILL.md` e `.agents/skills/break/SKILL.md`.
+- **Motion:** `.agents/skills/motion-design/SKILL.md` e `docs/FOCO_MOTION_SYSTEM.md`.
+- **Impeccable:** processo de direção de design, se CLI/harness instalado. `PRODUCT.md` e `DESIGN.md` contêm o contexto, mas **não** afirmam que `impeccable init` ou hooks rodaram.
+- **Hue:** referência sob demanda para evoluir o design system; propostas precisam preservar a marca aprovada.
+- **Taste e Hallmark:** não redesenhar o app autenticado. São opcionais para LP comercial e auditoria visual específica.
+- **Craftwork:** somente assets com licença auditada; não instalar wizard/MCP nem acessar contas automaticamente.
+
+## Precedência
+1. Segurança, dados verdadeiros, privacidade e acessibilidade.
+2. Comportamento esperado, referência validada e a experiência em academia.
+3. `PRODUCT.md`, `DESIGN.md`, `src/foco-pro-tokens.css`.
+4. Revisor especializado dono do domínio; motion-design decide apenas timing/choreography.
+5. Ferramentas externas apenas sob demanda, sem sobrepor marca ou decisões de produto.
+
+## Processo obrigatório
+Definir fluxo/estado e impacto → branch/PR → implementar sem alterar backend sem necessidade → `npm run lint` → `npm run build` → `npm run test:ui-ux` → `npm run test:motion` → `npm run test:pro-quality` → visual QA com dados sintéticos → testar em dispositivos reais quando aplicável.
+
+Nenhum gerador pode criar resultados, depoimentos, contagens, arquivos de terceiros ou promessas clínicas fictícias. Nunca commitar secrets. Nenhuma modificação visual pode perder rascunhos/séries em andamento. Diferencie **FOCO em Casa**, **Exercícios complementares** e **Cardio**.
+
+Outros detalhes: `docs/FOCO_SKILLS_DECISIONS.md`, `docs/FOCO_PRO_TEST_MATRIX.md`.
