@@ -119,3 +119,16 @@ html[data-foco-glass="reduced"] .foco-v6-shell .foco-v6-segments {
 .foco-v6-shell .foco-v2-insights-note{margin-top:15px;color:#BCC8B5;font-size:11px;line-height:1.5;}
 .foco-v6-shell .foco-v2-insights-message{margin-top:10px;color:var(--foco-pro-accent);font-size:12px;}
 @media(max-width:350px){.foco-v6-shell .foco-v2-insights-stats{gap:5px;}.foco-v6-shell .foco-v2-insights-stats>div{padding:9px 6px;}}
+
+/* Beta screenshot regression: the sticky CTA was covering the rest controls.
+ * In an active exercise, no primary action may obscure an interactive timer. */
+@media (max-width:767px) {
+  .foco-v6-shell .foco-v7-session-start,
+  .foco-v6-shell .foco-v7-session-actions {
+    position:static !important;
+    bottom:auto !important;
+  }
+  .foco-v6-shell .foco-v6-session-screen {
+    padding-bottom:calc(106px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
