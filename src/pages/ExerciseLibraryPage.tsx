@@ -6,6 +6,7 @@ import {
 import { api } from '../services/api';
 import { WorkoutExercise, WorkoutPlan } from '../types';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
+import { ExerciseDBPreview } from '../components/ExerciseDBPreview';
 import { AccessibleDialog } from '../components/AccessibleDialog';
 import {
   ExerciseCatalogItem, getEquipmentLabel, getExerciseDisplayName, getMuscleLabel,
@@ -259,6 +260,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
                 <p className="mt-3 text-[10px] leading-relaxed text-neutral-400">Configuração inicial: 3 séries · 8–12 repetições · 60 s de descanso. Você pode ajustar a ficha depois.</p>
               </div>
             </div>
+            <ExerciseDBPreview exerciseName={getExerciseDisplayName(selectedExercise.name)} compact />
             <div className="mt-4 space-y-2">
               <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Adicionar ao dia</p>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -311,6 +313,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               <button type="button" onClick={() => setDetailExercise(null)} className="rounded-lg p-2 text-neutral-400 hover:bg-white/10 hover:text-white" aria-label="Fechar"><X className="h-4 w-4" /></button>
             </div>
             <ExerciseIllustration exerciseId={detailExercise.id} exerciseName={detailExercise.name} muscleGroup={getMuscleLabel(detailExercise.primaryMuscles[0] || '')} imagePaths={detailExercise.images} className="mt-4 h-[360px] w-full sm:h-[440px]" showCaption />
+            <ExerciseDBPreview exerciseName={getExerciseDisplayName(detailExercise.name)} />
             <div className="mt-4 grid grid-cols-2 gap-2">
               <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
                 <p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Músculos primários</p>
