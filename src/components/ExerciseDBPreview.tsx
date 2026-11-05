@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ImageOff, LoaderCircle, PlayCircle, RefreshCcw } from 'lucide-react';
+import { EyeOff, LoaderCircle, PlayCircle, RefreshCcw } from 'lucide-react';
 import {
   getExerciseDBGifPreview, isExerciseDBBetaAllowed,
   type ExerciseDBPreviewResult,
@@ -44,13 +44,13 @@ export const ExerciseDBPreview: React.FC<Props> = ({ exerciseName, compact = fal
           GIF externo de 180p, carregado somente quando solicitado.
         </p>
       </div>
-      <button type="button" onClick={()=>void request()} disabled={loading}
+      <button type="button" onClick={()=>{if(state?.state==='matched'&&!imgFailed)setState(null);else void request();}} disabled={loading}
         aria-busy={loading}
         className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#C8F040]/40 bg-[#25371C] px-3 py-2 text-xs font-extrabold text-[#D8FF81] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8F040] disabled:opacity-60">
         {loading ? <LoaderCircle size={17} className="animate-spin" aria-hidden="true" /> :
-          state?.state === 'matched' ? <RefreshCcw size={17} aria-hidden="true" /> :
+          state?.state === 'matched' && !imgFailed ? <EyeOff size={17} aria-hidden="true" /> : imgFailed ? <RefreshCcw size={17} aria-hidden="true" /> :
           <PlayCircle size={17} aria-hidden="true" />}
-        {loading ? 'Consultando...' : state?.state === 'matched' ? 'Recarregar GIF' : compact ? 'Ver GIF' : 'Ver demonstração GIF'}
+        {loading ? 'Consultando...' : state?.state === 'matched' && !imgFailed ? 'Ocultar GIF' : imgFailed ? 'Tentar outro carregamento' : compact ? 'Ver GIF' : 'Ver demonstração GIF'}
       </button>
     </div>
     {state?.state === 'matched' && !imgFailed &&
