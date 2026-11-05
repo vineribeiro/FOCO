@@ -119,7 +119,7 @@ try{
       // A visible release badge and new composition are required; a CSS-only deploy
       // that leaves the previous Home unchanged is not sufficient for this beta.
       const visualRelease=page.locator('.foco-21-version-pill');
-      assert.ok((await visualRelease.innerText()).includes('V2.1'),'FOCO 2.1 release badge must be visible');
+      assert.ok((await visualRelease.innerText()).includes('V2.2'),'FOCO 2.2 release badge must be visible');
       await page.locator('.foco-21-week-pulse').waitFor({timeout:4000});
       const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>({
         radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
