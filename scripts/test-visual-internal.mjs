@@ -119,7 +119,7 @@ try{
       // A visible release badge and new composition are required; a CSS-only deploy
       // that leaves the previous Home unchanged is not sufficient for this beta.
       const visualRelease=page.locator('.foco-21-version-pill');
-      assert.match(await visualRelease.innerText(),/V2\\.1/);
+      assert.ok((await visualRelease.innerText()).includes('V2.1'),'FOCO 2.1 release badge must be visible');
       await page.locator('.foco-21-week-pulse').waitFor({timeout:4000});
       const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>({
         radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
@@ -132,7 +132,7 @@ try{
       await photo.first().waitFor({timeout:7000});
       const photoLoaded=await photo.first().evaluate(img=>img.complete&&img.naturalWidth>100);
       assert.ok(photoLoaded,'Supino active session must render an exercise-specific photographic asset');
-      assert.match(await page.locator('.foco-21-session-mark').innerText(),/FOCO 2\\.1/);
+      assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.1'),'FOCO 2.1 session marker must be visible');
       await page.locator('.foco-21-exercise-media').waitFor({timeout:4000});
       const stage=await page.locator('.foco-v7-session-stage').evaluate(el=>({
         radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
