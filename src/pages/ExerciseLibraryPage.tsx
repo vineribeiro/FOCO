@@ -133,11 +133,11 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
               Explore os movimentos, compare demonstrações e organize os exercícios da sua ficha.
             </p>
           </div>
-          <span className="shrink-0 rounded-xl border border-white/10 bg-[#141414] px-3 py-2 text-right">
+          {catalogSource==='foco'&&<span className="shrink-0 rounded-xl border border-white/10 bg-[#141414] px-3 py-2 text-right">
             <strong className="block text-xl tabular-nums">{catalog.length || '—'}</strong>
             <span className="block text-xs font-semibold text-neutral-400">exercícios</span>
             {!isLoading && <span className="mt-1 block text-xs text-neutral-500">{catalog.filter((item) => item.images.length > 0).length} ilustrados</span>}
-          </span>
+          </span>}
         </div>
 
         {catalogSource === 'foco' && <div className="relative">

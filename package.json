@@ -23,7 +23,8 @@
     "test:pro-quality": "node scripts/test-pro-quality.mjs",
     "test:v2": "tsx scripts/test-foco-v2.ts",
     "test:edb": "tsx scripts/test-exercisedb-beta.ts",
-    "test:edb:live": "node scripts/test-exercisedb-live.mjs"
+    "test:edb:live": "node scripts/test-exercisedb-live.mjs",
+    "test:atlas": "tsx scripts/test-exercise-atlas.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
