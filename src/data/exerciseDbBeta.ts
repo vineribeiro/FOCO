@@ -86,7 +86,7 @@ export function safeExerciseDBGif(url:unknown):string|null{
  catch{return null;}
 }
 export function isExerciseDBBetaAllowed():boolean{
- return import.meta.env?.VITE_FOCO_COMMERCIAL_MODE!=='true';
+ return import.meta.env?.VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA==='true' && import.meta.env?.VITE_FOCO_COMMERCIAL_MODE!=='true';
 }
 const cache=new Map<string,{expires:number,result:ExerciseDBPreviewResult}>();
 const pending=new Map<string,Promise<ExerciseDBPreviewResult>>();

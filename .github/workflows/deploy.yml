@@ -28,6 +28,11 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build production site
+        env:
+          # Public FOCO is a free beta during 2026 only. Remove this flag before
+          # any monetization; the default for other environments is DISABLED.
+          VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA: 'true'
+          VITE_FOCO_COMMERCIAL_MODE: 'false'
         run: npm run build
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
