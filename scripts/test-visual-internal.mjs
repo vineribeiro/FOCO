@@ -131,6 +131,9 @@ try{
       if(view==='dashboard'){
         await page.getByRole('button',{name:/Visualizar os exercícios do dia/}).click();
         await page.locator('.foco-v6-detail h1').first().waitFor({timeout:4000});
+        // Route navigation is synchronous; workout data arrives asynchronously.
+        // Wait for the fixture exercise rather than asserting against the loading skeleton.
+        await page.locator('.foco-v6-detail').getByText(/Supino reto/i).first().waitFor({timeout:12000});
         assert.match(await page.locator('.foco-v6-detail').innerText(),/Supino reto/i);
         await page.getByRole('button',{name:/Iniciar treino/}).click();
         await page.locator('.foco-v6-session-screen').waitFor({timeout:4000});

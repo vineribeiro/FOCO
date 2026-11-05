@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+
+const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
+const css = read('src/foco-motion.css');
+const app = read('src/App.tsx');
+const main = read('src/main.tsx');
+const dashboard = read('src/pages/DashboardPage.tsx');
+const nav = read('src/components/BottomNavBar.tsx');
+const rest = read('src/components/RestTimerHUD.tsx');
+const cardio = read('src/pages/CardioPage.tsx');
+const progress = read('src/pages/ProgressPage.tsx');
+const skill = read('.agents/skills/motion-design/SKILL.md');
+
+assert.match(skill, /# Motion Design Skill/);
+assert.match(main, /import '\.\/foco-motion\.css'/);
+assert.match(app, /key=\{activeTab\} className="foco-motion-view"/);
+assert.match(dashboard, /foco-motion-hero/);
+assert.match(dashboard, /foco-motion-week/);
+assert.match(dashboard, /foco-motion-shortcuts/);
+assert.match(nav, /foco-motion-nav/);
+assert.match(rest, /foco-motion-rest-hud/);
+assert.match(cardio, /foco-motion-cardio-timer/);
+assert.match(cardio, /data-running=\{!!draft && draft\.runningSince !== null && !draft\.finalizing\}/);
+assert.match(cardio, /foco-motion-confirmation/);
+assert.match(progress, /foco-motion-progress/);
+assert.match(css, /prefers-reduced-motion: reduce/);
+assert.match(css, /animation-duration: \.01ms !important/);
+assert.match(css, /@media \(hover:hover\) and \(pointer:fine\)/);
+assert.match(css, /foco-motion-success-in/);
+console.log('FOCO motion: skill, page integration and reduced-motion guardrails verified.');

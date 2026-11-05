@@ -32,6 +32,8 @@ jobs:
         run: npm run test:okok
       - name: Premium UI navigation and accessibility regression
         run: npm run test:ui-ux
+      - name: Motion design accessibility and navigation regression
+        run: npm run test:motion
       - name: Exercise image catalog audit
         run: npm run audit:images
       - name: Anatomy atlas manifest integrity

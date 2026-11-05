@@ -174,14 +174,14 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
         </p>
       </header>
       {saved && (
-        <div role="status" className="foco-v4-panel flex flex-wrap items-center gap-3 p-4">
+        <div role="status" className="foco-v4-panel foco-motion-confirmation flex flex-wrap items-center gap-3 p-4">
           <CheckCircle2 className="h-6 w-6" />
           <div className="flex-1"><p className="font-bold">Cardio registrado no histórico.</p>
             <p className="text-xs text-neutral-400">Teus dados estão salvos no FOCO.</p></div>
           <button type="button" className="foco-v4-secondary" onClick={() => setActiveTab('historico')}>Ver histórico</button>
         </div>
       )}
-      <section className="foco-v4-panel space-y-5 p-4 sm:p-6">
+      <section className="foco-v4-panel foco-motion-cardio space-y-5 p-4 sm:p-6">
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-neutral-400">Equipamento</p>
           <div className="mt-3 grid grid-cols-2 gap-2">
@@ -197,7 +197,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
             ))}
           </div>
         </div>
-        <div className="rounded-3xl border border-white/15 bg-[#080808] px-4 py-7 text-center">
+        <div className="foco-motion-cardio-timer rounded-3xl border border-white/15 bg-[#080808] px-4 py-7 text-center" data-running={!!draft && draft.runningSince !== null && !draft.finalizing}>
           <Clock3 className="mx-auto mb-4 h-6 w-6 text-neutral-400" />
           <p className="foco-v4-eyebrow">Tempo de atividade</p>
           <p role="timer" className="mt-2 font-mono text-5xl font-black tracking-tighter tabular-nums sm:text-6xl">{clock(elapsedSeconds)}</p>

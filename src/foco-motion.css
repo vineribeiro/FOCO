@@ -1,0 +1,124 @@
+/* FOCO motion: Premium, function-first; LottieFiles Motion Design Skill principles.
+   CSS uses compositor-friendly transform/opacity. No extra player or runtime package. */
+.foco-v6-shell {
+  --foco-motion-fast: 140ms;
+  --foco-motion-standard: 260ms;
+  --foco-motion-slow: 420ms;
+  --foco-motion-ease: cubic-bezier(.4,0,.2,1);
+  --foco-motion-enter: cubic-bezier(.2,0,0,1);
+}
+/* Spatial continuity, without waiting for an exit animation before the route loads. */
+.foco-v6-shell .foco-motion-view {
+  animation: foco-motion-view-in var(--foco-motion-standard) var(--foco-motion-enter) both;
+}
+@keyframes foco-motion-view-in {
+  from { opacity: .7; transform: translate3d(0,9px,0); }
+  to { opacity: 1; transform: translate3d(0,0,0); }
+}
+/* Hero first; week second; two cards with a 45ms stagger. */
+.foco-v6-shell .foco-motion-hero {
+  animation: foco-motion-hero-in var(--foco-motion-slow) var(--foco-motion-enter) both;
+}
+@keyframes foco-motion-hero-in {
+  from { opacity: .85; transform: translate3d(0,14px,0) scale(.99); }
+  to { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+}
+.foco-v6-shell .foco-motion-week {
+  animation: foco-motion-soft-in 300ms var(--foco-motion-enter) 65ms both;
+}
+.foco-v6-shell .foco-motion-shortcuts > button {
+  animation: foco-motion-soft-in 300ms var(--foco-motion-enter) both;
+}
+.foco-v6-shell .foco-motion-shortcuts > button:nth-child(2) { animation-delay: 45ms; }
+@keyframes foco-motion-soft-in {
+  from { opacity: .8; transform: translate3d(0,7px,0); }
+  to { opacity: 1; transform: translate3d(0,0,0); }
+}
+/* Precise press feedback for key actions, including non-Home views. */
+.foco-v6-shell .foco-v6-primary,
+.foco-v6-shell .foco-v6-mini-panel,
+.foco-v6-shell .foco-v6-week-day,
+.foco-v6-shell .foco-v6-glass-button,
+.foco-v6-shell .foco-v4-action,
+.foco-v6-shell .foco-v4-secondary,
+.foco-v6-shell .foco-motion-nav .foco-v4-tab {
+  transition-property: transform, border-color, background-color, box-shadow, color;
+  transition-duration: var(--foco-motion-fast);
+  transition-timing-function: var(--foco-motion-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.foco-v6-shell .foco-v6-primary:active:not(:disabled),
+.foco-v6-shell .foco-v6-mini-panel:active:not(:disabled),
+.foco-v6-shell .foco-v6-week-day:active:not(:disabled),
+.foco-v6-shell .foco-v6-glass-button:active:not(:disabled),
+.foco-v6-shell .foco-v4-action:active:not(:disabled),
+.foco-v6-shell .foco-v4-secondary:active:not(:disabled) { transform: scale(.98); }
+.foco-v6-shell .foco-v6-primary:disabled { transform: none; }
+@media (hover:hover) and (pointer:fine) {
+  .foco-v6-shell .foco-v6-mini-panel:hover {
+    transform: translate3d(0,-2px,0);
+    border-color: rgba(213,255,64,.40);
+  }
+  .foco-v6-shell .foco-v6-hero:hover img { transform: scale(1.025); }
+}
+.foco-v6-shell .foco-v6-hero img {
+  transition: transform 560ms var(--foco-motion-ease);
+}
+.foco-v6-shell .foco-motion-nav .foco-v4-tab svg {
+  transition: transform var(--foco-motion-standard) var(--foco-motion-ease);
+}
+.foco-v6-shell .foco-motion-nav .foco-v4-tab-active svg {
+  transform: translate3d(0,-2px,0) scale(1.07);
+}
+.foco-v6-shell .foco-motion-nav .foco-v4-tab:active svg { transform: scale(.93); }
+.foco-v6-shell .foco-v6-week-check {
+  animation: foco-motion-check var(--foco-motion-standard) var(--foco-motion-enter) both;
+}
+@keyframes foco-motion-check {
+  from { opacity: .45; transform: scale(.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* Rest HUD enters once; the countdown digits themselves never shift. */
+.foco-v6-shell .foco-motion-rest-hud {
+  animation: foco-motion-hud-in 280ms var(--foco-motion-enter) both;
+}
+@keyframes foco-motion-hud-in {
+  from { opacity: .8; transform: translate3d(0,12px,0); }
+  to { opacity: 1; transform: translate3d(0,0,0); }
+}
+.foco-v6-shell .foco-motion-rest-hud button:active:not(:disabled) { transform: scale(.96); }
+/* Cardio state is conveyed with a border, not a distracting endless pulse. */
+.foco-v6-shell .foco-motion-cardio-timer {
+  transition: border-color var(--foco-motion-standard) var(--foco-motion-ease),
+              box-shadow var(--foco-motion-standard) var(--foco-motion-ease);
+}
+.foco-v6-shell .foco-motion-cardio-timer[data-running="true"] {
+  border-color: rgba(200,240,64,.45);
+  box-shadow: inset 0 1px rgba(200,240,64,.1), 0 0 0 1px rgba(200,240,64,.08);
+}
+.foco-v6-shell .foco-motion-confirmation {
+  animation: foco-motion-success-in 360ms var(--foco-motion-enter) both;
+}
+@keyframes foco-motion-success-in {
+  from { opacity: .65; transform: translate3d(0,8px,0) scale(.98); }
+  to { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+}
+/* A chart reveal, never an animation of fabricated measurements. */
+.foco-v6-shell .foco-motion-progress .foco-v6-progress-svg {
+  animation: foco-motion-chart-in 460ms var(--foco-motion-ease) both;
+}
+@keyframes foco-motion-chart-in {
+  from { opacity: .5; transform: translate3d(0,5px,0); }
+  to { opacity: 1; transform: translate3d(0,0,0); }
+}
+/* Disable motion across shell and loading splash for users requesting reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .foco-v6-shell, .foco-v6-splash { scroll-behavior: auto !important; }
+  .foco-v6-shell *, .foco-v6-shell *::before, .foco-v6-shell *::after,
+  .foco-v6-splash *, .foco-v6-splash *::before, .foco-v6-splash *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
