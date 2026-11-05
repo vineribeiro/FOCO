@@ -3,6 +3,7 @@ import {ArrowLeft,ArrowRight,Dumbbell,LoaderCircle,Play,Search,X,Plus} from 'luc
 import {AccessibleDialog} from './AccessibleDialog';
 import {browseExerciseDB,EXERCISEDB_PAGE_SIZE,type ExternalExercise,type ExternalExercisePage} from '../data/exerciseDbCatalog';
 import {candidateExerciseDBNames} from '../data/exerciseDbBeta';
+import {loadExerciseCatalog} from '../data/exerciseLibrary';
 
 interface Props { onUseExercise:(exercise:ExternalExercise)=>void }
 const BODY_PT:Record<string,string>={
@@ -17,6 +18,7 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
   const [search,setSearch]=useState('');
   const [query,setQuery]=useState('');
   const [list,setList]=useState<Extract<ExternalExercisePage,{state:'ok'}>|null>(null);
+  const [fallback,setFallback]=useState(false);
   const [page,setPage]=useState(1);
   const [cursors,setCursors]=useState<Array<string|null>>([null]);
   const [muscle,setMuscle]=useState('all');
@@ -38,17 +40,34 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
     const result=await browseExerciseDB({query:term,after,signal:request.signal});
     if(id!==requestId.current||request.signal.aborted)return;
     setLoading(false);
-    if(result.state!=='ok'){
-      setError(result.state==='rate_limited'
-        ? 'A ExerciseDB atingiu o limite de consultas. Tenta novamente depois.'
-        : 'Não foi possível acessar a ExerciseDB agora. Verifica tua conexão ou tenta novamente.');
+    if(result.state!=='ok'||result.exercises.length===0){
+      // The external API is best-effort. Never hide the entire exercise library
+      // because it is down, throttled, blocked by CORS or returns no valid rows.
+      try {
+        const local=await loadExerciseCatalog();
+        if(id!==requestId.current||request.signal.aborted)return;
+        const match=term.toLocaleLowerCase('pt-BR');
+        const filtered=local.filter(e=>!match||[e.name,...(e.aliases||[])].some(name=>name.toLocaleLowerCase('pt-BR').includes(match)));
+        const exercises:ExternalExercise[]=filtered.map(e=>({
+          exerciseId:e.id,name:e.name,gifUrl:null,bodyParts:e.primaryMuscles,
+          targetMuscles:e.primaryMuscles,secondaryMuscles:e.secondaryMuscles,
+          equipments:[e.equipmentDisplay||e.equipment],instructions:e.instructions,
+        }));
+        setList({state:'ok',exercises,total:exercises.length,hasNext:false,nextCursor:null});
+        setFallback(true);setQuery(term);setPage(1);setCursors([null]);setMuscle('all');setViewKey(k=>k+1);
+        setError('A ExerciseDB está indisponível. Exibindo temporariamente exercícios próprios do FOCO, sem imagens antigas. Tenta reconectar para voltar ao catálogo externo.');
+      } catch {
+        if(id!==requestId.current||request.signal.aborted)return;
+        setList(null);setFallback(false);
+        setError('Não foi possível carregar a ExerciseDB nem o catálogo local de contingência. Tenta novamente.');
+      }
       return;
     }
     if(targetPage>1&&result.exercises[0]?.exerciseId===list?.exercises[0]?.exerciseId){
       setError('O servidor repetiu a página anterior. A navegação foi interrompida para evitar duplicação.');
       return;
     }
-    setList(result);setQuery(term);setPage(targetPage);setMuscle('all');setViewKey(k=>k+1);
+    setList(result);setFallback(false);setQuery(term);setPage(targetPage);setMuscle('all');setViewKey(k=>k+1);
     setDetail(null);setShowGif(false);
     setCursors(current=>{
       const next=targetPage===1?[null]:current.slice(0,targetPage);
@@ -91,9 +110,9 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
     {loading&&<div className="foco-atlas-loading" role="status"><LoaderCircle size={22} className="animate-spin"/> Carregando exercícios...</div>}
     {list&&<>
       <div className="foco-atlas-results-heading">
-        <div><strong>{list.total===null?'Catálogo ExerciseDB':list.total.toLocaleString('pt-BR')+' exercícios encontrados'}</strong>
+        <div><strong>{fallback?'Catálogo de contingência FOCO':list.total===null?'Catálogo ExerciseDB':list.total.toLocaleString('pt-BR')+' exercícios encontrados'}</strong>
           <span>Página {page} · até {EXERCISEDB_PAGE_SIZE} movimentos</span></div>
-        <span className="foco-atlas-remote-label">Dados em tempo real</span>
+        <span className="foco-atlas-remote-label">{fallback?'Modo contingência':'Dados em tempo real'}</span>
       </div>
       {muscles.length>1&&<div role="group" aria-label="Filtrar grupo muscular nesta página" className="foco-atlas-filters">
         <button type="button" onClick={()=>setMuscle('all')} aria-pressed={muscle==='all'}>Todos nesta página</button>
@@ -106,7 +125,7 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
             onClick={()=>{setDetail(item);setShowGif(false);setGifFailed(false);}}
             aria-label={'Abrir exercício '+item.name}>
             <span className="foco-atlas-media-placeholder"><Dumbbell size={39} strokeWidth={1.35} aria-hidden="true"/>
-              <span>GIF DISPONÍVEL NOS DETALHES</span></span>
+              <span>{item.gifUrl?'GIF DISPONÍVEL NOS DETALHES':'SEM GIF EXTERNO'}</span></span>
             <span className="foco-atlas-card-copy"><span>{item.bodyParts.map(pt).join(' · ')||'Exercício'}</span>
               <strong>{item.name}</strong>
               <small>{item.equipments.join(' · ')||'Equipamento não informado'}</small></span>
@@ -122,10 +141,10 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
       </nav>
     </>}
     <p className="foco-atlas-credit">Dados, descrições e mídia: <a href="https://oss.exercisedb.dev/docs" target="_blank" rel="noopener noreferrer">ExerciseDB / AscendAPI</a>. Uso não comercial. GIFs carregados somente por solicitação, sem armazenamento permanente.</p>
-    {detail&&<AccessibleDialog size="lg" title={'ExerciseDB: '+detail.name} onClose={()=>{setDetail(null);setShowGif(false);}}>
+    {detail&&<AccessibleDialog size="lg" title={(fallback?'FOCO: ':'ExerciseDB: ')+detail.name} onClose={()=>{setDetail(null);setShowGif(false);}}>
       <div className="foco-atlas-modal">
         <div className="foco-atlas-modal-head">
-          <div><span className="foco-atlas-kicker">EXERCISEDB / MOVIMENTO</span><h2>{detail.name}</h2></div>
+          <div><span className="foco-atlas-kicker">{fallback?'FOCO / CONTINGÊNCIA':'EXERCISEDB / MOVIMENTO'}</span><h2>{detail.name}</h2></div>
           <button type="button" onClick={()=>{setDetail(null);setShowGif(false);}} aria-label="Fechar exercício"><X size={19}/></button>
         </div>
         <div className="foco-atlas-media-detail">
@@ -143,14 +162,14 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
           <div><span>Músculos</span><strong>{detail.targetMuscles.join(', ')||'Não informados'}</strong></div>
           <div><span>Equipamento</span><strong>{detail.equipments.join(', ')||'Não informado'}</strong></div>
         </div>
-        <section className="foco-atlas-steps"><h3>Instruções fornecidas pela ExerciseDB (inglês)</h3>
+        <section className="foco-atlas-steps"><h3>{fallback?'Instruções do catálogo FOCO':'Instruções fornecidas pela ExerciseDB (inglês)'}</h3>
           {detail.instructions.length?<ol>{detail.instructions.map((line,i)=><li key={i}>{line}</li>)}</ol>
             :<p>Sem instruções disponíveis para este movimento.</p>}
         </section>
         <button type="button" className="foco-atlas-open-foco" onClick={()=>{onUseExercise(detail);setDetail(null);setShowGif(false);}}>
           <Plus size={17}/> Usar como referência para minha ficha
         </button>
-        <p className="foco-atlas-credit">Fonte: <a href="https://oss.exercisedb.dev/docs" target="_blank" rel="noopener noreferrer">ExerciseDB / AscendAPI</a> · GIF externo 180p.</p>
+        <p className="foco-atlas-credit">{fallback?'Catálogo FOCO temporário, sem conteúdo ou mídia importada da API.':'Fonte: ExerciseDB / AscendAPI · GIF externo 180p.'}</p>
       </div>
     </AccessibleDialog>}
   </section>;
