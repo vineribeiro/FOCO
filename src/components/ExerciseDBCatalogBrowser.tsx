@@ -88,7 +88,7 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
     <div className="foco-atlas-external-top">
       <div><span className="foco-atlas-kicker">CATÁLOGO DE MOVIMENTOS / ASCENDAPI</span>
         <h2>ExerciseDB</h2>
-        <p>Uma biblioteca única para consultar execução, músculos e equipamentos. Busca ao vivo, sem duplicar imagens.</p>
+        <p>Uma biblioteca única com demonstrações visuais, músculos e equipamentos. GIFs carregados conforme os cards aparecem na tela.</p>
       </div>
       <span className="foco-atlas-beta-pill">USO NÃO COMERCIAL</span>
     </div>
@@ -124,8 +124,17 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
           <button type="button" className="foco-atlas-card-open"
             onClick={()=>{setDetail(item);setShowGif(false);setGifFailed(false);}}
             aria-label={'Abrir exercício '+item.name}>
-            <span className="foco-atlas-media-placeholder"><Dumbbell size={39} strokeWidth={1.35} aria-hidden="true"/>
-              <span>{item.gifUrl?'GIF DISPONÍVEL NOS DETALHES':'SEM GIF EXTERNO'}</span></span>
+            <span className="foco-atlas-media-placeholder">
+              {item.gifUrl&&!fallback
+                ? <img className="foco-atlas-card-gif" src={item.gifUrl} loading="lazy" decoding="async"
+                    referrerPolicy="no-referrer" alt={'Demonstração de '+item.name}
+                    onError={event=>{event.currentTarget.style.display='none';event.currentTarget.nextElementSibling?.removeAttribute('hidden');}}/>
+                : null}
+              <span className="foco-atlas-image-unavailable" hidden={Boolean(item.gifUrl&&!fallback)}>
+                <Dumbbell size={32} strokeWidth={1.35} aria-hidden="true"/>
+                <span>{fallback?'Imagem indisponível no modo de contingência':'Imagem indisponível'}</span>
+              </span>
+            </span>
             <span className="foco-atlas-card-copy"><span>{item.bodyParts.map(pt).join(' · ')||'Exercício'}</span>
               <strong>{item.name}</strong>
               <small>{item.equipments.join(' · ')||'Equipamento não informado'}</small></span>
@@ -140,7 +149,7 @@ export const ExerciseDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
           onClick={()=>void fetchPage(query,list.nextCursor,page+1)}>Próxima <ArrowRight size={16}/></button>
       </nav>
     </>}
-    <p className="foco-atlas-credit">Dados, descrições e mídia: <a href="https://oss.exercisedb.dev/docs" target="_blank" rel="noopener noreferrer">ExerciseDB / AscendAPI</a>. Uso não comercial. GIFs carregados somente por solicitação, sem armazenamento permanente.</p>
+    <p className="foco-atlas-credit">Dados, descrições e mídia: <a href="https://oss.exercisedb.dev/docs" target="_blank" rel="noopener noreferrer">ExerciseDB / AscendAPI</a>. Uso não comercial. GIFs externos exibidos sob demanda conforme a rolagem, sem armazenamento pelo FOCO.</p>
     {detail&&<AccessibleDialog size="lg" title={(fallback?'FOCO: ':'ExerciseDB: ')+detail.name} onClose={()=>{setDetail(null);setShowGif(false);}}>
       <div className="foco-atlas-modal">
         <div className="foco-atlas-modal-head">
