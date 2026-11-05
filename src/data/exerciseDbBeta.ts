@@ -160,7 +160,7 @@ export async function getExerciseDBGifPreview(exerciseName:string):Promise<Exerc
   const controller=new AbortController();
   const timeout=setTimeout(()=>controller.abort(),8500);
   try{
-   const res=await fetch(SEARCH_URL+'?q='+encodeURIComponent(candidates[0]),{
+   const res=await fetch(SEARCH_URL+'?search='+encodeURIComponent(candidates[0]),{
      signal:controller.signal,headers:{Accept:'application/json'},cache:'no-store'
    });
    if(res.status===429)return {state:'rate_limited'};

@@ -4,7 +4,7 @@
 - Um componente reutilizável `ExerciseDBPreview` disponível em **todos os exercícios das telas de detalhes** na Biblioteca, na aba **Execução** de treinos e nos **Exercícios complementares** expandidos.
 - Não adiciona GIFs em todas as miniaturas (economia de memória, dados móveis e requisições). Só faz a consulta após o toque em **Ver demonstração GIF**.
 - Um resultado só é mostrado quando o **nome da variação** corresponde exatamente a um alias inglês explícito ou ao mapeamento RepDB já curado. Movimento parecido não é suficiente. GIF ausente, bloqueio de CORS, `429` ou erro de rede preservam as imagens e instruções atuais.
-- API: `GET https://oss.exercisedb.dev/api/v1/exercises/search?q=...` (1 consulta por toque, cache temporário em memória, sem armazenamento permanente de material externo).
+- API: `GET https://oss.exercisedb.dev/api/v1/exercises/search?search=...` (1 consulta por toque, cache temporário em memória, sem armazenamento permanente de material externo).
 - GIF: permitido somente do host `https://static.exercisedb.dev`, no caminho `/media/<id>.gif`.
 - Atribuição explícita para AscendAPI / ExerciseDB ao lado da demonstração. GIF 180p, **não** ilustração premium validada ou orientação técnica profissional.
 - Não altera os 254 IDs curados, backend, catálogo original, histórico, prescrição, músculos, treinamento por IA, nem fotos anatômicas próprias.

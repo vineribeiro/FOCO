@@ -12,6 +12,7 @@ assert.ok(candidateExerciseDBNames('Leg press 45 graus').some(x=>x.includes('45'
 assert.ok(candidateExerciseDBNames('Supino reto com barra').includes('barbell bench press'));
 assert.ok(candidateExerciseDBNames('Cadeira extensora').includes('leg extension'));
 assert.equal(normalizeExerciseDBName('Sled 45° Leg Press'),normalizeExerciseDBName('Sled 45 degree Leg Press'));
+assert.ok(read('src/data/exerciseDbBeta.ts').includes("'?search='"),'Live ExerciseDB search must use the provider-confirmed search parameter');
 
 const target=['sled 45 degree leg press','45 degree leg press'];
 assert.equal(acceptedExerciseDBName({name:'Sled 45° Leg Press'},target),true);
