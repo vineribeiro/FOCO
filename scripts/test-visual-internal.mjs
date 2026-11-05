@@ -162,6 +162,31 @@ try{
       // The 2026-11-05 beta screenshot was specifically of Leg press 45 graus.
       assert.match(await page.locator('.foco-v7-stage-footer h2').innerText(),/Leg press 45 graus/i);
       await page.screenshot({path:out+'/legpress-'+size.name+'.png',fullPage:false,animations:'disabled'});
+      if(size.name==='mobile-390'){
+        let apiRequests=0;
+        await page.route('https://oss.exercisedb.dev/api/v1/exercises/search*',route=>{
+          const term=new URL(route.request().url()).searchParams.get('search');
+          assert.ok(term&&term.toLowerCase().includes('leg press'),'Use provider-confirmed search query');
+          apiRequests++;
+          return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+            success:true,data:[{exerciseId:'10Z2DXU',name:'sled 45° leg press',
+              gifUrl:'https://static.exercisedb.dev/media/10Z2DXU.gif'}],
+          })});
+        });
+        await page.route('https://static.exercisedb.dev/media/*.gif',route=>
+          route.fulfill({status:200,contentType:'image/gif',
+            body:Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==','base64')}));
+        await page.getByRole('button',{name:'Execução',exact:true}).click();
+        const demoButton=page.getByRole('button',{name:'Ver demonstração GIF'});
+        await demoButton.waitFor({timeout:10000});
+        assert.equal(apiRequests,0,'Do not query API until user explicitly requests animation');
+        await demoButton.click();
+        await page.locator('.foco-edb-preview img').waitFor({timeout:10000});
+        assert.equal(apiRequests,1,'One API lookup per user action');
+        await page.getByRole('button',{name:'Ocultar GIF'}).click();
+        assert.equal(await page.locator('.foco-edb-preview img').count(),0,'Hide must stop GIF rendering');
+        await page.getByRole('button',{name:'Registro',exact:true}).click();
+      }
       assert.equal(await page.locator('.foco-21-exercise-media button').count(),0,'Exercise hero must not contain nested media controls');
       assert.equal(await page.locator('.foco-21-exercise-media [class*="bg-white"]').count(),0,'No white gallery overlays in stage');
       await page.getByRole('button',{name:/Ver exercício 1:/}).click();
