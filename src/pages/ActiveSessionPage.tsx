@@ -1,7 +1,6 @@
-import { FOCO_REFERENCE_BENCH } from '../data/focoReferenceBench';
 import { FOCO_VISUAL_RELEASE } from '../utils/release';
 import React, { useState, useEffect } from 'react';
-import { FocoV6Status, FocoV6Segment, V6_IMAGES } from '../components/FocoV6UI';
+import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { useAuth } from '../context/AuthContext';
 import { conciseWorkoutName } from '../utils/workoutTitles';
@@ -645,6 +644,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const v6ExIndex=v7ManualExerciseIndex===null ? suggestedExerciseIndex : Math.max(0,Math.min(exerciseLogs.length-1,v7ManualExerciseIndex));
   const v6CurrentExercise=exerciseLogs[v6ExIndex];
   const v6ReferenceBench=!!v6CurrentExercise && /supinoreto|benchpress/i.test(normalizeExerciseText(v6CurrentExercise.exercise_name));
+  const v6ReferenceLegPress=!!v6CurrentExercise && /leg\s*press\s*45/i.test(v6CurrentExercise.exercise_name);
   const v6SetIndex=v6CurrentExercise?Math.max(0,v6CurrentExercise.sets.findIndex(set=>!set.completed)):0;
   const v6CurrentSet=v6CurrentExercise?.sets[v6SetIndex];
   const v6TracksLoad=v6CurrentExercise?tracksLoad(v6CurrentExercise):false;
@@ -680,10 +680,11 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       {v6CurrentExercise&&<section className="foco-v7-session-stage" aria-label={'Exercício atual: '+v6CurrentExercise.exercise_name}>
         <div className="foco-21-art-surface" aria-hidden="true"/>
         <div className="foco-21-exercise-media">
-        {v6ReferenceBench
-          ? <img className="foco-v7-stage-photo" src={V6_IMAGES.bench} alt="Execução de supino reto com barra"
-              fetchPriority="high" loading="eager" decoding="async"
-              onError={e=>{if(e.currentTarget.src!==FOCO_REFERENCE_BENCH)e.currentTarget.src=FOCO_REFERENCE_BENCH;}}/>
+        {v6ReferenceBench || v6ReferenceLegPress
+          ? <img className="foco-v7-stage-photo foco-21-local-art"
+              src={import.meta.env.BASE_URL + 'assets/exercises/' + (v6ReferenceLegPress?'legpress-45-foco.svg':'supino-reto-foco.svg')}
+              alt={v6ReferenceLegPress?'Ilustração esquemática do Leg press 45 graus':'Ilustração esquemática do Supino reto com barra'}
+              fetchPriority="high" loading="eager" decoding="async"/>
           : <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name}
               muscleGroup={v6CurrentExercise.muscle_group} presentation="editorial" className="foco-v7-stage-illustration h-full w-full" />}
         </div>
