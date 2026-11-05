@@ -13,7 +13,7 @@ const profile = { id: user.id, full_name: user.full_name, current_weight_kg: 76.
 const days = ['segunda','terca','quarta','quinta','sexta','sabado'];
 const lifts = [
   ['Supino reto com barra','Peitoral'],['Puxada frontal na polia','Costas'],
-  ['Agachamento livre com barra','Quadríceps'],['Mesa flexora','Posteriores'],
+  ['Leg press 45 graus','Quadríceps'],['Mesa flexora','Posteriores'],
   ['Prancha abdominal','Core'],
 ];
 const exercises = days.flatMap(day => lifts.map(([exercise_name,muscle_group],i) => ({
@@ -151,6 +151,9 @@ try{
       // full image gallery's white caption strip, zoom button or phase switches.
       await page.getByRole('button',{name:/Ver exercício 3:/}).click();
       await page.locator('.foco-v7-stage-illustration.foco-v7-exercise-visual').waitFor({timeout:6000});
+      // The 2026-11-05 beta screenshot was specifically of Leg press 45 graus.
+      assert.match(await page.locator('.foco-v7-stage-footer h2').innerText(),/Leg press 45 graus/i);
+      await page.screenshot({path:out+'/legpress-'+size.name+'.png',fullPage:false,animations:'disabled'});
       assert.equal(await page.locator('.foco-v7-stage-illustration button').count(),0,'Stage preview must not inject nested image controls');
       assert.equal(await page.locator('.foco-v7-stage-illustration [class*="bg-white"]').count(),0,'No white gallery overlays in stage');
       await page.getByRole('button',{name:/Ver exercício 1:/}).click();
