@@ -40,10 +40,6 @@ jobs:
         run: npm run test:v2
       - name: ExerciseDB noncommercial licence and exercise match regression (offline)
         run: npm run test:edb
-      - name: ExerciseDB V1 API contract probe (this integration PR only; no media downloaded)
-        if: github.event_name == 'pull_request' && github.head_ref == 'feat/exercisedb-noncommercial-preview'
-        continue-on-error: true
-        run: npm run test:edb:live
       - name: Exercise image catalog audit
         run: npm run audit:images
       - name: Anatomy atlas manifest integrity
