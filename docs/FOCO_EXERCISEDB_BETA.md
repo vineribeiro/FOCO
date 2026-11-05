@@ -46,3 +46,8 @@ Consulta pontual de metadados efetuada no GitHub Actions, execução [#420829015
 
 Isso confirma **acesso real e duas correspondências**, mas não prova que todos os 254 exercícios tenham GIF, nem garante estabilidade futura da API. A integração mantém o fallback local/RepDB.
 O diagnóstico live deve ser executado **somente manualmente quando necessário** (`npm run test:edb:live`); não se faz polling externo em cada PR para respeitar limites do serviço.
+
+## Mudança de escopo e galeria unificada (05/11/2026)
+O responsável pelo FOCO decidiu **não comercializar** o aplicativo. Acesso ao catálogo ExerciseDB permanece pessoal, experimental e com atribuição obrigatória. Não há metas de lançamento comercial para 2027. A proibição contratual de baixar em massa e armazenar registros/mídia do provedor permanece relevante.
+
+A Biblioteca apresenta duas fontes: **FOCO** (exercícios curados, editáveis e adicionáveis à ficha) e **ExerciseDB** (catálogo externo paginado, pesquisável, somente leitura). Cada página é consultada apenas após interação, até 12 resultados por vez, e GIFs só são requisitados ao abrir um detalhe e tocar em carregar mídia. A identidade e o histórico dos exercícios permanecem no FOCO. Nomes, GIFs e instruções de terceiros **não são gravados** no Supabase nem nos planos do usuário.

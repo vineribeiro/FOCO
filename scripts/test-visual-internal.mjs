@@ -227,6 +227,38 @@ try{
         await page.getByRole('button',{name:'Programa',exact:true}).click();
         assert.equal(await page.getByRole('button',{name:'Programa',exact:true}).getAttribute('aria-pressed'),'true');
         await page.getByRole('button',{name:'Semana',exact:true}).click();
+      }else if(view==='biblioteca'){
+        let atlasRequests=0;
+        await page.route('https://oss.exercisedb.dev/api/v1/exercises?*',async route=>{
+          atlasRequests++;
+          const after=new URL(route.request().url()).searchParams.get('after');
+          const exercise=after
+            ? {exerciseId:'EIeI8Vz',name:'dumbbell bench press',bodyParts:['chest'],targetMuscles:['pectorals'],equipments:['dumbbell'],instructions:['Controlled descent'],gifUrl:'https://static.exercisedb.dev/media/EIeI8Vz.gif'}
+            : {exerciseId:'EIeI8Vf',name:'barbell bench press',bodyParts:['chest'],targetMuscles:['pectorals'],equipments:['barbell'],instructions:['Controlled descent'],gifUrl:'https://static.exercisedb.dev/media/EIeI8Vf.gif'};
+          await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+            success:true,data:[exercise],meta:{total:2,hasNextPage:!after,nextCursor:after?null:'edb_T5uXtLj'}
+          })});
+        });
+        await page.route('https://static.exercisedb.dev/media/*.gif',route=>
+          route.fulfill({status:200,contentType:'image/gif',body:Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==','base64')}));
+        await page.getByRole('tab',{name:/ExerciseDB/}).click();
+        assert.equal(atlasRequests,0,'No API call before explicit exploration');
+        await page.getByRole('button',{name:/Explorar ExerciseDB/}).click();
+        await page.getByRole('button',{name:'Abrir exercício barbell bench press'}).waitFor({timeout:10000});
+        assert.equal(atlasRequests,1,'One first-page request');
+        await page.getByRole('button',{name:'Abrir exercício barbell bench press'}).click();
+        assert.equal(await page.locator('.foco-atlas-media-detail img').count(),0,'GIF must be opt-in');
+        await page.getByRole('button',{name:/Carregar GIF de demonstração/}).click();
+        await page.locator('.foco-atlas-media-detail img').waitFor({timeout:5000});
+        await page.getByRole('button',{name:'Fechar exercício'}).click();
+        await page.getByRole('button',{name:/Próxima/}).click();
+        await page.getByRole('button',{name:'Abrir exercício dumbbell bench press'}).waitFor({timeout:10000});
+        assert.equal(atlasRequests,2,'Next follows server cursor');
+        await page.getByRole('button',{name:/Anterior/}).click();
+        await page.getByRole('button',{name:'Abrir exercício barbell bench press'}).waitFor({timeout:10000});
+        assert.equal(atlasRequests,3,'Back refetches, no third-party cache');
+        await page.getByRole('tab',{name:/FOCO/}).click();
+        assert.ok(await page.locator('.foco-atlas-curated-grid article').count()>0,'Curated FOCO cards still render');
       }
     }
     const result={viewport:size.name,view,layout_view:'synthetic fixtures',heading:check.title,overflow_px:overflow,status:issue?'FAIL':'PASS',error:issue||undefined,screenshot};

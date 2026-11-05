@@ -40,6 +40,8 @@ jobs:
         run: npm run test:v2
       - name: ExerciseDB noncommercial licence and exercise match regression (offline)
         run: npm run test:edb
+      - name: FOCO noncommercial Exercise Atlas pagination and gallery regression
+        run: npm run test:atlas
       - name: Exercise image catalog audit
         run: npm run audit:images
       - name: Anatomy atlas manifest integrity

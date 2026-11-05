@@ -5,7 +5,7 @@
 Aplicativo web responsivo/PWA, React + TypeScript + Vite, frontend no GitHub Pages e API conectada ao Supabase. O repositório também contém servidor Node legado; **não assumir que ele é o backend publicado** sem verificar o ambiente.
 
 ## Estágio
-**Beta real em 2026. Comercialização pretendida para 2027, ainda não autorizada.**
+**Projeto pessoal não comercial em beta real. Não há lançamento comercial planejado.**
 Não chamar de produção comercial nem prometer conformidade, eficácia clínica, integrações ou disponibilidade sem evidência de teste.
 
 ## Usuários

@@ -1,0 +1,148 @@
+/* FOCO Exercise Atlas — coherent with the existing FOCO PRO tokens.
+   Curated content is local; ExerciseDB inventory is live, personal and read-only. */
+.foco-v6-shell .foco-atlas-source-tabs{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
+  border:1px solid rgba(200,240,64,.22);padding:6px;border-radius:20px;
+  background:linear-gradient(145deg,#1C291C,#101A12);
+}
+.foco-v6-shell .foco-atlas-source-tabs>button{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;
+  min-height:63px;border-radius:15px;padding:11px 13px;color:#D5DCCF;
+  border:1px solid transparent;text-align:left;transition:background-color 180ms,border-color 180ms;
+}
+.foco-v6-shell .foco-atlas-source-tabs>button[aria-selected="true"]{
+  background:#C8F040;border-color:#C8F040;color:#101910;
+  box-shadow:0 5px 16px rgba(200,240,64,.14);
+}
+.foco-v6-shell .foco-atlas-source-tabs>button span{font-size:14px;font-weight:850;letter-spacing:-.035em;}
+.foco-v6-shell .foco-atlas-source-tabs>button small{font-size:10px;font-weight:600;opacity:.78;}
+.foco-v6-shell .foco-atlas-tab-beta{font-size:8px!important;letter-spacing:.05em!important;border:1px solid currentColor;padding:2px 4px;border-radius:4px;}
+.foco-v6-shell .foco-atlas-curated{display:flex;flex-direction:column;gap:20px;}
+.foco-v6-shell .foco-atlas-curated-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
+}
+.foco-v6-shell .foco-atlas-curated-card{
+  display:flex;flex-direction:column;min-width:0;border-radius:21px;overflow:hidden;
+  border:1px solid rgba(215,244,173,.2);background:linear-gradient(150deg,#202C20,#111912);
+  box-shadow:inset 0 1px rgba(255,255,255,.05);
+}
+.foco-v6-shell .foco-atlas-curated-card:hover{border-color:rgba(200,240,64,.55);}
+.foco-v6-shell .foco-atlas-curated-open{flex:1;}
+.foco-v6-shell .foco-atlas-curated-media{
+  height:145px!important;background:radial-gradient(ellipse at 68% 24%,#34492D,#161F17 75%)!important;
+  border:0!important;border-radius:0!important;pointer-events:none;overflow:hidden;
+}
+.foco-v6-shell .foco-atlas-curated-media img{mix-blend-mode:multiply;filter:contrast(1.1) saturate(.8)!important;}
+.foco-v6-shell .foco-atlas-curated-open>div:last-child{padding:13px!important;}
+.foco-v6-shell .foco-atlas-curated-open>div:last-child h2{font-size:13px;line-height:1.25;letter-spacing:-.02em;min-height:33px;overflow-wrap:anywhere;}
+.foco-v6-shell .foco-atlas-curated-open>div:last-child p{line-height:1.3;}
+.foco-v6-shell .foco-atlas-curated-actions{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:11px!important;}
+.foco-v6-shell .foco-atlas-curated-actions>p{width:100%;font-size:10px;line-height:1.4;white-space:normal;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;}
+.foco-v6-shell .foco-atlas-curated-actions>button{width:100%;justify-content:center;background:var(--foco-pro-accent,#C8F040);border-radius:12px;}
+.foco-v6-shell .foco-atlas-external{
+  display:flex;flex-direction:column;gap:17px;
+}
+.foco-v6-shell .foco-atlas-external-top{
+  display:flex;align-items:start;justify-content:space-between;gap:12px;
+  border:1px solid rgba(220,248,190,.22);border-radius:24px;padding:19px 17px;
+  background:radial-gradient(ellipse at 90% 0%,rgba(200,240,64,.21),transparent 70%),linear-gradient(140deg,#223020,#121A14);
+}
+.foco-v6-shell .foco-atlas-kicker{display:block;color:#C8F040;font-size:9px;font-weight:850;letter-spacing:.12em;}
+.foco-v6-shell .foco-atlas-external-top h2{font-size:clamp(21px,5.5vw,30px);font-weight:900;letter-spacing:-.06em;line-height:1.04;margin-top:9px;max-width:300px;}
+.foco-v6-shell .foco-atlas-external-top p{font-size:12px;line-height:1.55;color:#BECABB;margin-top:10px;max-width:420px;}
+.foco-v6-shell .foco-atlas-beta-pill{flex:0 0 auto;border:1px solid rgba(200,240,64,.4);padding:6px 8px;border-radius:9px;color:#C8F040;font-size:9px;font-weight:800;white-space:nowrap;}
+.foco-v6-shell .foco-atlas-search{
+  min-height:57px;display:flex;align-items:center;gap:10px;border-radius:18px;
+  border:1px solid rgba(200,240,64,.34);background:#1A241A;padding:6px 7px 6px 13px;
+}
+.foco-v6-shell .foco-atlas-search>svg{color:#B7D67D;flex:0 0 auto;}
+.foco-v6-shell .foco-atlas-search>input{
+  flex:1;min-width:0;height:43px;background:transparent;color:#F5F8EE;border:0;outline:0;font-size:13px;
+}
+.foco-v6-shell .foco-atlas-search>input::placeholder{color:#8E9E8C;}
+.foco-v6-shell .foco-atlas-search>button:not(.foco-atlas-search-submit){min-width:34px;min-height:44px;display:grid;place-items:center;color:#CDD7C4;}
+.foco-v6-shell .foco-atlas-search-submit{
+  min-height:44px;padding:9px 14px;border-radius:13px;
+  background:#C8F040;color:#0C160C;font-size:12px;font-weight:850;
+}
+.foco-v6-shell .foco-atlas-first{
+  min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;
+  border:1px dashed rgba(200,240,64,.28);border-radius:23px;padding:30px 20px;
+  background:linear-gradient(165deg,#1B291A,#101810);
+}
+.foco-v6-shell .foco-atlas-first-icon{width:67px;height:67px;border-radius:21px;background:#2B4125;display:grid;place-items:center;color:#C8F040;}
+.foco-v6-shell .foco-atlas-first h3{font-size:18px;font-weight:850;letter-spacing:-.04em;}
+.foco-v6-shell .foco-atlas-first p{font-size:12px;line-height:1.55;color:#B9C8B3;max-width:290px;}
+.foco-v6-shell .foco-atlas-first>button,.foco-v6-shell .foco-atlas-open-foco{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:48px;
+  background:#C8F040;color:#101A0D;font-size:12px;font-weight:850;
+  border-radius:14px;padding:12px 17px;margin-top:8px;
+}
+.foco-v6-shell .foco-atlas-alert{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;
+  border:1px solid rgba(241,194,106,.4);background:#242015;border-radius:16px;padding:15px;font-size:12px;
+}
+.foco-v6-shell .foco-atlas-alert button{min-height:44px;border-radius:12px;padding:9px 12px;background:#BFE844;color:#101A0D;font-weight:800;}
+.foco-v6-shell .foco-atlas-loading{display:flex;align-items:center;gap:10px;color:#B9C5B2;padding:25px 8px;}
+.foco-v6-shell .foco-atlas-results-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.foco-v6-shell .foco-atlas-results-heading>div{display:flex;flex-direction:column;gap:4px;}
+.foco-v6-shell .foco-atlas-results-heading strong{font-size:16px;letter-spacing:-.035em;}
+.foco-v6-shell .foco-atlas-results-heading span{font-size:11px;color:#B5C5B0;}
+.foco-v6-shell .foco-atlas-remote-label{border-radius:8px;background:#263925;padding:7px 8px;white-space:nowrap;}
+.foco-v6-shell .foco-atlas-filters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin;padding-bottom:4px;}
+.foco-v6-shell .foco-atlas-filters button{min-height:40px;flex:0 0 auto;padding:8px 12px;border-radius:999px;border:1px solid rgba(220,240,180,.2);color:#D0DCC9;font-size:11px;}
+.foco-v6-shell .foco-atlas-filters button[aria-pressed="true"]{background:#C8F040;color:#10190D;border-color:#C8F040;font-weight:850;}
+.foco-v6-shell .foco-atlas-external-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;}
+.foco-v6-shell .foco-atlas-exercise-card{min-width:0;border-radius:21px;border:1px solid rgba(220,244,194,.2);background:linear-gradient(145deg,#223021,#111B13);overflow:hidden;}
+.foco-v6-shell .foco-atlas-card-open{display:flex;flex-direction:column;width:100%;text-align:left;}
+.foco-v6-shell .foco-atlas-media-placeholder{height:126px;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;background:radial-gradient(ellipse at 65% 25%,#3A5230,#1C2A1A 65%,#141B14);color:#C8F040;}
+.foco-v6-shell .foco-atlas-media-placeholder>span{font-size:8px;line-height:1.3;letter-spacing:.08em;font-weight:800;text-align:center;padding:0 8px;color:#B8CD99;}
+.foco-v6-shell .foco-atlas-card-copy{min-height:130px;display:flex;flex-direction:column;gap:6px;padding:13px;}
+.foco-v6-shell .foco-atlas-card-copy>span{font-size:10px;color:#C8F040;line-height:1.25;}
+.foco-v6-shell .foco-atlas-card-copy strong{font-size:13px;font-weight:850;line-height:1.25;overflow-wrap:anywhere;}
+.foco-v6-shell .foco-atlas-card-copy small{margin-top:auto;font-size:10px;line-height:1.3;color:#ACBBA6;}
+.foco-v6-shell .foco-atlas-pagination{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid rgba(200,240,64,.15);padding-top:18px;}
+.foco-v6-shell .foco-atlas-pagination button{min-height:44px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:12px;border:1px solid rgba(200,240,64,.36);color:#C8F040;padding:9px 11px;font-size:11px;font-weight:800;}
+.foco-v6-shell .foco-atlas-pagination button:disabled{opacity:.3;}
+.foco-v6-shell .foco-atlas-pagination>span{font-size:12px;color:#D3DDCA;}
+.foco-v6-shell .foco-atlas-credit{font-size:11px;line-height:1.55;color:#AFBCAB;}
+.foco-v6-shell .foco-atlas-credit a{color:#C8F040;text-decoration:underline;text-underline-offset:3px;}
+.foco-v6-shell .foco-atlas-empty{padding:25px;text-align:center;color:#BCCABB;font-size:12px;}
+.foco-atlas-modal{display:flex;flex-direction:column;gap:15px;padding:20px;background:#111911;}
+.foco-atlas-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.foco-atlas-modal-head h2{font-size:clamp(20px,5vw,28px);font-weight:850;line-height:1.1;letter-spacing:-.045em;margin-top:8px;overflow-wrap:anywhere;}
+.foco-atlas-modal-head button{min-width:44px;min-height:44px;color:#CDD9C7;display:grid;place-items:center;}
+.foco-atlas-media-detail{min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;border-radius:19px;border:1px solid rgba(200,240,64,.24);background:radial-gradient(ellipse at 50% 35%,#2C4027,#101811 73%);text-align:center;padding:12px;}
+.foco-atlas-media-detail>img{height:auto;max-width:min(100%,300px);max-height:330px;object-fit:contain;border-radius:12px;filter:grayscale(.1);}
+.foco-atlas-play{min-height:52px;display:flex;align-items:center;gap:8px;padding:12px 17px;border-radius:15px;background:#C8F040;color:#0E1A0E;font-size:12px;font-weight:850;}
+.foco-atlas-play:disabled{opacity:.47;}
+.foco-atlas-hide{min-height:44px;margin-top:10px;color:#C8F040;text-decoration:underline;font-size:12px;}
+.foco-atlas-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.foco-atlas-meta>div{min-width:0;display:flex;flex-direction:column;gap:6px;border:1px solid rgba(210,240,180,.18);border-radius:13px;padding:11px 9px;background:#1E2A1D;}
+.foco-atlas-meta span{font-size:10px;color:#AAC1A2;}
+.foco-atlas-meta strong{font-size:11px;line-height:1.4;overflow-wrap:anywhere;}
+.foco-atlas-steps h3{font-size:14px;font-weight:850;margin-bottom:10px;}
+.foco-atlas-steps ol{display:flex;flex-direction:column;gap:9px;counter-reset:steps;list-style:none;}
+.foco-atlas-steps li{font-size:12px;line-height:1.5;color:#D4DED0;padding-left:32px;position:relative;counter-increment:steps;}
+.foco-atlas-steps li::before{content:counter(steps);position:absolute;left:0;top:0;width:23px;height:23px;border-radius:8px;background:#314629;color:#C8F040;display:grid;place-items:center;font-size:10px;font-weight:800;}
+.foco-atlas-no-import{font-size:12px;line-height:1.55;color:#C0CDC0;border:1px dashed rgba(200,240,64,.28);padding:13px;border-radius:13px;}
+.foco-atlas-external button:focus-visible,.foco-atlas-curated button:focus-visible,.foco-atlas-modal button:focus-visible{
+  outline:2px solid #C8F040;outline-offset:3px;
+}
+@media(max-width:370px){
+  .foco-v6-shell .foco-atlas-source-tabs>button{padding:9px;}
+  .foco-v6-shell .foco-atlas-source-tabs>button span{font-size:12px;}
+  .foco-v6-shell .foco-atlas-external-top{flex-direction:column;}
+  .foco-v6-shell .foco-atlas-curated-grid,.foco-v6-shell .foco-atlas-external-grid{grid-template-columns:1fr;}
+  .foco-v6-shell .foco-atlas-curated-media{height:175px!important;}
+  .foco-v6-shell .foco-atlas-media-placeholder{height:155px;}
+}
+@media(min-width:720px){
+  .foco-v6-shell .foco-atlas-curated-grid,.foco-v6-shell .foco-atlas-external-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media(min-width:1150px){
+  .foco-v6-shell .foco-atlas-curated-grid,.foco-v6-shell .foco-atlas-external-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+}
+@media(prefers-reduced-motion:reduce){
+  .foco-v6-shell .foco-atlas-source-tabs>button{transition:none;}
+}
