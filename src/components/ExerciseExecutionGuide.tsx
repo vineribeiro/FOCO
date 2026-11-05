@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ExercisePhaseGallery } from './ExercisePhaseGallery';
+import { ExerciseDBPreview } from './ExerciseDBPreview';
 import {
   getExerciseDisplayName, getMuscleLabel,
   loadExerciseCatalog, normalizeExerciseText, type ExerciseCatalogItem,
@@ -56,6 +57,7 @@ export const ExerciseExecutionGuide: React.FC<Props> = ({ exerciseName, muscleGr
         muscleGroup={muscleGroup}
         fallbackPaths={exercise.images}
       />
+      <ExerciseDBPreview exerciseName={exercise.name} />
       <p className="text-[11px] leading-relaxed text-neutral-400">
         Guia educativo: confira técnica, amplitude e ajuste de carga com um profissional. As imagens não substituem avaliação individual.
       </p>

@@ -21,7 +21,9 @@
     "audit:anatomy-review-public": "node scripts/audit-anatomy-review-public.mjs",
     "test:motion": "node scripts/test-motion-system.mjs",
     "test:pro-quality": "node scripts/test-pro-quality.mjs",
-    "test:v2": "tsx scripts/test-foco-v2.ts"
+    "test:v2": "tsx scripts/test-foco-v2.ts",
+    "test:edb": "tsx scripts/test-exercisedb-beta.ts",
+    "test:edb:live": "node scripts/test-exercisedb-live.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
