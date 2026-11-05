@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { InstallAppButton } from '../components/InstallAppButton';
 import { soundEngine } from '../utils/soundEngine';
 import { useAuth } from '../context/AuthContext';
+import { applyUiPreferences, readUiPreferences, saveUiPreferences, type FocoUiPreferences } from '../utils/uiPreferences';
 import {
   ClipboardList,
   UserRound,
@@ -24,6 +25,14 @@ interface SettingsPageProps {
 export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
   const { logout } = useAuth();
   const [hapticsEnabled, setHapticsEnabled] = useState(() => soundEngine.getHapticsEnabled());
+  const [uiPreferences, setUiPreferences] = useState(readUiPreferences);
+  const [uiPreferencesError, setUiPreferencesError] = useState(false);
+  const changeUiPreferences = (change: Partial<FocoUiPreferences>) => {
+    const next = { ...uiPreferences, ...change };
+    setUiPreferences(next);
+    applyUiPreferences(next);
+    setUiPreferencesError(!saveUiPreferences(next));
+  };
   const setHaptics = (enabled: boolean) => { soundEngine.setHapticsEnabled(enabled); setHapticsEnabled(enabled); if (enabled) soundEngine.vibrate(40); };
 
   const settings = [
@@ -71,6 +80,36 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#D5FF40] px-4 text-xs font-extrabold text-[#10160D]">
           <RefreshCcw className="h-4 w-4"/> Atualizar
         </a>
+      </section>
+
+      <section className="foco-v4-panel space-y-4 p-5 sm:p-6" aria-labelledby="foco-ui-preferences-title">
+        <div>
+          <h2 id="foco-ui-preferences-title" className="text-base font-extrabold">Aparência do FOCO</h2>
+          <p className="mt-1 text-xs leading-relaxed text-neutral-400">Ajuste o espaço entre os elementos e a transparência das superfícies. Vale apenas neste dispositivo.</p>
+        </div>
+        <div role="group" aria-label="Densidade da interface">
+          <p className="mb-2 text-xs font-semibold text-neutral-300">Espaçamento</p>
+          <div className="grid grid-cols-2 gap-2">
+            {([['comfortable','Confortável'],['compact','Compacto']] as const).map(([value,label])=>
+              <button key={value} type="button" aria-pressed={uiPreferences.density===value}
+                onClick={()=>changeUiPreferences({density:value})}
+                className={'min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8F040] '+(uiPreferences.density===value?'border-[#C8F040] bg-[#C8F040] text-[#10160D]':'border-white/20 bg-white/5 text-white')}>
+                {label}
+              </button>)}
+          </div>
+        </div>
+        <div role="group" aria-label="Transparência das superfícies">
+          <p className="mb-2 text-xs font-semibold text-neutral-300">Transparência</p>
+          <div className="grid grid-cols-2 gap-2">
+            {([['balanced','Equilibrada'],['reduced','Reduzida']] as const).map(([value,label])=>
+              <button key={value} type="button" aria-pressed={uiPreferences.glass===value}
+                onClick={()=>changeUiPreferences({glass:value})}
+                className={'min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8F040] '+(uiPreferences.glass===value?'border-[#C8F040] bg-[#C8F040] text-[#10160D]':'border-white/20 bg-white/5 text-white')}>
+                {label}
+              </button>)}
+          </div>
+        </div>
+        {uiPreferencesError && <p role="alert" className="text-xs text-amber-200">Não foi possível guardar a preferência neste aparelho. Ela poderá voltar ao padrão após fechar o aplicativo.</p>}
       </section>
 
       <section aria-labelledby="foco-haptics-label" className="rounded-2xl border border-white/10 bg-[#141414] p-5 sm:p-6">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
+import { applyUiPreferences, readUiPreferences } from './utils/uiPreferences';
 import './index.css';
 import './foco-pro-tokens.css';
 import './foco-v6.css';
@@ -8,6 +9,7 @@ import './foco-v7-polish.css';
 import './foco-v8-fidelity.css';
 import './foco-motion.css';
 import './foco-pro-responsive.css';
+import './foco-v2-experience.css';
 
 class AppErrorBoundary extends React.Component<React.PropsWithChildren, { hasError: boolean }> {
   state = { hasError: false };
@@ -97,6 +99,7 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   else window.addEventListener('load', () => { void registerFocoWorker(); }, { once: true });
 }
 
+applyUiPreferences(readUiPreferences());
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   document.body.innerHTML = '<main style="background:#0A0A0A;color:white;min-height:100vh;padding:32px;font-family:Arial,sans-serif"><h1>FOCO</h1><p>Não foi encontrado o elemento principal do aplicativo. Atualize a página e tente novamente.</p></main>';

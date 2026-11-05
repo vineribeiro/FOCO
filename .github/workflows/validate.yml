@@ -36,6 +36,8 @@ jobs:
         run: npm run test:motion
       - name: FOCO PRO product design and beta readiness guardrails
         run: npm run test:pro-quality
+      - name: FOCO 2.0 interaction, skill and data-truth regression
+        run: npm run test:v2
       - name: Exercise image catalog audit
         run: npm run audit:images
       - name: Anatomy atlas manifest integrity
