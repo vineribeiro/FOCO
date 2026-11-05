@@ -32,3 +32,15 @@ Definir fluxo/estado e impacto → branch/PR → implementar sem alterar backend
 Nenhum gerador pode criar resultados, depoimentos, contagens, arquivos de terceiros ou promessas clínicas fictícias. Nunca commitar secrets. Nenhuma modificação visual pode perder rascunhos/séries em andamento. Diferencie **FOCO em Casa**, **Exercícios complementares** e **Cardio**.
 
 Outros detalhes: `docs/FOCO_SKILLS_DECISIONS.md`, `docs/FOCO_PRO_TEST_MATRIX.md`.
+
+## FOCO 2.0: protagonistas e hierarquia sem conflitos
+Cada mudança de interface **deve** começar por `foco-pro`, que arbitra a atividade e escolhe um líder técnico:
+1. **Impeccable (modo Operate):** direção de UX do app autenticado; aplicar `.agents/skills/impeccable/SKILL.md` e `reference/mode-operate.md` quando compatíveis com `DESIGN.md`.
+2. **Hue:** linguagem visual derivada do FOCO, apenas ao propor alterações de `DESIGN.md` ou tokens; `.agents/skills/hue/SKILL.md`.
+3. **Jakub (better-*):** dono dos critérios concretos de acessibilidade, layout, cor, tipografia, copy, componentes e estados.
+4. **LottieFiles Motion:** dono do timing e das microinterações funcionais; `.agents/skills/motion-design/SKILL.md`.
+5. **Taste + Hallmark:** líderes somente na futura landing page e comunicação comercial, **não** dentro da tela de registro de treino.
+
+Quando recomendações divergirem: integridade e segurança de dados > ergonomia e WCAG > design aprovado > tokens > timing > gosto e decoração. Propostas de Hue/Impeccable não podem substituir a identidade FOCO automaticamente; nenhuma skill de marketing tem autoridade para tornar o app operacional "uma seção por tela".
+
+Impeccable, Hue, Taste e Hallmark estão versionados em **subconjuntos documentais**, com licença na respectiva pasta. Binários, scripts, browsers, MCPs e instaladores globais **não** foram executados nem configurados por isso. `docs/FOCO_2_0_DELIVERY.md` distingue o que funciona daquilo que ainda falta.

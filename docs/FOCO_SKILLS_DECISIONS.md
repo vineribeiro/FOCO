@@ -36,3 +36,14 @@ O FOCO é uma PWA fitness com fluxo de registro de treino e dados pessoais. Esta
 
 ## Processo
 Cada PR declara qual skill governa a mudança, que arquivos foram alterados e que testes provaram o resultado. Nenhum benchmark, automação ou política aqui representa uma homologação independente de segurança, proteção de dados ou acessibilidade.
+
+## 05/11/2026 — Integração documental de quatro skills adicionais
+As pastas `.agents/skills/impeccable`, `.agents/skills/hue`, `.agents/skills/taste-skill` e `.agents/skills/hallmark` agora contêm seus `SKILL.md`, **referências selecionadas** e cópias das respectivas licenças. Isto é uma instalação **de instruções versionadas para agentes**, não do pacote de linha de comando completo. Links e atribuição preservados.
+
+- Impeccable: autoriza consultoria de UX, navegação e polimento do aplicativo, respeitando `DESIGN.md`; seu launcher `scripts/impeccable` **não** foi incluído nem executado.
+- Hue: documenta criação de linguagem visual, mas mudar logo/paleta/tema exige avaliação de design e comprovação em UI.
+- Taste/Hallmark: exclusivos de superfícies de aquisição/venda; não injetar JavaScript, templates, imagens ou dependências deles no treino.
+- Jakub + Lottie: continuam responsáveis por verificações concretas e movimento; sem qualquer motor de animação adicional no runtime.
+- Craftwork: permanece não instalado; requer auditoria dos assets comerciais e eventual conta/permissão.
+
+Critério para declarar algo "implementado": código executável, CI verde e verificação visual/funcional. Critério para declarar "pronto para vender": gates de segurança, acessibilidade, licenças e beta real documentados.

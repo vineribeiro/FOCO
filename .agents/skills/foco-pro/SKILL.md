@@ -32,3 +32,14 @@ Executar scripts de typecheck/build, os testes do produto, o guardrail `test:pro
 
 ## 6. Handoff
 Registrar: "feito e testado", "pendente de validação", "não iniciado". Não usar porcentagem de fidelidade sem método verificável. Não declarar o FOCO pronto para o mercado antes dos três gates de produto.
+
+## 7. Hierarquia das novas skills
+O FOCO PRO é o **roteador de trabalho**, não mais uma direção estética concorrente.
+- Produto / fluxos de treino: **Impeccable Operate** + `better-interface`; se divergir, o comportamento de uso real e `PRODUCT.md` prevalecem.
+- Sistema autoral: **Hue** propõe tokens e componentes, somente com identidade existente fixada e validação de contraste. `DESIGN.md` é o árbitro.
+- Foco e navegação: **Jakub better-accessibility**, critério obrigatório mesmo quando outro guia propuser gestos sem alternativa.
+- Motion: **LottieFiles** limita transições ao feedback funcional; estados, relógios e dados não recebem movimentos simulados.
+- Marketing: **Taste** define composição e **Hallmark** avalia originalidade apenas no site público comercial. Não afetam CSS da área autenticada.
+- Arte de exercícios: origem e licença precisam ser demonstradas; nenhuma skill visual pode gerar ilustração clinicamente imprecisa e divulgá-la como real.
+
+Esta entrega inclui arquivos `SKILL.md` e referências, **não** instala CLIs/binários que certas skills requerem. Quando uma função exigir script ou MCP ausente, registrar bloqueio e usar revisão manual sem declarar execução.
