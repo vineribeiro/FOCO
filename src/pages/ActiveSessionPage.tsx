@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { conciseWorkoutName } from '../utils/workoutTitles';
 import { loadWorkoutDraft, saveWorkoutDraft, clearWorkoutDraft } from '../utils/workoutDraft';
 import { api } from '../services/api';
-import { WorkoutPlan, WorkoutExercise } from '../types';
+import { WorkoutPlan, WorkoutExercise, WorkoutSession } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
 import { soundEngine } from '../utils/soundEngine';
 import { ExerciseExecutionGuide } from '../components/ExerciseExecutionGuide';
@@ -64,6 +64,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [sessionStarted, setSessionStarted] = useState(false);
   const [v6SessionMode,setV6SessionMode]=useState('register');
   const [v7ManualExerciseIndex,setV7ManualExerciseIndex]=useState<number | null>(null);
+  const [previousLoads, setPreviousLoads] = useState<Record<string, number>>({});
   const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
@@ -166,6 +167,26 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     }
     loadPlan();
   }, []);
+
+  // Optional history shortcut: only actually saved, completed series.
+  useEffect(() => {
+    let mounted = true;
+    api.getSessions().then((history: WorkoutSession[]) => {
+      if (!mounted) return;
+      const loads: Record<string, number> = {};
+      const ordered = [...history].filter(s => s.status === 'completed')
+        .sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime());
+      for (const session of ordered) {
+        for (const set of (session.sets || []).filter(s => s.completed)) {
+          const key = normalizeExerciseText(set.exercise_name || '');
+          const kg = Number(set.load_kg);
+          if (key && !Object.prototype.hasOwnProperty.call(loads, key) && Number.isFinite(kg) && kg > 0) loads[key] = kg;
+        }
+      }
+      setPreviousLoads(loads);
+    }).catch(() => { if (mounted) setPreviousLoads({}); });
+    return () => { mounted = false; };
+  }, [user?.id]);
 
   const initExerciseLogs = (exercises: WorkoutExercise[]) => {
     const logs: ExerciseLog[] = exercises.map((ex) => ({
@@ -630,6 +651,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const v7CompletedInExercise=v6CurrentExercise?.sets.filter(set=>set.completed).length||0;
   const v7WorkoutTitle=conciseWorkoutName([...new Set(exerciseLogs.map(ex=>ex.muscle_group).filter(Boolean))],activePlan?.name||'Meu treino');
   const v7ActiveRestSeconds=restTimerActive?restSecondsRemaining:(v6CurrentExercise?.rest_seconds||90);
+  const priorRecordedLoad=v6CurrentExercise?previousLoads[normalizeExerciseText(v6CurrentExercise.exercise_name)]:undefined;
   const v7GoExercise=(offset:number)=>{
     if(!exerciseLogs.length)return;
     setV7ManualExerciseIndex(Math.max(0,Math.min(exerciseLogs.length-1,v6ExIndex+offset)));
@@ -660,7 +682,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
               fetchPriority="high" loading="eager" decoding="async"
               onError={e=>{if(e.currentTarget.src!==FOCO_REFERENCE_BENCH)e.currentTarget.src=FOCO_REFERENCE_BENCH;}}/>
           : <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name}
-              muscleGroup={v6CurrentExercise.muscle_group} className="foco-v7-stage-illustration h-full w-full" />}
+              muscleGroup={v6CurrentExercise.muscle_group} presentation="editorial" className="foco-v7-stage-illustration h-full w-full" />}
         <span className="foco-v7-stage-tag">EXERCÍCIO {String(v6ExIndex+1).padStart(2,'0')} / {String(exerciseLogs.length).padStart(2,'0')}</span>
         <div className="foco-v7-stage-footer">
           <h2>{v6CurrentExercise.exercise_name}</h2>
@@ -704,6 +726,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             </div>
           </label>
         </section>
+        {v6TracksLoad && typeof priorRecordedLoad === 'number' && <div className="foco-v2-prior-load">
+          <span>Última carga registrada: <strong>{priorRecordedLoad.toLocaleString('pt-BR')} kg</strong></span>
+          <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'load_kg',priorRecordedLoad)} aria-label={'Usar carga anterior de '+priorRecordedLoad.toLocaleString('pt-BR')+' quilogramas'}>
+            Usar carga anterior
+          </button>
+        </div>}
         <section className={'foco-v7-rest-panel '+(restTimerActive?'is-running':'')} aria-label="Controle de descanso">
           <span className="foco-v7-rest-ring" style={{'--v6-rest-progress':v6RestRatio+'%'} as React.CSSProperties}>
             <Clock size={17}/>
