@@ -8,6 +8,16 @@ const read=(p:string)=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 
 // Contract: no implicit activation in CLI, unit tests or future commercial builds.
 assert.equal(isExerciseDBBetaAllowed(),false);
+const groups=['01_peito','02_costas','03_ombros','04_biceps','05_triceps','06_antebracos',
+ '07_quadriceps','08_posteriores','09_gluteos','10_panturrilhas','11_abdomen','12_lombar',
+ '13_trapezio','14_adutores_abdutores','15_funcionais_e_cardio'];
+const names=groups.flatMap(group=>
+ (JSON.parse(read('public/'+group+'.json')).exercicios as {nome:string}[]).map(ex=>ex.nome));
+assert.equal(names.length,254,'Curated beta catalog should contain 254 movements');
+for(const name of names){
+ assert.ok(candidateExerciseDBNames(name).length>0,'Missing English lookup candidate for '+name);
+}
+
 assert.ok(candidateExerciseDBNames('Leg press 45 graus').some(x=>x.includes('45')));
 assert.ok(candidateExerciseDBNames('Supino reto com barra').includes('barbell bench press'));
 assert.ok(candidateExerciseDBNames('Cadeira extensora').includes('leg extension'));

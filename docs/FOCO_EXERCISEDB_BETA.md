@@ -19,7 +19,7 @@ Documentação oficial: https://oss.exercisedb.dev/docs
 - Não faça download em massa de GIFs e não os inclua no repositório.
 
 ## Cobertura real
-O botão está disponível para **cada exercício com visualização detalhada**, mas **não existem 254 GIFs homologados**. O motor consulta o provedor e aceita só equivalências exatas. Os primeiros mapeamentos manuais cobrem movimentos frequentes; os demais aproveitam slugs já curados do RepDB, quando disponíveis. Não mostrar GIF para variação distinta e nem criar conteúdo fictício.
+O botão está disponível para **cada exercício com visualização detalhada**. Os **254 exercícios curados têm nomes de consulta configurados**, e uma regressão offline garante essa cobertura de candidatos. Porém **não existem 254 GIFs homologados**: só uma correspondência exata confirmada na API permite exibir a mídia. O motor consulta o provedor e aceita só equivalências exatas. Os primeiros mapeamentos manuais cobrem movimentos frequentes; os demais aproveitam slugs já curados do RepDB, quando disponíveis. Não mostrar GIF para variação distinta e nem criar conteúdo fictício.
 O endpoint gratuito tem limites e pode estar temporariamente indisponível. A execução do FOCO nunca depende dele.
 
 ## Comandos
