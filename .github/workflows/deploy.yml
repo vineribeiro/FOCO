@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: read
+  actions: write
   contents: read
   pages: write
   id-token: write
@@ -41,12 +41,50 @@ jobs:
         with:
           path: dist
 
+  clear-stale-pages:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Cancel competing automatic Pages workflows
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner, repo, per_page: 100
+            });
+            const conflicts = data.workflow_runs.filter(run =>
+              run.name === 'pages build and deployment' &&
+              ['queued', 'waiting', 'pending', 'in_progress', 'requested'].includes(run.status)
+            );
+            for (const run of conflicts) {
+              try {
+                core.info(`Cancelling competing Pages run #${run.id} (${run.status})`);
+                await github.rest.actions.cancelWorkflowRun({owner, repo, run_id: run.id});
+              } catch (error) {
+                core.warning(`Could not cancel run #${run.id}: ${error.message}`);
+              }
+            }
+            // A cancelled workflow may still have a Pages deployment releasing its lock.
+            for (let attempt = 0; attempt < 30; attempt++) {
+              const { data: current } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner, repo, per_page: 100
+              });
+              const busy = current.workflow_runs.some(run =>
+                run.name === 'pages build and deployment' &&
+                ['queued', 'waiting', 'pending', 'in_progress', 'requested'].includes(run.status)
+              );
+              if (!busy) return;
+              await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+            core.warning('An automatic Pages run is still active; deployment may need a later rerun.');
+
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, clear-stale-pages]
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
