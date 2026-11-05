@@ -133,7 +133,7 @@ try{
       // A visible release badge and new composition are required; a CSS-only deploy
       // that leaves the previous Home unchanged is not sufficient for this beta.
       const visualRelease=page.locator('.foco-21-version-pill');
-      assert.ok((await visualRelease.innerText()).includes('V2.2'),'FOCO 2.2 release badge must be visible');
+      assert.ok((await visualRelease.innerText()).includes('V2.3'),'FOCO 2.3 release badge must be visible');
       await page.locator('.foco-21-week-pulse').waitFor({timeout:4000});
       const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>({
         radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
@@ -145,7 +145,7 @@ try{
       await page.locator('.foco-21-exercise-media [data-foco-media-source="exercisedb"]').waitFor({timeout:7000});
       assert.equal(await page.locator('.foco-21-exercise-media img').count(),0,
         'Exercise stage must not render legacy images or load GIF before consent');
-      assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.2'),'FOCO 2.2 session marker must be visible');
+      assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.3'),'FOCO 2.3 session marker must be visible');
       await page.locator('.foco-21-exercise-media').waitFor({timeout:4000});
       const sessionLayout=await page.evaluate(()=>{
         const stage=document.querySelector('.foco-v7-session-stage');
