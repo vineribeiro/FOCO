@@ -13,7 +13,7 @@ const hudCss = read('src/foco-pro-responsive.css');
 const app = read('src/App.tsx');
 const skill = read('.agents/skills/foco-pro/SKILL.md');
 const ui = read('.agents/skills/better-interface/SKILL.md');
-assert.match(product,/comercialização pretendida para 2027/i);
+assert.match(product,/projeto pessoal não comercial em beta real/i);
 assert.match(product,/dados pessoais/i);
 assert.match(design,/Design System Canônico/);
 assert.match(decisions,/Craftwork Wizard/);

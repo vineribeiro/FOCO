@@ -1,3 +1,5 @@
+> **ARQUIVO HISTÓRICO — DECISÃO ALTERADA EM 05/11/2026.** O FOCO não será comercializado. Os gates técnicos de acessibilidade, privacidade, confiabilidade e testes ainda são válidos para o projeto pessoal, mas nenhuma seção abaixo representa cronograma ou intenção atual de venda.
+
 # FOCO PRO 2027 — Programa de beta real e prontidão comercial
 
 **Corte de planejamento:** 2026-11-05. **Status:** não lançado comercialmente.

@@ -3,7 +3,7 @@
 
 # FOCO — Regra de desenvolvimento para agentes
 
-Leia `PRODUCT.md` e `DESIGN.md` antes de propor mudanças. O FOCO está em **beta real** com comercialização pretendida para 2027; não declarar pronto para venda sem os gates de `docs/FOCO_PRO_2027.md`.
+Leia `PRODUCT.md` e `DESIGN.md` antes de propor mudanças. O FOCO está em **beta real não comercial**. Aplicar os critérios técnicos de qualidade independentemente de haver venda; o documento histórico `docs/FOCO_PRO_2027.md` não representa um plano atual de comercialização.
 
 ## Skill principal e arbitragem
 - **FOCO PRO (obrigatória neste projeto):** `.agents/skills/foco-pro/SKILL.md`. Ela escolhe as disciplinas e impede regras conflitantes.

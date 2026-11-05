@@ -1,4 +1,4 @@
-# FOCO — Design System Canônico (Beta 2026 → 2027)
+# FOCO — Design System Canônico (projeto pessoal não comercial)
 
 **Status:** identidade preservada, consolidação gradual em andamento. Este documento não aprova um redesenho geral.
 **Fonte atual de valores:** `src/foco-v6.css`, `src/foco-v7-polish.css`, `src/foco-v8-fidelity.css`, `src/foco-motion.css`. A folha `src/foco-pro-tokens.css` declara a nova nomenclatura sem substituir telas existentes.
