@@ -78,7 +78,7 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
     else dialogRef.current?.showModal();
   };
   return (
-    <div className={'relative isolate overflow-hidden rounded-2xl ' + (presentation === 'editorial' ? 'foco-v7-exercise-visual ' : 'border border-black/10 bg-[#F5F5F5] ') + className}>
+    <div data-foco-media-source={isAtlas ? 'atlas' : isRepDB ? 'repdb' : 'catalog'} className={'relative isolate overflow-hidden rounded-2xl ' + (presentation === 'editorial' ? 'foco-v7-exercise-visual ' : 'border border-black/10 bg-[#F5F5F5] ') + className}>
       {!compact && <div className="absolute left-3 top-3 z-10 rounded-full border border-black/10 bg-white/95 px-3 py-2 text-[11px] font-bold text-neutral-900 shadow-sm">
         {isAtlas ? 'FOCO · Atlas anatômico' : isRepDB ? 'RepDB · Execução ilustrada' : 'Foto de referência'}
       </div>}
@@ -106,6 +106,7 @@ export const ExerciseIllustration: React.FC<ExerciseIllustrationProps> = ({
         <div className={'absolute inset-0 flex flex-col items-center justify-center gap-2 text-center text-neutral-500 ' + (compact ? 'p-1' : 'px-6 pb-14 pt-12')}>
           <ImageOff className={compact ? 'h-5 w-5' : 'h-8 w-8'} aria-hidden="true" />
           {!compact && <p className="text-sm font-semibold text-neutral-800">Ilustração em preparação</p>}
+          {compact && <span className="sr-only">Imagem indisponível. Veja o guia de execução deste exercício.</span>}
           {!compact && <p className="text-xs leading-relaxed">Confira o passo a passo do exercício enquanto o atlas é revisado.</p>}
         </div>
       )}
