@@ -251,3 +251,14 @@ html[data-foco-density="compact"] .foco-v6-shell .foco-21-session .foco-v7-sessi
 @media(min-width:768px){
  html[data-foco-density="compact"] .foco-v6-shell .foco-21-session .foco-v7-session-stage{height:clamp(260px,34vh,340px);}
 }
+
+/* iOS WebKit magnifies the entire viewport when an input smaller than 16px
+ * receives focus. Preserve large workout numeric inputs via their more specific rules. */
+@media(max-width:767px){
+  .foco-v6-shell .foco-21-session input:not([type="checkbox"]):not([type="radio"]),
+  .foco-v6-shell .foco-21-session select,
+  .foco-v6-shell .foco-21-session textarea {font-size:16px;}
+  .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster input{
+    font-size:clamp(20px,5.5vw,27px);
+  }
+}
