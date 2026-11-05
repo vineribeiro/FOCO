@@ -37,6 +37,13 @@ assert.ok(read('src/components/ExerciseDBCatalogBrowser.tsx').includes('onClick=
 assert.ok(read('src/components/ExerciseDBCatalogBrowser.tsx').includes('result.nextCursor'));
 assert.ok(read('src/main.tsx').includes("import './foco-exercise-atlas.css'"));
 assert.ok(read('src/components/ExerciseIllustration.tsx').includes('data-foco-media-source="exercisedb"'));
+const stageMedia=read('src/components/ExerciseIllustration.tsx');
+assert.ok(stageMedia.includes("presentation === 'editorial'"),'Only active training stage should request a GIF');
+assert.ok(stageMedia.includes('getExerciseDBGifPreview(exerciseName)'),'Active stage must request a real ExerciseDB demo');
+assert.ok(stageMedia.includes('className="foco-edb-stage-gif"'),'Active stage must render the downloaded preview');
+assert.ok(stageMedia.includes('setFailedImage(true)'),'Handle broken remote GIF URLs');
+assert.ok(read('src/data/exerciseDbBeta.ts').includes("'incline dumbbell bench press'"),'Match alternate exact name for user-reported incline press');
+
 assert.ok(!read('src/components/ExerciseIllustration.tsx').includes('getRepDBIllustrations'));
 assert.ok(!read('src/components/ExerciseExecutionGuide.tsx').includes('ExercisePhaseGallery'));
 assert.ok(!read('src/pages/ActiveSessionPage.tsx').includes('legpress-45-foco.svg'));
