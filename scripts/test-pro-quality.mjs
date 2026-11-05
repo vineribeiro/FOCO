@@ -35,12 +35,12 @@ for(const route of ["cardio","complementares","em-casa","sessao"]){
  assert.match(app,new RegExp("case '"+route+"'"));
 }
 assert.match(read('src/foco-motion.css'),/prefers-reduced-motion:\s*reduce/);
-assert.match(read('src/main.tsx'),/import '\\.\\/foco-21-redesign\\.css'/);
+assert.ok(read('src/main.tsx').includes("import './foco-21-redesign.css'"));
 assert.match(read('src/pages/DashboardPage.tsx'),/foco-21-week-pulse/);
 assert.match(read('src/pages/DashboardPage.tsx'),/FOCO_VISUAL_RELEASE/);
 assert.match(read('src/pages/ActiveSessionPage.tsx'),/foco-21-exercise-media/);
 assert.match(read('src/pages/SettingsPage.tsx'),/FOCO_VISUAL_DATE/);
 assert.match(read('src/foco-21-redesign.css'),/mix-blend-mode:multiply/);
-assert.match(read('src/foco-21-redesign.css'),/min-height:clamp\\(390px,51dvh,520px\\)/);
+assert.ok(read('src/foco-21-redesign.css').includes("min-height:clamp(390px,51dvh,520px)"));
 assert.match(read('public/sw.js'),/foco-shell-20261105-v21/);
 console.log('FOCO PRO: product contract, skill hierarchy, 2.1 visual release and beta QA verified.');

@@ -78,16 +78,20 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.register(
         import.meta.env.BASE_URL + 'sw.js', { updateViaCache: 'none' }
       );
-      if (reg.waiting) showUpdateNotice();
+      // A first-time installation is not an available update to an older UI.
+      const alreadyControlled = Boolean(navigator.serviceWorker.controller);
+      if (alreadyControlled && reg.waiting) showUpdateNotice();
       reg.addEventListener('updatefound', () => {
         const installing = reg.installing;
         installing?.addEventListener('statechange', () => {
-          if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+          if (installing.state === 'installed' && alreadyControlled) {
             showUpdateNotice();
           }
         });
       });
-      navigator.serviceWorker.addEventListener('controllerchange', showUpdateNotice);
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (alreadyControlled) showUpdateNotice();
+      });
       await reg.update();
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') void reg.update().catch(() => {});
