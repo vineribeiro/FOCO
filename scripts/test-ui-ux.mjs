@@ -10,7 +10,7 @@ const session=read("src/pages/ActiveSessionPage.tsx");
 const dashboard=read("src/pages/DashboardPage.tsx");
 const details=read("src/pages/WorkoutDetailPage.tsx");
 const workout=read("src/pages/WorkoutsPage.tsx");
-const css=read("src/index.css")+"\n"+read("src/foco-v6.css")+"\n"+read("src/foco-v7-polish.css");
+const css=read("src/index.css")+"\n"+read("src/foco-pro-tokens.css")+"\n"+read("src/foco-v6.css")+"\n"+read("src/foco-v7-polish.css");
 
 for(const id of ["dashboard","sessao","progresso","treinos","perfil"]){
  assert.match(mobile,new RegExp("id:\\s*'"+id+"'"),"Mobile menu missing "+id);
@@ -57,7 +57,8 @@ assert.match(progress,/OkokEvolutionSection/);
 assert.match(progress,/htmlFor="foco-measurement-value"/);
 assert.match(progress,/dataUnavailable/);
 assert.match(progress,/role="alert"/);
-assert.match(css,/--v6-accent:#C8F040/);
+assert.match(css,/--foco-pro-accent:\\s*#C8F040/);
+assert.match(css,/--v6-accent:var\\(--foco-pro-accent,#C8F040\\)/);
 assert.match(css,/backdrop-filter:blur\(24px\)/);
 assert.match(css,/safe-area-inset-bottom/);
 assert.match(css,/prefers-reduced-motion/);
