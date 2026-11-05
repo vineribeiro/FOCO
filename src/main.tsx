@@ -91,7 +91,7 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
       const remote = await fetch(remoteUrl, { cache: 'no-store', credentials: 'omit' });
       if (!remote.ok) return;
       const html = await remote.text();
-      const match = html.match(/<meta\\s+name=["']foco-release["']\\s+content=["']([^"']+)["']/);
+      const match = html.match(/<meta\s+name=["']foco-release["']\s+content=["']([^"']+)["']/);
       if (match && match[1] !== FOCO_BUILD_ID) showUpdateNotice();
     } catch {
       // Offline/temporary outage is not evidence of an app update.

@@ -46,5 +46,5 @@ assert.ok(read('src/pages/ActiveSessionPage.tsx').includes('legpress-45-foco.svg
 assert.ok(read('src/pages/ActiveSessionPage.tsx').includes('supino-reto-foco.svg'));
 assert.match(read('public/assets/exercises/legpress-45-foco.svg'),/Leg press 45 graus/);
 assert.match(read('public/assets/exercises/supino-reto-foco.svg'),/Supino reto com barra/);
-assert.match(read('public/sw.js'),/foco-shell-20261105-v21/);
-console.log('FOCO PRO: product contract, skill hierarchy, 2.1 visual release and beta QA verified.');
+assert.match(read('public/sw.js'),/foco-shell-20261105-v22/);
+console.log('FOCO PRO: product contract, skill hierarchy, 2.2 release sync and beta QA verified.');
