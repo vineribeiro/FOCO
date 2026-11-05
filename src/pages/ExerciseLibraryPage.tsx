@@ -7,6 +7,8 @@ import { api } from '../services/api';
 import { WorkoutExercise, WorkoutPlan } from '../types';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { ExerciseDBPreview } from '../components/ExerciseDBPreview';
+import { ExerciseDBCatalogBrowser } from '../components/ExerciseDBCatalogBrowser';
+import { isExerciseDBBetaAllowed } from '../data/exerciseDbBeta';
 import { AccessibleDialog } from '../components/AccessibleDialog';
 import {
   ExerciseCatalogItem, getEquipmentLabel, getExerciseDisplayName, getMuscleLabel,
@@ -19,6 +21,8 @@ interface ExerciseLibraryPageProps {
 
 export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setActiveTab }) => {
   const [catalog, setCatalog] = useState<ExerciseCatalogItem[]>([]);
+  const [catalogSource, setCatalogSource] = useState<'foco' | 'exercisedb'>('foco');
+  const exerciseDBAvailable = isExerciseDBBetaAllowed();
   const [plans, setPlans] = useState<WorkoutPlan[]>([]);
   const [search, setSearch] = useState('');
   const [muscleFilter, setMuscleFilter] = useState('all');
@@ -126,7 +130,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
             <p className="foco-v4-eyebrow">FOCO / Exercícios</p>
             <h1 className="foco-v4-heading mt-2">Biblioteca</h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-400">
-              Explore os exercícios por grupo muscular, consulte a execução ilustrada e adicione movimentos à sua ficha.
+              Explore os movimentos, compare demonstrações e organize os exercícios da sua ficha.
             </p>
           </div>
           <span className="shrink-0 rounded-xl border border-white/10 bg-[#141414] px-3 py-2 text-right">
@@ -136,7 +140,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
           </span>
         </div>
 
-        <div className="relative">
+        {catalogSource === 'foco' && <div className="relative">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
           <input
             value={search}
@@ -146,9 +150,19 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
             aria-label="Buscar exercícios"
           />
           {search && <button type="button" onClick={() => setSearch('')} aria-label="Limpar busca" className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-neutral-400 hover:text-white"><X className="h-4 w-4" /></button>}
-        </div>
+        </div>}
       </header>
-
+      <div className="foco-atlas-source-tabs" role="tablist" aria-label="Fonte da biblioteca de exercícios">
+        <button type="button" role="tab" aria-selected={catalogSource==='foco'} onClick={()=>setCatalogSource('foco')}>
+          <span>FOCO</span><small>Curadoria e fichas</small>
+        </button>
+        {exerciseDBAvailable&&<button type="button" role="tab" aria-selected={catalogSource==='exercisedb'} onClick={()=>setCatalogSource('exercisedb')}>
+          <span>ExerciseDB <span className="foco-atlas-tab-beta">BETA</span></span><small>Exploração não comercial</small>
+        </button>}
+      </div>
+      {catalogSource==='exercisedb' && exerciseDBAvailable
+        ? <ExerciseDBCatalogBrowser curated={catalog} onOpenCurated={item=>{setCatalogSource('foco');setDetailExercise(item);}}/>
+        : <div className="foco-atlas-curated">
       <section className="foco-v4-panel flex min-h-20 items-center gap-3 p-4" aria-label="Guia de execução">
         <span className="foco-v4-info-icon"><Dumbbell className="h-5 w-5" /></span>
         <div>
@@ -206,11 +220,11 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="foco-atlas-curated-grid">
             {filteredExercises.slice(0, visibleCount).map((exercise) => (
-              <article key={exercise.id} className="overflow-hidden rounded-2xl border border-white/10 bg-[#141414] transition hover:border-white/35">
-                <button type="button" onClick={() => setDetailExercise(exercise)} aria-label={`Abrir execução de ${getExerciseDisplayName(exercise.name)}`} className="block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                  <ExerciseIllustration exerciseId={exercise.id} exerciseName={exercise.name} muscleGroup={getMuscleLabel(exercise.primaryMuscles[0] || '')} imagePaths={exercise.images} className="h-44 w-full rounded-none border-0 sm:h-48" showCaption />
+              <article key={exercise.id} className="foco-atlas-curated-card">
+                <button type="button" onClick={() => setDetailExercise(exercise)} aria-label={`Abrir execução de ${getExerciseDisplayName(exercise.name)}`} className="foco-atlas-curated-open block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8F040]">
+                  <ExerciseIllustration exerciseId={exercise.id} exerciseName={exercise.name} muscleGroup={getMuscleLabel(exercise.primaryMuscles[0] || '')} imagePaths={exercise.images} presentation="editorial" className="foco-atlas-curated-media h-44 w-full rounded-none border-0 sm:h-48" />
                   <div className="p-4">
                     <p className="text-xs font-semibold text-neutral-300">{getMuscleLabel(exercise.primaryMuscles[0] || 'Geral')}</p>
                     <h2 className="mt-1 text-base font-bold leading-snug">{getExerciseDisplayName(exercise.name)}</h2>
@@ -220,7 +234,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
                     </span>
                   </div>
                 </button>
-                <div className="flex items-center justify-between gap-3 border-t border-white/10 px-3 py-3">
+                <div className="foco-atlas-curated-actions flex items-center justify-between gap-3 border-t border-white/10 px-3 py-3">
                   <p className="truncate text-[10px] text-neutral-500">{exercise.secondaryMuscles.length ? `Também trabalha ${exercise.secondaryMuscles.slice(0,2).map(getMuscleLabel).join(', ')}` : 'Exercício principal'}</p>
                   <button type="button" onClick={() => { setSelectedExercise(exercise); setActionMessage(null); }} className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-xs font-bold text-black transition hover:bg-neutral-200">
                     <Plus className="h-3.5 w-3.5" /> Adicionar ao meu plano
@@ -388,6 +402,7 @@ export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setAct
           </div>
         </AccessibleDialog>
       )}
+        </div>}
     </div>
   );
 };
