@@ -70,7 +70,6 @@
 .foco-v6-shell .foco-v7-adjuster button,
 .foco-v6-shell .foco-v7-next-exercise{min-height:44px;}
 /* User-selectable density and transparent-surface comfort, both stored only on this device. */
-html[data-foco-density="compact"] .foco-v6-shell .foco-v7-session-stage {height:clamp(235px,32dvh,310px);}
 html[data-foco-density="compact"] .foco-v6-shell .foco-v6-hero {min-height:260px;}
 html[data-foco-density="compact"] .foco-v6-shell .foco-v6-mini-panel{min-height:90px;}
 html[data-foco-glass="reduced"] .foco-v6-shell .foco-v6-glass,
