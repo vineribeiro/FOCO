@@ -17,26 +17,6 @@
 .foco-v6-shell .foco-v7-adjuster button:focus-visible,
 .foco-v6-shell .foco-v7-stage-expand:focus-visible,
 .foco-v6-shell .foco-v2-prior-load button:focus-visible { outline:2px solid var(--foco-v2-focus);outline-offset:3px; }
-/* Compact, non-interactive exercise preview. Full gallery is in the Execução tab. */
-.foco-v6-shell .foco-v7-session-stage {
-  background:radial-gradient(ellipse at 65% 17%,#303b27 0%,#111a11 58%,#080d09 100%);
-  overflow:hidden;
-}
-.foco-v6-shell .foco-v7-stage-illustration.foco-v7-exercise-visual {
-  background:transparent !important;border:0 !important;border-radius:0 !important;
-  isolation:isolate;pointer-events:none;
-}
-.foco-v6-shell .foco-v7-stage-illustration .foco-v7-exercise-image {
-  display:block;box-sizing:border-box;width:100% !important;height:100% !important;
-  max-width:100%;max-height:100%;object-fit:contain !important;object-position:center 38%;
-  padding:18px 12px 82px;border:0;background:transparent !important;filter:saturate(.82) brightness(.85);
-}
-.foco-v6-shell .foco-v7-stage-illustration[data-foco-media-source="repdb"] .foco-v7-exercise-image {
-  filter:saturate(.66) brightness(.8) contrast(1.08);
-}
-.foco-v6-shell .foco-v7-session-stage:after {
-  background:linear-gradient(0deg,rgba(7,10,7,.99) 0%,rgba(7,10,7,.85) 23%,rgba(7,10,7,.10) 72%,transparent 100%);
-}
 .foco-v6-shell .foco-v7-stage-footer {z-index:3;padding-inline:clamp(16px,4vw,24px);}
 .foco-v6-shell .foco-v7-stage-footer h2 {
   overflow-wrap:anywhere;max-width:calc(100% - 45px);letter-spacing:-.04em;line-height:1.06;

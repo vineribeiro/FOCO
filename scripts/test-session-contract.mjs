@@ -2,10 +2,10 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const id=read('src/utils/release.ts').match(/FOCO_BUILD_ID = '([^']+)'/)?.[1];
-assert.equal(id,'2026-11-05-v22','Runtime release must be explicit');
+assert.equal(id,'2026-11-05-v23','Runtime release must be explicit');
 assert.ok(read('index.html').includes('name="foco-release" content="'+id+'"'),'HTML release must match bundle');
-assert.ok(read('public/sw.js').includes('foco-shell-20261105-v22'),'Service Worker must advance with UI release');
-assert.ok(read('public/atualizar.html').includes('20261105-v22'),'Manual refresh must use current release');
+assert.ok(read('public/sw.js').includes('foco-shell-20261105-v23'),'Service Worker must advance with UI release');
+assert.ok(read('public/atualizar.html').includes('20261105-v23'),'Manual refresh must use current release');
 assert.ok(read('src/main.tsx').includes('verifyPublishedRelease'),'Open tabs must check new published version');
 assert.ok(read('src/main.tsx').includes("fetch(remoteUrl, { cache: 'no-store'"),'Release check must bypass stale HTML cache');
 const v7=read('src/foco-v7-polish.css'),v2=read('src/foco-v2-experience.css'),v21=read('src/foco-21-redesign.css');
@@ -18,4 +18,4 @@ for(const rule of ['height:clamp(218px,30dvh,290px)','height:clamp(285px,38vh,38
 }
 assert.ok(!v21.includes('height:clamp(330px,44dvh,470px)'));
 assert.ok(!v21.includes('font-size:clamp(30px,8.4vw,47px)'));
-console.log('FOCO 2.2: release metadata, proportional workout and CSS ownership verified.');
+console.log('FOCO 2.3: release metadata, proportional workout and CSS ownership verified.');

@@ -1,408 +1,101 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import {
-  ArrowUpRight, CheckCircle2, ChevronDown, Dumbbell, Filter,
-  LoaderCircle, Plus, Search, X
-} from 'lucide-react';
-import { api } from '../services/api';
-import { WorkoutExercise, WorkoutPlan } from '../types';
-import { ExerciseIllustration } from '../components/ExerciseIllustration';
-import { ExerciseDBPreview } from '../components/ExerciseDBPreview';
-import { ExerciseDBCatalogBrowser } from '../components/ExerciseDBCatalogBrowser';
-import { isExerciseDBBetaAllowed } from '../data/exerciseDbBeta';
-import { AccessibleDialog } from '../components/AccessibleDialog';
-import {
-  ExerciseCatalogItem, getEquipmentLabel, getExerciseDisplayName, getMuscleLabel,
-  getPreferredTrainingDay, getTrainingDayLabel, loadExerciseCatalog, MUSCLE_FILTERS, savePreferredTrainingDay, TRAINING_DAYS
-} from '../data/exerciseLibrary';
+import React,{useEffect,useState} from 'react';
+import {CheckCircle2,Dumbbell,Plus,X} from 'lucide-react';
+import {api} from '../services/api';
+import {AccessibleDialog} from '../components/AccessibleDialog';
+import {ExerciseDBCatalogBrowser} from '../components/ExerciseDBCatalogBrowser';
+import type {ExternalExercise} from '../data/exerciseDbCatalog';
+import {getPreferredTrainingDay,getTrainingDayLabel,savePreferredTrainingDay,TRAINING_DAYS} from '../data/exerciseLibrary';
+import type {WorkoutExercise,WorkoutPlan} from '../types';
 
-interface ExerciseLibraryPageProps {
-  setActiveTab: (tab: string) => void;
-}
+interface Props {setActiveTab:(tab:string)=>void}
 
-export const ExerciseLibraryPage: React.FC<ExerciseLibraryPageProps> = ({ setActiveTab }) => {
-  const [catalog, setCatalog] = useState<ExerciseCatalogItem[]>([]);
-  const [catalogSource, setCatalogSource] = useState<'foco' | 'exercisedb'>('foco');
-  const exerciseDBAvailable = isExerciseDBBetaAllowed();
-  const [plans, setPlans] = useState<WorkoutPlan[]>([]);
-  const [search, setSearch] = useState('');
-  const [muscleFilter, setMuscleFilter] = useState('all');
-  const [equipmentFilter, setEquipmentFilter] = useState('all');
-  const [visibleCount, setVisibleCount] = useState(36);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
-  const [selectedExercise, setSelectedExercise] = useState<ExerciseCatalogItem | null>(null);
-  const [selectedTrainingDay, setSelectedTrainingDay] = useState<string>(() => getPreferredTrainingDay());
-  const [detailExercise, setDetailExercise] = useState<ExerciseCatalogItem | null>(null);
-  const [addingPlanId, setAddingPlanId] = useState<string | null>(null);
-  const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+/** Single-source library. Historic user workouts are not deleted or migrated. */
+export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
+  const [plans,setPlans]=useState<WorkoutPlan[]>([]);
+  const [plansError,setPlansError]=useState('');
+  const [selected,setSelected]=useState<ExternalExercise|null>(null);
+  const [ownName,setOwnName]=useState('');
+  const [ownGroup,setOwnGroup]=useState('Geral');
+  const [ownDay,setOwnDay]=useState(getPreferredTrainingDay);
+  const [saving,setSaving]=useState<string|null>(null);
+  const [notice,setNotice]=useState<{type:'error'|'success';text:string}|null>(null);
 
-  useEffect(() => {
-    let active = true;
-    Promise.allSettled([loadExerciseCatalog(), api.getWorkouts()])
-      .then(([exerciseResult, plansResult]) => {
-        if (!active) return;
-        if (exerciseResult.status === 'fulfilled') {
-          setCatalog(exerciseResult.value);
-        } else {
-          setLoadError(exerciseResult.reason instanceof Error ? exerciseResult.reason.message : 'Não foi possível carregar a biblioteca.');
-        }
-        if (plansResult.status === 'fulfilled') {
-          setPlans(plansResult.value);
-        } else {
-          setActionMessage({ type: 'error', text: 'Não foi possível carregar suas fichas. Tente atualizar a página antes de adicionar exercícios.' });
-        }
-      })
-      .finally(() => { if (active) setIsLoading(false); });
-    return () => { active = false; };
-  }, []);
-
-  const equipmentOptions = useMemo(() => {
-    const unique = Array.from(new Set(catalog.map((exercise) => exercise.equipment).filter(Boolean)));
-    return unique.sort((a, b) => getEquipmentLabel(a).localeCompare(getEquipmentLabel(b), 'pt-BR'));
-  }, [catalog]);
-
-  const filteredExercises = useMemo(() => {
-    const term = search.trim().toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    return catalog.filter((exercise) => {
-      const name = getExerciseDisplayName(exercise.name);
-      const searchable = [
-        exercise.name, name, ...exercise.primaryMuscles.map(getMuscleLabel),
-        ...exercise.secondaryMuscles.map(getMuscleLabel), getEquipmentLabel(exercise.equipment),
-        ...exercise.instructions.slice(0, 2)
-      ].join(' ').toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      const matchesSearch = !term || searchable.includes(term);
-      const muscles = [...exercise.primaryMuscles, ...exercise.secondaryMuscles];
-      const matchesMuscle = muscleFilter === 'all' || (muscleFilter === 'back'
-        ? muscles.some((muscle) => ['lats', 'middle back', 'lower back', 'traps'].includes(muscle))
-        : muscles.includes(muscleFilter));
-      const matchesEquipment = equipmentFilter === 'all' || exercise.equipment === equipmentFilter;
-      return matchesSearch && matchesMuscle && matchesEquipment;
-    });
-  }, [catalog, search, muscleFilter, equipmentFilter]);
-
-  useEffect(() => { setVisibleCount(36); }, [search, muscleFilter, equipmentFilter]);
-
-  const addExercise = async (plan: WorkoutPlan, exercise: ExerciseCatalogItem) => {
-    const displayName = getExerciseDisplayName(exercise.name);
-    const duplicate = (plan.exercises || []).some((item) =>
-      item.exercise_name.trim().toLocaleLowerCase('pt-BR') === displayName.trim().toLocaleLowerCase('pt-BR')
-      && (item.training_day || '') === (selectedTrainingDay || '')
-    );
-    if (duplicate) {
-      setActionMessage({ type: 'error', text: 'Este exercício já está neste dia da ficha. Ajuste a ficha existente em vez de duplicar.' });
-      return;
-    }
-    setAddingPlanId(plan.id);
-    setActionMessage(null);
-    const workoutExercise: WorkoutExercise = {
-      exercise_name: displayName,
-      muscle_group: getMuscleLabel(exercise.primaryMuscles[0] || 'general'),
-      sets: 3,
-      reps_min: 8,
-      reps_max: 12,
-      rest_seconds: 60,
-      suggested_load_kg: 0,
-      notes: '',
-      training_day: selectedTrainingDay as WorkoutExercise['training_day'],
-    };
-    try {
-      const saved = await api.addExerciseToWorkout(plan.id, workoutExercise);
-      setPlans((current) => current.map((item) =>
-        item.id === plan.id ? { ...item, exercises: [...(item.exercises || []), saved] } : item
-      ));
-      setSelectedExercise(null);
-      setActionMessage({ type: 'success', text: `${displayName} foi adicionado à ${getTrainingDayLabel(selectedTrainingDay)} de “${plan.name}”.` });
-    } catch (error: unknown) {
-      setActionMessage({
-        type: 'error',
-        text: error instanceof Error ? error.message : 'Não foi possível adicionar o exercício.',
-      });
-    } finally {
-      setAddingPlanId(null);
-    }
+  useEffect(()=>{
+    let active=true;
+    api.getWorkouts().then(value=>{if(active)setPlans(value);})
+      .catch(()=>{if(active)setPlansError('Não foi possível carregar tuas fichas. A biblioteca externa continua acessível.');});
+    return ()=>{active=false;};
+  },[]);
+  const startAdd=(remote:ExternalExercise)=>{
+    // Remote metadata is for display only. No name, ID or GIF is copied to storage.
+    setSelected(remote);setOwnName('');setOwnGroup('Geral');setNotice(null);
   };
-
-  return (
-    <div className="foco-v4-page space-y-5 text-white">
-      <header className="space-y-3">
+  const addToPlan=async(plan:WorkoutPlan)=>{
+    const typed=ownName.trim().replace(/\s+/g,' ');
+    if(typed.length<3||typed.length>100){setNotice({type:'error',text:'Escreve um nome próprio de 3 a 100 caracteres para usar na tua ficha.'});return;}
+    if(plans.some(p=>p.id===plan.id&&p.exercises?.some(e=>
+      e.exercise_name.trim().toLocaleLowerCase('pt-BR')===typed.toLocaleLowerCase('pt-BR')
+      &&(e.training_day||'')===ownDay))){
+      setNotice({type:'error',text:'Já existe um exercício com esse nome neste dia da ficha.'});return;
+    }
+    setSaving(plan.id);setNotice(null);
+    const exercise:WorkoutExercise={
+      exercise_name:typed,muscle_group:ownGroup,sets:3,reps_min:8,reps_max:12,
+      rest_seconds:60,suggested_load_kg:0,notes:'',training_day:ownDay as WorkoutExercise['training_day'],
+    };
+    try{
+      const saved=await api.addExerciseToWorkout(plan.id,exercise);
+      setPlans(current=>current.map(p=>p.id===plan.id?{...p,exercises:[...(p.exercises||[]),saved]}:p));
+      setSelected(null);setOwnName('');
+      setNotice({type:'success',text:typed+' foi adicionado à '+getTrainingDayLabel(ownDay)+' de '+plan.name+'.'});
+    }catch(error){
+      setNotice({type:'error',text:'Não foi possível salvar o exercício: '+(error instanceof Error?error.message:'tenta novamente.')});
+    }finally{setSaving(null);}
+  };
+  return <div className="foco-v4-page foco-atlas-library-page">
+    <header className="foco-atlas-library-header">
+      <div><p className="foco-v4-eyebrow">FOCO / BIBLIOTECA</p><h1>Exercícios</h1>
+        <p>Explore a ExerciseDB. Sem imagens duplicadas, catálogos paralelos ou informações antigas misturadas.</p></div>
+      <span className="foco-atlas-library-source"><Dumbbell size={16}/> EXERCISEDB</span>
+    </header>
+    {notice&&<div role="status" className="foco-atlas-alert">
+      <span>{notice.text}</span><button type="button" onClick={()=>setNotice(null)} aria-label="Fechar aviso"><X size={17}/></button></div>}
+    <ExerciseDBCatalogBrowser onUseExercise={startAdd}/>
+    {selected&&<AccessibleDialog title="Adicionar exercício à ficha" onClose={()=>{setSelected(null);setNotice(null);}}>
+      <div className="foco-atlas-add-modal">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="foco-v4-eyebrow">FOCO / Exercícios</p>
-            <h1 className="foco-v4-heading mt-2">Biblioteca</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-400">
-              Explore os movimentos, compare demonstrações e organize os exercícios da sua ficha.
-            </p>
-          </div>
-          {catalogSource==='foco'&&<span className="shrink-0 rounded-xl border border-white/10 bg-[#141414] px-3 py-2 text-right">
-            <strong className="block text-xl tabular-nums">{catalog.length || '—'}</strong>
-            <span className="block text-xs font-semibold text-neutral-400">exercícios</span>
-            {!isLoading && <span className="mt-1 block text-xs text-neutral-500">{catalog.filter((item) => item.images.length > 0).length} ilustrados</span>}
-          </span>}
+          <div><p className="foco-atlas-kicker">TUA FICHA / NOME PERSONALIZADO</p>
+            <h2>Adicionar um movimento</h2></div>
+          <button type="button" onClick={()=>setSelected(null)} aria-label="Fechar"><X size={20}/></button>
         </div>
-
-        {catalogSource === 'foco' && <div className="relative">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
-          <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Buscar exercício, músculo ou equipamento..."
-            className="foco-v4-field !w-full !pl-10 !pr-10 placeholder:text-neutral-500"
-            aria-label="Buscar exercícios"
-          />
-          {search && <button type="button" onClick={() => setSearch('')} aria-label="Limpar busca" className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-neutral-400 hover:text-white"><X className="h-4 w-4" /></button>}
-        </div>}
-      </header>
-      <div className="foco-atlas-source-tabs" role="tablist" aria-label="Fonte da biblioteca de exercícios">
-        <button type="button" role="tab" aria-selected={catalogSource==='foco'} onClick={()=>setCatalogSource('foco')}>
-          <span>FOCO</span><small>Curadoria e fichas</small>
-        </button>
-        {exerciseDBAvailable&&<button type="button" role="tab" aria-selected={catalogSource==='exercisedb'} onClick={()=>setCatalogSource('exercisedb')}>
-          <span>ExerciseDB <span className="foco-atlas-tab-beta">BETA</span></span><small>Exploração não comercial</small>
-        </button>}
-      </div>
-      {catalogSource==='exercisedb' && exerciseDBAvailable
-        ? <ExerciseDBCatalogBrowser curated={catalog} onOpenCurated={item=>{setCatalogSource('foco');setDetailExercise(item);}}/>
-        : <div className="foco-atlas-curated">
-      <section className="foco-v4-panel flex min-h-20 items-center gap-3 p-4" aria-label="Guia de execução">
-        <span className="foco-v4-info-icon"><Dumbbell className="h-5 w-5" /></span>
-        <div>
-          <h2 className="text-sm font-extrabold">Guia de execução</h2>
-          <p className="mt-1 text-xs leading-relaxed text-neutral-400">Abra um exercício para ver imagens, músculos envolvidos e orientações quando disponíveis.</p>
-        </div>
-      </section>
-
-      {actionMessage && (
-        <div className={`flex items-start justify-between gap-3 rounded-xl border p-3 text-sm ${actionMessage.type === 'success' ? 'border-white/15 bg-white/10 text-white' : 'border-white/30 bg-white/5 text-neutral-100'}`} role="status">
-          <span>{actionMessage.text}</span>
-          <button type="button" onClick={() => setActionMessage(null)} aria-label="Fechar aviso"><X className="h-4 w-4" /></button>
-        </div>
-      )}
-
-      <section className="space-y-3">
-        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-neutral-500"><Filter className="h-3.5 w-3.5" /> Grupo muscular</div>
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {MUSCLE_FILTERS.map((filter) => (
-            <button key={filter.value} type="button" onClick={() => setMuscleFilter(filter.value)} className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-bold transition ${muscleFilter === filter.value ? 'border-white bg-white text-black' : 'border-white/10 bg-[#141414] text-neutral-400 hover:text-white'}`}>
-              {filter.label}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs text-neutral-500">{isLoading ? 'Carregando catálogo...' : `${filteredExercises.length} exercícios encontrados`}</p>
-        <label className="flex items-center gap-2 text-xs text-neutral-400">
-          Equipamento
-          <select value={equipmentFilter} onChange={(event) => setEquipmentFilter(event.target.value)} className="max-w-[190px] rounded-lg border border-white/10 bg-[#141414] px-3 py-2 text-white outline-none">
-            <option value="all">Todos</option>
-            {equipmentOptions.map((equipment) => <option key={equipment} value={equipment}>{getEquipmentLabel(equipment)}</option>)}
+        <p>A ExerciseDB é uma referência visual. Para salvar na tua ficha, escreve tu mesmo o nome que queres usar. Não copiamos os dados do fornecedor para o banco.</p>
+        <label className="foco-atlas-form-field">Nome que tu escolheste
+          <input value={ownName} onChange={e=>setOwnName(e.target.value)} maxLength={100} autoComplete="off"
+            placeholder="Ex.: supino reto com barra" aria-label="Nome personalizado do exercício"/>
+        </label>
+        <label className="foco-atlas-form-field">Grupo muscular da tua ficha
+          <select value={ownGroup} onChange={e=>setOwnGroup(e.target.value)} aria-label="Grupo muscular">
+            {['Geral','Peito','Costas','Ombros','Bíceps','Tríceps','Pernas','Quadríceps','Posteriores','Glúteos','Panturrilhas','Abdômen','Cardio'].map(group=><option key={group} value={group}>{group}</option>)}
           </select>
         </label>
-      </section>
-
-      {loadError && (
-        <div className="rounded-2xl border border-white/30 bg-white/5 p-5">
-          <p className="text-sm font-bold">Não foi possível carregar a biblioteca.</p>
-          <p className="mt-1 text-xs text-neutral-300">{loadError}</p>
-          <button type="button" onClick={() => window.location.reload()} className="mt-3 rounded-lg bg-white px-4 py-2 text-xs font-black text-black">Tentar novamente</button>
-        </div>
-      )}
-
-      {isLoading ? (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {[1,2,3,4,5,6].map((key) => <div key={key} className="h-72 animate-pulse rounded-2xl border border-white/5 bg-[#141414]" />)}
-        </div>
-      ) : !loadError && filteredExercises.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/10 bg-[#141414] px-5 py-14 text-center">
-          <Dumbbell className="mx-auto h-8 w-8 text-neutral-600" />
-          <p className="mt-3 text-sm font-bold">Nenhum exercício encontrado</p>
-          <p className="mt-1 text-xs text-neutral-500">Tente outro termo ou remova um filtro.</p>
-        </div>
-      ) : (
-        <>
-          <div className="foco-atlas-curated-grid">
-            {filteredExercises.slice(0, visibleCount).map((exercise) => (
-              <article key={exercise.id} className="foco-atlas-curated-card">
-                <button type="button" onClick={() => setDetailExercise(exercise)} aria-label={`Abrir execução de ${getExerciseDisplayName(exercise.name)}`} className="foco-atlas-curated-open block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8F040]">
-                  <ExerciseIllustration exerciseId={exercise.id} exerciseName={exercise.name} muscleGroup={getMuscleLabel(exercise.primaryMuscles[0] || '')} imagePaths={exercise.images} presentation="editorial" className="foco-atlas-curated-media h-44 w-full rounded-none border-0 sm:h-48" />
-                  <div className="p-4">
-                    <p className="text-xs font-semibold text-neutral-300">{getMuscleLabel(exercise.primaryMuscles[0] || 'Geral')}</p>
-                    <h2 className="mt-1 text-base font-bold leading-snug">{getExerciseDisplayName(exercise.name)}</h2>
-                    <p className="mt-2 text-xs text-neutral-500">{getEquipmentLabel(exercise.equipment)} · {exercise.level === 'beginner' ? 'Iniciante' : exercise.level === 'intermediate' ? 'Intermediário' : exercise.level === 'expert' ? 'Avançado' : exercise.level}</p>
-                    <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-neutral-300 hover:text-white">
-                      Toque para ver execução e passo a passo <ArrowUpRight className="h-3.5 w-3.5" />
-                    </span>
-                  </div>
-                </button>
-                <div className="foco-atlas-curated-actions flex items-center justify-between gap-3 border-t border-white/10 px-3 py-3">
-                  <p className="truncate text-[10px] text-neutral-500">{exercise.secondaryMuscles.length ? `Também trabalha ${exercise.secondaryMuscles.slice(0,2).map(getMuscleLabel).join(', ')}` : 'Exercício principal'}</p>
-                  <button type="button" onClick={() => { setSelectedExercise(exercise); setActionMessage(null); }} className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-white px-3 py-2 text-xs font-bold text-black transition hover:bg-neutral-200">
-                    <Plus className="h-3.5 w-3.5" /> Adicionar ao meu plano
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-          {visibleCount < filteredExercises.length && (
-            <button type="button" onClick={() => setVisibleCount((count) => count + 36)} className="mx-auto flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10">
-              Carregar mais exercícios <ChevronDown className="h-4 w-4" />
-            </button>
-          )}
-        </>
-      )}
-
-      <footer className="rounded-xl border border-white/10 bg-[#101010] p-3 text-xs leading-relaxed text-neutral-400">
-        As imagens são referências ilustrativas em tons de cinza. Toque para ampliar e consultar as etapas de execução; não substituem orientação profissional.
-      </footer>
-
-      {selectedExercise && (
-        <AccessibleDialog title="Adicionar exercício à ficha" onClose={() => setSelectedExercise(null)}>
-          <div className="w-full bg-[#101010] p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Adicionar à minha ficha</p>
-                <h2 className="mt-1 text-lg font-black">{getExerciseDisplayName(selectedExercise.name)}</h2>
-                <p className="mt-1 text-xs text-neutral-400">Escolha o dia da semana e depois a ficha de destino — como adicionar uma música a uma playlist.</p>
-              </div>
-              <button type="button" onClick={() => setSelectedExercise(null)} className="rounded-lg p-2 text-neutral-400 hover:bg-white/10 hover:text-white" aria-label="Fechar"><X className="h-4 w-4" /></button>
-            </div>
-            <div className="mt-4 grid grid-cols-[104px_1fr] gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-3">
-              <ExerciseIllustration exerciseId={selectedExercise.id} exerciseName={selectedExercise.name} muscleGroup={getMuscleLabel(selectedExercise.primaryMuscles[0] || '')} imagePaths={selectedExercise.images} className="h-44 w-full" showCaption />
-              <div className="py-1">
-                <p className="text-xs font-bold">{getMuscleLabel(selectedExercise.primaryMuscles[0] || 'Geral')}</p>
-                <p className="mt-1 text-[10px] text-neutral-500">{selectedExercise.equipmentDisplay || getEquipmentLabel(selectedExercise.equipment)}</p>
-                <p className="mt-3 text-[10px] leading-relaxed text-neutral-400">Configuração inicial: 3 séries · 8–12 repetições · 60 s de descanso. Você pode ajustar a ficha depois.</p>
-              </div>
-            </div>
-            <ExerciseDBPreview exerciseName={getExerciseDisplayName(selectedExercise.name)} compact />
-            <div className="mt-4 space-y-2">
-              <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Adicionar ao dia</p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {TRAINING_DAYS.map((day) => (
-                  <button
-                    key={day.value}
-                    type="button"
-                    aria-pressed={selectedTrainingDay === day.value}
-                    onClick={() => { setSelectedTrainingDay(day.value); savePreferredTrainingDay(day.value); }}
-                    className={`rounded-xl border px-3 py-2.5 text-left text-xs font-bold transition ${selectedTrainingDay === day.value ? 'border-white bg-white text-black' : 'border-white/10 bg-[#171717] text-neutral-400 hover:border-white/30 hover:text-white'}`}
-                  >
-                    <span className="block">{day.shortLabel}</span>
-                    <span className={`mt-0.5 block text-[9px] ${selectedTrainingDay === day.value ? 'text-neutral-600' : 'text-neutral-600'}`}>{selectedTrainingDay === day.value ? 'Selecionado' : 'Escolher dia'}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-            {plans.length === 0 ? (
-              <div className="mt-4 rounded-xl border border-dashed border-white/15 p-5 text-center">
-                <p className="text-sm font-bold">Você ainda não tem fichas</p>
-                <p className="mt-1 text-xs text-neutral-500">Monte um treino primeiro; depois volte para adicionar exercícios como em uma playlist.</p>
-                <button type="button" onClick={() => setActiveTab('novo-treino')} className="mt-4 rounded-xl bg-white px-4 py-3 text-xs font-black uppercase tracking-wide text-black">Criar minha primeira ficha</button>
-              </div>
-            ) : (
-              <div className="mt-4 space-y-2">
-                {plans.map((plan) => (
-                  <button key={plan.id} type="button" disabled={addingPlanId !== null} onClick={() => addExercise(plan, selectedExercise)} className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-[#171717] p-3 text-left transition hover:border-white/30 hover:bg-white/[0.06] disabled:opacity-60">
-                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${plan.status === 'ativo' ? 'bg-white text-black' : 'bg-white/5 text-neutral-300'}`}>{plan.status === 'ativo' ? <CheckCircle2 className="h-5 w-5" /> : <Dumbbell className="h-5 w-5" />}</span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-bold">{plan.name}</span>
-                      <span className="mt-1 block text-[10px] text-neutral-500">
-                        {plan.exercises?.length || 0} exercícios · {(plan.exercises || []).filter((item) => !item.training_day || item.training_day === selectedTrainingDay).length} disponíveis neste dia {plan.status === 'ativo' ? '· ficha ativa' : ''}
-                      </span>
-                    </span>
-                    {addingPlanId === plan.id ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                  </button>
-                ))}
-              </div>
-            )}
-            <button type="button" onClick={() => setSelectedExercise(null)} className="mt-4 w-full rounded-xl border border-white/10 px-4 py-3 text-xs font-bold text-neutral-400 hover:text-white">Cancelar</button>
-          </div>
-        </AccessibleDialog>
-      )}
-
-      {detailExercise && (
-        <AccessibleDialog size="lg" title="Detalhes do exercício" onClose={() => setDetailExercise(null)}>
-          <div className="w-full bg-[#101010] p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div><p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Execução do exercício</p><h2 className="mt-1 text-lg font-black">{getExerciseDisplayName(detailExercise.name)}</h2></div>
-              <button type="button" onClick={() => setDetailExercise(null)} className="rounded-lg p-2 text-neutral-400 hover:bg-white/10 hover:text-white" aria-label="Fechar"><X className="h-4 w-4" /></button>
-            </div>
-            <ExerciseIllustration exerciseId={detailExercise.id} exerciseName={detailExercise.name} muscleGroup={getMuscleLabel(detailExercise.primaryMuscles[0] || '')} imagePaths={detailExercise.images} className="mt-4 h-[360px] w-full sm:h-[440px]" showCaption />
-            <ExerciseDBPreview exerciseName={getExerciseDisplayName(detailExercise.name)} />
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                <p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Músculos primários</p>
-                <p className="mt-1 text-sm font-bold">{detailExercise.primaryMuscleDisplay?.join(', ') || getMuscleLabel(detailExercise.primaryMuscles[0] || 'Geral')}</p>
-                {detailExercise.secondaryMuscleDisplay?.length ? <p className="mt-2 text-[10px] leading-relaxed text-neutral-500">Secundários: {detailExercise.secondaryMuscleDisplay.join(', ')}</p> : null}
-              </div>
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                <p className="text-[9px] font-black uppercase tracking-widest text-neutral-500">Equipamento</p>
-                <p className="mt-1 text-sm font-bold">{detailExercise.equipmentDisplay || getEquipmentLabel(detailExercise.equipment)}</p>
-                {detailExercise.movementPattern && <p className="mt-2 text-[10px] text-neutral-500">{detailExercise.movementPattern}</p>}
-              </div>
-            </div>
-            {(detailExercise.suggestedSets || detailExercise.suggestedReps) && (
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-neutral-300">Séries sugeridas</p>
-                  <p className="mt-1 text-xl font-black text-white">{detailExercise.suggestedSets ?? '—'}</p>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-neutral-300">{detailExercise.suggestedRepsLabel || 'Repetições sugeridas'}</p>
-                  <p className="mt-1 text-xl font-black text-white">{detailExercise.suggestedReps ?? '—'}</p>
-                </div>
-              </div>
-            )}
-            <div className="mt-5">
-              <h3 className="text-xs font-black uppercase tracking-widest text-neutral-300">Passo a passo</h3>
-              <ol className="mt-3 space-y-2">
-                {detailExercise.instructions.map((instruction, index) => <li key={index} className="flex gap-3 text-xs leading-relaxed text-neutral-400"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-black text-white">{index + 1}</span><span>{instruction}</span></li>)}
-              </ol>
-            </div>
-            {detailExercise.respiration && Object.keys(detailExercise.respiration).length > 0 && (
-              <section className="mt-5 rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-300">Respiração</h3>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {Object.entries(detailExercise.respiration).map(([phase, instruction]) => (
-                    <span key={phase} className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-[11px] text-neutral-300">
-                      <strong className="text-white">{phase.charAt(0).toUpperCase() + phase.slice(1)}:</strong> {instruction}
-                    </span>
-                  ))}
-                </div>
-              </section>
-            )}
-            {detailExercise.commonErrors?.length ? (
-              <section className="mt-4 rounded-xl border border-white/10 bg-white/[0.04] p-3">
-                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-100">Erros comuns</h3>
-                <ul className="mt-2 space-y-1.5">
-                  {detailExercise.commonErrors.map((error, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-neutral-400">•</span><span>{error}</span></li>)}
-                </ul>
-              </section>
-            ) : null}
-            {detailExercise.safetyNotes?.length ? (
-              <section className="mt-4 rounded-xl border border-white/15 bg-white/[0.04] p-3">
-                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-100">Cuidados e segurança</h3>
-                <ul className="mt-2 space-y-1.5">
-                  {detailExercise.safetyNotes.map((note, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-neutral-400">•</span><span>{note}</span></li>)}
-                </ul>
-              </section>
-            ) : null}
-            {detailExercise.variations?.length ? (
-              <section className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-300">Variações relacionadas</h3>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {detailExercise.variations.map((variation) => {
-                    const resolved = catalog.find((item) => item.id === variation);
-                    const label = resolved ? getExerciseDisplayName(resolved.name) : variation.replace(/_/g, ' ');
-                    return <span key={variation} className="rounded-full border border-white/10 px-3 py-2 text-xs text-neutral-300">{label}</span>;
-                  })}
-                </div>
-              </section>
-            ) : null}
-            <button type="button" onClick={() => { setDetailExercise(null); setSelectedExercise(detailExercise); }} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-black uppercase tracking-wide text-black"><Plus className="h-4 w-4" /> Adicionar ao meu plano</button>
-          </div>
-        </AccessibleDialog>
-      )}
+        <fieldset className="foco-atlas-days"><legend>Dia do treino</legend>
+          <div>{TRAINING_DAYS.map(day=><button key={day.value} type="button"
+            aria-pressed={ownDay===day.value} onClick={()=>{setOwnDay(day.value);savePreferredTrainingDay(day.value);}}>
+            {day.shortLabel}</button>)}</div>
+        </fieldset>
+        {notice?.type==='error'&&<p role="alert" className="foco-atlas-form-error">{notice.text}</p>}
+        {plansError&&<p role="alert" className="foco-atlas-form-error">{plansError}</p>}
+        {plans.length?<div className="foco-atlas-plan-list">
+          <h3>Escolhe a ficha</h3>
+          {plans.map(plan=><button key={plan.id} type="button" disabled={saving!==null}
+            onClick={()=>void addToPlan(plan)}><CheckCircle2 size={18}/><span>{plan.name}
+              <small>{plan.exercises?.length||0} exercícios · {plan.status==='ativo'?'Ficha ativa':'Ficha salva'}</small></span>
+              <Plus size={18}/></button>)}
+        </div>:<div className="foco-atlas-plan-list"><p>Ainda não tens uma ficha disponível.</p>
+          <button type="button" onClick={()=>{setSelected(null);setActiveTab('novo-treino');}}>Criar ficha <Plus size={18}/></button>
         </div>}
-    </div>
-  );
+        <p className="foco-atlas-credit">Apenas o nome e o grupo escolhidos por ti são salvos. GIF, identificador e instruções externas não são gravados.</p>
+      </div>
+    </AccessibleDialog>}
+  </div>;
 };

@@ -29,10 +29,10 @@ export const ExerciseDBPreview: React.FC<Props> = ({ exerciseName, compact = fal
     finally { setLoading(false); }
   };
   if (!allowed) return null;
-  const message = imgFailed ? 'GIF indisponível no servidor externo. A demonstração do FOCO continua disponível.'
-    : state?.state === 'no_match' ? 'Não encontramos um GIF com correspondência exata para esta variação. Mantivemos a demonstração do FOCO.'
+  const message = imgFailed ? 'GIF indisponível no servidor externo. Consulta outro exercício ou tenta novamente depois.'
+    : state?.state === 'no_match' ? 'Não encontramos um GIF com correspondência exata para esta variação. Não exibimos substituições imprecisas.'
     : state?.state === 'rate_limited' ? 'A API gratuita limitou as consultas. Tenta novamente depois de alguns segundos.'
-    : state?.state === 'unavailable' ? 'A API gratuita está indisponível, bloqueada no navegador ou demorou demais. A demonstração do FOCO continua disponível.'
+    : state?.state === 'unavailable' ? 'A API gratuita está indisponível, bloqueada no navegador ou demorou demais. Consulta outro exercício ou tenta novamente depois.'
     : state?.state === 'disabled' ? 'Esta demonstração não está habilitada para uso comercial.'
     : null;
 
@@ -64,7 +64,7 @@ export const ExerciseDBPreview: React.FC<Props> = ({ exerciseName, compact = fal
     <p className="mt-3 text-[10px] leading-4 text-[#AFBEA7]">
       Mídia de terceiros para testes, não substitui orientação profissional.
       {' '}<a href="https://oss.exercisedb.dev/docs" rel="noopener noreferrer" target="_blank" className="font-semibold text-[#C8F040] underline underline-offset-2">Créditos: AscendAPI / ExerciseDB</a>.
-      {' '}Não disponível para uso comercial sem licença.
+      {' '}Uso exclusivamente não comercial.
     </p>
   </section>;
 };

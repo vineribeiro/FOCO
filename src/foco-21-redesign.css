@@ -128,18 +128,6 @@
   background:repeating-linear-gradient(135deg,rgba(234,255,213,.025) 0px,rgba(234,255,213,.025) 1px,transparent 1px,transparent 30px);
 }
 .foco-v6-shell .foco-21-exercise-media{position:absolute;inset:0;z-index:0;overflow:hidden;}
-.foco-v6-shell .foco-21-exercise-media .foco-v7-stage-photo{width:100%;height:100%;object-position:center 39%;}
-.foco-v6-shell .foco-21-session .foco-v7-stage-illustration.foco-v7-exercise-visual{
-  position:absolute !important;inset:0 !important;overflow:hidden;border:0!important;background:transparent!important;pointer-events:none;
-}
-.foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-v7-exercise-image{
-  box-sizing:border-box;display:block;width:100%!important;height:100%!important;
-  object-fit:contain!important;object-position:center 28%;padding:16px 12px 72px;background:transparent!important;
-}
-.foco-v6-shell .foco-21-session .foco-v7-stage-illustration[data-foco-media-source="repdb"] img,
-.foco-v6-shell .foco-21-session .foco-v7-stage-illustration[data-foco-media-source="atlas"] img{
-  mix-blend-mode:multiply;filter:contrast(1.15) saturate(.88) brightness(1.05)!important;
-}
 .foco-v6-shell .foco-21-session .foco-v7-session-stage::after{
   z-index:1;background:linear-gradient(0deg,rgba(3,8,5,.99) 0%,rgba(4,9,5,.93) 21%,rgba(7,13,8,.56) 39%,rgba(8,13,8,.07) 70%,transparent 100%),
   radial-gradient(ellipse 70% 40% at 75% 10%,rgba(200,240,64,.13),transparent);
@@ -205,7 +193,6 @@
 @media(max-width:370px){
   .foco-v6-shell .foco-21-week-pulse-values{gap:6px;}
   .foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel{padding:13px;min-height:144px;}
-  .foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-v7-exercise-image{padding:12px 6px 68px;}
   .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster{padding:10px 6px;}
   .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster>div{grid-template-columns:40px minmax(0,1fr) 40px;gap:2px;}
   .foco-v6-shell .foco-21-adjusters .foco-v7-adjuster button{width:40px;min-height:44px;}
@@ -226,24 +213,6 @@ html[data-foco-glass="reduced"] .foco-v6-shell .foco-21-shortcut-grid .foco-v6-m
 html[data-foco-glass="reduced"] .foco-v6-shell .foco-21-week-section,
 html[data-foco-glass="reduced"] .foco-v6-shell .foco-v6-hero{
   backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
-}
-
-/* Offline-stable, original schematic hero media for the exact verified variants.
- * Technical instruction remains in the Execução tab and must be expert-reviewed. */
-.foco-v6-shell .foco-21-session .foco-v7-stage-photo.foco-21-local-art {
-  object-fit:contain!important;
-  object-position:center 30%!important;
-  box-sizing:border-box;
-  padding:14px 6px 72px;
-  width:100%;height:100%;
-  filter:none!important;
-  mix-blend-mode:normal;
-  background:transparent!important;
-}
-@media(max-width:370px) {
-  .foco-v6-shell .foco-21-session .foco-v7-stage-photo.foco-21-local-art{
-    padding:11px 0 66px;
-  }
 }
 
 /* 2.2: single size owner for compact session mode, never bigger than standard. */

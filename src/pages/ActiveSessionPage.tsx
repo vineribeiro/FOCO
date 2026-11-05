@@ -10,7 +10,7 @@ import { WorkoutPlan, WorkoutExercise, WorkoutSession } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
 import { soundEngine } from '../utils/soundEngine';
 import { ExerciseExecutionGuide } from '../components/ExerciseExecutionGuide';
-import { getPreferredTrainingDay, getTrainingDayLabel, savePreferredTrainingDay, TRAINING_DAYS, loadExerciseCatalog, getExerciseImageUrl, normalizeExerciseText, getExerciseDisplayName } from '../data/exerciseLibrary';
+import { getPreferredTrainingDay, getTrainingDayLabel, savePreferredTrainingDay, TRAINING_DAYS, normalizeExerciseText } from '../data/exerciseLibrary';
 import {
   Play,
   Pause,
@@ -246,65 +246,21 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     ctx.fillStyle = '#080808';
     ctx.fillRect(0, 0, W, H);
 
-    // Fundo fotográfico: um exercício executado na sessão (não uma imagem aleatória).
-    let drewPhoto = false;
-    try {
-      const catalog = await Promise.race([
-        loadExerciseCatalog(),
-        new Promise<null>(resolve => window.setTimeout(() => resolve(null), 1700)),
-      ]);
-      if (catalog) {
-        const imageEntry = (completed.exerciseNames as string[] || [])
-          .map(name => catalog.find(item =>
-            [item.name, getExerciseDisplayName(item.name), ...(item.aliases || [])].some(candidate =>
-              normalizeExerciseText(candidate) === normalizeExerciseText(name)) && item.images?.length))
-          .find(Boolean);
-        const source = imageEntry?.images?.[0];
-        if (source) {
-          const photo = new Image();
-          photo.crossOrigin = 'anonymous';
-          photo.src = getExerciseImageUrl(source);
-          const loaded = await Promise.race([
-            new Promise<boolean>(resolve => {
-              photo.onload = () => resolve(true);
-              photo.onerror = () => resolve(false);
-              if (photo.complete && photo.naturalWidth) resolve(true);
-            }),
-            new Promise<boolean>(resolve => window.setTimeout(() => resolve(false), 2200)),
-          ]);
-          if (loaded && photo.naturalWidth && photo.naturalHeight) {
-            const box = { x: 320, y: 235, w: 880, h: 1360 };
-            const scale = Math.max(box.w / photo.naturalWidth, box.h / photo.naturalHeight);
-            const dw = photo.naturalWidth * scale;
-            const dh = photo.naturalHeight * scale;
-            ctx.save();
-            ctx.globalAlpha = 0.19;
-            ctx.filter = 'grayscale(100%) contrast(125%)';
-            ctx.drawImage(photo, box.x + (box.w - dw) / 2, box.y + (box.h - dh) / 2, dw, dh);
-            ctx.restore();
-            drewPhoto = true;
-          }
-        }
-      }
-    } catch {
-      // A fotografia é ornamental; falhar não pode impedir a exportação.
-    }
+    // Compartilhamento offline: gráficos originais sem copiar mídia externa.
+    // ExerciseDB proíbe armazenar GIFs/imagens no story ou em canvas.
+    ctx.save();
+    ctx.translate(625, 860);
+    ctx.rotate(-Math.PI / 8);
+    ctx.strokeStyle = 'rgba(235,235,235,.12)';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 26;
+    ctx.beginPath(); ctx.moveTo(-390, 0); ctx.lineTo(390, 0); ctx.stroke();
+    [-320, -270, 270, 320].forEach((x, i) => {
+      ctx.fillStyle = i === 0 || i === 3 ? 'rgba(255,255,255,.10)' : 'rgba(255,255,255,.075)';
+      ctx.fillRect(x - 24, -145, 48, 290);
+    });
+    ctx.restore();
 
-    if (!drewPhoto) {
-      // Ilustração vetorial de academia como fallback offline.
-      ctx.save();
-      ctx.translate(625, 860);
-      ctx.rotate(-Math.PI / 8);
-      ctx.strokeStyle = 'rgba(235,235,235,.12)';
-      ctx.lineCap = 'round';
-      ctx.lineWidth = 26;
-      ctx.beginPath(); ctx.moveTo(-390, 0); ctx.lineTo(390, 0); ctx.stroke();
-      [-320, -270, 270, 320].forEach((x, i) => {
-        ctx.fillStyle = i === 0 || i === 3 ? 'rgba(255,255,255,.10)' : 'rgba(255,255,255,.075)';
-        ctx.fillRect(x - 24, -145, 48, 290);
-      });
-      ctx.restore();
-    }
 
     // Vinheta suave que garante contraste do texto e integra a foto ao aplicativo.
     const fade = ctx.createLinearGradient(0, 0, 0, H);
@@ -643,8 +599,6 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const suggestedExerciseIndex=focusedExerciseIndex>=0?focusedExerciseIndex:Math.max(0,exerciseLogs.length-1);
   const v6ExIndex=v7ManualExerciseIndex===null ? suggestedExerciseIndex : Math.max(0,Math.min(exerciseLogs.length-1,v7ManualExerciseIndex));
   const v6CurrentExercise=exerciseLogs[v6ExIndex];
-  const v6ReferenceBench=!!v6CurrentExercise && /supinoreto|benchpress/i.test(normalizeExerciseText(v6CurrentExercise.exercise_name));
-  const v6ReferenceLegPress=!!v6CurrentExercise && /leg\s*press\s*45/i.test(v6CurrentExercise.exercise_name);
   const v6SetIndex=v6CurrentExercise?Math.max(0,v6CurrentExercise.sets.findIndex(set=>!set.completed)):0;
   const v6CurrentSet=v6CurrentExercise?.sets[v6SetIndex];
   const v6TracksLoad=v6CurrentExercise?tracksLoad(v6CurrentExercise):false;
@@ -680,13 +634,8 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       {v6CurrentExercise&&<section className="foco-v7-session-stage" aria-label={'Exercício atual: '+v6CurrentExercise.exercise_name}>
         <div className="foco-21-art-surface" aria-hidden="true"/>
         <div className="foco-21-exercise-media">
-        {v6ReferenceBench || v6ReferenceLegPress
-          ? <img className="foco-v7-stage-photo foco-21-local-art"
-              src={import.meta.env.BASE_URL + 'assets/exercises/' + (v6ReferenceLegPress?'legpress-45-foco.svg':'supino-reto-foco.svg')}
-              alt={v6ReferenceLegPress?'Ilustração esquemática do Leg press 45 graus':'Ilustração esquemática do Supino reto com barra'}
-              fetchPriority="high" loading="eager" decoding="async"/>
-          : <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name}
-              muscleGroup={v6CurrentExercise.muscle_group} presentation="editorial" className="foco-v7-stage-illustration h-full w-full" />}
+        <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name}
+          muscleGroup={v6CurrentExercise.muscle_group} presentation="editorial" className="foco-v7-stage-illustration h-full w-full" />
         </div>
         <span className="foco-v7-stage-tag">EXERCÍCIO {String(v6ExIndex+1).padStart(2,'0')} / {String(exerciseLogs.length).padStart(2,'0')}</span>
         <div className="foco-v7-stage-footer">

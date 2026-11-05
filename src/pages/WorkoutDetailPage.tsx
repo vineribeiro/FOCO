@@ -96,7 +96,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
         <ExerciseExecutionGuide exerciseName={preview.exercise_name} muscleGroup={preview.muscle_group}/>
       </div>
     </dialog>}
-    <div className="sticky bottom-[78px] z-10 rounded-3xl bg-[#080A07]/80 p-2 backdrop-blur-2xl">
+    <div className="mt-4 rounded-2xl bg-[#080A07]/80 p-2">
       <button type="button" onClick={today.length?start:()=>setActiveTab('cardio')} className="foco-v6-primary" disabled={loading||error}>
         {today.length?'Iniciar treino':'Fazer cardio'} <Play size={15} fill="currentColor"/>
       </button>

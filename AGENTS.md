@@ -1,3 +1,6 @@
+# Regra ativa de mídia — FOCO 2.3
+A **ExerciseDB/AscendAPI é a ÚNICA fonte de catálogo, GIF e demonstração de exercícios** para a interface. Não reativar FOCO curated grid, ExercisePhaseGallery, RepDB ou SVGs antigos como fallback. Os treinos persistidos e os dados técnicos internos necessários ao motor/compatibilidade são exceções: não deletar nem substituir dados reais do usuário. GIFs e metadados da API não devem ser baixados em massa nem persistidos; atribuir AscendAPI, obedecer uso não comercial.
+
 # Atualização de escopo — 05/11/2026
 **FOCO é agora um projeto pessoal NÃO COMERCIAL. Não existe lançamento de venda previsto para 2027.** Respeitar licenças e atribuições, incluindo a ExerciseDB OSS. A galeria externa é exclusivamente de leitura em tempo real e não pode persistir dados de terceiros. Essa decisão prevalece sobre referências antigas de plano comercial em documentos históricos.
 

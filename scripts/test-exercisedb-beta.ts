@@ -41,7 +41,8 @@ for(const url of [
 
 // One reusable opt-in component for all exercise detail/guide surfaces.
 assert.match(read('src/components/ExerciseExecutionGuide.tsx'),/ExerciseDBPreview exerciseName/);
-assert.match(read('src/pages/ExerciseLibraryPage.tsx'),/ExerciseDBPreview exerciseName/g);
+assert.match(read('src/pages/ExerciseLibraryPage.tsx'),/ExerciseDBCatalogBrowser onUseExercise/);
+assert.ok(!read('src/pages/ExerciseLibraryPage.tsx').includes('loadExerciseCatalog()'),'No old library in visible catalogue');
 assert.match(read('src/pages/ComplementaryPage.tsx'),/ExerciseDBPreview exerciseName/);
 assert.match(read('src/components/ExerciseDBPreview.tsx'),/Créditos: AscendAPI \/ ExerciseDB/);
 assert.match(read('src/components/ExerciseDBPreview.tsx'),/else void request\(\)/);
