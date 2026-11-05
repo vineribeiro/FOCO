@@ -99,6 +99,19 @@ try{
       success:true,data:[record],meta:{total:2,hasNextPage:!after,nextCursor:after?null:'edb_T5uXtLj'}
     })});
   });
+  // ExerciseDB is mocked for one active workout image at a time. No external requests.
+  let edbSearchRequests=0;
+  await context.route('https://oss.exercisedb.dev/api/v1/exercises/search*',route=>{
+    const term=(new URL(route.request().url()).searchParams.get('search')||'').toLowerCase();
+    edbSearchRequests++;
+    const record=term.includes('leg press')
+      ? {exerciseId:'10Z2DXU',name:'sled 45° leg press',gifUrl:'https://static.exercisedb.dev/media/10Z2DXU.gif'}
+      : term.includes('bench press')
+        ? {exerciseId:'EIeI8Vf',name:'barbell bench press',gifUrl:'https://static.exercisedb.dev/media/EIeI8Vf.gif'}
+        : null;
+    return route.fulfill({status:200,contentType:'application/json',
+      body:JSON.stringify({success:true,data:record?[record]:[]})});
+  });
   await context.route('https://static.exercisedb.dev/media/*.gif',route=>
     route.fulfill({status:200,contentType:'image/gif',body:Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==','base64')}));
   const page=await context.newPage();
@@ -143,8 +156,9 @@ try{
     }
     if(view==='sessao'){
       await page.locator('.foco-21-exercise-media [data-foco-media-source="exercisedb"]').waitFor({timeout:7000});
-      assert.equal(await page.locator('.foco-21-exercise-media img').count(),0,
-        'Exercise stage must not render legacy images or load GIF before consent');
+      await page.locator('.foco-21-exercise-media .foco-edb-stage-gif').waitFor({timeout:10000});
+      assert.equal(await page.locator('.foco-21-exercise-media img').count(),1,
+        'Active workout must show exactly one ExerciseDB GIF instead of an icon');
       assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.3'),'FOCO 2.3 session marker must be visible');
       await page.locator('.foco-21-exercise-media').waitFor({timeout:4000});
       const sessionLayout=await page.evaluate(()=>{
@@ -184,33 +198,24 @@ try{
         });
         assert.ok(overlap&&overlap.position==='static'&&overlap.rest<=overlap.cta+1,'Start CTA must not obscure rest controls');
       }
-      // Another exercise must not bring back the old local image gallery.
+      // Switching exercises should display the matching provider GIF, never an old SVG.
+      await page.waitForTimeout(1600); // Respect rate limit between distinct exercise requests.
       await page.getByRole('button',{name:/Ver exercício 3:/}).click();
       assert.match(await page.locator('.foco-v7-stage-footer h2').innerText(),/Leg press 45 graus/i);
-      assert.equal(await page.locator('.foco-21-exercise-media img').count(),0,'Leg press must not use old local SVGs');
+      await page.locator('.foco-21-exercise-media .foco-edb-stage-gif').waitFor({timeout:10000});
+      assert.equal(await page.locator('.foco-21-exercise-media img').count(),1,'Leg press must display a provider GIF');
       assert.equal(await page.locator('.foco-21-exercise-media [data-foco-media-source="exercisedb"]').count(),1);
       await page.screenshot({path:out+'/legpress-'+size.name+'.png',fullPage:false,animations:'disabled'});
       if(size.name==='mobile-390'){
-        let apiRequests=0;
-        await page.route('https://oss.exercisedb.dev/api/v1/exercises/search*',route=>{
-          const term=new URL(route.request().url()).searchParams.get('search');
-          assert.ok(term&&term.toLowerCase().includes('leg press'),'Use provider-confirmed search query');
-          apiRequests++;
-          return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
-            success:true,data:[{exerciseId:'10Z2DXU',name:'sled 45° leg press',
-              gifUrl:'https://static.exercisedb.dev/media/10Z2DXU.gif'}],
-          })});
-        });
-        await page.route('https://static.exercisedb.dev/media/*.gif',route=>
-          route.fulfill({status:200,contentType:'image/gif',
-            body:Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==','base64')}));
+        const requestsBeforeDetail=edbSearchRequests;
         await page.getByRole('button',{name:'Execução',exact:true}).click();
         const demoButton=page.getByRole('button',{name:'Ver demonstração GIF'});
         await demoButton.waitFor({timeout:10000});
-        assert.equal(apiRequests,0,'Do not query API until user explicitly requests animation');
+        assert.ok(requestsBeforeDetail>=1,'Active training stage must have requested provider media');
+        await page.waitForTimeout(1600);
         await demoButton.click();
         await page.locator('.foco-edb-preview img').waitFor({timeout:10000});
-        assert.equal(apiRequests,1,'One API lookup per user action');
+        assert.equal(edbSearchRequests,requestsBeforeDetail+1,'One extra API lookup on explicit detail request');
         await page.getByRole('button',{name:'Ocultar GIF'}).click();
         assert.equal(await page.locator('.foco-edb-preview img').count(),0,'Hide must stop GIF rendering');
         await page.getByRole('button',{name:'Registro',exact:true}).click();
