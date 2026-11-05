@@ -150,8 +150,10 @@ try{
       // Regression from beta device report: non-bench hero must never render the
       // full image gallery's white caption strip, zoom button or phase switches.
       await page.getByRole('button',{name:/Ver exercício 3:/}).click();
-      await page.locator('.foco-21-local-art').first().waitFor({timeout:6000});
-      const legPressArt=await page.locator('.foco-21-local-art').first().evaluate(img=>({
+      const legPressImage=page.locator('.foco-21-local-art[src$="legpress-45-foco.svg"]').first();
+      await legPressImage.waitFor({timeout:10000});
+      await legPressImage.evaluate(img=>img.decode());
+      const legPressArt=await legPressImage.evaluate(img=>({
         loaded:img.complete&&img.naturalWidth>=640,
         filename:new URL(img.src).pathname.split('/').pop(),
       }));
