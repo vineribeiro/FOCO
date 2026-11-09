@@ -2,8 +2,8 @@ import React,{useEffect,useState} from 'react';
 import {CheckCircle2,Dumbbell,Plus,X} from 'lucide-react';
 import {api} from '../services/api';
 import {AccessibleDialog} from '../components/AccessibleDialog';
-import {ExerciseDBCatalogBrowser} from '../components/ExerciseDBCatalogBrowser';
-import type {ExternalExercise} from '../data/exerciseDbCatalog';
+import {RepDBCatalogBrowser} from '../components/RepDBCatalogBrowser';
+import {repdbDisplayName,REPDB_CREDIT_TEXT,REPDB_CREDIT_URL,type RepDBExercise} from '../data/repdbAssets';
 import {getPreferredTrainingDay,getTrainingDayLabel,savePreferredTrainingDay,TRAINING_DAYS} from '../data/exerciseLibrary';
 import type {WorkoutExercise,WorkoutPlan} from '../types';
 
@@ -13,7 +13,7 @@ interface Props {setActiveTab:(tab:string)=>void}
 export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
   const [plans,setPlans]=useState<WorkoutPlan[]>([]);
   const [plansError,setPlansError]=useState('');
-  const [selected,setSelected]=useState<ExternalExercise|null>(null);
+  const [selected,setSelected]=useState<RepDBExercise|null>(null);
   const [ownName,setOwnName]=useState('');
   const [ownGroup,setOwnGroup]=useState('Geral');
   const [ownDay,setOwnDay]=useState(getPreferredTrainingDay);
@@ -26,9 +26,11 @@ export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
       .catch(()=>{if(active)setPlansError('Não foi possível carregar tuas fichas. A biblioteca externa continua acessível.');});
     return ()=>{active=false;};
   },[]);
-  const startAdd=(remote:ExternalExercise)=>{
-    // Remote metadata is for display only. No name, ID or GIF is copied to storage.
-    setSelected(remote);setOwnName('');setOwnGroup('Geral');setNotice(null);
+  const startAdd=(remote:RepDBExercise)=>{
+    // The canonical ID survives user-controlled display-name changes.
+    const groupNames:Record<string,string>={chest:'Peito',back:'Costas',shoulders:'Ombros',biceps:'Bíceps',triceps:'Tríceps',legs:'Pernas',quadriceps:'Quadríceps',glutes:'Glúteos',calves:'Panturrilhas',abdominals:'Abdômen'};
+    setSelected(remote);setOwnName(repdbDisplayName(remote));
+    setOwnGroup(groupNames[remote.body_part||'']||'Geral');setNotice(null);
   };
   const addToPlan=async(plan:WorkoutPlan)=>{
     const typed=ownName.trim().replace(/\s+/g,' ');
@@ -40,7 +42,7 @@ export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
     }
     setSaving(plan.id);setNotice(null);
     const exercise:WorkoutExercise={
-      exercise_name:typed,muscle_group:ownGroup,sets:3,reps_min:8,reps_max:12,
+      exercise_name:typed,muscle_group:ownGroup,repdb_id:selected?.id,sets:3,reps_min:8,reps_max:12,
       rest_seconds:60,suggested_load_kg:0,notes:'',training_day:ownDay as WorkoutExercise['training_day'],
     };
     try{
@@ -55,12 +57,12 @@ export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
   return <div className="foco-v4-page foco-atlas-library-page">
     <header className="foco-atlas-library-header">
       <div><p className="foco-v4-eyebrow">FOCO / BIBLIOTECA</p><h1>Exercícios</h1>
-        <p>Explore a ExerciseDB. Sem imagens duplicadas, catálogos paralelos ou informações antigas misturadas.</p></div>
-      <span className="foco-atlas-library-source"><Dumbbell size={16}/> EXERCISEDB</span>
+        <p>Explore movimentos ilustrados pela RepDB. Uma fonte visual, poses precisas e fichas preservadas.</p></div>
+      <span className="foco-atlas-library-source"><Dumbbell size={16}/> REPDB</span>
     </header>
     {notice&&<div role="status" className="foco-atlas-alert">
       <span>{notice.text}</span><button type="button" onClick={()=>setNotice(null)} aria-label="Fechar aviso"><X size={17}/></button></div>}
-    <ExerciseDBCatalogBrowser onUseExercise={startAdd}/>
+    <RepDBCatalogBrowser onUseExercise={startAdd}/>
     {selected&&<AccessibleDialog title="Adicionar exercício à ficha" onClose={()=>{setSelected(null);setNotice(null);}}>
       <div className="foco-atlas-add-modal">
         <div className="flex items-start justify-between gap-3">
@@ -68,7 +70,7 @@ export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
             <h2>Adicionar um movimento</h2></div>
           <button type="button" onClick={()=>setSelected(null)} aria-label="Fechar"><X size={20}/></button>
         </div>
-        <p>A ExerciseDB é uma referência visual. Para salvar na tua ficha, escreve tu mesmo o nome que queres usar. Não copiamos os dados do fornecedor para o banco.</p>
+        <p>O nome pode ser personalizado. O identificador RepDB permanece associado ao exercício para não perder a imagem ao renomeá-lo.</p>
         <label className="foco-atlas-form-field">Nome que tu escolheste
           <input value={ownName} onChange={e=>setOwnName(e.target.value)} maxLength={100} autoComplete="off"
             placeholder="Ex.: supino reto com barra" aria-label="Nome personalizado do exercício"/>
@@ -94,7 +96,7 @@ export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
         </div>:<div className="foco-atlas-plan-list"><p>Ainda não tens uma ficha disponível.</p>
           <button type="button" onClick={()=>{setSelected(null);setActiveTab('novo-treino');}}>Criar ficha <Plus size={18}/></button>
         </div>}
-        <p className="foco-atlas-credit">Apenas o nome e o grupo escolhidos por ti são salvos. GIF, identificador e instruções externas não são gravados.</p>
+        <p className="foco-atlas-credit">O nome, o grupo e o identificador da mídia são salvos na tua ficha. <a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer">{REPDB_CREDIT_TEXT}</a>.</p>
       </div>
     </AccessibleDialog>}
   </div>;
