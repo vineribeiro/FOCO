@@ -1,19 +1,18 @@
 import React from 'react';
-import {ExerciseDBPreview} from './ExerciseDBPreview';
+import {ExerciseIllustration} from './ExerciseIllustration';
+import {REPDB_CREDIT_URL,REPDB_CREDIT_TEXT} from '../data/repdbAssets';
 
-interface Props {exerciseName:string;muscleGroup:string}
-
-/** The detail view has one media owner: ExerciseDB. No legacy atlas/RepDB gallery. */
-export const ExerciseExecutionGuide:React.FC<Props>=({exerciseName,muscleGroup})=><div className="foco-edb-guide space-y-4 p-3 sm:p-4">
- <div className="foco-edb-guide-heading">
-  <p className="foco-atlas-kicker">FONTE ÚNICA · EXERCISEDB</p>
-  <h3>{exerciseName}</h3>
-  <span>{muscleGroup||'Movimento da ficha'}</span>
-  <p>Consulta a demonstração quando estiver disponível para exatamente esta variação. A ExerciseDB é externa e pode ter nomes em inglês.</p>
- </div>
- <ExerciseDBPreview exerciseName={exerciseName}/>
- <p className="foco-edb-guide-note">
-  Antes de executar, confirma equipamento, trajetória e amplitude com um profissional.
-  Se não houver correspondência exata, o FOCO não mostrará um movimento diferente como se fosse o teu.
- </p>
-</div>;
+interface Props{exerciseName:string;muscleGroup:string;exerciseId?:string|null}
+export const ExerciseExecutionGuide:React.FC<Props>=({exerciseName,muscleGroup,exerciseId})=>
+ <div className="foco-repdb-guide space-y-4 p-3 sm:p-4">
+  <div className="foco-edb-guide-heading">
+   <p className="foco-atlas-kicker">FOCO / GUIA DE MOVIMENTO</p>
+   <h3>{exerciseName}</h3>
+   <span>{muscleGroup||'Exercício da ficha'}</span>
+   <p>Veja o início e o final do movimento. As duas poses são ilustrações estáticas, não uma animação de execução.</p>
+  </div>
+  <ExerciseIllustration exerciseName={exerciseName} exerciseId={exerciseId} muscleGroup={muscleGroup}
+    presentation="editorial" interactive className="foco-repdb-guide-visual w-full"/>
+  <p className="foco-edb-guide-note">Confirma equipamento, postura, amplitude e carga com um profissional. O FOCO não substitui acompanhamento especializado.</p>
+  <p className="foco-atlas-credit"><a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer">{REPDB_CREDIT_TEXT}</a></p>
+ </div>;
