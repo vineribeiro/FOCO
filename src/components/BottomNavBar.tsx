@@ -27,7 +27,7 @@ export const BottomNavBar:React.FC<BottomNavBarProps>=({activeTab,setActiveTab})
         return <button type="button" key={id} onClick={()=>route(id)} aria-current={selected?'page':undefined}
           aria-label={label} className={'foco-v4-tab '+(selected?'foco-v4-tab-active':'')}>
           <Icon strokeWidth={selected?2.4:1.65} aria-hidden="true"/>
-          <span>{label}</span>
+          <span className="sr-only">{label}</span>
         </button>;
       })}
     </div>

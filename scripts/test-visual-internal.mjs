@@ -5,6 +5,7 @@ import { chromium } from 'playwright';
 // UI-only fixtures. All requests to the production API are intercepted.
 // No real user is authenticated and NO request reaches data mutation endpoints.
 const base = process.env.FOCO_VISUAL_BASE || 'https://vineribeiro.github.io/FOCO/';
+const proxyBridge = process.env.FOCO_BROWSER_PROXY_BRIDGE === '1';
 const out = 'visual-qa/internal';
 mkdirSync(out, { recursive: true });
 const date = (daysAgo = 0) => new Date(Date.now() - daysAgo * 86400000).toISOString();
@@ -72,12 +73,30 @@ const responses = {
 const viewports=[{name:'mobile-320',width:320,height:720},{name:'mobile-390',width:390,height:844},
  {name:'tablet-768',width:768,height:1024},{name:'desktop-1440',width:1440,height:900}];
 const views=['dashboard','detalhes','sessao','treinos','progresso','perfil','anamnese','arquivos','novo-treino','biblioteca'];
-const browser=await chromium.launch({headless:true});
+const browser=await chromium.launch({headless:true,
+ ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{})});
 let failed=false; const results=[];
 try{
  for(const size of viewports){
   const context=await browser.newContext({viewport:{width:size.width,height:size.height},deviceScaleFactor:1,
-   colorScheme:'dark',reducedMotion:'reduce',isMobile:size.width<768,hasTouch:size.width<768});
+   colorScheme:'dark',reducedMotion:'reduce',isMobile:size.width<768,hasTouch:size.width<768,serviceWorkers:'block'});
+  // Registered before the specific fixtures below: Playwright dispatches their
+  // handlers first. Unmatched writes are blocked; optional Cloud reads use the
+  // Node runtime's inherited proxy and CA trust, never ignoreHTTPSErrors.
+  await context.route('**/*',async route=>{
+    const request=route.request();
+    const url=new URL(request.url());
+    if(!['http:','https:'].includes(url.protocol))return route.continue();
+    if(!['GET','HEAD','OPTIONS'].includes(request.method()))return route.abort('blockedbyclient');
+    if(!proxyBridge||url.protocol!=='https:')return route.continue();
+    try{
+      const response=await fetch(request.url(),{method:request.method(),
+        headers:await request.allHeaders(),signal:AbortSignal.timeout(25000)});
+      const headers=Object.fromEntries(response.headers);
+      for(const key of ['content-encoding','content-length','transfer-encoding'])delete headers[key];
+      return route.fulfill({status:response.status,headers,body:Buffer.from(await response.arrayBuffer())});
+    }catch{return route.abort('failed');}
+  });
   await context.addInitScript(()=>localStorage.setItem('foco_auth_token','qa-mocked-token'));
   await context.route('**/functions/v1/foco-api/**',async route=>{
     const req=route.request();
@@ -146,16 +165,50 @@ try{
         width:img.naturalWidth,height:img.naturalHeight,
       }));
       assert.ok(hero.loaded,'FOCO hero athlete media must decode, not show a broken-image icon');
-      // A visible release badge and new composition are required; a CSS-only deploy
-      // that leaves the previous Home unchanged is not sufficient for this beta.
+      // The current reference uses a compact photo card, quiet chrome and a
+      // week immediately beneath it. Keep the release visible without forcing
+      // the previous oversized promotional header back into the product.
       const visualRelease=page.locator('.foco-21-version-pill');
       assert.ok((await visualRelease.innerText()).includes('V2.4'),'FOCO 2.4 release badge must be visible');
       await page.locator('.foco-21-week-pulse').waitFor({timeout:4000});
-      const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>({
-        radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
-      }));
-      assert.ok(homeStyle.radius.includes('30px'),'FOCO V2.1 hero should have the new 30px corner radius');
-      assert.ok(homeStyle.height>=380,'FOCO V2.1 hero must be visually larger than V2.0');
+      const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>{
+        const heading=el.querySelector('h2');
+        const greeting=document.querySelector('.foco-v6-home-intro h1');
+        const action=el.querySelector('.foco-v6-primary');
+        return {radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
+          titleFont:heading?parseFloat(getComputedStyle(heading).fontSize):null,
+          greetingFont:greeting?parseFloat(getComputedStyle(greeting).fontSize):null,
+          actionHeight:action?.getBoundingClientRect().height??0};
+      });
+      assert.equal(homeStyle.radius,'20px','Home must use the reference\'s restrained 20px card radius');
+      assert.ok(homeStyle.actionHeight>=44&&homeStyle.actionHeight<=56,
+        'Home action must retain a comfortable target within the compact card');
+      const expandedHome=size.width>=1200;
+      assert.ok(expandedHome?homeStyle.titleFont>=36&&homeStyle.titleFont<=40
+        :homeStyle.titleFont>=26&&homeStyle.titleFont<=34,
+        'Home workout title must keep the reference\'s hierarchy at '+size.name+': '+JSON.stringify(homeStyle));
+      assert.ok(expandedHome?homeStyle.greetingFont>=34&&homeStyle.greetingFont<=38
+        :homeStyle.greetingFont>=25&&homeStyle.greetingFont<=32,
+        'Home greeting must keep the reference\'s hierarchy at '+size.name+': '+JSON.stringify(homeStyle));
+      assert.ok(size.width<768?homeStyle.height>=271&&homeStyle.height<=321
+        :size.width<1200?homeStyle.height>=370&&homeStyle.height<=400
+        :homeStyle.height>=430&&homeStyle.height<=460,
+        'Home photo card must match the compact reference scale at '+size.name+': '+JSON.stringify(homeStyle));
+      assert.equal(await page.locator('.foco-21-week-section [data-training-day]').count(),7,
+        'The compact reference must preserve access to all seven weekdays');
+      if(size.width<768){
+        const placement=await page.evaluate(()=>{
+          const hero=document.querySelector('.foco-v6-hero').getBoundingClientRect();
+          const week=document.querySelector('.foco-21-week-section').getBoundingClientRect();
+          const strip=document.querySelector('.foco-21-week-section .foco-v6-week-scroller').getBoundingClientRect();
+          const nav=document.querySelector('nav[aria-label="Navegação principal"]').getBoundingClientRect();
+          return {gap:week.top-hero.bottom,stripBottom:strip.bottom,navTop:nav.top};
+        });
+        assert.ok(placement.gap>=0&&placement.gap<=24,
+          'The weekly schedule must follow the hero directly on mobile: '+JSON.stringify(placement));
+        assert.ok(size.width<390||placement.stripBottom<=placement.navTop,
+          'The week must be visible above mobile navigation: '+JSON.stringify(placement));
+      }
     }
     if(view==='sessao'){
       await page.locator('.foco-21-exercise-media [data-foco-media-source="repdb"]').waitFor({timeout:7000});
@@ -183,7 +236,7 @@ try{
           visualScale:viewport?.scale??1,
         };
       });
-      assert.ok(sessionLayout.stageRadius.includes('23px'),'Session must use the controlled 2.2 radius');
+      assert.equal(sessionLayout.stageRadius,'20px','Session must share the restrained 20px reference radius');
       assert.ok(sessionLayout.screenWidth<=Math.min(size.width,505),'Workout cannot expand past its intended width');
       assert.ok(sessionLayout.stageWidth<=sessionLayout.screenWidth+1,'Exercise hero cannot overrun session container');
       assert.ok(sessionLayout.headerFont<=28&&sessionLayout.titleFont<=30,'Training headings must not be zoomed');

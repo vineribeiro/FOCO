@@ -18,6 +18,8 @@ import {
 } from 'recharts';
 import {
   TrendingUp,
+  ArrowDownRight,
+  ArrowUpRight,
   Plus,
   Weight,
   Trash2,
@@ -60,7 +62,6 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
     } catch (e: any) {
       setDataUnavailable(true);
       console.error('Error fetching progress data:', e);
-      setActionMsg({ type: 'error', text: 'Não foi possível consultar a evolução. Verifique sua conexão e tente novamente.' });
     } finally {
       setIsLoading(false);
     }
@@ -167,7 +168,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
     return current?.numericValue!=null && previous?.numericValue!=null ? current.numericValue-previous.numericValue:null;
   };
   const heroMetric=metric('peso');
-  const heroValue=heroMetric?.value || (latestWeight!==null?latestWeight.toLocaleString('pt-BR')+' kg':'—');
+  const heroValue=isLoading || dataUnavailable ? '—' : heroMetric?.value || (latestWeight!==null?latestWeight.toLocaleString('pt-BR')+' kg':'—');
   const series=heroMetric?getOkokTrend(assessments,heroMetric.key).filter(p=>p.timestamp>=cutoff)
     :visibleWeightData.map(p=>({value:p.peso,date:p.date,timestamp:p.timestamp,unit:'kg',assessmentId:p.date}));
   const numericSeries=series.filter(p=>Number.isFinite(p.value));
@@ -179,6 +180,9 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
     return [x,y] as const;
   });
   const pathPoints=svgPoints.map(p=>p.join(',')).join(' ');
+  const heroDelta=numericSeries.length>=2 ? numericSeries[numericSeries.length-1].value-numericSeries[0].value : null;
+  const heroUnit=heroMetric?.unit || 'kg';
+  const sourceDate=heroMetric ? latestAssessment?.uploadedAt : weightData.length ? weightData[weightData.length-1].timestamp : null;
   const tiles=[
     {label:'Gordura corporal',key:'gordura_corporal'},
     {label:'Massa muscular',key:metric('musculo_esqueletico')?'musculo_esqueletico':'massa_muscular'},
@@ -188,24 +192,49 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
   return (
     <div className="foco-v6-progress foco-v4-page foco-motion-progress">
       <div className="md:hidden"><FocoV6Status/></div>
-      <header className="foco-v6-mobile-title"><h1>Minha evolução</h1></header>
+      <header className="foco-v6-mobile-title foco-progress-heading"><h1>Minha evolução</h1></header>
       <FocoV6Segment label="Período de evolução" options={[{value:'7',label:'7 dias'},{value:'30',label:'30 dias'},{value:'90',label:'90 dias'},{value:'365',label:'1 ano'}]}
         value={period} onChange={value=>setPeriod(value as '7'|'30'|'90'|'365')}/>
-      <section className="foco-v6-progress-hero">
-        <p>Peso corporal</p>
-        <div className="foco-v6-progress-value">{heroValue}</div>
-        {numericSeries.length>=2?<svg className="foco-v6-progress-svg" viewBox="0 0 300 106" preserveAspectRatio="none" role="img" aria-label="Tendência do peso no período">
+      {dataUnavailable && !isLoading && <div className="foco-progress-load-error foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-4" role="alert">
+        <p className="text-sm text-neutral-200">Não foi possível consultar a evolução. Seus registros foram preservados.</p>
+        <button type="button" onClick={() => void loadData()} className="foco-v4-secondary">Tentar novamente</button>
+      </div>}
+      <section className="foco-v6-progress-hero" aria-labelledby="foco-progress-weight-title" aria-busy={isLoading}>
+        <div className="foco-progress-hero-summary flex min-w-0 items-end justify-between gap-3">
+          <div className="min-w-0"><p id="foco-progress-weight-title" className="text-xs text-neutral-300">Peso corporal</p>
+            <div className="foco-v6-progress-value">{heroValue}</div>
+          </div>
+          {!isLoading && !dataUnavailable && heroDelta !== null && <span className="foco-progress-delta inline-flex shrink-0 items-center gap-1 rounded-full bg-[#D5FF40]/10 px-2 py-1 text-xs font-semibold text-[#D5FF40]">
+            {heroDelta<0 ? <ArrowDownRight size={14} aria-hidden="true"/> : heroDelta>0 ? <ArrowUpRight size={14} aria-hidden="true"/> : null}
+            <span className="sr-only">Variação no período: </span>{heroDelta>0?'+':''}{heroDelta.toLocaleString('pt-BR',{maximumFractionDigits:2})} {heroUnit}
+          </span>}
+        </div>
+        {!isLoading && !dataUnavailable && numericSeries.length>=2?<svg className="foco-v6-progress-svg" viewBox="0 0 300 106" preserveAspectRatio="none" role="img" aria-label={'Tendência do peso no período: '+numericSeries[0].value.toLocaleString('pt-BR')+' '+heroUnit+' em '+numericSeries[0].date+', '+numericSeries[numericSeries.length-1].value.toLocaleString('pt-BR')+' '+heroUnit+' em '+numericSeries[numericSeries.length-1].date}>
           <defs><linearGradient id="v6-weight-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#C8F040" stopOpacity=".32"/><stop offset="100%" stopColor="#C8F040" stopOpacity="0"/>
+            <stop offset="0%" stopColor="#D5FF40" stopOpacity=".32"/><stop offset="100%" stopColor="#D5FF40" stopOpacity="0"/>
           </linearGradient></defs>
           <path d={'M'+pathPoints.replaceAll(' ',' L')+' L294 104 L6 104Z'} fill="url(#v6-weight-gradient)"/>
-          <polyline points={pathPoints} fill="none" stroke="#C8F040" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/>
-          {svgPoints.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===svgPoints.length-1?3.6:2.2} fill="#C8F040"/>)}
-        </svg>:<div className="my-5 flex h-[92px] items-center justify-center rounded-xl border border-dashed border-[#C8F040]/15 text-center text-xs text-[#A5B09E]">
-          {isLoading?'Consultando dados...':'Adicione duas avaliações para visualizar sua tendência.'}
+          <polyline points={pathPoints} fill="none" stroke="#D5FF40" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/>
+          {svgPoints.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===svgPoints.length-1?3.6:2.2} fill="#D5FF40"/>)}
+        </svg>:<div className="my-5 flex h-[92px] items-center justify-center rounded-xl border border-dashed border-[#D5FF40]/15 text-center text-xs text-[#A5B09E]">
+          <p className="min-w-0 max-w-full px-3 leading-relaxed">{isLoading?'Consultando dados...':dataUnavailable?'Dados temporariamente indisponíveis.':'Amplie o período ou adicione outro registro para visualizar a tendência.'}</p>
         </div>}
-        {numericSeries.length>=2&&<div className="flex justify-between text-[10px] text-[#B0B8AB]"><span>{numericSeries[0].date}</span><span>{numericSeries[numericSeries.length-1].date}</span></div>}
+        {!isLoading && !dataUnavailable && numericSeries.length>=2&&<div className="foco-progress-chart-dates flex justify-between text-[10px] text-[#B0B8AB]"><span>{numericSeries[0].date}</span><span>{numericSeries[numericSeries.length-1].date}</span></div>}
+        {!isLoading && !dataUnavailable && sourceDate && <p className="foco-progress-source mt-2 text-[10px] leading-relaxed text-neutral-400">{heroMetric?'Último relatório OKOK enviado':'Último registro manual'} em {new Date(sourceDate).toLocaleDateString('pt-BR')}.</p>}
       </section>
+      <section className="foco-v6-progress-tiles" aria-label="Indicadores do último relatório OKOK">
+        {tiles.map(tile=>{
+          const value=metric(tile.key), delta=deltaFor(tile.key);
+          return <div className="foco-v6-progress-tile" key={tile.key}>
+            <p>{tile.label}</p><strong>{isLoading || dataUnavailable?'—':value?.value||'—'}</strong>
+            {!isLoading && !dataUnavailable && delta!==null&&<em>{delta>0?'+':''}{delta.toLocaleString('pt-BR',{maximumFractionDigits:2})} {value?.unit||''}<span className="sr-only"> desde o relatório anterior</span></em>}
+            {!isLoading && !dataUnavailable && !value && <span className="foco-progress-metric-empty text-[10px] text-neutral-400">Sem registro OKOK</span>}
+          </div>;
+        })}
+      </section>
+      <button type="button" className="foco-v6-glass-button foco-progress-report-action w-full" onClick={()=>{reportRef.current?.setAttribute('open','');reportRef.current?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}}>
+        Ver relatório completo <TrendingUp size={15}/>
+      </button>
       <section className="foco-v2-insights" aria-labelledby="foco-v2-insights-title">
         <div className="foco-v2-insights-head">
           <div><p>FOCO Intelligence · seus registros</p><h2 id="foco-v2-insights-title">Últimos 30 dias</h2></div>
@@ -222,45 +251,30 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         {shareMessage && <p role="status" className="foco-v2-insights-message">{shareMessage}</p>}
         <p className="foco-v2-insights-note">Resumo calculado das sessões salvas, incluindo cardio. Não estima recuperação muscular nem substitui orientação profissional.</p>
       </section>
-      <div className="foco-v6-progress-tiles">
-        {tiles.map(tile=>{
-          const value=metric(tile.key), delta=deltaFor(tile.key);
-          return <div className="foco-v6-progress-tile" key={tile.key}>
-            <p>{tile.label}</p><strong>{value?.value||'—'}</strong>
-            {delta!==null&&<em>{delta>0?'+':''}{delta.toLocaleString('pt-BR',{maximumFractionDigits:2})} {value?.unit||''} desde o relatório anterior</em>}
-          </div>;
-        })}
-      </div>
-      <button type="button" className="foco-v6-glass-button w-full" onClick={()=>{reportRef.current?.setAttribute('open','');reportRef.current?.scrollIntoView({behavior:'smooth',block:'start'});}}>
-        Ver relatório completo <TrendingUp size={15}/>
-      </button>
       <details ref={reportRef} id="foco-v6-report" className="foco-v6-glass rounded-2xl p-3">
-        <summary className="cursor-pointer px-2 py-3 text-sm font-bold text-[#C8F040]">Histórico, gráficos e ajustes</summary>
-    <div className="foco-v5-evolution foco-v4-page space-y-5">
+        <summary className="cursor-pointer px-2 py-3 text-sm font-bold text-[#D5FF40]">Histórico, gráficos e ajustes</summary>
+    <div className="foco-v5-evolution foco-progress-report space-y-5 pt-4">
       
       {/* Header */}
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <span className="foco-v4-eyebrow">EVOLUÇÃO / SEUS DADOS</span>
-          <h1 className="foco-v4-heading">Minha <span className="text-[#C8F040]">evolução.</span></h1>
+          <h2 className="text-base font-bold">Seus registros</h2>
           <p className="mt-2 text-sm text-neutral-400">Acompanhe sua composição corporal OKOK, seus treinos e as medidas registradas.</p>
         </div>
         <label className="flex flex-col gap-1.5 text-xs font-semibold text-neutral-300">
           Período dos gráficos
           <select aria-label="Período dos gráficos" className="foco-v4-field !min-h-11 !py-2" value={period} onChange={event => setPeriod(event.target.value as '7' | '30' | '90' | '365' | 'all')}>
+            <option value="7">Últimos 7 dias</option>
             <option value="30">Últimos 30 dias</option>
             <option value="90">Últimos 90 dias</option>
+            <option value="365">Último ano</option>
             <option value="all">Todo o histórico</option>
           </select>
         </label>
       </header>
-      <OkokEvolutionSection period={period==='7'?'30':period==='365'?'all':period} onOpenAssessment={openOkok} />
+      <OkokEvolutionSection period={period} onOpenAssessment={openOkok} />
 
       {isLoading && <div role="status" className="foco-v4-panel p-4 text-sm text-neutral-300">Atualizando seus registros...</div>}
-      {dataUnavailable && !isLoading && <div className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-4" role="alert">
-        <p className="text-sm text-neutral-200">Os dados de treinos e medidas manuais não puderam ser carregados. Nenhum valor foi presumido.</p>
-        <button type="button" onClick={() => void loadData()} className="foco-v4-secondary">Tentar novamente</button>
-      </div>}
       {!isLoading && !dataUnavailable && <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4" aria-label="Resumo da evolução">
         {[
           { label: 'Treinos concluídos', value: String(completedSessions.length), hint: 'Desde o início' },
@@ -311,8 +325,8 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
               <AreaChart data={visibleWeightData}>
                 <defs>
                   <linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#C8F040" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#C8F040" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#D5FF40" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#D5FF40" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#303030" />
@@ -336,7 +350,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                   type="monotone"
                   dataKey="peso"
                   name="Peso (kg)"
-                  stroke="#C8F040"
+                  stroke="#D5FF40"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#monoGrad)"
@@ -384,7 +398,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                 <Bar
                   dataKey="tonelagem"
                   name="Tonelagem (kg)"
-                  fill="#C8F040"
+                  fill="#D5FF40"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>

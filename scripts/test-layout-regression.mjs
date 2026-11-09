@@ -14,6 +14,7 @@ const base = process.env.FOCO_E2E_BASE_URL || 'http://127.0.0.1:4173/FOCO/';
 const output = process.env.FOCO_E2E_OUTPUT_DIR || 'work/layout-regression';
 const baseline = process.env.FOCO_LAYOUT_BASELINE_DIR || '../layout-review/screens';
 const proxyBridge = process.env.FOCO_BROWSER_PROXY_BRIDGE === '1';
+const fixedNow = '2026-11-14T12:00:00.000Z';
 const viewports = [{ width: 320, height: 720 }, { width: 390, height: 844 },
   { width: 768, height: 1024 }, { width: 1440, height: 900 }];
 const views = ['dashboard', 'sessao', 'arquivos', 'novo-treino', 'perfil', 'treinos', 'progresso', 'anamnese'];
@@ -31,7 +32,18 @@ const extraction = {
     training_day: 'segunda', sets: 3, reps_min: 8, reps_max: 12, suggested_load_kg: 20,
     rest_seconds: 90, notes: longNotes }],
 };
+const referenceAssessmentFiles = [2, 5, 45, 200].map((daysAgo, index) => ({
+  id: 'reference-synthetic-report-' + index, user_id: 'audit-synthetic-user',
+  filename: 'avaliacao-sintetica-' + index + '.pdf', processing_status: 'processed',
+  mime_type: 'application/pdf', storage_path: 'synthetic-not-a-real-file',
+  created_at: new Date(Date.parse(fixedNow) - daysAgo * 86400000).toISOString(),
+  extracted_data: { summary: 'Relatório sintético exclusivo para verificar o filtro de datas.',
+    metrics: [{ name: 'Peso corporal', value: [76, 77, 80, 82][index] + ' kg', interpretation: '' },
+      { name: 'Gordura corporal', value: [24, 25, 26, 27][index] + '%', interpretation: '' }],
+    limitations: 'Fixture local, sem avaliação ou arquivo real.' },
+}));
 const safety = { interceptedApiRequests: 0, mockedExtractionRequests: 0,
+  mockedProfileUpdateRequests: 0,
   blockedUnexpectedWrites: [], unmockedApiRequests: [], externalWritesSent: 0 };
 const results = [];
 const contexts = new Set();
@@ -63,18 +75,18 @@ async function until(predicate, message, timeout = 10000) {
   assert.fail(message);
 }
 
-async function fixturePage(viewport) {
+async function fixturePage(viewport, { overrides = {}, mockProfileUpdate = false } = {}) {
   const context = await browser.newContext({ viewport, reducedMotion: 'reduce',
     colorScheme: 'dark', serviceWorkers: 'block' });
   contexts.add(context);
-  const fixtures = createAuditFixtures();
+  const fixtures = { ...createAuditFixtures(), ...overrides };
   // Distinct names prove that choosing a weekday filters the displayed exercises.
   // The explicit RepDB variant keeps those renamed synthetic exercises accurate.
   for (const plan of [fixtures['/api/workouts/active'], ...fixtures['/api/workouts']]) {
     plan.exercises = plan.exercises.map(exercise => ({ ...exercise, repdb_id: 'bench-press',
       exercise_name: 'Supino reto com barra · ' + exercise.training_day }));
   }
-  const state = { apiRequests: [], extractionPayload: null };
+  const state = { apiRequests: [], extractionPayload: null, profileUpdatePayload: null };
   await context.route('**/*', async route => {
     const request = route.request();
     const url = new URL(request.url());
@@ -87,7 +99,7 @@ async function fixturePage(viewport) {
       const key = request.method() + ' ' + path;
       state.apiRequests.push(key);
       const headers = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*',
-        'access-control-allow-methods': 'GET, POST, OPTIONS' };
+        'access-control-allow-methods': 'GET, POST, PUT, OPTIONS' };
       const json = (status, body) => route.fulfill({ status, headers,
         contentType: 'application/json', body: JSON.stringify(body) });
       if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers, body: '' });
@@ -95,6 +107,13 @@ async function fixturePage(viewport) {
         safety.mockedExtractionRequests++;
         state.extractionPayload = request.postDataJSON();
         return json(200, extraction);
+      }
+      if (mockProfileUpdate && path === '/api/profile' && request.method() === 'PUT') {
+        safety.mockedProfileUpdateRequests++;
+        state.profileUpdatePayload = request.postDataJSON();
+        fixtures[path] = { ...fixtures[path], ...state.profileUpdatePayload };
+        fixtures['/api/auth/me'].profile = fixtures[path];
+        return json(200, fixtures[path]);
       }
       if (request.method() !== 'GET') {
         safety.blockedUnexpectedWrites.push(key);
@@ -131,15 +150,15 @@ async function fixturePage(viewport) {
   page.setDefaultTimeout(10000);
   // A weekend catches accidental five-day strips and active-day auto-scroll
   // moving the whole page down past the primary workout action.
-  await page.clock.setFixedTime(new Date('2026-11-14T12:00:00.000Z'));
+  await page.clock.setFixedTime(new Date(fixedNow));
   return { page, context, state };
 }
 
-async function check(name, viewport, run) {
+async function check(name, viewport, run, fixtureOptions) {
   const started = Date.now();
   let fixture;
   try {
-    fixture = await fixturePage(viewport);
+    fixture = await fixturePage(viewport, fixtureOptions);
     await run(fixture);
     results.push({ name, status: 'PASS', duration_ms: Date.now() - started });
     console.log('PASS ' + name);
@@ -376,6 +395,137 @@ try {
       await noGlobalOverflow(page, 'detail ' + day);
     }
   });
+
+  for (const viewport of viewports.slice(0, 2)) await check('onboarding-keyboard-height-and-retained-fields-' + viewport.width,
+    viewport, async ({ page, state }) => {
+      await openView(page, 'anamnese');
+      const goal = page.getByRole('button', { name: /Perda de gordura/ });
+      await goal.waitFor();
+      await goal.focus();
+      await page.keyboard.press('Enter');
+      assert.equal(await goal.getAttribute('aria-pressed'), 'true', 'Goal selection must work from the keyboard');
+      await noGlobalOverflow(page, 'onboarding goal ' + viewport.width);
+      await capture(page, 'anamnese-' + viewport.width + '-goal');
+      await axe(page, 'onboarding-goal-' + viewport.width);
+      await page.getByRole('button', { name: 'Avançar', exact: true }).click();
+      const height = page.getByRole('slider', { name: 'Ajustar altura em centímetros', exact: true });
+      await height.waitFor();
+      assert.equal(await height.inputValue(), '175', 'Height selection must start from the actual profile fixture');
+      await height.focus();
+      await page.keyboard.press('ArrowRight');
+      assert.equal(await height.inputValue(), '176', 'A native keyboard step must update the height');
+      assert.equal(await height.getAttribute('aria-valuetext'), '176 centímetros');
+      assert.match(await page.locator('.foco-height-output').innerText(), /176\s*cm/,
+        'Displayed height must reflect the same real input value');
+      await noGlobalOverflow(page, 'onboarding height ' + viewport.width);
+      await capture(page, 'anamnese-' + viewport.width + '-height');
+      await axe(page, 'onboarding-height-' + viewport.width);
+      await page.getByRole('button', { name: 'Voltar ao objetivo', exact: true }).click();
+      assert.equal(await goal.getAttribute('aria-pressed'), 'true', 'Returning must retain the chosen goal');
+      await page.getByRole('button', { name: 'Avançar', exact: true }).click();
+      assert.equal(await height.inputValue(), '176', 'Returning must retain the chosen height');
+      await page.getByRole('button', { name: 'Avançar', exact: true }).click();
+      const formGoal = page.getByLabel('Objetivo principal', { exact: true });
+      await formGoal.waitFor();
+      assert.equal(await formGoal.inputValue(), 'Definição & Emagrecimento',
+        'The full form must retain the goal chosen in the compact intro');
+      assert.deepEqual(state.profileUpdatePayload, { height_cm: 176 },
+        'Only the explicitly chosen height may be sent to the in-memory profile fixture');
+      const details = page.getByLabel('Meta mais específica (opcional)', { exact: true });
+      await details.fill('Objetivo sintético preservado entre etapas');
+      await page.getByLabel('Tempo por sessão', { exact: true }).selectOption('45');
+      await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+      await page.getByRole('button', { name: 'Etapa anterior', exact: true }).click();
+      assert.equal(await details.inputValue(), 'Objetivo sintético preservado entre etapas');
+      assert.equal(await formGoal.inputValue(), 'Definição & Emagrecimento');
+      assert.equal(await page.getByLabel('Tempo por sessão', { exact: true }).inputValue(), '45');
+      assert.deepEqual(state.apiRequests.filter(key => !key.startsWith('GET ') && !key.startsWith('OPTIONS ')),
+        ['PUT /api/profile'], 'Only the local height fixture may be updated; never save an actual anamnesis');
+      await noGlobalOverflow(page, 'onboarding full form ' + viewport.width);
+      await capture(page, 'anamnese-' + viewport.width + '-retained-form', true);
+    }, { overrides: { '/api/anamnesis': null }, mockProfileUpdate: true });
+
+  await check('weekly-navigation-seven-days-and-dated-completions', viewports[1], async ({ page, state }) => {
+    await openView(page, 'treinos');
+    const rows = page.locator('.foco-v6-week-rows [data-training-day]');
+    await until(async () => (await rows.count()) === 7, 'The active fixture must expose all seven scheduled days');
+    assert.deepEqual(await rows.evaluateAll(nodes => nodes.map(node => node.getAttribute('data-training-day'))),
+      days.map(([day]) => day), 'Weekly rows must preserve weekday ordering including Saturday and Sunday');
+    const range = page.locator('.foco-v6-week-dates [role="status"]');
+    const currentRange = await range.innerText();
+    assert.match(currentRange, /09.*nov.*15.*nov/i, 'The fixed Saturday must belong to the 9–15 November week');
+    const doneDays = () => page.locator('.foco-v6-week-rows .is-done').evaluateAll(nodes =>
+      nodes.map(node => node.getAttribute('data-training-day')));
+    await until(async () => JSON.stringify(await doneDays()) === '["quinta"]',
+      'Only this week’s Thursday session may be marked complete');
+    const originalUrl = page.url();
+    await page.getByRole('button', { name: 'Ver semana anterior', exact: true }).click();
+    assert.match(await range.innerText(), /02.*nov.*08.*nov/i, 'Previous must move the date range back exactly one week');
+    assert.equal(page.url(), originalUrl, 'Week arrows must navigate dates without replacing the page');
+    assert.deepEqual(await doneDays(), ['terca'], 'Previous week must use its own Tuesday completion');
+    await capture(page, 'treinos-390-previous-week');
+    await page.getByRole('button', { name: 'Ver próxima semana', exact: true }).click();
+    assert.equal(await range.innerText(), currentRange);
+    await page.getByRole('button', { name: 'Ver próxima semana', exact: true }).click();
+    assert.match(await range.innerText(), /16.*nov.*22.*nov/i, 'Next must move the date range forward exactly one week');
+    assert.deepEqual(await doneDays(), [], 'A future week must not inherit past completion badges');
+    await page.getByRole('button', { name: 'Semana atual', exact: true }).click();
+    assert.equal(await range.innerText(), currentRange, 'Current week must restore the original range');
+    assert.deepEqual(await doneDays(), ['quinta']);
+    assert.equal(await page.getByRole('button', { name: 'Semana atual', exact: true }).count(), 0);
+    const saturday = page.locator('.foco-v6-week-rows [data-training-day="sabado"] .foco-week-select');
+    await saturday.click();
+    assert.equal(await saturday.getAttribute('aria-pressed'), 'true');
+    await page.getByRole('button', { name: 'Selecionar treino', exact: true }).click();
+    await page.locator('.foco-v7-stage-footer h2').waitFor();
+    assert.equal(await page.locator('.foco-v7-stage-footer h2').innerText(), 'Supino reto com barra · sabado',
+      'Starting the selected Saturday must open Saturday’s exercise rather than the previous day');
+    assert.ok(state.apiRequests.every(key => key.startsWith('GET ') || key.startsWith('OPTIONS ')),
+      'Week navigation must never mutate a saved workout or session');
+    await noGlobalOverflow(page, 'selected Saturday session');
+  }, { overrides: { '/api/sessions': [
+    { id: 'synthetic-current-thursday', plan_id: 'audit-plan', status: 'completed',
+      started_at: '2026-11-12T12:00:00.000Z', finished_at: '2026-11-12T12:30:00.000Z',
+      duration_seconds: 1800, notes: 'Treino escolhido da semana: Quinta-feira', sets: [] },
+    { id: 'synthetic-previous-tuesday', plan_id: 'audit-plan', status: 'completed',
+      started_at: '2026-11-03T12:00:00.000Z', finished_at: '2026-11-03T12:30:00.000Z',
+      duration_seconds: 1800, notes: 'Treino escolhido da semana: Terça-feira', sets: [] },
+  ] } });
+
+  await check('progress-period-buttons-and-report-select-stay-synchronized', viewports[1], async ({ page, state }) => {
+    await openView(page, 'progresso');
+    const periods = page.getByRole('group', { name: 'Período de evolução', exact: true });
+    const points = page.locator('.foco-v6-progress-svg circle');
+    await until(async () => (await points.count()) === 2, 'The default 30-day trend must contain only the two recent reports');
+    await periods.getByRole('button', { name: '7 dias', exact: true }).click();
+    assert.equal(await periods.getByRole('button', { name: '7 dias', exact: true }).getAttribute('aria-pressed'), 'true');
+    assert.equal(await points.count(), 2, 'Seven days must exclude the 45-day and 200-day reports');
+    assert.match(await page.locator('.foco-progress-delta').innerText(), /-1\s*kg/,
+      'The visible delta must use the selected seven-day endpoints');
+    await page.getByRole('button', { name: 'Ver relatório completo', exact: true }).click();
+    const report = page.locator('#foco-v6-report');
+    assert.equal(await report.getAttribute('open'), '', 'The report action must open the actual report disclosure');
+    const select = report.getByLabel('Período dos gráficos', { exact: true });
+    assert.equal(await select.inputValue(), '7', 'The report filter must reflect the selected period button');
+    await select.selectOption('365');
+    assert.equal(await periods.getByRole('button', { name: '1 ano', exact: true }).getAttribute('aria-pressed'), 'true',
+      'Changing the report filter must update the top period control');
+    await until(async () => (await points.count()) === 4, 'The yearly trend must include all four synthetic reports');
+    assert.match(await page.locator('.foco-progress-delta').innerText(), /-6\s*kg/,
+      'The visible delta must update to the yearly endpoints');
+    const comparison = page.getByRole('region', { name: 'Evolução entre avaliações OKOK', exact: true });
+    await until(() => comparison.getByText('4 medições comparáveis', { exact: true }).isVisible(),
+      'The detailed OKOK chart must use the same yearly date filter');
+    await capture(page, 'progresso-390-yearly-report-full', true);
+    await select.selectOption('7');
+    assert.equal(await periods.getByRole('button', { name: '7 dias', exact: true }).getAttribute('aria-pressed'), 'true');
+    await until(async () => (await points.count()) === 2, 'Returning to seven days must restore the recent two-point trend');
+    await until(() => comparison.getByText('2 medições comparáveis', { exact: true }).isVisible(),
+      'The detailed chart must return to the same two recent reports');
+    assert.ok(state.apiRequests.every(key => key.startsWith('GET ') || key.startsWith('OPTIONS ')),
+      'Date filtering and report navigation must never mutate a measurement');
+    await noGlobalOverflow(page, 'seven-day progress report');
+  }, { overrides: { '/api/files': referenceAssessmentFiles } });
 
   await check('sidebar-one-current-exact-destination', viewports[3], async ({ page }) => {
     const routes = [['dashboard', 'Início'], ['sessao', 'Treinar'], ['progresso', 'Minha evolução'],

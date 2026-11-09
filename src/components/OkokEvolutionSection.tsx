@@ -5,7 +5,7 @@ import { api } from '../services/api';
 import { getOkokAssessments, getOkokTrend, type OkokAssessment, type OkokMetric } from '../utils/okokMetrics';
 
 interface Props {
-  period: '30' | '90' | 'all';
+  period: '7' | '30' | '90' | '365' | 'all';
   onOpenAssessment: () => void;
 }
 const categories: OkokMetric['category'][] = ['Composição corporal', 'Metabolismo', 'Circunferências', 'Outros indicadores'];
@@ -115,7 +115,7 @@ export const OkokEvolutionSection: React.FC<Props> = ({ period, onOpenAssessment
   );
 
   return (
-    <section className="foco-v4-panel space-y-5 p-4 sm:p-6" aria-labelledby="foco-okok-title">
+    <section className="foco-okok-report foco-v4-panel space-y-5 p-4 sm:p-6" aria-labelledby="foco-okok-title">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
           <span className="foco-v4-info-icon"><ScanLine className="h-5 w-5" /></span>
@@ -141,10 +141,10 @@ export const OkokEvolutionSection: React.FC<Props> = ({ period, onOpenAssessment
               <h3 className="text-sm font-bold tracking-tight text-white">Principais indicadores</h3>
               <p className="mt-1 text-xs text-neutral-300">Valores extraídos do último relatório, sem estimativas adicionais.</p>
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="foco-okok-metric-grid grid grid-cols-2 gap-2 sm:grid-cols-4">
               {featured.map((metric, index) => {
                 const delta = metricDelta(metric);
-                return <article key={metric.key + ':' + index} className="foco-v4-data-tile !min-h-[140px]">
+                return <article key={metric.key + ':' + index} className="foco-okok-metric-card foco-v4-data-tile !min-h-0">
                   <p className="text-xs font-semibold leading-snug text-neutral-200">{metric.name}</p>
                   <strong className="mt-3 block break-words !text-[clamp(19px,4vw,26px)] leading-tight tracking-tight text-white">{metric.value}</strong>
                   {delta !== null && <p className="mt-2 text-xs text-neutral-300">
@@ -152,7 +152,7 @@ export const OkokEvolutionSection: React.FC<Props> = ({ period, onOpenAssessment
                     {delta > 0 ? '+' : ''}{displayNumber(delta)} {metric.unit} vs. anterior
                   </p>}
                   {metric.interpretation && <details className="mt-3 text-xs leading-relaxed text-neutral-300">
-                    <summary className="min-h-8 cursor-pointer py-1 font-semibold text-neutral-200">Sobre o indicador</summary>
+                    <summary className="min-h-11 cursor-pointer py-2 font-semibold text-neutral-200">Sobre o indicador</summary>
                     <p className="mt-1 whitespace-pre-line">{metric.interpretation}</p>
                   </details>}
                 </article>;
@@ -215,8 +215,8 @@ export const OkokEvolutionSection: React.FC<Props> = ({ period, onOpenAssessment
               <AreaChart data={chartData} margin={{ top: 10, right: 10, bottom: 5, left: -16 }}>
                 <defs>
                   <linearGradient id="foco-okok-trend" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#fff" stopOpacity={0.27} />
-                    <stop offset="95%" stopColor="#fff" stopOpacity={0} />
+                    <stop offset="0%" stopColor="var(--v6-accent)" stopOpacity={0.27} />
+                    <stop offset="95%" stopColor="var(--v6-accent)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="#333" strokeDasharray="3 4" vertical={false} />
@@ -225,7 +225,7 @@ export const OkokEvolutionSection: React.FC<Props> = ({ period, onOpenAssessment
                 <Tooltip contentStyle={{ borderRadius: 14, background: '#151515', color: '#fff', border: '1px solid #444' }}
                   formatter={(value) => [displayNumber(Number(value)) + (activeMetric?.unit ? ' ' + activeMetric.unit : ''), activeMetric?.name || 'Indicador']}
                 />
-                <Area dataKey="value" type="monotone" stroke="#fff" strokeWidth={2.5} fill="url(#foco-okok-trend)" dot={{ fill: '#fff', r: 3 }} activeDot={{ r: 5 }} />
+                <Area dataKey="value" type="monotone" stroke="var(--v6-accent)" strokeWidth={2.5} fill="url(#foco-okok-trend)" dot={{ fill: 'var(--v6-accent)', r: 3 }} activeDot={{ r: 5 }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>

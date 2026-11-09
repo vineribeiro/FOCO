@@ -1,6 +1,6 @@
 import { conciseWorkoutName } from '../utils/workoutTitles';
 import React, { useState, useEffect } from 'react';
-import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
+import { FocoV6Segment } from '../components/FocoV6UI';
 import { api } from '../services/api';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { getTrainingDayLabel, getCurrentTrainingDay, TRAINING_DAYS } from '../data/exerciseLibrary';
@@ -31,6 +31,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
   const [v6Mode, setV6Mode] = useState('week');
   const [isLoading, setIsLoading] = useState(true);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
+  const [weekOffset, setWeekOffset] = useState(0);
   const [expandedWeekDay, setExpandedWeekDay] = useState<string>(() => getCurrentTrainingDay());
   const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null);
   const [savingDayKey, setSavingDayKey] = useState<string | null>(null);
@@ -151,7 +152,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
 
   const weekStart = new Date();
   weekStart.setHours(0, 0, 0, 0);
-  weekStart.setDate(weekStart.getDate() - (weekStart.getDay() + 6) % 7);
+  weekStart.setDate(weekStart.getDate() - (weekStart.getDay() + 6) % 7 + weekOffset * 7);
   const nextWeekStart = new Date(weekStart);
   nextWeekStart.setDate(weekStart.getDate() + 7);
   const completedPlannedDays = new Set<string>();
@@ -177,37 +178,40 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
     setActiveTab('sessao');
   };
 
-  const monday=new Date();monday.setHours(0,0,0,0);monday.setDate(monday.getDate()-((monday.getDay()+6)%7));
-  const sunday=new Date(monday);sunday.setDate(monday.getDate()+6);
+  const sunday=new Date(weekStart);sunday.setDate(weekStart.getDate()+6);
+  const selectedWeeklyCard=weeklyCards.find(day=>day.value===expandedWeekDay)||weeklyCards[0];
   const fmt=(d:Date)=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
   return (
-    <div className="foco-v6-weekly foco-v4-page">
-      <div className="md:hidden"><FocoV6Status/></div>
+    <div className="foco-v6-weekly foco-reference-weekly foco-v4-page">
       <header className="foco-v6-mobile-title">
-        <div><h1>Meus treinos</h1><p>Teu plano, no teu ritmo.</p></div>
+        <h1>Meus treinos</h1>
         <button type="button" className="foco-v6-icon-button" aria-label="Criar ficha" onClick={()=>setActiveTab('novo-treino')}><Plus size={20}/></button>
       </header>
       <FocoV6Segment label="Seções dos treinos" options={[{value:'week',label:'Semana'},{value:'program',label:'Programa'},{value:'history',label:'Histórico'}]} value={v6Mode} onChange={setV6Mode}/>
       {actionMsg&&<div role={actionMsg.type==='error'?'alert':'status'} className="foco-v6-glass rounded-xl p-3 text-xs">{actionMsg.text}</div>}
-      {v6Mode==='week'&&<section className="space-y-4">
+      {v6Mode==='week'&&<section className="foco-week-overview space-y-4" aria-label="Agenda da ficha ativa">
         <div className="foco-v6-week-dates">
-          <button type="button" onClick={()=>setActiveTab('dashboard')} className="foco-v6-icon-button" aria-label="Voltar para início"><ChevronLeft size={17}/></button>
-          <span>{fmt(monday)} – {fmt(sunday)}</span>
-          <button type="button" onClick={()=>setActiveTab('historico')} className="foco-v6-icon-button" aria-label="Abrir histórico"><ChevronRight size={17}/></button>
+          <button type="button" onClick={()=>setWeekOffset(offset=>offset-1)} className="foco-v6-icon-button" aria-label="Ver semana anterior"><ChevronLeft size={17}/></button>
+          <span role="status">{fmt(weekStart)} – {fmt(sunday)}</span>
+          <button type="button" onClick={()=>setWeekOffset(offset=>offset+1)} className="foco-v6-icon-button" aria-label="Ver próxima semana"><ChevronRight size={17}/></button>
         </div>
+        {weekOffset!==0&&<div className="foco-week-context">
+          <p>Agenda da ficha ativa. Ao selecionar, o treino será iniciado hoje.</p>
+          <button type="button" className="foco-v6-glass-button" onClick={()=>setWeekOffset(0)}>Semana atual</button>
+        </div>}
         {isLoading?<p role="status" className="foco-v6-glass rounded-xl p-4 text-xs">Carregando tua semana...</p>:
         weeklyCards.length?<div className="foco-v6-week-rows">
           {weeklyCards.map(day=>{
-            const selected=expandedWeekDay===day.value, done=completedPlannedDays.has(day.value);
+            const selected=selectedWeeklyCard?.value===day.value, done=completedPlannedDays.has(day.value);
             const groups=[...new Set(day.exercises.map(ex=>ex.muscle_group).filter(Boolean))];
             const focus=conciseWorkoutName(groups,activePlan?.name||'Treino');
-            return <div key={day.value} className={'foco-v6-week-row '+(selected?'is-selected ':'')+(done?'is-done':'')}>
-              <button type="button" className="flex min-w-0 flex-1 items-center gap-3 text-left" onClick={()=>setExpandedWeekDay(day.value)} aria-pressed={selected}>
-                {day.exercises[0]&&<span className="foco-v6-week-thumb"><ExerciseIllustration exerciseName={day.exercises[0].exercise_name} exerciseId={day.exercises[0].repdb_id} muscleGroup={day.exercises[0].muscle_group} className="h-full w-full !rounded-xl" presentation="editorial"/></span>}
+            return <div key={day.value} className={'foco-v6-week-row '+(selected?'is-selected ':'')+(done?'is-done':'')} data-training-day={day.value}>
+              <button type="button" className="foco-week-select flex min-w-0 flex-1 items-center gap-3 text-left" onClick={()=>setExpandedWeekDay(day.value)} aria-pressed={selected}>
+                {day.exercises[0]&&<span className="foco-v6-week-thumb"><ExerciseIllustration exerciseName={day.exercises[0].exercise_name} exerciseId={day.exercises[0].repdb_id} muscleGroup={day.exercises[0].muscle_group} className="h-16 w-full !rounded-xl" presentation="editorial"/></span>}
                 <span className="foco-v6-week-row-text">
-                  <small className="foco-v8-week-day">{day.label.toUpperCase()}</small>
-                  <strong>{focus}</strong>
-                  <small>{day.exercises.length} exercícios {done?'· Concluído':'· Toque para selecionar'}</small>
+                  <strong className="foco-week-day-title">{day.label}</strong>
+                  <small className="foco-week-focus">{focus} · {day.exercises.length} exercícios</small>
+                  {done&&<span className="sr-only">Concluído nesta semana</span>}
                 </span>
               </button>
               <button type="button" className="foco-v6-week-row-status" onClick={()=>selectSession(day.value)} aria-label={'Selecionar treino de '+day.label}>
@@ -216,7 +220,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
             </div>;
           })}
         </div>:<p className="foco-v6-glass rounded-xl p-4 text-sm">Ainda não há treinos para esta semana.</p>}
-        <button type="button" className="foco-v6-primary" onClick={()=>expandedWeekDay&&weeklyCards.length?selectSession(expandedWeekDay):setActiveTab('novo-treino')}><Play size={15} fill="currentColor"/>{weeklyCards.length?'Selecionar treino':'Criar ficha'}</button>
+        <button type="button" className="foco-v6-primary" onClick={()=>selectedWeeklyCard?selectSession(selectedWeeklyCard.value):setActiveTab('novo-treino')}><Play size={15} fill="currentColor"/>{weeklyCards.length?'Selecionar treino':'Criar ficha'}</button>
         <button type="button" className="foco-v6-glass-button w-full" onClick={()=>setActiveTab('cardio')}><Activity size={16}/> Cardio livre</button>
       </section>}
       {v6Mode==='program'&&<section className="foco-v6-glass rounded-2xl p-5">
@@ -225,14 +229,14 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
         <button type="button" className="foco-v6-primary mt-5" onClick={()=>setActiveTab('novo-treino')}><Plus size={16}/> Criar outra ficha</button>
       </section>}
       {v6Mode==='history'&&<button type="button" className="foco-v6-glass-button w-full" onClick={()=>setActiveTab('historico')}>Abrir histórico completo <ChevronRight size={17}/></button>}
-      <details className="foco-v6-glass rounded-2xl p-3">
-        <summary className="min-h-10 cursor-pointer list-none px-2 py-2 text-xs font-bold text-[#C8F040]">Gerenciar fichas e exercícios <ChevronDown size={16} className="ml-2 inline"/></summary>
-    <div className="foco-v5-workouts foco-v4-page space-y-5 text-white">
+      <details className="foco-week-management foco-v6-glass rounded-2xl p-3">
+        <summary className="min-h-10 cursor-pointer list-none px-2 py-2 text-xs font-bold text-[#D5FF40]">Gerenciar fichas e exercícios <ChevronDown size={16} className="ml-2 inline"/></summary>
+    <div className="foco-v5-workouts space-y-5 pt-4 text-white">
       
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <><p className="foco-v4-eyebrow mb-2">FOCO / SEU PLANEJAMENTO</p><h1 className="foco-v4-heading">Meus treinos</h1></>
+          <h2 className="text-lg font-bold">Gerenciar planejamento</h2>
           <p className="text-xs text-neutral-400 mt-0.5">
             Consulte seus planos, escolha a ficha ativa e inicie o próximo treino.
           </p>
@@ -320,7 +324,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
                 const groups = [...new Set(day.exercises.map(ex => ex.muscle_group).filter(Boolean))];
                 const completed = completedPlannedDays.has(day.value);
                 return (
-                  <article key={day.value} className={'min-w-0 overflow-hidden rounded-2xl border bg-[#101010] ' + (expanded ? 'border-[#C8F040]/70 bg-[#20291A]' : 'border-white/15')}>
+                  <article key={day.value} className={'min-w-0 overflow-hidden rounded-2xl border bg-[#101010] ' + (expanded ? 'border-[#D5FF40]/70 bg-[#20291A]' : 'border-white/15')}>
                     <button type="button" aria-expanded={expanded} onClick={() => setExpandedWeekDay(expanded ? '' : day.value)}
                       className="flex w-full items-center gap-3 p-3.5 text-left hover:bg-white/5">
                       {day.exercises[0] && <ExerciseIllustration exerciseName={day.exercises[0].exercise_name} exerciseId={day.exercises[0].repdb_id}
