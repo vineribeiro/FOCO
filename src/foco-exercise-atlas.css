@@ -180,14 +180,14 @@
 .foco-repdb-pose-switch button:focus-visible{outline:2px solid #D5FF40;outline-offset:2px}
 .foco-repdb-guide-visual{height:clamp(260px,48dvh,410px);border-radius:20px}
 .foco-repdb-dialog-art{height:clamp(290px,58dvh,470px);border-radius:19px}
-.foco-edb-guide-heading{padding:15px;background:#1B2B1C;border:1px solid rgba(213,255,64,.22);border-radius:17px}
-.foco-edb-guide-heading h3{font-size:20px;font-weight:850;line-height:1.2;margin-top:7px}
-.foco-edb-guide-heading span{display:block;color:#D5FF40;font-size:11px;margin-top:7px}
-.foco-edb-guide-heading p,.foco-edb-guide-note{font-size:12px;line-height:1.6;color:#CBD9C6;margin-top:12px}
+.foco-repdb-guide-heading{padding:15px;background:#1B2B1C;border:1px solid rgba(213,255,64,.22);border-radius:17px}
+.foco-repdb-guide-heading h3{font-size:20px;font-weight:850;line-height:1.2;margin-top:7px}
+.foco-repdb-guide-heading span{display:block;color:#D5FF40;font-size:11px;margin-top:7px}
+.foco-repdb-guide-heading p,.foco-repdb-guide-note{font-size:12px;line-height:1.6;color:#CBD9C6;margin-top:12px}
 .foco-v6-shell .foco-21-session .foco-v7-stage-illustration[data-foco-media-status="image"]{border:0;background:transparent}
 .foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-repdb-pose{
   position:absolute;top:3%;left:50%;transform:translateX(-50%);
-  width:min(74%,320px);height:77%;inset:auto;object-fit:contain;object-position:center top;
+  width:min(74%,320px);height:77%;object-fit:contain;object-position:center top;
   border-radius:16px;box-shadow:0 14px 36px rgba(0,0,0,.3)
 }
 .foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-repdb-image-shade{background:linear-gradient(0deg,rgba(7,12,7,.55),transparent 25%)}
