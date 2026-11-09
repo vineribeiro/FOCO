@@ -40,9 +40,9 @@ jobs:
         run: npm run test:v2
       - name: FOCO 2.2 training scale and PWA freshness guardrails
         run: npm run test:session-contract
-      - name: ExerciseDB noncommercial licence and exercise match regression (offline)
-        run: npm run test:edb
-      - name: FOCO noncommercial Exercise Atlas pagination and gallery regression
+      - name: RepDB licensed imagery and stable exercise IDs
+        run: npm run test:repdb
+      - name: RepDB Exercise Atlas pagination and gallery regression
         run: npm run test:atlas
       - name: Exercise image catalog audit
         run: npm run audit:images
