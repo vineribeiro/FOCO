@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InstallAppButton } from '../components/InstallAppButton';
 import { soundEngine } from '../utils/soundEngine';
+import { REPDB_CREDIT_TEXT, REPDB_CREDIT_URL } from '../data/repdbAssets';
 import { FOCO_VISUAL_RELEASE, FOCO_VISUAL_DATE } from '../utils/release';
 import { useAuth } from '../context/AuthContext';
 import { applyUiPreferences, readUiPreferences, saveUiPreferences, type FocoUiPreferences } from '../utils/uiPreferences';
@@ -138,6 +139,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
             <p className="mt-1 text-xs leading-relaxed text-neutral-400">Compartilhe apenas as informações necessárias para personalizar seus treinos. Dores, lesões e outras informações de saúde só devem ser usadas com sua autorização.</p>
           </div>
         </div>
+      </section>
+
+      <section className="rounded-2xl border border-white/10 bg-[#141414] p-5" aria-labelledby="foco-image-credit-title">
+        <h2 id="foco-image-credit-title" className="text-sm font-bold text-white">Créditos das ilustrações</h2>
+        <p className="mt-2 text-xs leading-5 text-neutral-400">As posições dos exercícios são imagens estáticas do catálogo gratuito da RepDB. O crédito e a licença acompanham a biblioteca.</p>
+        <a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-xs font-bold text-[#D5FF40] underline underline-offset-4">{REPDB_CREDIT_TEXT}</a>
       </section>
 
       <button type="button" onClick={logout} className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-xs font-black uppercase tracking-wide text-white transition hover:border-white/35 hover:bg-white/10">
