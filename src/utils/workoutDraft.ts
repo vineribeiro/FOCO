@@ -7,6 +7,7 @@ export interface WorkoutDraftSet {
 }
 export interface WorkoutDraftExercise {
   exercise_name: string;
+  repdb_id?: string | null;
   muscle_group: string;
   rest_seconds: number;
   sets: WorkoutDraftSet[];
