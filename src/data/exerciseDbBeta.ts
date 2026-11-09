@@ -140,7 +140,7 @@ export function safeExerciseDBGif(url:unknown):string|null{
  catch{return null;}
 }
 export function isExerciseDBBetaAllowed():boolean{
- return import.meta.env?.VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA==='true' && import.meta.env?.VITE_FOCO_COMMERCIAL_MODE!=='true';
+ return import.meta.env?.VITE_FOCO_COMMERCIAL_MODE!=='true' && import.meta.env?.VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA!=='false';
 }
 // Provider caching rights are plan-specific. Do not persist ANY response,
 // GIF URL, ID or negative result, including through an in-memory result cache.
@@ -166,7 +166,7 @@ export async function getExerciseDBGifPreview(exerciseName:string):Promise<Exerc
  const task=(async():Promise<ExerciseDBPreviewResult>=>{
   // Two *explicitly approved names* at most. No fuzzy substitution:
   // the API's fuzzy suggestions are only candidates, not identity.
-  const approvedTerms=[...new Set(candidates)].slice(0,2);
+  const approvedTerms=[...new Set(candidates)].slice(0,3);
   for(let index=0;index<approvedTerms.length;index++){
    await waitForProviderSlot();
    const term=approvedTerms[index];
