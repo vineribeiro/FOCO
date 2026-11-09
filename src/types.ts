@@ -49,6 +49,8 @@ export interface WorkoutExercise {
   id?: string;
   plan_id?: string;
   exercise_name: string;
+  /** Optional RepDB media ID, independent of the user-entered exercise name. */
+  repdb_id?: string | null;
   muscle_group: string;
   sets: number;
   reps_min: number;
