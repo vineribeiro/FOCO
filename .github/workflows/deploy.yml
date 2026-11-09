@@ -29,8 +29,10 @@ jobs:
         run: npm install
       - name: Typecheck
         run: npm run lint
-      - name: ExerciseDB contract tests
-        run: npm run test:edb
+      - name: RepDB licensed imagery contract
+        run: npm run test:repdb
+      - name: RepDB atlas tests
+        run: npm run test:atlas
       - name: Training science tests
         run: npm run test:training-science
       - name: Session persistence contract
@@ -38,11 +40,6 @@ jobs:
       - name: UI/UX regression tests
         run: npm run test:ui-ux
       - name: Build production site
-        env:
-          # Public FOCO is a free beta during 2026 only. Remove this flag before
-          # any monetization; the default for other environments is DISABLED.
-          VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA: 'true'
-          VITE_FOCO_COMMERCIAL_MODE: 'false'
         run: npm run build
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
