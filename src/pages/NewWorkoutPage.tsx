@@ -589,7 +589,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       <tr key={idx} className="hover:bg-white/5">
                         <td className="py-2.5 px-2 font-sans font-bold text-white">
                           <div className="flex min-w-[190px] items-center gap-2.5">
-                            <ExerciseIllustration exerciseName={ex.exercise_name} muscleGroup={ex.muscle_group} className="h-16 w-16 shrink-0" />
+                            <ExerciseIllustration exerciseName={ex.exercise_name} exerciseId={ex.repdb_id} muscleGroup={ex.muscle_group} className="h-16 w-16 shrink-0" />
                             <span>{ex.exercise_name}</span>
                           </div>
                         </td>
