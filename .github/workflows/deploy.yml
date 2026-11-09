@@ -26,7 +26,17 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+      - name: Typecheck
+        run: npm run lint
+      - name: ExerciseDB contract tests
+        run: npm run test:edb
+      - name: Training science tests
+        run: npm run test:training-science
+      - name: Session persistence contract
+        run: npm run test:session-contract
+      - name: UI/UX regression tests
+        run: npm run test:ui-ux
       - name: Build production site
         env:
           # Public FOCO is a free beta during 2026 only. Remove this flag before
