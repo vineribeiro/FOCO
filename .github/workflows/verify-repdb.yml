@@ -1,0 +1,33 @@
+name: Verify FOCO RepDB
+on:
+  push:
+    branches: [feature/repdb-unified-media-20261109]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  integration:
+    name: TypeScript, RepDB, session, UI and production build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install
+      - name: Typecheck
+        run: npm run lint
+      - name: RepDB contract
+        run: npm run test:repdb
+      - name: RepDB gallery
+        run: npm run test:atlas
+      - name: Workout session contract
+        run: npm run test:session-contract
+      - name: UI UX regression
+        run: npm run test:ui-ux
+      - name: Training science
+        run: npm run test:training-science
+      - name: Production build
+        run: npm run build
