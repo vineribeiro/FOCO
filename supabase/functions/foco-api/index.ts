@@ -185,6 +185,7 @@ async function createPlan(db: SupabaseClient, uid: string, input: any, givenExer
     if (trainingDay && !validDays.includes(trainingDay)) throw new ApiError(400, "Dia da semana inválido no exercício.");
     return {
       plan_id: p.data.id, exercise_name: text(e.exercise_name, 160) || "Exercício",
+      repdb_id: typeof e.repdb_id === "string" && /^[a-z0-9-]{1,100}$/.test(e.repdb_id) ? e.repdb_id : null,
       muscle_group: text(e.muscle_group, 80) || "Geral",
       sets: Number(e.sets) || 3, reps_min: Number(e.reps_min) || 8, reps_max: Number(e.reps_max) || 12,
       rest_seconds: Number(e.rest_seconds) || 60, suggested_load_kg: Number(e.suggested_load_kg) || 0,
@@ -718,6 +719,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     const exercise = await db.from("workout_exercises").insert({
       plan_id: planId,
       exercise_name: exerciseName,
+      repdb_id: typeof input.repdb_id === "string" && /^[a-z0-9-]{1,100}$/.test(input.repdb_id) ? input.repdb_id : null,
       muscle_group: text(input.muscle_group, 80) || "Geral",
       sets: Math.min(10, Math.max(1, Number(input.sets) || 3)),
       reps_min: Math.min(100, Math.max(1, Number(input.reps_min) || 8)),
