@@ -1,8 +1,13 @@
-# Regra ativa de mídia — FOCO 2.3
-A **ExerciseDB/AscendAPI é a ÚNICA fonte de catálogo, GIF e demonstração de exercícios** para a interface. Não reativar FOCO curated grid, ExercisePhaseGallery, RepDB ou SVGs antigos como fallback. Os treinos persistidos e os dados técnicos internos necessários ao motor/compatibilidade são exceções: não deletar nem substituir dados reais do usuário. GIFs e metadados da API não devem ser baixados em massa nem persistidos; atribuir AscendAPI, obedecer uso não comercial.
+# Regra ativa de mídia — FOCO / RepDB Free / 09-11-2026
+A **RepDB Free** é a única fonte de ilustrações de exercícios nas telas do FOCO.
+Usar imagens WebP originais de posição inicial/final, com associação por `repdb_id` quando disponível. Nunca substituir uma variação por movimento semelhante.
+Fichas, histórico, dados técnicos do motor e catálogos internos de instrução permanecem preservados. Não apagar registros reais.
+Licença: https://github.com/RepDB/exercise-dataset/blob/main/LICENSE-DATA.md — uso dentro de aplicativos com atribuição visível: "Exercise data by RepDB (repdb.co)".
+Não publicar o dataset como API/redistribuição independente. Não usar imagens do free tier como referência para IA generativa.
+**Animações premium-samples são somente para avaliação**, não são permitidas em produção com a licença Free.
 
-# Atualização de escopo — 05/11/2026
-**FOCO é agora um projeto pessoal NÃO COMERCIAL. Não existe lançamento de venda previsto para 2027.** Respeitar licenças e atribuições, incluindo a ExerciseDB OSS. A galeria externa é exclusivamente de leitura em tempo real e não pode persistir dados de terceiros. Essa decisão prevalece sobre referências antigas de plano comercial em documentos históricos.
+# Atualização de escopo — 09/11/2026
+FOCO permanece um projeto pessoal não comercial. A biblioteca visual antiga foi removida; os treinos históricos e o catálogo científico interno não devem ser apagados.
 
 # FOCO — Regra de desenvolvimento para agentes
 
