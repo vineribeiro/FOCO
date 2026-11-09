@@ -11,6 +11,10 @@
 }
 /* Home: new editorial rhythm, visible version and activity snapshot. */
 .foco-v6-shell .foco-v6-dashboard {gap:20px;max-width:520px;padding-top:15px;}
+.foco-v6-shell .foco-home-layout,
+.foco-v6-shell .foco-home-support {display:grid;grid-template-columns:minmax(0,1fr);min-width:0;gap:20px;}
+.foco-v6-shell .foco-home-support>* {min-width:0;}
+.foco-v6-shell .foco-home-layout>.foco-v6-hero {min-width:0;align-self:start;}
 .foco-v6-shell .foco-v6-home-header {
   min-height:64px;padding:0 2px 12px;gap:14px;
   border-bottom:1px solid rgba(238,255,217,.14);
@@ -108,6 +112,15 @@
 }
 .foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel strong{font-size:14px;line-height:1.15;letter-spacing:-.02em;display:block;}
 .foco-v6-shell .foco-21-shortcut-grid .foco-v6-mini-panel p{font-size:11px;line-height:1.4;margin-top:5px;color:var(--f21-quiet);}
+@media(min-width:1200px){
+  .foco-v6-shell .foco-v6-dashboard{max-width:1080px;}
+  .foco-v6-shell .foco-home-layout{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start;gap:24px;}
+  .foco-v6-shell .foco-home-support{gap:16px;}
+  .foco-v6-shell .foco-home-support .foco-21-shortcut-grid .foco-v6-mini-panel{min-height:96px;padding:14px;flex-direction:row;align-items:center;gap:12px;}
+  .foco-v6-shell .foco-home-support .foco-21-shortcut-grid .foco-v6-mini-panel>span{min-width:0;}
+  .foco-v6-shell .foco-home-support .foco-21-shortcut-grid .foco-v6-mini-panel strong{font-size:13px;}
+  .foco-v6-shell .foco-home-support .foco-21-shortcut-grid .foco-v6-mini-panel svg{width:36px;height:36px;padding:9px;flex:0 0 36px;}
+}
 /* Session: actual new composition, distinct readable media, separated controls. */
 .foco-v6-shell .foco-21-session{max-width:500px;min-width:0;gap:10px !important;padding-top:4px;}
 .foco-v6-shell .foco-21-session .foco-v7-session-heading{min-height:60px;gap:10px;}

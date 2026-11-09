@@ -97,6 +97,8 @@ jobs:
         run: npm run test:audit-browser
       - name: Lost response, reload and storage-quota session regression
         run: npm run test:session-retry-browser
+      - name: Responsive layout, full notes and navigation regression
+        run: npm run test:layout-regression
       - name: Upload synthetic regression evidence
         if: always()
         uses: actions/upload-artifact@v4

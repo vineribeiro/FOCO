@@ -460,53 +460,71 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       )}
       {/* Extracted Data Confirmation Box */}
       {extractedResult && (
-        <div className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/30 space-y-5 animate-in fade-in">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
-            <div>
+        <section className="foco-extracted-review min-w-0 p-4 sm:p-6 rounded-2xl bg-[#141414] border border-white/30 space-y-5 animate-in fade-in" aria-labelledby="foco-extracted-plan-title">
+          <div className="space-y-3 pb-3 border-b border-white/10">
+            <div className="min-w-0">
               <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-widest">
                 <span>Leitura Concluída</span>
                 <span>·</span>
                 <span>{extractedResult.extracted_exercises.length} Exercícios</span>
               </div>
-              <h3 className="text-lg font-black text-white uppercase mt-0.5">
+              <h3 id="foco-extracted-plan-title" className="text-lg font-black text-white uppercase mt-0.5 [overflow-wrap:anywhere]">
                 {extractedResult.plan_name}
               </h3>
-              <p className="text-xs text-neutral-400 mt-0.5">
+              <p className="text-xs leading-relaxed text-neutral-400 mt-0.5 whitespace-pre-wrap [overflow-wrap:anywhere]">
                 {extractedResult.confidence_notes}
               </p>
             </div>
-
-            <button
-              onClick={handleConfirmAndSavePlan}
-              disabled={isProcessing}
-              className="px-5 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shrink-0 shadow-md"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              <span>Aprovar e Salvar Ficha</span>
-            </button>
+            <p className="text-xs leading-relaxed text-neutral-300">Confira cada exercício e suas observações antes de aprovar a ficha.</p>
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="foco-extracted-cards space-y-3 lg:hidden">
+            {extractedResult.extracted_exercises.map((ex, idx) => (
+              <article key={idx} className="min-w-0 rounded-xl border border-white/15 bg-[#0A0A0A] p-4 space-y-4" aria-labelledby={`foco-extracted-exercise-${idx}`}>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Exercício {idx + 1}</p>
+                  <h4 id={`foco-extracted-exercise-${idx}`} className="mt-1 text-sm font-bold text-white [overflow-wrap:anywhere]">{ex.exercise_name}</h4>
+                  <p className="mt-1 text-xs text-neutral-400 [overflow-wrap:anywhere]">{ex.muscle_group}</p>
+                </div>
+                <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
+                  <div className="min-w-0"><dt className="text-neutral-400">Séries</dt><dd className="mt-1 font-mono font-bold text-white [overflow-wrap:anywhere]">{ex.sets}</dd></div>
+                  <div className="min-w-0"><dt className="text-neutral-400">Repetições</dt><dd className="mt-1 font-mono font-bold text-white [overflow-wrap:anywhere]">{ex.reps_min}-{ex.reps_max}</dd></div>
+                  <div className="min-w-0"><dt className="text-neutral-400">Carga (kg)</dt><dd className="mt-1 font-mono font-bold text-white [overflow-wrap:anywhere]">{ex.suggested_load_kg ?? '—'}</dd></div>
+                  <div className="min-w-0"><dt className="text-neutral-400">Descanso</dt><dd className="mt-1 font-mono font-bold text-white [overflow-wrap:anywhere]">{ex.rest_seconds}s</dd></div>
+                </dl>
+                <div className="min-w-0 border-t border-white/10 pt-3">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Observações</p>
+                  <p data-extracted-notes={idx} className="mt-2 text-xs leading-relaxed text-neutral-300 whitespace-pre-wrap [overflow-wrap:anywhere]">{ex.notes || 'Sem observações.'}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="foco-extracted-table hidden lg:block">
+            <table className="w-full table-fixed text-left text-xs">
+              <caption className="sr-only">Exercícios extraídos da ficha {extractedResult.plan_name}, incluindo observações completas para revisão.</caption>
+              <colgroup>
+                <col className="w-[25%]" /><col className="w-[14%]" /><col className="w-[8%]" />
+                <col className="w-[11%]" /><col className="w-[10%]" /><col className="w-[10%]" /><col className="w-[22%]" />
+              </colgroup>
               <thead>
                 <tr className="text-neutral-500 font-bold border-b border-white/10 uppercase text-[10px]">
-                  <th className="py-2 px-2">EXERCÍCIO</th>
-                  <th className="py-2 px-2">GRUPAMENTO</th>
-                  <th className="py-2 px-2">SÉRIES</th>
-                  <th className="py-2 px-2">REPETIÇÕES</th>
-                  <th className="py-2 px-2">CARGA (KG)</th>
-                  <th className="py-2 px-2">DESCANSO</th>
-                  <th className="py-2 px-2">NOTAS</th>
+                  <th scope="col" className="py-2 px-2 [overflow-wrap:anywhere]">EXERCÍCIO</th>
+                  <th scope="col" className="py-2 px-2 [overflow-wrap:anywhere]">GRUPAMENTO</th>
+                  <th scope="col" className="py-2 px-2 [overflow-wrap:anywhere]">SÉRIES</th>
+                  <th scope="col" className="py-2 px-2 [overflow-wrap:anywhere]">REPETIÇÕES</th>
+                  <th scope="col" className="py-2 px-2 [overflow-wrap:anywhere]">CARGA (KG)</th>
+                  <th scope="col" className="py-2 px-2 [overflow-wrap:anywhere]">DESCANSO</th>
+                  <th scope="col" className="py-2 px-2 [overflow-wrap:anywhere]">OBSERVAÇÕES</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 font-mono">
                 {extractedResult.extracted_exercises.map((ex, idx) => (
-                  <tr key={idx} className="hover:bg-white/5">
-                    <td className="py-2.5 px-2 font-sans font-bold text-white">
+                  <tr key={idx} className="align-top hover:bg-white/5">
+                    <th scope="row" className="py-2.5 px-2 font-sans font-bold text-white [overflow-wrap:anywhere]">
                       {ex.exercise_name}
-                    </td>
-                    <td className="py-2.5 px-2 font-sans text-neutral-400">
+                    </th>
+                    <td className="py-2.5 px-2 font-sans text-neutral-400 [overflow-wrap:anywhere]">
                       {ex.muscle_group}
                     </td>
                     <td className="py-2.5 px-2 text-white font-black">
@@ -516,20 +534,31 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
                       {ex.reps_min}-{ex.reps_max}
                     </td>
                     <td className="py-2.5 px-2 text-white font-bold">
-                      {ex.suggested_load_kg || '--'}
+                      {ex.suggested_load_kg ?? '—'}
                     </td>
                     <td className="py-2.5 px-2 text-neutral-400">
                       {ex.rest_seconds}s
                     </td>
-                    <td className="py-2.5 px-2 font-sans text-neutral-400 truncate max-w-[150px]">
-                      {ex.notes || '-'}
+                    <td className="py-2.5 px-2 font-sans text-neutral-300">
+                      <p data-extracted-notes={idx} className="leading-relaxed whitespace-pre-wrap [overflow-wrap:anywhere]">{ex.notes || 'Sem observações.'}</p>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
+          <div className="flex justify-end border-t border-white/10 pt-4">
+            <button
+              type="button"
+              onClick={handleConfirmAndSavePlan}
+              disabled={isProcessing}
+              className="w-full sm:w-auto min-h-11 px-5 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            >
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <span>Aprovar e Salvar Ficha</span>
+            </button>
+          </div>
+        </section>
       )}
 
       {/* Uploaded History List */}

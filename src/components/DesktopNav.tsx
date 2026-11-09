@@ -16,7 +16,7 @@ const primary = [
 const tools = [
   { id: 'treinos', label: 'Minhas fichas', icon: ClipboardList },
   { id: 'cardio', label: 'Cardio livre', icon: Activity },
-  { id: 'novo-treino', label: 'Nova ficha com IA', icon: Sparkles },
+  { id: 'novo-treino', label: 'Nova ficha', icon: Sparkles },
   { id: 'arquivos', label: 'Avaliação OKOK', icon: ScanLine },
   { id: 'anamnese', label: 'Anamnese', icon: FileUp },
   { id: 'objetivos', label: 'Meus objetivos', icon: Target },
@@ -27,11 +27,9 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ activeTab, navigate }) =
     <div className="mb-10 flex flex-col gap-2 px-2"><FocoV6Lockup compact /><span className="text-[9px] font-bold tracking-[.16em] text-[#AEBDA0]">TREINO. EVOLUÇÃO. PERFORMANCE.</span></div>
     <nav aria-label="Principal" className="space-y-1">
       {primary.map(({ id, label, icon: Icon }) => {
-        const selected = activeTab === id
-          || (id === 'sessao' && ['treinos', 'novo-treino', 'revisao'].includes(activeTab))
-          || (id === 'progresso' && ['arquivos', 'historico'].includes(activeTab))
-          || (id === 'biblioteca' && ['musculos', 'atlas'].includes(activeTab))
-          || (id === 'perfil' && ['configuracoes', 'anamnese', 'objetivos'].includes(activeTab));
+        // A section and its child page must not both claim to be the current
+        // page. "musculos" is a legacy alias of the same library screen.
+        const selected = activeTab === id || (id === 'biblioteca' && activeTab === 'musculos');
         return <button key={id} type="button" onClick={() => navigate(id)} aria-current={selected ? 'page' : undefined}
           className={'foco-nav-item ' + (selected ? 'foco-nav-item-active' : '')}>
           <Icon className="h-5 w-5" aria-hidden="true" /><span>{label}</span>
@@ -48,10 +46,9 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ activeTab, navigate }) =
       ))}
     </nav>
     <div className="mt-auto space-y-1 border-t border-white/10 pt-4">
-      <button type="button" onClick={() => navigate('perfil')} className="foco-nav-item">
-        <UserRound className="h-4 w-4" aria-hidden="true" />Meu perfil
-      </button>
-      <button type="button" onClick={() => navigate('configuracoes')} className="foco-nav-item">
+      <button type="button" onClick={() => navigate('configuracoes')}
+        aria-current={activeTab === 'configuracoes' ? 'page' : undefined}
+        className={'foco-nav-item ' + (activeTab === 'configuracoes' ? 'foco-nav-item-active' : '')}>
         <Settings2 className="h-4 w-4" aria-hidden="true" />Configurações
       </button>
     </div>

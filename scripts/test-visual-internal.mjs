@@ -194,12 +194,25 @@ try{
         : sessionLayout.stageHeight>=275&&sessionLayout.stageHeight<=390,
         'Workout hero must stay proportional at '+size.name+': '+JSON.stringify(sessionLayout));
       if(size.width<768){
-        const overlap=await page.evaluate(()=>{
+        const placement=await page.evaluate(()=>{
           const rest=document.querySelector('.foco-21-rest');
           const cta=document.querySelector('.foco-v7-session-start');
-          return rest&&cta?{rest:rest.getBoundingClientRect().bottom,cta:cta.getBoundingClientRect().top,position:getComputedStyle(cta).position}:null;
+          const hero=document.querySelector('.foco-v7-session-stage');
+          const nav=document.querySelector('nav[aria-label="Navegação principal"]');
+          return rest&&cta&&hero&&nav?{
+            restTop:rest.getBoundingClientRect().top,
+            ctaTop:cta.getBoundingClientRect().top,
+            ctaBottom:cta.getBoundingClientRect().bottom,
+            heroBottom:hero.getBoundingClientRect().bottom,
+            navTop:nav.getBoundingClientRect().top,
+            position:getComputedStyle(cta).position,
+          }:null;
         });
-        assert.ok(overlap&&overlap.position==='static'&&overlap.rest<=overlap.cta+1,'Start CTA must not obscure rest controls');
+        assert.ok(placement&&placement.position==='static'
+          &&placement.heroBottom<=placement.ctaTop+1
+          &&placement.ctaBottom<=placement.restTop+1
+          &&placement.ctaBottom<=placement.navTop+1,
+          'Start CTA must remain in flow, visible after the exercise and before secondary rest controls');
       }
       // Switching exercises should display the matching RepDB pose, never an old SVG.
       await page.waitForTimeout(1600); // Respect rate limit between distinct exercise requests.

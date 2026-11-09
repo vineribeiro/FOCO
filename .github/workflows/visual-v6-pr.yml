@@ -20,10 +20,9 @@ jobs:
         with:
           node-version: 22
       - name: Install app dependencies
-        run: npm install
+        run: npm ci
       - name: Install browser test dependencies
         run: |
-          npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
       - name: Build preview from pull request
         env:
