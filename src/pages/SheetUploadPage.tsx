@@ -76,6 +76,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
   const [bodyContext, setBodyContext] = useState('');
   const [bodyReport, setBodyReport] = useState<BodyReport | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showNewUpload, setShowNewUpload] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -104,11 +105,12 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
 
   const loadFiles = async () => {
     setIsLoading(true);
+    setLoadError(false);
     try {
       const data = await api.getFiles();
       setFiles(data);
     } catch (e: any) {
-      console.error('Error fetching files:', e);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -290,8 +292,14 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
         </button>
       </div>
       {/* Alerts */}
+      <p role="status" className="sr-only">{successMsg || ''}</p>
+      {isLoading && <p role="status" className="py-4 text-xs text-neutral-400">Carregando documentos e avaliações...</p>}
+      {loadError && <div role="alert" className="rounded-xl border border-white/20 p-4 text-sm text-neutral-300">
+        <p>Não foi possível consultar seus documentos e avaliações. Seus registros não foram alterados. Confira a conexão e tente novamente.</p>
+        <button type="button" onClick={() => void loadFiles()} className="mt-3 min-h-11 rounded-xl bg-white px-4 font-bold text-black">Tentar novamente</button>
+      </div>}
       {errorMsg && (
-        <div className="p-3.5 rounded-xl bg-white/5 border border-white/20 text-neutral-200 text-xs flex items-center gap-2.5">
+        <div role="alert" className="p-3.5 rounded-xl bg-white/5 border border-white/20 text-neutral-200 text-xs flex items-center gap-2.5">
           <AlertCircle className="w-4 h-4 shrink-0 text-white" />
           <span>{errorMsg}</span>
         </div>
@@ -374,10 +382,10 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
 
         {/* Optional notes are only relevant for workout-sheet extraction. */}
         {uploadMode === 'workout' && <div>
-          <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">
+          <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-sheetupload-notes">
             Observações Adicionais para a IA (Opcional)
           </label>
-          <input
+          <input id="foco-sheetupload-notes"
             type="text"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
@@ -389,8 +397,8 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
         {/* Process Button */}
         {uploadMode === 'body' && (
           <div className="mt-4 space-y-2">
-            <label className="block text-xs font-bold uppercase tracking-wide text-neutral-300">Contexto opcional</label>
-            <textarea value={bodyContext} onChange={(e) => setBodyContext(e.target.value)} rows={3}
+            <label className="block text-xs font-bold uppercase tracking-wide text-neutral-300" htmlFor="foco-sheetupload-body-context">Contexto opcional</label>
+            <textarea id="foco-sheetupload-body-context" value={bodyContext} onChange={(e) => setBodyContext(e.target.value)} rows={3}
               placeholder="Ex.: objetivo de ganhar massa, frequência de treino, restrições ou dúvidas..."
               className="w-full rounded-xl bg-[#0A0A0A] border border-white/15 px-3 py-2.5 text-xs text-white placeholder-neutral-500 focus:border-white focus:outline-none" />
           </div>
@@ -527,14 +535,15 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       {/* Uploaded History List */}
       <div className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/10 space-y-4">
         <h3 className="text-xs font-black text-white uppercase tracking-wider">
-          Fichas e Documentos Enviados ({files.length})
+          Fichas e Documentos Enviados{!isLoading && !loadError ? ` (${files.length})` : ''}
         </h3>
 
-        {files.length === 0 ? (
+        {!isLoading && !loadError && files.length === 0 && (
           <p className="text-xs text-neutral-500 py-4 text-center font-mono">
             Nenhum arquivo enviado até o momento.
           </p>
-        ) : (
+        )}
+        {files.length > 0 && (
           <div className="divide-y divide-white/5">
             {files.map((file) => (
               <div key={file.id} className="py-3 flex items-center justify-between text-xs">

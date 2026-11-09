@@ -72,7 +72,7 @@ await check("GitHub Pages entrega HTML do FOCO", async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") || "", /text\/html/);
   const html = await response.text();
-  assert.match(html, /<meta name="foco-release" content="2026-11-09-v24-repdb1"/, 'O site publicado precisa conter a versão 2.4, não apenas o workflow concluído');
+  assert.match(html, /<meta name="foco-release" content="2026-11-09-v24-audit2"/, 'O site publicado precisa conter a versão 2.4, não apenas o workflow concluído');
   assert.match(html, /<div[^>]+id=["']root["']/);
   const scripts = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/g)].map(match => match[1]);
   const asset = scripts.find(source => /(?:^|\/)assets\/[^/]+\.js(?:\?.*)?$/.test(source));

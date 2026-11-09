@@ -33,9 +33,19 @@ import { InstallAppButton } from './components/InstallAppButton';
 import { ExerciseLibraryPage } from './pages/ExerciseLibraryPage';
 import { AnatomyStudioPage } from './pages/AnatomyStudioPage';
 
+const VIEW_TITLES: Record<string, string> = {
+  dashboard: 'Início', detalhes: 'Treino do dia', biblioteca: 'Biblioteca de exercícios',
+  musculos: 'Biblioteca de exercícios', sessao: 'Sessão de treino', 'ia-lab': 'Laboratório de treino',
+  progresso: 'Minha evolução', perfil: 'Meu perfil', configuracoes: 'Configurações',
+  historico: 'Histórico de treinos', treinos: 'Minhas fichas', 'novo-treino': 'Nova ficha',
+  anamnese: 'Anamnese', revisao: 'Revisão de progressão', arquivos: 'Fichas e avaliações',
+  objetivos: 'Metas e objetivos', atlas: 'Atlas muscular', cardio: 'Cardio livre',
+  complementares: 'Exercícios complementares', 'em-casa': 'FOCO em Casa',
+};
+
 function MainApp() {
-  const { user, isAuthenticated, isLoading, authLoadError } = useAuth();
-  const validViews = ['dashboard', 'detalhes', 'biblioteca', 'musculos', 'sessao', 'ia-lab', 'progresso', 'perfil', 'configuracoes', 'historico', 'treinos', 'novo-treino', 'anamnese', 'revisao', 'arquivos', 'objetivos', 'atlas', 'cardio', 'complementares', 'em-casa'];
+  const { user, isAuthenticated, isRestoringSession, authLoadError, retrySession } = useAuth();
+  const validViews = Object.keys(VIEW_TITLES);
   const [activeTab, setActiveTabState] = useState<string>(() => {
     const view = new URLSearchParams(window.location.search).get('view');
     return view && validViews.includes(view) ? view : 'dashboard';
@@ -51,6 +61,18 @@ function MainApp() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeTab]);
+  useEffect(() => {
+    document.title = `${isRestoringSession ? 'Iniciando' : isAuthenticated ? VIEW_TITLES[activeTab] : authLoadError ? 'Reconectar' : 'Entrar'} | FOCO`;
+    if (!isAuthenticated || isRestoringSession) return;
+    // Focus the stable landmark after route replacement. Native dialogs retain
+    // their own focus, including onboarding dialogs opened on first render.
+    const frame = window.requestAnimationFrame(() => {
+      if (!document.querySelector('dialog[open]')) {
+        document.getElementById('foco-main-content')?.focus({ preventScroll: true });
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeTab, isAuthenticated, isRestoringSession, authLoadError]);
   useEffect(() => {
     const onPopState = () => {
       const view = new URLSearchParams(window.location.search).get('view');
@@ -71,7 +93,7 @@ function MainApp() {
     return () => { active = false; };
   }, [isAuthenticated, user?.id]);
   
-  if (isLoading) {
+  if (isRestoringSession) {
     return (
       <div className="foco-v6-splash" role="status" aria-label="Iniciando FOCO">
         <img className="foco-v6-splash-photo" src={V6_IMAGES.portrait} alt="" aria-hidden="true" />
@@ -92,7 +114,7 @@ function MainApp() {
             O FOCO não conseguiu validar sua sessão a tempo. Isso não significa que sua conta foi perdida.
           </p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => void retrySession()}
             className="mt-6 w-full rounded-xl bg-white px-4 py-3 font-bold text-black"
           >
             Tentar novamente
@@ -197,7 +219,7 @@ function MainApp() {
         </header>
 
         {/* Viewport Content Area with Protected Bottom Space (pb-32) */}
-        <main id="foco-main-content" tabIndex={-1} className="flex-1 min-w-0 px-[14px] pb-28 pt-0 sm:px-6 sm:pt-3 lg:px-9 lg:pt-6 md:pb-10">
+        <main id="foco-main-content" tabIndex={-1} aria-label={VIEW_TITLES[activeTab]} className="flex-1 min-w-0 px-[14px] pb-28 pt-0 sm:px-6 sm:pt-3 lg:px-9 lg:pt-6 md:pb-10">
           <div key={activeTab} className="foco-motion-view">{renderActiveView()}</div>
         </main>
 

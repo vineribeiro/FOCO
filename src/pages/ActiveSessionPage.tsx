@@ -1,11 +1,14 @@
 import { FOCO_VISUAL_RELEASE } from '../utils/release';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { useAuth } from '../context/AuthContext';
 import { conciseWorkoutName } from '../utils/workoutTitles';
 import { loadWorkoutDraft, saveWorkoutDraft, clearWorkoutDraft } from '../utils/workoutDraft';
 import { api } from '../services/api';
+import { AccessibleDialog } from '../components/AccessibleDialog';
+import { createSessionRequestId, createSessionSubmission } from '../utils/sessionSubmission';
+import type { SessionSubmission } from '../utils/sessionSubmission';
 import { WorkoutPlan, WorkoutExercise, WorkoutSession } from '../types';
 import { useRestTimer } from '../context/RestTimerContext';
 import { soundEngine } from '../utils/soundEngine';
@@ -106,6 +109,11 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const [draftHydrated, setDraftHydrated] = useState(false);
   const [restoredDraft, setRestoredDraft] = useState(false);
   const [draftError, setDraftError] = useState<string | null>(null);
+  const [pendingSubmission, setPendingSubmission] = useState<SessionSubmission | null>(null);
+  const submissionRef = useRef<SessionSubmission | null>(null);
+  const requestIdRef = useRef<string | null>(null);
+  const sessionPlanIdRef = useRef<string | null>(null);
+  const saveInFlightRef = useRef(false);
 
   // Consumir a escolha somente depois da montagem evita perder o valor no
   // segundo render de inicialização do React StrictMode.
@@ -116,8 +124,19 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   useEffect(() => {
     setDraftHydrated(false);
     if (!user?.id) return;
+    submissionRef.current = null;
+    requestIdRef.current = null;
+    sessionPlanIdRef.current = null;
+    setPendingSubmission(null);
+    setSessionStarted(false);
+    setSessionStartTime(null);
+    setExerciseLogs([]);
     const draft = loadWorkoutDraft(user.id);
     if (draft) {
+      requestIdRef.current = draft.clientRequestId;
+      sessionPlanIdRef.current = draft.planId;
+      submissionRef.current = draft.pendingSubmission || null;
+      setPendingSubmission(draft.pendingSubmission || null);
       setSessionStarted(true);
       setSessionStartTime(new Date(draft.sessionStartedAt));
       setSelectedTrainingDay(draft.selectedTrainingDay);
@@ -135,24 +154,27 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     if (!draftHydrated || !user?.id || !sessionStarted || !sessionStartTime || sessionCompletedModal) return;
     const ok = saveWorkoutDraft(user.id, {
       sessionStartedAt: sessionStartTime.toISOString(),
+      clientRequestId: requestIdRef.current!,
+      pendingSubmission: submissionRef.current || undefined,
       selectedTrainingDay,
-      planId: activePlan?.id || null,
+      planId: sessionPlanIdRef.current,
       sessionNotes,
       perceivedEffort,
       sessionPerformance,
       exerciseLogs,
     });
     setDraftError(ok ? null : 'Não foi possível salvar o rascunho neste aparelho.');
-  }, [draftHydrated, user?.id, sessionStarted, sessionStartTime, selectedTrainingDay, activePlan?.id, sessionNotes, perceivedEffort, sessionPerformance, exerciseLogs, sessionCompletedModal]);
+  }, [draftHydrated, user?.id, sessionStarted, sessionStartTime, selectedTrainingDay, activePlan?.id, sessionNotes, perceivedEffort, sessionPerformance, exerciseLogs, sessionCompletedModal, pendingSubmission]);
 
   // Relógio real: o cronômetro continua correto depois de trocar de aba.
   useEffect(() => {
     if (!sessionStarted || !sessionStartTime) return;
-    const tick = () => setElapsedSeconds(Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)));
+    const tick = () => setElapsedSeconds(pendingSubmission?.duration_seconds
+      ?? Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)));
     tick();
     const interval = window.setInterval(tick, 1000);
     return () => window.clearInterval(interval);
-  }, [sessionStarted, sessionStartTime]);
+  }, [sessionStarted, sessionStartTime, pendingSubmission]);
 
   // Load active plan on mount
   useEffect(() => {
@@ -218,7 +240,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   }, [activePlan, selectedTrainingDay]);
 
   const tracksLoad = (ex: ExerciseLog) => ex.track_load ?? defaultTracksLoad(ex.exercise_name);
-  const toggleExerciseLoad = (index: number) => setExerciseLogs(prev => prev.map((ex, i) => i === index ? { ...ex, track_load: !tracksLoad(ex) } : ex));
+  const toggleExerciseLoad = (index: number) => {
+    if (submissionRef.current || saveInFlightRef.current) return;
+    setExerciseLogs(prev => prev.map((ex, i) => i === index ? { ...ex, track_load: !tracksLoad(ex) } : ex));
+  };
 
 
   // Story FOCO / PERFORMANCE: editorial 9:16, 100% vetorial e exportável offline.
@@ -366,12 +391,16 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   };
 
   const handleStartWorkout = () => {
+    if (sessionStarted || saveInFlightRef.current || submissionRef.current) return;
     if (exerciseLogs.length === 0) {
       setErrorAlert('Adicione exercícios à sua ficha antes de iniciar a sessão.');
       return;
     }
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
+    requestIdRef.current = createSessionRequestId();
+    sessionPlanIdRef.current = activePlan?.id || null;
+    setErrorAlert(null);
     setSessionStarted(true);
     setSessionStartTime(new Date());
     setElapsedSeconds(0);
@@ -389,6 +418,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   };
 
   const handleToggleSetComplete = (exIdx: number, setIdx: number) => {
+    if (submissionRef.current || saveInFlightRef.current) return;
     const exercise = exerciseLogs[exIdx];
     const current = exercise?.sets[setIdx];
     if (!current) return;
@@ -404,12 +434,14 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   };
 
   const handleUpdateSet = (exIdx: number, setIdx: number, field: 'load_kg' | 'repetitions' | 'rpe', value: number) => {
+    if (submissionRef.current || saveInFlightRef.current) return;
     setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx ? ex : {
       ...ex, sets: ex.sets.map((set, j) => j !== setIdx ? set : { ...set, [field]: value }),
     }));
   };
 
   const handleQuickAddLoad = (exIdx: number, setIdx: number, delta: number) => {
+    if (submissionRef.current || saveInFlightRef.current) return;
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
     setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx ? ex : {
@@ -420,12 +452,14 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   };
 
   const handleChangeExerciseRest = (exIdx: number, seconds: number) => {
+    if (submissionRef.current || saveInFlightRef.current) return;
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
     setExerciseLogs((prev) => prev.map((ex, i) => i === exIdx ? { ...ex, rest_seconds: seconds } : ex));
   };
 
   const handleAddSet = (exIdx: number) => {
+    if (submissionRef.current || saveInFlightRef.current) return;
     soundEngine.initContext();
     soundEngine.playCheckmarkClick();
     setExerciseLogs((prev) => prev.map((ex, i) => {
@@ -439,6 +473,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   };
 
   const handleRemoveSet = (exIdx: number, setIdx: number) => {
+    if (submissionRef.current || saveInFlightRef.current) return;
     setExerciseLogs((prev) => prev.map((ex, i) => i !== exIdx || ex.sets.length <= 1 ? ex : {
       ...ex, sets: ex.sets.filter((_, j) => j !== setIdx).map((set, j) => ({ ...set, set_number: j + 1 })),
     }));
@@ -448,83 +483,98 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     || activePlan?.name || 'Treino Livre';
 
   const handleFinishWorkout = async () => {
-    if (!sessionStarted && elapsedSeconds === 0) {
+    if (saveInFlightRef.current) return;
+    if (!sessionStarted || !sessionStartTime || !user?.id || !requestIdRef.current) {
       setErrorAlert('Inicie o treino antes de finalizar.');
       return;
     }
-
-    if (!exerciseLogs.some((ex) => ex.sets.some((set) => set.completed)) && !window.confirm('Nenhuma série foi concluída. Salvar a sessão mesmo assim?')) return;
+    if (!submissionRef.current && !exerciseLogs.some((ex) => ex.sets.some((set) => set.completed))
+      && !window.confirm('Nenhuma série foi concluída. Salvar a sessão mesmo assim?')) return;
+    saveInFlightRef.current = true;
     setIsSaving(true);
+    setErrorAlert(null);
     try {
-      const flatSets: { exercise_name: string; set_number: number; repetitions: number; load_kg: number; completed: boolean }[] = [];
-      let totalTonnage = 0;
-      let completedSetsCount = 0;
-
-      exerciseLogs.forEach((ex) => {
-        ex.sets.forEach((s) => {
-          flatSets.push({
+      let submission = submissionRef.current;
+      if (!submission) {
+        const finishedAt = new Date();
+        submission = createSessionSubmission(requestIdRef.current, {
+          plan_id: sessionPlanIdRef.current || undefined,
+          plan_name: currentWorkoutTitle,
+          started_at: sessionStartTime.toISOString(),
+          finished_at: finishedAt.toISOString(),
+          duration_seconds: Math.max(0, Math.floor((finishedAt.getTime() - sessionStartTime.getTime()) / 1000)),
+          notes: [
+            sessionNotes.trim(),
+            'Treino escolhido da semana: ' + getTrainingDayLabel(selectedTrainingDay),
+            perceivedEffort || sessionPerformance
+              ? '[Feedback FOCO — esforço percebido: ' + (perceivedEffort || 'não informado') +
+                '; desempenho: ' + (sessionPerformance || 'não informado') + ']' : '',
+          ].filter(Boolean).join('\n').slice(0, 1200),
+          status: 'completed',
+          sets: exerciseLogs.flatMap(ex => ex.sets.map(set => ({
             exercise_name: ex.exercise_name,
-            set_number: s.set_number,
-            repetitions: Number(s.repetitions) || 0,
-            load_kg: tracksLoad(ex) ? (Number(s.load_kg) || 0) : 0,
-            completed: s.completed,
-          });
-          if (s.completed) {
-            completedSetsCount++;
-            totalTonnage += tracksLoad(ex) ? (Number(s.repetitions) || 0) * (Number(s.load_kg) || 0) : 0;
-          }
+            set_number: set.set_number,
+            repetitions: Number(set.repetitions) || 0,
+            load_kg: tracksLoad(ex) ? (Number(set.load_kg) || 0) : 0,
+            completed: set.completed,
+          }))),
         });
+        submissionRef.current = submission;
+        setPendingSubmission(submission);
+        setElapsedSeconds(submission.duration_seconds);
+        skipTimer();
+      }
+      // Persist before the POST: a reload after a lost response must replay the
+      // original identity, finish time and sets instead of creating another row.
+      const preserved = saveWorkoutDraft(user.id, {
+        clientRequestId: submission.client_request_id,
+        pendingSubmission: submission,
+        sessionStartedAt: submission.started_at,
+        planId: submission.plan_id || null,
+        selectedTrainingDay,
+        sessionNotes,
+        perceivedEffort,
+        sessionPerformance,
+        exerciseLogs,
       });
-
-      const res = await api.recordSession({
-        plan_id: activePlan?.id,
-        plan_name: currentWorkoutTitle,
-        started_at: (sessionStartTime || new Date()).toISOString(),
-        finished_at: new Date().toISOString(),
-        duration_seconds: sessionStartTime ? Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)) : elapsedSeconds,
-        notes: [
-          sessionNotes.trim(),
-          'Treino escolhido da semana: ' + getTrainingDayLabel(selectedTrainingDay),
-          perceivedEffort || sessionPerformance
-            ? '[Feedback FOCO — esforço percebido: ' + (perceivedEffort || 'não informado') +
-              '; desempenho: ' + (sessionPerformance || 'não informado') + ']' : '',
-        ].filter(Boolean).join('\n').slice(0, 1200),
-        status: 'completed',
-        sets: flatSets,
-      });
-
+      if (!preserved) {
+        setDraftError('Não foi possível preservar o registro neste aparelho.');
+        throw new Error('Libere espaço ou habilite o armazenamento do navegador e tente salvar novamente. O treino ainda não foi enviado.');
+      }
+      setDraftError(null);
+      const res = await api.recordSession(submission);
+      if (!res?.id) throw new Error('O servidor não confirmou o registro. Tente salvar novamente.');
+      const completedSets = submission.sets.filter(set => set.completed);
+      const completedExerciseNames = [...new Set(completedSets.map(set => set.exercise_name))];
+      const totalTonnage = completedSets.reduce((sum, set) => sum + set.repetitions * set.load_kg, 0);
       setSessionStarted(false);
-      if (user?.id) clearWorkoutDraft(user.id);
+      clearWorkoutDraft(user.id);
       setRestoredDraft(false);
-      skipTimer();
-
-      // Som e vibração festiva de conclusão
       soundEngine.playWorkoutCompletedChime();
-
       setSessionCompletedModal({
-        duration: sessionStartTime ? Math.max(0, Math.floor((Date.now() - sessionStartTime.getTime()) / 1000)) : elapsedSeconds,
-        planName: currentWorkoutTitle,
-        finishedAt: new Date().toISOString(),
-        exerciseNames: exerciseLogs.filter(ex => ex.sets.some(set => set.completed)).map(ex => ex.exercise_name),
+        duration: submission.duration_seconds,
+        planName: submission.plan_name,
+        finishedAt: submission.finished_at,
+        exerciseNames: completedExerciseNames,
         caloriesEstimate: (() => {
           const weightKg = Number(profile?.current_weight_kg);
-          const minutes = (sessionStartTime ? Math.max(0, (Date.now() - sessionStartTime.getTime()) / 1000) : elapsedSeconds) / 60;
+          const minutes = submission.duration_seconds / 60;
           if (!Number.isFinite(weightKg) || weightKg < 25 || weightKg > 350 || minutes < 1) return null;
           const met = perceivedEffort.startsWith('leve') ? 3.5
-            : perceivedEffort.startsWith('alto') ? 5.5
             : perceivedEffort.startsWith('muito alto') ? 6
-            : 4.5;
-          // Estimativa bruta baseada em MET; inclui descanso e não é medição clínica.
+            : perceivedEffort.startsWith('alto') ? 5.5 : 4.5;
           return Math.round((met * 3.5 * weightKg / 200 * minutes) / 10) * 10;
         })(),
         tonnage: totalTonnage,
-        setsDone: completedSetsCount,
-        exercisesDone: exerciseLogs.filter(ex => ex.sets.some(set => set.completed)).length,
+        setsDone: completedSets.length,
+        exercisesDone: completedExerciseNames.length,
         session: res,
       });
-    } catch (err: any) {
-      setErrorAlert('Erro ao gravar treino no banco: ' + err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Não foi possível salvar o treino.';
+      setErrorAlert(message + ' Seu registro foi mantido para tentar novamente.');
     } finally {
+      saveInFlightRef.current = false;
       setIsSaving(false);
     }
   };
@@ -576,11 +626,12 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   };
   return (
     <div className="foco-v6-session-screen foco-v4-page foco-21-session">
+      <p role="status" className="sr-only">{isSaving ? 'Salvando treino.' : ''}</p>
       <div className="md:hidden"><FocoV6Status/></div>
       <header className="foco-v7-session-heading">
         <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Voltar aos treinos"><ArrowLeft size={19}/></button>
         <div className="foco-v7-session-heading-text">
-          <p>{sessionStarted?'TREINO EM ANDAMENTO':'PRONTO PARA TREINAR'} <span className="foco-21-session-mark">FOCO {FOCO_VISUAL_RELEASE}</span></p>
+          <p>{pendingSubmission && sessionStarted?'AGUARDANDO SALVAMENTO':sessionStarted?'TREINO EM ANDAMENTO':'PRONTO PARA TREINAR'} <span className="foco-21-session-mark">FOCO {FOCO_VISUAL_RELEASE}</span></p>
           <h1>{v7WorkoutTitle}</h1>
         </div>
         <div className="foco-v7-session-stopwatch" aria-label={'Tempo de treino '+formatTime(elapsedSeconds)}>
@@ -617,6 +668,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           {v6CurrentExercise.sets.map((set,index)=><span key={index} className={(set.completed?'is-complete ':'')+(index===v6SetIndex?'is-current':'')}/>)}
         </div>
       </section>}
+      {!pendingSubmission && <>
       <FocoV6Segment label="Modo do exercício" options={[{value:'register',label:'Registro'},{value:'execution',label:'Execução'},{value:'tips',label:'Dicas'}]} value={v6SessionMode} onChange={setV6SessionMode}/>
       {v6CurrentExercise&&v6SessionMode==='register'&&v6CurrentSet&&<>
         <section className={'foco-v7-session-adjusters foco-21-adjusters '+(!v6TracksLoad?'single-control':'')} aria-label="Registrar série">
@@ -686,11 +738,15 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <p className="mt-2 text-sm leading-relaxed text-[#B8C1B4]">Execute com amplitude confortável, postura estável e movimento controlado. Ajuste a carga às suas condições.</p>
         <button type="button" className="foco-v6-glass-button mt-5 w-full" onClick={()=>setV6SessionMode('execution')}>Ver execução completa <ChevronRight size={16}/></button>
       </section>}
+      </>}
+      {pendingSubmission && sessionStarted && <p role="status" className="foco-v6-glass rounded-xl p-3 text-sm">
+        Treino encerrado. O registro está preservado neste aparelho; tente salvar novamente para confirmar o envio.
+      </p>}
       {sessionStarted&&<button type="button" className="foco-v7-finish" disabled={isSaving} onClick={handleFinishWorkout}>
-        <CheckCircle2 size={17}/>{isSaving?'Salvando sessão...':'Finalizar e salvar treino'}
+        <CheckCircle2 size={17}/>{isSaving?'Salvando sessão...':pendingSubmission?'Tentar salvar o mesmo treino':'Finalizar e salvar treino'}
       </button>}
       {errorAlert&&<p role="alert" className="foco-v6-glass rounded-xl p-3 text-sm">{errorAlert}</p>}
-      <details className="foco-v6-glass rounded-2xl p-3">
+      {!pendingSubmission && <details className="foco-v6-glass rounded-2xl p-3">
         <summary className="cursor-pointer p-2 text-xs font-bold text-[#C8F040]">Ficha completa e ajustes avançados</summary>
       <div className="foco-v5-session foco-v4-page max-w-3xl space-y-4 pb-8">
       <header className="space-y-1">
@@ -965,7 +1021,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
                           {showLoad && <td className="py-2 px-1">
                             <input type="number" min="0" step="0.5" inputMode="decimal"
-                              aria-label={'Carga da série ' + set.set_number + ' em quilogramas'}
+                              aria-label={'Carga da série ' + set.set_number + ' de ' + exercise.exercise_name + ' em quilogramas'}
                               value={set.load_kg === 0 ? '' : set.load_kg} placeholder="0"
                               onChange={(e) => handleUpdateSet(exIdx, setIdx, 'load_kg', Math.max(0, parseFloat(e.target.value) || 0))}
                               className="foco-field !w-[84px] !min-h-12 !px-2 text-center font-mono text-base tabular-nums" />
@@ -975,7 +1031,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                           <td className="py-2.5 px-1">
                             <input
                               type="number" min="0" step="1" inputMode="numeric"
-                              aria-label={'Repetições da série ' + set.set_number}
+                              aria-label={'Repetições da série ' + set.set_number + ' de ' + exercise.exercise_name}
                               value={set.repetitions === 0 ? '' : set.repetitions}
                               placeholder="0"
                               onChange={(e) =>
@@ -1014,7 +1070,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                 <button type="button" onClick={() => handleToggleSetComplete(exIdx, exercise.sets.findIndex(set => !set.completed))}
                   className="foco-v4-action flex-1"><CheckCircle2 className="h-5 w-5" /> Concluir série</button>
                 {exIdx < exerciseLogs.length - 1 && <button type="button"
-                  onClick={() => document.getElementById('foco-exercise-card-' + (exIdx + 1))?.scrollIntoView({behavior:'smooth',block:'start'})}
+                  onClick={() => document.getElementById('foco-exercise-card-' + (exIdx + 1))?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
                   className="foco-v4-secondary flex-1"><ChevronRight className="h-4 w-4" /> Ver próximo exercício</button>}
               </div>}
               <details className="mt-3 rounded-xl border border-white/10 bg-black/20">
@@ -1095,10 +1151,11 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       )}
       {/* Session Notes */}
       <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 space-y-2">
-        <label className="block text-xs font-black text-white uppercase tracking-wider">
+        <label htmlFor="workout-session-notes" className="block text-xs font-black text-white uppercase tracking-wider">
           Anotações do Treino de Hoje
         </label>
         <textarea
+          id="workout-session-notes"
           rows={2}
           value={sessionNotes}
           onChange={(e) => setSessionNotes(e.target.value)}
@@ -1122,11 +1179,11 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       )}
 
       </div>
-      </details>
+      </details>}
 
       {/* Workout Completed Modal (Monochrome Luxury) */}
       {sessionCompletedModal && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md flex items-start justify-center p-4 sm:items-center">
+        <AccessibleDialog title="Treino concluído e registrado" onClose={() => { setSessionCompletedModal(null); setActiveTab('dashboard'); }}>
           <div className="my-auto max-h-[calc(100dvh-2rem)] w-full max-w-sm space-y-4 overflow-y-auto rounded-3xl border border-white/20 bg-[#141414] p-5 text-center shadow-2xl sm:p-6">
             <div className="w-16 h-16 rounded-2xl bg-white text-black flex items-center justify-center mx-auto shadow-xl">
               <Award className="w-9 h-9" />
@@ -1168,6 +1225,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                 <img src={storyPreviewUrl} alt="Prévia do Story de treino FOCO — toque para ampliar" className="block h-auto w-full" />
               </a>
             )}
+            {errorAlert && <p role="alert" className="text-sm text-white">{errorAlert}</p>}
             <div className="flex flex-col gap-2">
               <button type="button" onClick={() => shareStory(false)} className="w-full py-3 rounded-xl bg-white text-black font-bold flex items-center justify-center gap-2"><Share2 className="w-4 h-4" /> Compartilhar Story</button>
               <button type="button" onClick={() => shareStory(true)} className="w-full py-3 rounded-xl border border-white/20 text-white font-bold flex items-center justify-center gap-2"><Download className="w-4 h-4" /> Salvar imagem 1080 × 1920</button>
@@ -1182,7 +1240,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
               </button>
             </div>
           </div>
-        </div>
+        </AccessibleDialog>
       )}
     </div>
   );

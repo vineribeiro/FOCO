@@ -1,3 +1,6 @@
+import { createSessionRequestId, isSessionRequestId, isSessionSubmission } from './sessionSubmission';
+import type { SessionSubmission } from './sessionSubmission';
+
 export interface WorkoutDraftSet {
   set_number: number;
   repetitions: number;
@@ -16,6 +19,8 @@ export interface WorkoutDraft {
   version: 1;
   updatedAt: number;
   sessionStartedAt: string;
+  clientRequestId: string;
+  pendingSubmission?: SessionSubmission;
   selectedTrainingDay: string;
   planId: string | null;
   sessionNotes: string;
@@ -30,10 +35,18 @@ export function loadWorkoutDraft(userId: string): WorkoutDraft | null {
     const raw = localStorage.getItem(keyFor(userId));
     if (!raw) return null;
     const draft: WorkoutDraft = JSON.parse(raw);
-    if (draft.version !== 1 || !Number.isFinite(draft.updatedAt) || Date.now() - draft.updatedAt > 7 * 86400000
+    if (draft.version !== 1 || !Number.isFinite(draft.updatedAt) || (!draft.pendingSubmission && Date.now() - draft.updatedAt > 7 * 86400000)
       || !Array.isArray(draft.exerciseLogs) || !draft.exerciseLogs.every((ex) => typeof ex.exercise_name === 'string' && Array.isArray(ex.sets))
-      || !Number.isFinite(new Date(draft.sessionStartedAt).getTime())) return null;
-    return draft;
+      || !Number.isFinite(new Date(draft.sessionStartedAt).getTime())
+      || (draft.pendingSubmission && !isSessionSubmission(draft.pendingSubmission))) return null;
+    const clientRequestId = draft.pendingSubmission?.client_request_id
+      || (isSessionRequestId(draft.clientRequestId) ? draft.clientRequestId : createSessionRequestId());
+    const restored = { ...draft, clientRequestId };
+    if (draft.clientRequestId !== clientRequestId) {
+      // Preserve the age of the original draft when adding its replay identity.
+      try { localStorage.setItem(keyFor(userId), JSON.stringify(restored)); } catch { /* The page will show its storage warning. */ }
+    }
+    return restored;
   } catch { return null; }
 }
 export function saveWorkoutDraft(userId: string, data: Omit<WorkoutDraft, 'version' | 'updatedAt'>): boolean {

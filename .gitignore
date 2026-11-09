@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Local audit artifacts and Supabase CLI cache
+work/
+.audit-scripts/
+visual-qa/
+supabase/.temp/

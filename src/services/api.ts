@@ -21,6 +21,29 @@ const LOCAL_DB_KEY = 'foco_local_db_v1';
 const SUPABASE_FUNCTION_URL = 'https://buoefcnkpdrhevzbakze.supabase.co/functions/v1/foco-api';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_0oYKLSj8WxQMV2A9TtNGew_zduFYPVI';
 
+export type ApiErrorCode = 'HTTP_ERROR' | 'NETWORK_ERROR' | 'REQUEST_TIMEOUT' | 'INVALID_RESPONSE' | 'SESSION_CHANGED';
+
+/** HTTP status is the authority for invalid credentials; network errors never sign a user out. */
+export class ApiRequestError extends Error {
+  constructor(message: string, public code: ApiErrorCode, public status?: number) {
+    super(message);
+    this.name = 'ApiRequestError';
+  }
+}
+
+export function isAuthenticationFailure(error: unknown): error is ApiRequestError {
+  return error instanceof ApiRequestError && error.status === 401;
+}
+
+const SESSION_TIMEOUT_MS = 12_000;
+interface TokenRefresh {
+  refreshToken: string;
+  accessToken: string;
+  controller: AbortController;
+  promise: Promise<string>;
+}
+let tokenRefresh: TokenRefresh | null = null;
+
 export function getStoredToken(): string | null {
   try {
     return localStorage.getItem(TOKEN_KEY);
@@ -37,55 +60,102 @@ export function setStoredToken(token: string, refreshToken?: string, expiresAt?:
       localStorage.setItem(TOKEN_EXPIRES_KEY, String(expiresAt));
     }
   } catch {
-    // Ignore
+    // Storage can be unavailable in private browsing; the server remains authoritative.
   }
 }
 
 export function removeStoredToken(): void {
+  tokenRefresh?.controller.abort();
+  tokenRefresh = null;
   try {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(TOKEN_EXPIRES_KEY);
   } catch {
-    // Ignore
+    // Ignore unavailable browser storage.
   }
 }
 
-async function getValidAccessToken(): Promise<string | null> {
-  const token = getStoredToken();
-  if (!token) return null;
+function currentSessionMatches(accessToken: string, refreshToken: string): boolean {
+  return getStoredToken() === accessToken && localStorage.getItem(REFRESH_TOKEN_KEY) === refreshToken;
+}
 
+/** A caller can stop waiting without cancelling a refresh shared by other requests. */
+function withAbort<T>(promise: Promise<T>, signal?: AbortSignal | null): Promise<T> {
+  if (!signal) return promise;
+  if (signal.aborted) {
+    void promise.catch(() => {});
+    return Promise.reject(new DOMException('Request aborted', 'AbortError'));
+  }
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => { cleanup(); reject(new DOMException('Request aborted', 'AbortError')); };
+    const cleanup = () => signal.removeEventListener('abort', onAbort);
+    signal.addEventListener('abort', onAbort, { once: true });
+    promise.then(value => { cleanup(); resolve(value); }, error => { cleanup(); reject(error); });
+  });
+}
+
+async function renewAccessToken(accessToken: string, refreshToken: string, controller: AbortController): Promise<string> {
+  const timeoutId = window.setTimeout(() => controller.abort(), SESSION_TIMEOUT_MS);
   try {
-    const expiresAt = Number(localStorage.getItem(TOKEN_EXPIRES_KEY) || 0);
-    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-    // Older sessions without expiry metadata will be validated by the API as usual.
-    if (!expiresAt || expiresAt * 1000 > Date.now() + 60_000) return token;
-    if (!refreshToken) {
-      removeStoredToken();
-      return null;
-    }
-
-    const response = await fetch(SUPABASE_FUNCTION_URL + '/api/auth/refresh', {
+    const response = await withAbort(fetch(SUPABASE_FUNCTION_URL + '/api/auth/refresh', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: SUPABASE_PUBLISHABLE_KEY,
-      },
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY },
       body: JSON.stringify({ refresh_token: refreshToken }),
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok || !data.token || !data.refresh_token) {
-      removeStoredToken();
-      throw new Error(data.error || 'Sua sessão expirou. Entre novamente no FOCO.');
+      signal: controller.signal,
+    }), controller.signal);
+    const data = await withAbort(response.json().catch(() => ({})), controller.signal);
+    // Logout or another login may have happened while the response was in flight.
+    if (!currentSessionMatches(accessToken, refreshToken)) {
+      throw new ApiRequestError('A sessão mudou durante a conexão. Tente novamente.', 'SESSION_CHANGED');
+    }
+    if (!response.ok) {
+      if (response.status === 401) removeStoredToken();
+      throw new ApiRequestError(data.error || 'Não foi possível renovar sua sessão. Tente novamente.', 'HTTP_ERROR', response.status);
+    }
+    if (typeof data.token !== 'string' || !data.token || typeof data.refresh_token !== 'string' || !data.refresh_token) {
+      throw new ApiRequestError('O servidor não retornou uma sessão válida. Tente novamente; sua sessão foi preservada.', 'INVALID_RESPONSE');
     }
     setStoredToken(data.token, data.refresh_token, data.expires_at);
-    return data.token as string;
+    return data.token;
   } catch (error) {
+    if (error instanceof ApiRequestError) throw error;
+    if (controller.signal.aborted) {
+      throw new ApiRequestError('O servidor do FOCO demorou para renovar sua sessão. Tente novamente; sua sessão foi preservada.', 'REQUEST_TIMEOUT');
+    }
     if (error instanceof TypeError) {
-      throw new Error('Não foi possível atualizar a sessão no Supabase. Verifique sua conexão.');
+      throw new ApiRequestError('Não foi possível renovar a sessão. Verifique a internet e tente novamente; sua sessão foi preservada.', 'NETWORK_ERROR');
     }
     throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
   }
+}
+
+async function getValidAccessToken(signal?: AbortSignal | null): Promise<string | null> {
+  if (signal?.aborted) throw new DOMException('Request aborted', 'AbortError');
+  const accessToken = getStoredToken();
+  if (!accessToken) return null;
+  const expiresAt = Number(localStorage.getItem(TOKEN_EXPIRES_KEY) || 0);
+  // Older sessions without expiry metadata will be validated by the API as usual.
+  if (!expiresAt || expiresAt * 1000 > Date.now() + 60_000) return accessToken;
+  const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+  if (!refreshToken) {
+    removeStoredToken();
+    throw new ApiRequestError('Sua sessão expirou. Entre novamente no FOCO.', 'HTTP_ERROR', 401);
+  }
+  if (!tokenRefresh || tokenRefresh.refreshToken !== refreshToken || tokenRefresh.accessToken !== accessToken) {
+    const controller = new AbortController();
+    const operation: TokenRefresh = {
+      refreshToken, accessToken, controller,
+      promise: renewAccessToken(accessToken, refreshToken, controller),
+    };
+    tokenRefresh = operation;
+    const clear = () => { if (tokenRefresh === operation) tokenRefresh = null; };
+    // Supply both handlers so a timed-out caller cannot cause an unhandled rejection.
+    void operation.promise.then(clear, clear);
+  }
+  return withAbort(tokenRefresh.promise, signal);
 }
 
 // Detecção de ambiente estático como GitHub Pages
@@ -316,49 +386,45 @@ function saveLocalDb(db: LocalDatabase): void {
 }
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const apiBaseUrl = SUPABASE_FUNCTION_URL;
-  const requestUrl = endpoint.startsWith('http') ? endpoint : apiBaseUrl + endpoint;
-
-  // A validação de sessão não pode deixar o aplicativo preso no splash se a API do Supabase
-  // estiver iniciando ou sem responder. Limite apenas esta chamada; operações de IA
-  // podem legitimamente demorar mais.
+  const requestUrl = endpoint.startsWith('http') ? endpoint : SUPABASE_FUNCTION_URL + endpoint;
   const isSessionCheck = endpoint === '/api/auth/me';
   const controller = isSessionCheck ? new AbortController() : null;
-  const timeoutId = controller ? window.setTimeout(() => controller.abort(), 12_000) : null;
-
+  let timedOut = false;
+  const forwardAbort = () => controller?.abort();
+  if (controller && options.signal) {
+    if (options.signal.aborted) controller.abort();
+    else options.signal.addEventListener('abort', forwardAbort, { once: true });
+  }
+  const signal = controller?.signal || options.signal;
+  // One budget includes token renewal, response headers and parsing the auth response.
+  const timeoutId = controller ? window.setTimeout(() => { timedOut = true; controller.abort(); }, SESSION_TIMEOUT_MS) : null;
   try {
     const publicAuthEndpoint = ['/api/auth/register', '/api/auth/login', '/api/auth/forgot-password', '/api/auth/refresh', '/api/system/status'].includes(endpoint);
-    const token = publicAuthEndpoint ? null : await getValidAccessToken();
+    const token = publicAuthEndpoint ? null : await getValidAccessToken(signal);
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_PUBLISHABLE_KEY,
+      'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY,
       ...(options.headers as Record<string, string>),
     };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-
-    const response = await fetch(requestUrl, {
-      ...options,
-      ...(controller ? { signal: controller.signal } : {}),
-      headers,
-    });
-
-    const data = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-      throw new Error(data.error || `Erro HTTP ${response.status}`);
-    }
-
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const response = await withAbort(fetch(requestUrl, { ...options, ...(signal ? { signal } : {}), headers }), signal);
+    const data = await withAbort(response.json().catch(() => {
+      if (response.ok) throw new ApiRequestError('O servidor retornou uma resposta incompleta. Tente novamente; sua sessão foi preservada.', 'INVALID_RESPONSE');
+      return {};
+    }), signal);
+    if (!response.ok) throw new ApiRequestError(data.error || `Erro HTTP ${response.status}`, 'HTTP_ERROR', response.status);
     return data as T;
-  } catch (err: any) {
-    if (err?.name === 'AbortError' && isSessionCheck) {
-      throw new Error('O servidor do FOCO demorou para responder. Tente novamente; sua sessão foi preservada.');
+  } catch (error) {
+    if (timedOut) {
+      throw new ApiRequestError('O servidor do FOCO demorou para responder. Tente novamente; sua sessão foi preservada.', 'REQUEST_TIMEOUT');
     }
-    if (err instanceof TypeError) {
-      throw new Error('Não foi possível conectar à API do FOCO no Supabase. Verifique a internet ou tente novamente em instantes.');
+    if (error instanceof ApiRequestError) throw error;
+    if (error instanceof TypeError) {
+      throw new ApiRequestError('Não foi possível conectar à API do FOCO. Verifique a internet e tente novamente.', 'NETWORK_ERROR');
     }
-    throw err;
+    throw error;
   } finally {
     if (timeoutId !== null) window.clearTimeout(timeoutId);
+    options.signal?.removeEventListener('abort', forwardAbort);
   }
 }
 
@@ -382,8 +448,12 @@ export const api = {
     return res;
   },
 
-  async getMe() {
-    return await request<{ user: User; profile: Profile }>('/api/auth/me');
+  async getMe(options: { signal?: AbortSignal } = {}) {
+    const data = await request<{ user: User; profile: Profile }>('/api/auth/me', options);
+    if (!data || typeof data.user?.id !== 'string' || !data.user.id || !data.profile) {
+      throw new ApiRequestError('O servidor não retornou seu perfil. Tente novamente; sua sessão foi preservada.', 'INVALID_RESPONSE');
+    }
+    return data;
   },
 
   async forgotPassword(email: string) {
@@ -660,6 +730,7 @@ export const api = {
   },
 
   async recordSession(session: {
+    client_request_id?: string;
     plan_id?: string;
     plan_name?: string;
     started_at: string;
@@ -680,6 +751,7 @@ export const api = {
       const newSession: WorkoutSession = {
         id: 'sess_' + Date.now(),
         user_id: db.user.id,
+        client_request_id: session.client_request_id,
         plan_id: session.plan_id,
         plan_name: session.plan_name || 'Treino Livre',
         started_at: session.started_at,

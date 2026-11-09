@@ -1,41 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Activity, ArrowLeft, Bike, CheckCircle2, Clock3, Footprints, Pause, Play, RotateCcw, Save } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { CARDIO_TYPES } from '../utils/cardio';
 import type { CardioEffort, CardioMachine } from '../utils/cardio';
+import { loadCardioDraft, saveCardioDraft, currentCardioSeconds } from '../utils/cardioDraft';
+import type { CardioDraft } from '../utils/cardioDraft';
+import { createSessionRequestId, createSessionSubmission } from '../utils/sessionSubmission';
 
 interface CardioPageProps { setActiveTab: (tab: string) => void }
-interface CardioDraft {
-  version: 1;
-  machine: CardioMachine;
-  effort: CardioEffort;
-  startedAt: number;
-  runningSince: number | null;
-  accumulatedSeconds: number;
-  finalizing?: boolean;
-  metric: string;
-  notes: string;
-}
-const storageKey = (userId: string) => 'foco:cardio-draft:v1:' + encodeURIComponent(userId);
-function readDraft(userId?: string): CardioDraft | null {
-  if (!userId) return null;
-  try {
-    const raw = localStorage.getItem(storageKey(userId));
-    if (!raw) return null;
-    const draft = JSON.parse(raw) as CardioDraft;
-    if (draft.version !== 1 || !CARDIO_TYPES.some(type => type.id === draft.machine)
-      || !Number.isFinite(draft.startedAt) || draft.startedAt > Date.now()
-      || draft.startedAt < Date.now() - 7 * 86400000
-      || !Number.isFinite(draft.accumulatedSeconds)
-      || (draft.runningSince !== null && !Number.isFinite(draft.runningSince))) return null;
-    return draft;
-  } catch { return null; }
-}
-function currentSeconds(draft: CardioDraft): number {
-  return Math.max(0, Math.floor(draft.accumulatedSeconds
-    + (draft.runningSince === null ? 0 : (Date.now() - draft.runningSince) / 1000)));
-}
 function clock(seconds: number) {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor(seconds % 3600 / 60);
@@ -47,16 +20,17 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
   const { user } = useAuth();
   const [machine, setMachine] = useState<CardioMachine>('esteira');
   const [effort, setEffort] = useState<CardioEffort>('leve');
-  const [draft, setDraft] = useState<CardioDraft | null>(() => readDraft(user?.id));
+  const [draft, setDraft] = useState<CardioDraft | null>(() => loadCardioDraft(user?.id));
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [metric, setMetric] = useState('');
   const [notes, setNotes] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [saved, setSaved] = useState(false);
+  const saveInFlightRef = useRef(false);
 
   useEffect(() => {
-    const restored = readDraft(user?.id);
+    const restored = loadCardioDraft(user?.id);
     setDraft(restored);
     if (restored) {
       setMachine(restored.machine);
@@ -68,27 +42,24 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
 
   useEffect(() => {
     if (!draft) { setElapsedSeconds(0); return; }
-    const update = () => setElapsedSeconds(currentSeconds(draft));
+    const update = () => setElapsedSeconds(currentCardioSeconds(draft));
     update();
     const interval = window.setInterval(update, 1000);
     return () => window.clearInterval(interval);
   }, [draft]);
 
-  const saveDraft = (next: CardioDraft | null) => {
+  const saveDraft = (next: CardioDraft | null): boolean => {
     setDraft(next);
-    if (!user?.id) return;
-    try {
-      if (next) localStorage.setItem(storageKey(user.id), JSON.stringify(next));
-      else localStorage.removeItem(storageKey(user.id));
-    } catch {
-      setMessage('Armazenamento local indisponível. Evita fechar o aplicativo durante o cardio.');
-    }
+    if (!user?.id) return false;
+    const preserved = saveCardioDraft(user.id, next);
+    if (!preserved) setMessage('Armazenamento local indisponível. Libere espaço ou habilite o armazenamento do navegador e tente novamente.');
+    return preserved;
   };
 
   const start = () => {
     if (draft) return;
     const now = Date.now();
-    const next: CardioDraft = { version: 1, machine, effort, startedAt: now,
+    const next: CardioDraft = { version: 1, clientRequestId: createSessionRequestId(), machine, effort, startedAt: now,
       runningSince: now, accumulatedSeconds: 0, metric: '', notes: '' };
     setSaved(false);
     setMessage('');
@@ -96,7 +67,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
   };
   const pause = () => {
     if (!draft || draft.runningSince === null || draft.finalizing) return;
-    saveDraft({ ...draft, accumulatedSeconds: currentSeconds(draft), runningSince: null });
+    saveDraft({ ...draft, accumulatedSeconds: currentCardioSeconds(draft), runningSince: null });
   };
   const resume = () => {
     if (!draft || draft.runningSince !== null || draft.finalizing) return;
@@ -104,13 +75,14 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
   };
   const stopActivity = () => {
     if (!draft || draft.finalizing) return;
-    saveDraft({ ...draft, accumulatedSeconds: currentSeconds(draft), runningSince: null, finalizing: true });
+    saveDraft({ ...draft, accumulatedSeconds: currentCardioSeconds(draft), runningSince: null, finalizing: true, finishedAt: Date.now() });
   };
   const continueActivity = () => {
-    if (!draft || !draft.finalizing) return;
-    saveDraft({ ...draft, finalizing: false, runningSince: Date.now() });
+    if (!draft || !draft.finalizing || draft.pendingSubmission || isSaving) return;
+    saveDraft({ ...draft, finalizing: false, finishedAt: undefined, runningSince: Date.now() });
   };
   const discard = () => {
+    if (draft?.pendingSubmission || saveInFlightRef.current) return;
     if (!window.confirm('Descartar o cardio não salvo?')) return;
     saveDraft(null);
     setMetric('');
@@ -118,17 +90,16 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
     setMessage('');
   };
   const finish = async () => {
-    if (!draft || !draft.finalizing || isSaving) return;
-    const seconds = currentSeconds(draft);
-    if (seconds < 5) { setMessage('Registra pelo menos cinco segundos antes de concluir.'); return; }
+    if (!draft || !draft.finalizing || saveInFlightRef.current || !user?.id) return;
+    const seconds = currentCardioSeconds(draft);
+    if (seconds < 5) { setMessage('Registre pelo menos cinco segundos antes de concluir.'); return; }
     const selected = CARDIO_TYPES.find(item => item.id === draft.machine)!;
     const trimmed = metric.trim();
     const value = trimmed ? Number(trimmed.replace(',', '.')) : null;
-    if (value !== null && (!Number.isFinite(value) || value < 0 || value > 10000)) {
-      setMessage('Confere a distância ou os andares: informa um número válido.');
+    if (!draft.pendingSubmission && value !== null && (!Number.isFinite(value) || value < 0 || value > 10000)) {
+      setMessage('Confira a distância ou os andares: informe um número válido.');
       return;
     }
-    // A distância é opcional: algumas máquinas não mostram quilômetros ou andares.
     const metricLabel = value === null ? 'Não informado' : `${value.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} ${selected.metric}`;
     const notesText = [
       '[FOCO_CARDIO_V1]',
@@ -138,25 +109,34 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
       'Escolha livre: cardio realizado sem mudar a ficha semanal.',
       notes.trim() ? 'Observações: ' + notes.trim() : '',
     ].filter(Boolean).join('\n').slice(0, 1200);
+    saveInFlightRef.current = true;
     setIsSaving(true);
     setMessage('');
     try {
-      await api.recordSession({
+      const submission = draft.pendingSubmission || createSessionSubmission(draft.clientRequestId, {
         plan_name: 'Cardio · ' + selected.label,
         started_at: new Date(draft.startedAt).toISOString(),
-        finished_at: new Date().toISOString(),
+        finished_at: new Date(draft.finishedAt || Date.now()).toISOString(),
         duration_seconds: seconds,
         notes: notesText,
         status: 'completed',
         sets: [],
       });
+      const frozenDraft: CardioDraft = { ...draft, pendingSubmission: submission, runningSince: null };
+      if (!saveDraft(frozenDraft)) {
+        throw new Error('Não foi possível preservar o registro neste aparelho. Libere espaço ou habilite o armazenamento e tente salvar novamente. O cardio ainda não foi enviado.');
+      }
+      const response = await api.recordSession(submission);
+      if (!response?.id) throw new Error('O servidor não confirmou o registro do cardio. Tente salvar novamente.');
       saveDraft(null);
       setMetric('');
       setNotes('');
       setSaved(true);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível gravar o cardio. Tenta novamente; o registro local foi preservado.');
+      const reason = error instanceof Error ? error.message : 'Não foi possível gravar o cardio.';
+      setMessage(reason + ' O registro foi mantido para tentar novamente.');
     } finally {
+      saveInFlightRef.current = false;
       setIsSaving(false);
     }
   };
@@ -173,8 +153,9 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
           Escolhe uma atividade para hoje, inclusive num dia de descanso. A ficha original não muda.
         </p>
       </header>
+      <p className="sr-only" role="status">{saved ? 'Cardio registrado no histórico. Teus dados estão salvos no FOCO.' : isSaving ? 'Salvando cardio.' : ''}</p>
       {saved && (
-        <div role="status" className="foco-v4-panel foco-motion-confirmation flex flex-wrap items-center gap-3 p-4">
+        <div className="foco-v4-panel foco-motion-confirmation flex flex-wrap items-center gap-3 p-4">
           <CheckCircle2 className="h-6 w-6" />
           <div className="flex-1"><p className="font-bold">Cardio registrado no histórico.</p>
             <p className="text-xs text-neutral-400">Teus dados estão salvos no FOCO.</p></div>
@@ -201,14 +182,14 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
           <Clock3 className="mx-auto mb-4 h-6 w-6 text-neutral-400" />
           <p className="foco-v4-eyebrow">Tempo de atividade</p>
           <p role="timer" className="mt-2 font-mono text-5xl font-black tracking-tighter tabular-nums sm:text-6xl">{clock(elapsedSeconds)}</p>
-          <p className="mt-3 text-xs text-neutral-400">{draft ? draft.finalizing ? 'Atividade encerrada · Preenche os dados abaixo' : draft.runningSince !== null ? 'Cronômetro em andamento' : 'Cronômetro pausado' : 'Pronto para começar'}</p>
+          <p className="mt-3 text-xs text-neutral-400">{draft ? draft.pendingSubmission ? 'Atividade encerrada · Registro preservado para reenvio' : draft.finalizing ? 'Atividade encerrada · Preencha os dados abaixo' : draft.runningSince !== null ? 'Cronômetro em andamento' : 'Cronômetro pausado' : 'Pronto para começar'}</p>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             {!draft ? (
               <button type="button" onClick={start} className="foco-v4-action min-w-48 justify-center">
                 <Play className="h-4 w-4" /> Iniciar cardio
               </button>
             ) : draft.finalizing ? (
-              <button type="button" onClick={continueActivity} className="foco-v4-secondary justify-center">
+              <button type="button" onClick={continueActivity} disabled={isSaving || !!draft.pendingSubmission} className="foco-v4-secondary justify-center">
                 <RotateCcw className="h-4 w-4" /> Retomar atividade
               </button>
             ) : (
@@ -230,11 +211,12 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
         </div>
         {draft?.finalizing && (
           <div className="space-y-4 border-t border-white/10 pt-5">
+            {draft.pendingSubmission && <p role="status" className="text-sm text-neutral-200">Registro encerrado e preservado. Tente salvar novamente para confirmar o envio, sem criar outro cardio.</p>}
             <div>
               <label htmlFor="cardio-metric" className="mb-2 block text-sm font-bold">
                 {chosen.metric === 'andares' ? 'Andares percorridos' : 'Distância percorrida (km)'} <span className="font-normal text-neutral-400">opcional</span>
               </label>
-              <input id="cardio-metric" type="text" inputMode="decimal" value={metric}
+              <input id="cardio-metric" type="text" inputMode="decimal" value={metric} disabled={isSaving || !!draft.pendingSubmission}
                 placeholder={chosen.metric === 'andares' ? 'Ex.: 18' : 'Ex.: 3,50'}
                 onChange={event => {
                   setMetric(event.target.value);
@@ -246,7 +228,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
               <p className="mb-2 text-sm font-bold">Como foi o esforço?</p>
               <div className="grid grid-cols-3 gap-2">
                 {(['leve', 'moderado', 'intenso'] as CardioEffort[]).map(value => (
-                  <button type="button" key={value} aria-pressed={effort === value}
+                  <button type="button" key={value} disabled={isSaving || !!draft.pendingSubmission} aria-pressed={effort === value}
                     onClick={() => {
                       setEffort(value);
                       if (draft) saveDraft({ ...draft, effort: value });
@@ -260,7 +242,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
             </div>
             <div>
               <label htmlFor="cardio-notes" className="mb-2 block text-sm font-bold">Observações <span className="font-normal text-neutral-400">opcional</span></label>
-              <textarea id="cardio-notes" rows={2} maxLength={400} value={notes}
+              <textarea id="cardio-notes" rows={2} maxLength={400} value={notes} disabled={isSaving || !!draft.pendingSubmission}
                 onChange={event => {
                   setNotes(event.target.value);
                   if (draft) saveDraft({ ...draft, notes: event.target.value });
@@ -270,7 +252,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
             </div>
             <button type="button" disabled={isSaving} onClick={finish}
               className="foco-v4-action w-full justify-center disabled:opacity-50">
-              <Save className="h-4 w-4" /> {isSaving ? 'Salvando...' : 'Finalizar e registrar cardio'}
+              <Save className="h-4 w-4" /> {isSaving ? 'Salvando...' : draft.pendingSubmission ? 'Tentar salvar o mesmo cardio' : 'Finalizar e registrar cardio'}
             </button>
           </div>
         )}
