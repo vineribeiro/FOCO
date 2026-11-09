@@ -53,5 +53,10 @@ assert.ok(!read('src/data/exerciseDbBeta.ts').includes('cache.set('),'Provider r
 assert.ok(!read('src/data/exerciseDbBeta.ts').includes('cached.expires'),'No persistent/temporary response cache');
 assert.ok(read('src/data/exerciseDbBeta.ts').includes('[...new Set(candidates)].slice(0,2)'), 'At most two explicitly approved names per user request');
 assert.match(read('src/data/exerciseDbBeta.ts'),/credentials:'omit'/);
+const thumbnail=read('src/components/ExerciseIllustration.tsx');
+assert.match(thumbnail,/IntersectionObserver/, 'Standard thumbnails should lazy-load when visible');
+assert.match(thumbnail,/if \(!visible \|\| !allowed/, 'Visible exercise media must respect noncommercial feature flag');
+assert.match(thumbnail,/ref=\{rootRef\}/, 'Image viewport observer must be attached');
+assert.match(thumbnail,/onError=\{\(\) => setFailedImage\(true\)\}/, 'Broken images need an explicit fallback');
 assert.match(read('.github/workflows/deploy.yml'),/VITE_FOCO_EXERCISEDB_NONCOMMERCIAL_BETA: 'true'/);
 console.log('ExerciseDB beta: exact-name match, URL allowlist, attribution, opt-in and commercial guard verified.');
