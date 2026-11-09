@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { ShieldAlert, CheckCircle2, AlertCircle, Save, Trash2, X, Settings2, ChevronRight, UserRound, Bell, Target, SlidersHorizontal, ScanLine, Activity, CalendarDays } from 'lucide-react';
+import { ShieldAlert, CheckCircle2, AlertCircle, Save, Trash2, X, Settings, ChevronRight, UserRound, Bell, Target, SlidersHorizontal, ScanLine, Activity, CalendarDays } from 'lucide-react';
 import { FocoV6Status } from '../components/FocoV6UI';
 import { AccessibleDialog } from '../components/AccessibleDialog';
 
@@ -92,28 +92,28 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
     <div className="foco-v6-profile foco-v4-page">
       <p role="status" className="sr-only">{msg?.type === 'success' ? msg.text : ''}</p>
       <div className="md:hidden"><FocoV6Status/></div>
-      <header className="foco-v6-profile-top">
-        <h1>Perfil</h1><button className="foco-v6-icon-button" type="button" onClick={()=>setActiveTab('configuracoes')} aria-label="Abrir configurações"><Settings2 size={19}/></button>
+      <header className="foco-v6-profile-top foco-profile-heading">
+        <h1>Perfil</h1><button className="foco-v6-icon-button" type="button" onClick={()=>setActiveTab('configuracoes')} aria-label="Abrir configurações"><Settings size={19}/></button>
       </header>
-      <section className="foco-v6-profile-card">
-        <div className="foco-v6-profile-avatar grid place-items-center">
-          <span className="grid h-full w-full place-items-center rounded-full bg-gradient-to-br from-[#303B23] to-[#0C100B] text-2xl font-black text-[#C8F040]">{initials}</span>
+      <section className="foco-v6-profile-card foco-profile-identity" aria-labelledby="foco-profile-name">
+        <div className="foco-v6-profile-avatar grid place-items-center" aria-hidden="true">
+          <span className="grid h-full w-full place-items-center rounded-full bg-gradient-to-br from-[#303B23] to-[#0C100B] text-2xl font-black text-[#D5FF40]">{initials}</span>
         </div>
-        <h2>{fullName||user?.full_name||'Atleta FOCO'}</h2>
-        <span className="mt-1 rounded-full bg-[#C8F040]/10 px-3 py-1 text-[10px] font-bold text-[#C8F040]">Plano pessoal</span>
+        <h2 id="foco-profile-name">{fullName||user?.full_name||'Atleta FOCO'}</h2>
+        <span className="mt-1 rounded-full bg-[#D5FF40]/10 px-3 py-1 text-[10px] font-bold text-[#D5FF40]">Plano pessoal</span>
       </section>
-      <div className="foco-v6-profile-kpis">
+      <section className="foco-v6-profile-kpis" aria-label="Resumo dos seus treinos">
         <div className="foco-v6-profile-kpi"><strong>{trainingSummary?.completed??'—'}</strong><p>Treinos</p></div>
         <div className="foco-v6-profile-kpi"><strong>{trainingSummary?.consistency===null?'—':trainingSummary?.consistency===undefined?'—':trainingSummary.consistency+'%'}</strong><p>Consistência (28 dias)</p></div>
         <div className="foco-v6-profile-kpi"><strong>{trainingSummary?.weeks??'—'}</strong><p>Semanas ativas</p></div>
-      </div>
-      <nav className="grid gap-2" aria-label="Preferências do perfil">
+      </section>
+      <nav className="foco-profile-preferences grid gap-2" aria-label="Preferências do perfil">
         {routes.map(route=><button key={route.label} type="button" className="foco-v6-profile-item" onClick={()=>setActiveTab(route.tab)}>
           <route.icon size={17}/><span>{route.label}</span><ChevronRight size={16}/>
         </button>)}
       </nav>
-      <details className="foco-v6-glass rounded-2xl p-3">
-        <summary className="cursor-pointer px-2 py-2 text-sm font-bold text-[#C8F040]">Editar meus dados <ChevronRight size={16} className="ml-2 inline"/></summary>
+      <details className="foco-profile-edit foco-v6-glass rounded-2xl p-3">
+        <summary className="cursor-pointer px-2 py-2 text-sm font-bold text-[#D5FF40]">Editar meus dados <ChevronRight size={16} className="ml-2 inline"/></summary>
       <section className="foco-v5-profile space-y-5 pt-3 text-white" aria-labelledby="foco-profile-personal-data-title">
         <h2 id="foco-profile-personal-data-title" className="px-2 text-base font-bold">Dados pessoais</h2>
 

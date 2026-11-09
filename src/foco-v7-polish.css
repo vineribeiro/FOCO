@@ -2,11 +2,11 @@
 /* FOCO — Fitness editorial quality pass, November 2026.
    Actual session logic/data remains in React, not in decorative layers. */
 :root {
-  --f7-lime:var(--foco-pro-accent,#C8F040);
+  --f7-lime:var(--foco-pro-accent,#D5FF40);
   --f7-paper:#F7F8F2;
   --f7-muted:var(--foco-pro-muted,#B5BEAF);
   --f7-line:rgba(230,245,210,.16);
-  --f7-panel:#1B2119;
+  --f7-panel:#191C15;
   --f7-radius:22px;
 }
 /* HIGH RES LOGIN / IMAGE SYSTEM */
@@ -25,27 +25,42 @@
   background-image:linear-gradient(90deg,rgba(8,11,7,.43),rgba(8,11,7,.66)),linear-gradient(0deg,rgba(8,11,7,.95),transparent 55%) !important;
 }
 .foco-v7-auth-card {
-  background:linear-gradient(150deg,rgba(34,43,30,.90),rgba(11,15,11,.95) 58%) !important;
-  border:1px solid rgba(210,244,166,.20) !important;
+  background:linear-gradient(150deg,rgba(30,34,24,.94),rgba(12,15,10,.97) 58%) !important;
+  border:1px solid rgba(239,244,226,.14) !important;
   box-shadow:0 28px 95px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.14) !important;
   -webkit-backdrop-filter:blur(25px) saturate(145%);
   backdrop-filter:blur(25px) saturate(145%);
 }
-.foco-v7-auth-card h2{letter-spacing:-.055em;font-weight:800;}
+.foco-v7-auth-card h1{letter-spacing:-.04em;font-weight:700;}
 .foco-v7-auth-card input{font-size:16px;min-height:50px;}
 .foco-v7-auth-card input:focus-visible{outline-color:var(--f7-lime);}
 .foco-v7-auth-brand {position:relative;isolation:isolate;}
 @media(max-width:1023px){
   .foco-v7-auth-photo {
-    width:100%;height:355px;object-position:50% 17%;opacity:.88;
+    width:100%;height:300px;object-position:50% 17%;opacity:.88;
     -webkit-mask-image:linear-gradient(180deg,#000 7%,#000 30%,transparent 98%);
     mask-image:linear-gradient(180deg,#000 7%,#000 30%,transparent 98%);
   }
   .foco-v6-auth > .relative.mx-auto.grid{padding-top:0;}
-  .foco-v7-auth-brand{margin-top:85px !important;margin-bottom:22px !important;}
+  .foco-v7-auth-brand{margin-top:68px !important;margin-bottom:22px !important;}
   .foco-v7-auth-card{position:relative;}
 }
-@media(max-width:359px){.foco-v7-auth-brand{margin-top:55px !important;}}
+@media(max-width:359px){.foco-v7-auth-brand{margin-top:44px !important;}}
+
+.foco-auth-layout {gap:24px;}
+.foco-auth-stage {min-height:600px;border:0;}
+.foco-auth-stage:before {border:0;}
+.foco-auth-stage-brand {position:relative;z-index:1;padding:0 12px 36px;}
+.foco-auth-stage-brand .foco-v6-brand img {width:260px;max-width:100%;}
+.foco-auth-stage-brand p {font-size:10px;letter-spacing:.18em;margin-top:16px;color:#D6DDC8;}
+.foco-auth-card-header {padding:22px 20px 18px;}
+.foco-auth-card-body {padding:20px;}
+.foco-auth-card-footer {padding:14px 20px;}
+.foco-auth-card-header h1 {font-size:25px;line-height:1.15;}
+.foco-auth-card-header p {font-size:12px;line-height:1.65;}
+.foco-auth-card-body form>button[type="submit"] {border-radius:999px;}
+.foco-auth-brand .foco-v6-brand img {width:180px;}
+@media(min-width:1024px) {.foco-auth-layout {gap:48px;}.foco-auth-card-header,.foco-auth-card-body {padding-inline:28px;}}
 
 /* EXERCISES: readable artwork instead of postage-stamp previews */
 .foco-v7-exercise-visual {
@@ -61,28 +76,28 @@
 button:hover .foco-v7-exercise-visual img{transform:scale(1.035);}
 .foco-v6-detail .foco-v6-exercise-list{gap:10px;}
 .foco-v6-detail .foco-v6-exercise-row {
-  min-height:118px;padding:9px;gap:13px;align-items:center;
+  min-height:80px;padding:6px;gap:9px;align-items:center;
   border-radius:19px;
-  background:linear-gradient(135deg,rgba(35,42,31,.98),rgba(13,17,12,.98));
+  background:linear-gradient(135deg,#23261E,#12150E);
   border:1px solid var(--f7-line);
   box-shadow:inset 0 1px rgba(255,255,255,.045);
 }
 .foco-v6-detail .foco-v6-exercise-row>.foco-v7-exercise-visual {
-  width:clamp(94px,31%,126px);min-width:94px;height:104px;flex:none;border-radius:14px;
+  width:76px;min-width:76px;height:66px;flex:none;border-radius:14px;
 }
 .foco-v6-detail .foco-v6-exercise-row img {width:100%;height:100%;object-fit:contain;border-radius:8px;filter:grayscale(.70);}
 .foco-v6-detail .foco-v6-exercise-row-text strong{font-size:clamp(12px,3.5vw,15px);line-height:1.29;letter-spacing:-.03em;}
 .foco-v6-detail .foco-v6-exercise-row-text span{font-size:11px;margin-top:7px;line-height:1.4;}
 .foco-v7-exercise-index{display:block;font-size:9px;color:var(--f7-lime);font-weight:800;letter-spacing:.08em;margin-bottom:7px;}
-.foco-v6-weekly .foco-v6-week-row{min-height:104px;padding:7px;gap:12px;border-radius:18px;}
-.foco-v6-weekly .foco-v6-week-thumb{width:108px;height:91px;flex-shrink:0;border-radius:13px;}
+.foco-v6-weekly .foco-v6-week-row{min-height:76px;padding:6px;gap:10px;border-radius:14px;}
+.foco-v6-weekly .foco-v6-week-thumb{width:70px;height:64px;flex-shrink:0;border-radius:10px;}
 .foco-v6-weekly .foco-v6-week-thumb>div{width:100% !important;height:100% !important;}
 .foco-v6-weekly .foco-v6-week-row-text strong{font-size:14px;line-height:1.3;}
 .foco-v6-weekly .foco-v6-week-row-text small{font-size:11px;line-height:1.4;}
 .foco-v6-weekly .foco-v6-week-row-status{width:34px;height:34px;margin-right:3px;flex-shrink:0;}
 @media(max-width:360px){
- .foco-v6-weekly .foco-v6-week-thumb{width:86px;height:85px;}
- .foco-v6-detail .foco-v6-exercise-row>.foco-v7-exercise-visual{min-width:86px;width:86px;height:96px;}
+ .foco-v6-weekly .foco-v6-week-thumb{width:62px;height:60px;}
+ .foco-v6-detail .foco-v6-exercise-row>.foco-v7-exercise-visual{min-width:66px;width:66px;height:60px;}
 }
 
 /* REBUILT WORKOUT PLAYER */
@@ -233,7 +248,7 @@ button:hover .foco-v7-exercise-visual img{transform:scale(1.035);}
   border-radius:999px;box-shadow:0 13px 32px rgba(0,0,0,.45);
 }
 .foco-v7-session-start{box-shadow:0 0 0 7px rgba(9,13,8,.83),0 13px 32px rgba(0,0,0,.4);}
-.foco-v7-session-actions{padding:5px;background:rgba(11,16,11,.96);backdrop-filter:blur(18px);border:1px solid rgba(200,240,64,.12);}
+.foco-v7-session-actions{padding:0;background:none;border:0;}
 @media(min-width:768px){
  .foco-v6-session-screen{padding-bottom:80px !important;}
 }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Activity,
   AlertCircle,
   ArrowRight,
   CheckCircle2,
@@ -9,11 +8,10 @@ import {
   LockKeyhole,
   Mail,
   ShieldCheck,
-  Sparkles,
   UserRound,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { FocoV6Lockup, FocoV6Mark, V6_IMAGES } from '../components/FocoV6UI';
+import { FocoV6Lockup, V6_IMAGES } from '../components/FocoV6UI';
 import { api, removeStoredToken } from '../services/api';
 import { InstallAppButton } from '../components/InstallAppButton';
 
@@ -172,80 +170,26 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
   const isReset = mode === 'reset';
 
   return (
-    <main style={{ '--foco-v6-portrait': `url("${V6_IMAGES.portrait}")` } as React.CSSProperties} className="foco-v6-auth foco-v5-auth relative min-h-screen overflow-hidden bg-[#090C09] text-white selection:bg-[#C8F040] selection:text-black">
+    <main style={{ '--foco-v6-portrait': `url("${V6_IMAGES.portrait}")` } as React.CSSProperties} className="foco-v6-auth foco-v5-auth relative min-h-screen overflow-hidden bg-[#090C09] text-white selection:bg-[#D5FF40] selection:text-black">
       <img className="foco-v7-auth-photo" src={V6_IMAGES.login} alt="" aria-hidden="true"
         loading="eager" decoding="async" fetchPriority="high"
         onError={(event)=>{ /* Do not upscale the old 3 KB reference. Keep the premium gradient instead. */ event.currentTarget.hidden=true; }} />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-36 top-[-10rem] h-[30rem] w-[30rem] rounded-full bg-white/[0.045] blur-[110px]" />
-        <div className="absolute -bottom-48 right-[-8rem] h-[32rem] w-[32rem] rounded-full bg-neutral-500/[0.07] blur-[130px]" />
-        <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px)', backgroundSize: '56px 56px' }} />
-      </div>
-
-      <div className="relative mx-auto grid min-h-screen w-full max-w-[1320px] grid-cols-1 items-center gap-8 px-4 py-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(420px,520px)] lg:gap-14 lg:px-12 lg:py-10">
-        <section className="foco-v6-auth-editorial hidden min-w-0 flex-col justify-between self-stretch py-5 lg:flex">
-          <div>
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] p-2.5 shadow-2xl">
-                <FocoV6Mark size={33}/>
-              </div>
-              <div>
-                <FocoV6Lockup compact />
-                <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">Fitness premium</p>
-              </div>
-            </div>
-
-            <div className="mt-24 max-w-xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-neutral-300">
-                <Sparkles className="h-3.5 w-3.5" />
-                Seu próximo nível começa aqui
-              </div>
-              <h1 className="max-w-lg text-5xl font-black leading-[1.02] tracking-[-0.055em] xl:text-6xl">
-                Treine com
-                <span className="mt-1 block text-neutral-500">intenção.</span>
-                Evolua com
-                <span className="mt-1 block">método.</span>
-              </h1>
-              <p className="mt-6 max-w-md text-sm leading-7 text-neutral-400">
-                Organize suas fichas, acompanhe cada sessão e construa uma rotina de treino feita para ti — no teu ritmo, com os teus objetivos.
-              </p>
-            </div>
-
-            <div className="mt-14 grid max-w-lg grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
-                <div className="mb-5 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-black">
-                  <Activity className="h-4 w-4" />
-                </div>
-                <p className="text-sm font-black">Treino organizado</p>
-                <p className="mt-1 text-xs leading-5 text-neutral-500">Fichas e exercícios num só lugar.</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
-                <div className="mb-5 flex h-9 w-9 items-center justify-center rounded-xl bg-white text-black">
-                  <ShieldCheck className="h-4 w-4" />
-                </div>
-                <p className="text-sm font-black">Sua evolução</p>
-                <p className="mt-1 text-xs leading-5 text-neutral-500">Histórico, metas e progresso pessoal.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-5 text-[10px] font-medium uppercase tracking-[0.16em] text-neutral-600">
-            <span>FOCO EM EVOLUIR.</span>
-            <span>Um treino de cada vez.</span>
+      <div className="foco-auth-layout relative mx-auto grid min-h-screen w-full max-w-[1320px] grid-cols-1 items-center gap-8 px-4 py-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(420px,520px)] lg:gap-14 lg:px-12 lg:py-10">
+        <section className="foco-v6-auth-editorial foco-auth-stage hidden min-w-0 flex-col justify-end self-stretch lg:flex" aria-label="FOCO — treino, evolução e performance">
+          <div className="foco-auth-stage-brand">
+            <FocoV6Lockup />
+            <p>TREINO · EVOLUÇÃO · PERFORMANCE</p>
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-[500px]">
-          <div className="foco-v7-auth-brand mb-7 flex flex-col items-center text-center lg:hidden">
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] p-3 shadow-xl">
-              <FocoV6Mark size={38}/>
-            </div>
-            <FocoV6Lockup compact />
-            <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-500">Fitness premium</p>
+        <section className="foco-auth-form-column mx-auto w-full max-w-[500px]">
+          <div className="foco-v7-auth-brand foco-auth-brand mb-7 flex flex-col items-center text-center lg:hidden">
+            <FocoV6Lockup />
+            <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-400">TREINO · EVOLUÇÃO · PERFORMANCE</p>
           </div>
 
           <div className="foco-v7-auth-card foco-v6-auth-card overflow-hidden rounded-[28px] border border-white/10 bg-[#111111]/95 shadow-[0_32px_100px_rgba(0,0,0,.5)] backdrop-blur-xl">
-            <div className="border-b border-white/[0.07] px-5 pb-5 pt-6 sm:px-8 sm:pt-8">
+            <div className="foco-auth-card-header border-b border-white/[0.07] px-5 pb-5 pt-6 sm:px-8 sm:pt-8">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">
                   {isLogin ? 'Bem-vindo de volta' : isRegister ? 'Comece sua jornada' : isReset ? 'Definir nova senha' : 'Recuperar acesso'}
@@ -255,9 +199,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                   Acesso seguro
                 </div>
               </div>
-              <h2 className="text-2xl font-black tracking-tight sm:text-[28px]">
+              <h1 className="text-2xl font-black tracking-tight sm:text-[28px]">
                 {isLogin ? 'Entre na sua conta.' : isRegister ? 'Crie seu perfil.' : isReset ? 'Defina sua nova senha.' : 'Vamos recuperar seu acesso.'}
-              </h2>
+              </h1>
               <p className="mt-2 max-w-md text-xs leading-6 text-neutral-400 sm:text-sm">
                 {isLogin
                   ? 'Continue de onde parou e mantenha seu treino em movimento.'
@@ -269,7 +213,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
               </p>
             </div>
 
-            <div className="px-5 py-5 sm:px-8 sm:py-7">
+            <div className="foco-auth-card-body px-5 py-5 sm:px-8 sm:py-7">
               {!isForgot && !isReset && (
                 <div className="mb-6 grid grid-cols-2 rounded-xl border border-white/10 bg-black/40 p-1" role="tablist" aria-label="Tipo de acesso">
                   <button
@@ -456,7 +400,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
               )}
             </div>
 
-            <div className="flex items-center justify-center gap-2 border-t border-white/[0.07] bg-black/20 px-5 py-4 text-[9px] font-bold uppercase tracking-[0.14em] text-neutral-600">
+            <div className="foco-auth-card-footer flex items-center justify-center gap-2 border-t border-white/[0.07] bg-black/20 px-5 py-4 text-[9px] font-bold uppercase tracking-[0.14em] text-neutral-400">
               <ShieldCheck className="h-3.5 w-3.5" />
               Seus dados de treino são pessoais
             </div>
@@ -464,7 +408,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
 
           <div className="mt-5 flex flex-col items-center gap-3">
             <InstallAppButton />
-            <p className="text-center text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-700">FOCO · Fitness Premium · FOCO EM EVOLUIR.</p>
+            <p className="text-center text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-700">FOCO · UM TREINO DE CADA VEZ.</p>
           </div>
         </section>
       </div>

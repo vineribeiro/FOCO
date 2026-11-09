@@ -4,6 +4,7 @@ import { chromium } from 'playwright';
 
 /** Public, anonymous-only visual smoke. NO production login, user edits or mock data. */
 const BASE = process.env.FOCO_VISUAL_BASE || 'https://vineribeiro.github.io/FOCO/';
+const proxyBridge = process.env.FOCO_BROWSER_PROXY_BRIDGE === '1';
 const OUT = 'visual-qa';
 const sizes = [
   { label: 'mobile-320', width: 320, height: 720 },
@@ -13,7 +14,9 @@ const sizes = [
   { label: 'desktop-1440', width: 1440, height: 900 },
 ];
 mkdirSync(OUT, { recursive: true });
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true,
+  ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE } : {}),
+});
 const results = [];
 let failed = false;
 try {
@@ -25,6 +28,23 @@ try {
       reducedMotion: 'reduce',
       isMobile: size.width < 768,
       hasTouch: size.width < 768,
+      serviceWorkers: 'block',
+    });
+    // Cloud Chromium reads through Node's inherited proxy and trusted CA when
+    // requested. Anonymous smoke tests never need to send any external write.
+    await context.route('**/*', async route => {
+      const request = route.request();
+      const url = new URL(request.url());
+      if (!['http:', 'https:'].includes(url.protocol)) return route.continue();
+      if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method())) return route.abort('blockedbyclient');
+      if (!proxyBridge || url.protocol !== 'https:') return route.continue();
+      try {
+        const response = await fetch(request.url(), { method: request.method(),
+          headers: await request.allHeaders(), signal: AbortSignal.timeout(25000) });
+        const headers = Object.fromEntries(response.headers);
+        for (const key of ['content-encoding', 'content-length', 'transfer-encoding']) delete headers[key];
+        return route.fulfill({ status: response.status, headers, body: Buffer.from(await response.arrayBuffer()) });
+      } catch { return route.abort('failed'); }
     });
     const page = await context.newPage();
     try {
