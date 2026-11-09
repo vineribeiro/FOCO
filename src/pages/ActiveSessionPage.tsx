@@ -219,154 +219,114 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const toggleExerciseLoad = (index: number) => setExerciseLogs(prev => prev.map((ex, i) => i === index ? { ...ex, track_load: !tracksLoad(ex) } : ex));
 
 
-  // Card 9:16 com a identidade monocromática oficial do FOCO.
-  // A fotografia é obtida do catálogo de exercícios já utilizado pelo app.
-  // Caso a imagem não carregue ou não permita Canvas, o card segue exportável.
+  // Story FOCO / PERFORMANCE: editorial 9:16, 100% vetorial e exportável offline.
+  // Não inclui mídia ExerciseDB de terceiros; apenas métricas da sessão concluída.
   const createStoryImage = async (): Promise<Blob | null> => {
     const completed = sessionCompletedModal;
     if (!completed) return null;
-
     const canvas = document.createElement('canvas');
     canvas.width = 1080;
     canvas.height = 1920;
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
+    const W = 1080, H = 1920;
+    const lime = '#D5FF40', white = '#F6F7F3', muted = '#A6ADA5';
+    const minutes = Math.max(0, Math.round(Number(completed.duration || 0) / 60));
+    const date = new Date(completed.finishedAt || Date.now());
+    const dateLabel = date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '').toUpperCase();
+    const timeLabel = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const workoutName = String(completed.planName || 'TREINO LIVRE').trim().toLocaleUpperCase('pt-BR') || 'TREINO LIVRE';
+    const setsDone = Math.max(0, Number(completed.setsDone) || 0);
+    const exercisesDone = Math.max(0, Number(completed.exercisesDone) || 0);
+    const kcal = Number(completed.caloriesEstimate);
+    const hasKcal = completed.caloriesEstimate !== null && completed.caloriesEstimate !== undefined && Number.isFinite(kcal) && kcal >= 0;
 
-    const W = canvas.width;
-    const H = canvas.height;
-    const durationMinutes = Math.max(0, Math.round(completed.duration / 60));
-    const completedDate = new Date(completed.finishedAt || Date.now());
-    const dateLabel = completedDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '').toUpperCase();
-    const timeLabel = completedDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    const title = String(completed.planName || 'Treino livre').trim() || 'Treino livre';
-    const calorieLabel = typeof completed.caloriesEstimate === 'number'
-      ? '~' + completed.caloriesEstimate + ' kcal'
-      : '— kcal';
-
-    ctx.fillStyle = '#080808';
-    ctx.fillRect(0, 0, W, H);
-
-    // Compartilhamento offline: gráficos originais sem copiar mídia externa.
-    // ExerciseDB proíbe armazenar GIFs/imagens no story ou em canvas.
-    ctx.save();
-    ctx.translate(625, 860);
-    ctx.rotate(-Math.PI / 8);
-    ctx.strokeStyle = 'rgba(235,235,235,.12)';
-    ctx.lineCap = 'round';
-    ctx.lineWidth = 26;
-    ctx.beginPath(); ctx.moveTo(-390, 0); ctx.lineTo(390, 0); ctx.stroke();
-    [-320, -270, 270, 320].forEach((x, i) => {
-      ctx.fillStyle = i === 0 || i === 3 ? 'rgba(255,255,255,.10)' : 'rgba(255,255,255,.075)';
-      ctx.fillRect(x - 24, -145, 48, 290);
-    });
-    ctx.restore();
-
-
-    // Vinheta suave que garante contraste do texto e integra a foto ao aplicativo.
-    const fade = ctx.createLinearGradient(0, 0, 0, H);
-    fade.addColorStop(0, 'rgba(8,8,8,.65)');
-    fade.addColorStop(.34, 'rgba(8,8,8,.42)');
-    fade.addColorStop(.68, 'rgba(8,8,8,.84)');
-    fade.addColorStop(1, '#080808');
-    ctx.fillStyle = fade;
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.fillStyle = 'rgba(255,255,255,.025)';
-    for (let x = 80; x < W; x += 120) ctx.fillRect(x, 250, 1, 1180);
-
-    // Monograma e lettering vetoriais correspondentes ao FocoBrand.tsx.
-    ctx.fillStyle = '#FFFFFF';
-    ctx.save();
-    ctx.translate(79, 88);
-    ctx.scale(.94, .94);
-    ctx.fill(new Path2D('M 32 30 L 52 10 L 98 10 L 80 28 L 52 28 Z'));
-    ctx.fill(new Path2D('M 4 58 L 32 30 L 76 30 L 60 46 L 38 46 L 24 60 L 4 60 Z'));
-    ctx.restore();
-
-    ctx.save();
-    ctx.translate(185, 91);
-    ctx.scale(.83, .83);
-    const letterPaths = [
-      'M 10 8 L 86 8 L 86 24 L 34 24 L 34 34 L 76 34 L 76 50 L 34 50 L 34 68 L 10 68 Z',
-      'M 122 8 C 104 8 96 16 96 34 C 96 52 104 68 122 68 L 168 68 C 186 68 194 52 194 34 C 194 16 186 8 168 8 L 122 8 Z M 126 24 C 122 24 120 28 120 38 C 120 48 122 52 126 52 L 164 52 C 168 52 170 48 170 38 C 170 28 168 24 164 24 L 126 24 Z',
-      'M 292 24 L 292 8 L 230 8 C 212 8 204 16 204 34 C 204 52 212 68 230 68 L 292 68 L 292 52 L 234 52 C 230 52 228 48 228 38 C 228 28 230 24 234 24 L 292 24 Z',
-      'M 328 8 C 310 8 302 16 302 34 C 302 52 310 68 328 68 L 374 68 C 392 68 400 52 400 34 C 400 16 392 8 374 8 L 328 8 Z M 332 24 C 328 24 326 28 326 38 C 326 48 328 52 332 52 L 370 52 C 374 52 376 48 376 38 C 376 28 374 24 L 332 24 Z',
-    ];
-    letterPaths.forEach(path => ctx.fill(new Path2D(path), 'evenodd'));
-    ctx.restore();
-
-    const rule = (y: number) => {
-      ctx.fillStyle = 'rgba(255,255,255,.22)';
-      ctx.fillRect(82, y, 916, 2);
-    };
-    const label = (value: string, x: number, y: number, size = 27) => {
-      ctx.font = '700 ' + size + 'px Arial, sans-serif';
-      ctx.fillStyle = '#AAA9A9';
-      ctx.fillText(value, x, y);
-    };
-
-    rule(233);
-    label('REGISTRO DE TREINO  /  FOCO', 83, 303, 26);
-    label('SESSÃO CONCLUÍDA', 83, 480, 30);
-
-    // O nome verdadeiro da ficha é o centro visual, com quebra de linha segura.
-    const fontSize = title.length > 36 ? 72 : title.length > 24 ? 82 : 100;
-    const maxTextWidth = 915;
-    ctx.font = '900 ' + fontSize + 'px Arial, sans-serif';
-    const titleWords = title.toLocaleUpperCase('pt-BR').split(/\s+/);
-    const titleLines: string[] = [];
-    let currentLine = '';
-    titleWords.forEach(word => {
-      const next = currentLine ? currentLine + ' ' + word : word;
-      if (currentLine && ctx.measureText(next).width > maxTextWidth) {
-        titleLines.push(currentLine);
-        currentLine = word;
-      } else currentLine = next;
-    });
-    if (currentLine) titleLines.push(currentLine);
-    const trimmedLines = titleLines.slice(0, 3);
-    if (titleLines.length > 3) {
-      let last = trimmedLines[2];
-      while (last.length && ctx.measureText(last + '…').width > maxTextWidth) last = last.slice(0, -1);
-      trimmedLines[2] = last + '…';
+    // Background com profundidade controlada, sem efeitos externos ou imagens pixeladas.
+    ctx.fillStyle = '#080B09'; ctx.fillRect(0, 0, W, H);
+    const glow = ctx.createRadialGradient(760, 610, 80, 760, 610, 890);
+    glow.addColorStop(0, 'rgba(114,160,40,.19)');
+    glow.addColorStop(.48, 'rgba(38,65,26,.09)');
+    glow.addColorStop(1, 'rgba(8,11,9,0)');
+    ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+    // Linhas de movimento originais, em vez de uma ilustração genérica de halteres.
+    ctx.save(); ctx.translate(640, 780); ctx.rotate(-.27);
+    for (let i = 0; i < 9; i++) {
+      const x = (i - 4) * 118;
+      ctx.strokeStyle = i === 4 ? 'rgba(213,255,64,.35)' : 'rgba(213,255,64,.075)';
+      ctx.lineWidth = i === 4 ? 4 : 2;
+      ctx.beginPath(); ctx.moveTo(x, -380); ctx.lineTo(x + 175, 380); ctx.stroke();
     }
-    ctx.fillStyle = '#FFFFFF';
-    trimmedLines.forEach((line, index) => ctx.fillText(line, 80, 590 + index * (fontSize + 15), maxTextWidth));
-    ctx.fillStyle = 'rgba(255,255,255,.16)';
-    ctx.fillRect(83, 955, 82, 7);
-
-    // Estatísticas principais: números reais da sessão e kcal apenas estimadas.
-    rule(1050);
-    label('TEMPO DE TREINO', 83, 1135);
-    label('CALORIAS ESTIMADAS', 550, 1135);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '900 94px Arial, sans-serif';
-    ctx.fillText(durationMinutes + ' min', 79, 1248, 445);
-    ctx.font = '900 82px Arial, sans-serif';
-    ctx.fillText(calorieLabel, 546, 1246, 475);
-    label(typeof completed.caloriesEstimate === 'number'
-      ? 'Estimativa por peso, duração e esforço'
-      : 'Cadastre o peso para estimar', 548, 1304, 21);
-
-    rule(1408);
-    label('SÉRIES', 83, 1487, 25);
-    label('EXERCÍCIOS', 550, 1487, 25);
-    ctx.font = '900 73px Arial, sans-serif';
-    ctx.fillStyle = '#F8F8F8';
-    ctx.fillText(String(completed.setsDone), 81, 1578);
-    ctx.fillText(String(completed.exercisesDone), 548, 1578);
-
-    rule(1670);
-    label(dateLabel + '   •   ' + timeLabel, 83, 1741, 29);
-    ctx.font = '700 28px Arial, sans-serif';
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillText('FOCO EM EVOLUIR.', 83, 1832);
-    ctx.fillStyle = '#777777';
-    ctx.font = '23px Arial, sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText('RESULTADOS, UM TREINO POR VEZ.', 998, 1832);
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(213,255,64,.22)';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(775, 730, 350, -2.25, .65); ctx.stroke();
+    ctx.beginPath(); ctx.arc(775, 730, 415, -2.1, .3); ctx.stroke();
+    // Marca vetorial compartilhada com o app.
+    ctx.save(); ctx.translate(78, 104); ctx.scale(.95, .95);
+    ctx.fillStyle = lime;
+    ctx.fill(new Path2D('M7 47L19 17H35L22 47H7Z'));
+    ctx.fill(new Path2D('M28 69L53 6H69L44 69H28Z'));
+    ctx.fill(new Path2D('M57 43L65 23H78L70 43H57Z'));
+    ctx.restore();
+    const text = (value: string, x: number, y: number, font: string, color = white) => {
+      ctx.fillStyle = color; ctx.font = font; ctx.textAlign = 'left'; ctx.fillText(value, x, y);
+    };
+    const line = (y: number) => { ctx.fillStyle = 'rgba(246,247,243,.16)'; ctx.fillRect(78, y, 924, 2); };
+    text('FOCO', 174, 153, '900 74px Arial, sans-serif');
+    ctx.textAlign = 'right'; ctx.fillStyle = muted; ctx.font = '700 25px Arial, sans-serif';
+    ctx.fillText('TRAINING SYSTEM', 1000, 139); ctx.textAlign = 'left';
+    line(210);
+    text('SESSÃO FINALIZADA', 80, 292, '700 29px Arial, sans-serif', lime);
+    text('FEITO.', 67, 490, '900 202px Arial, sans-serif');
+    text('MAIS UM DIA', 79, 570, '800 55px Arial, sans-serif');
+    text('DE EVOLUÇÃO.', 79, 638, '800 55px Arial, sans-serif');
+    // Área central com nome do treino, quebrado por largura e não por caracteres.
+    ctx.fillStyle = 'rgba(9,14,9,.83)';
+    ctx.fillRect(77, 825, 926, 280);
+    ctx.strokeStyle = 'rgba(213,255,64,.34)'; ctx.lineWidth = 2;
+    ctx.strokeRect(77, 825, 926, 280);
+    ctx.fillStyle = lime; ctx.fillRect(77, 825, 10, 280);
+    text('TREINO CONCLUÍDO', 113, 885, '700 25px Arial, sans-serif', lime);
+    const maxWidth = 838;
+    const fontSize = workoutName.length > 38 ? 57 : workoutName.length > 22 ? 67 : 83;
+    ctx.font = '900 ' + fontSize + 'px Arial, sans-serif';
+    const words = workoutName.split(/\s+/);
+    const lines: string[] = [];
+    let current = '';
+    for (const word of words) {
+      const next = current ? current + ' ' + word : word;
+      if (current && ctx.measureText(next).width > maxWidth) { lines.push(current); current = word; }
+      else current = next;
+    }
+    if (current) lines.push(current);
+    const visibleLines = lines.slice(0, 2);
+    if (lines.length > 2) {
+      let last = visibleLines[1];
+      while (last && ctx.measureText(last + '…').width > maxWidth) last = last.slice(0, -1);
+      visibleLines[1] = last + '…';
+    }
+    ctx.fillStyle = white;
+    visibleLines.forEach((value, index) => ctx.fillText(value, 111, 974 + index * 88, maxWidth));
+    // Números de maior interesse, com hierarquia forte e espaçamento generoso.
+    line(1170);
+    text('DURAÇÃO', 81, 1243, '700 26px Arial, sans-serif', muted);
+    text('SÉRIES', 574, 1243, '700 26px Arial, sans-serif', muted);
+    text(String(minutes), 73, 1384, '900 144px Arial, sans-serif');
+    text('MIN', 317, 1381, '700 36px Arial, sans-serif', lime);
+    text(String(setsDone), 567, 1384, '900 144px Arial, sans-serif');
+    line(1434);
+    text('EXERCÍCIOS', 81, 1510, '700 26px Arial, sans-serif', muted);
+    text('GASTO ESTIMADO', 574, 1510, '700 26px Arial, sans-serif', muted);
+    text(String(exercisesDone), 76, 1616, '900 91px Arial, sans-serif');
+    text(hasKcal ? '~' + Math.round(kcal) + ' KCAL' : 'NÃO DISP.', 570, 1612,
+      hasKcal ? '900 67px Arial, sans-serif' : '700 47px Arial, sans-serif', white);
+    if (hasKcal) text('VALOR APROXIMADO', 574, 1661, '600 22px Arial, sans-serif', muted);
+    line(1720);
+    text(dateLabel + '  /  ' + timeLabel, 81, 1792, '700 28px Arial, sans-serif', muted);
+    ctx.textAlign = 'right'; ctx.fillStyle = lime; ctx.font = '800 30px Arial, sans-serif';
+    ctx.fillText('CONTINUA.', 998, 1792);
     ctx.textAlign = 'left';
-
+    text('SEU PROGRESSO. SEU RITMO.', 81, 1852, '700 24px Arial, sans-serif', white);
     return new Promise<Blob | null>(resolve => {
       try { canvas.toBlob(resolve, 'image/png'); } catch { resolve(null); }
     });
