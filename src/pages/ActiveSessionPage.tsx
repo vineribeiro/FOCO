@@ -48,6 +48,7 @@ interface SetLog {
 }
 
 interface ExerciseLog {
+  repdb_id?: string | null;
   track_load?: boolean;
   exercise_name: string;
   muscle_group: string;
@@ -191,6 +192,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const initExerciseLogs = (exercises: WorkoutExercise[]) => {
     const logs: ExerciseLog[] = exercises.map((ex) => ({
       exercise_name: ex.exercise_name,
+      repdb_id: ex.repdb_id,
       track_load: defaultTracksLoad(ex.exercise_name),
       muscle_group: ex.muscle_group,
       rest_seconds: ex.rest_seconds || 60,
@@ -220,7 +222,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
 
   // Story FOCO / PERFORMANCE: editorial 9:16, 100% vetorial e exportável offline.
-  // Não inclui mídia ExerciseDB de terceiros; apenas métricas da sessão concluída.
+  // Não inclui mídia de terceiros; apenas métricas da sessão concluída.
   const createStoryImage = async (): Promise<Blob | null> => {
     const completed = sessionCompletedModal;
     if (!completed) return null;
@@ -594,7 +596,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       {v6CurrentExercise&&<section className="foco-v7-session-stage" aria-label={'Exercício atual: '+v6CurrentExercise.exercise_name}>
         <div className="foco-21-art-surface" aria-hidden="true"/>
         <div className="foco-21-exercise-media">
-        <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name}
+        <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name} exerciseId={v6CurrentExercise.repdb_id}
           muscleGroup={v6CurrentExercise.muscle_group} presentation="editorial" className="foco-v7-stage-illustration h-full w-full" />
         </div>
         <span className="foco-v7-stage-tag">EXERCÍCIO {String(v6ExIndex+1).padStart(2,'0')} / {String(exerciseLogs.length).padStart(2,'0')}</span>
@@ -676,7 +678,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       </>}
       {v6CurrentExercise&&v6SessionMode==='execution'&&<section className="foco-v7-guide-panel">
         <div className="foco-v7-guide-heading"><span>EXECUÇÃO CORRETA</span><button type="button" onClick={()=>setV6SessionMode('register')}>Voltar ao registro</button></div>
-        <ExerciseExecutionGuide exerciseName={v6CurrentExercise.exercise_name} muscleGroup={v6CurrentExercise.muscle_group}/>
+        <ExerciseExecutionGuide exerciseName={v6CurrentExercise.exercise_name} exerciseId={v6CurrentExercise.repdb_id} muscleGroup={v6CurrentExercise.muscle_group}/>
       </section>}
       {v6CurrentExercise&&v6SessionMode==='tips'&&<section className="foco-v7-guide-panel p-5">
         <p className="foco-v7-guide-label">DICA DO FOCO</p>
@@ -927,14 +929,14 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
               {exIdx === focusedExerciseIndex ? (
                 <section className="mt-4 overflow-hidden rounded-[19px] border border-white/10 bg-[#111]" aria-label={'Guia de execução de ' + exercise.exercise_name}>
                   <p className="foco-v4-eyebrow px-4 pt-4">Execução do exercício</p>
-                  <ExerciseExecutionGuide exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} />
+                  <ExerciseExecutionGuide exerciseName={exercise.exercise_name} exerciseId={exercise.repdb_id} muscleGroup={exercise.muscle_group} />
                 </section>
               ) : (
                 <details className="mt-3 overflow-hidden rounded-[19px] border border-white/10 bg-[#111]">
                   <summary className="foco-touch cursor-pointer px-4 py-3 text-sm font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
                     <span className="flex items-center gap-2"><Dumbbell className="h-4 w-4" /> Execução, músculos e cuidados</span>
                   </summary>
-                  <ExerciseExecutionGuide exerciseName={exercise.exercise_name} muscleGroup={exercise.muscle_group} />
+                  <ExerciseExecutionGuide exerciseName={exercise.exercise_name} exerciseId={exercise.repdb_id} muscleGroup={exercise.muscle_group} />
                 </details>
               )}
 
