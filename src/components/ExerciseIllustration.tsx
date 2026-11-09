@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Dumbbell, LoaderCircle, PlayCircle } from 'lucide-react';
 import {
   getExerciseDBGifPreview,
@@ -27,6 +27,19 @@ export const ExerciseIllustration: React.FC<Props> = ({
   presentation = 'standard',
 }) => {
   const activeStage = presentation === 'editorial';
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const [visible, setVisible] = useState(activeStage);
+  useEffect(() => {
+    if (activeStage) { setVisible(true); return; }
+    const node = rootRef.current;
+    if (!node) return;
+    if (typeof IntersectionObserver === 'undefined') { setVisible(true); return; }
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) { setVisible(true); observer.disconnect(); }
+    }, { rootMargin: '120px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [activeStage]);
   const [preview, setPreview] = useState<ExerciseDBPreviewResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [failedImage, setFailedImage] = useState(false);
@@ -41,17 +54,17 @@ export const ExerciseIllustration: React.FC<Props> = ({
 
     // Never turn ordinary exercise lists into N simultaneous API/GIF requests.
     // An active session shows only one exercise at a time.
-    if (!activeStage || !allowed || !exerciseName.trim()) return;
+    if (!visible || !allowed || !exerciseName.trim()) return;
     setLoading(true);
     void getExerciseDBGifPreview(exerciseName)
       .then(value => { if (!cancelled) setPreview(value); })
       .catch(() => { if (!cancelled) setPreview({ state: 'unavailable' }); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [exerciseName, activeStage, allowed, retryKey]);
+  }, [exerciseName, visible, allowed, retryKey]);
 
   const compact = activeStage || /\bh-(14|16|20)\b/.test(className);
-  const gif = activeStage && !loading && !failedImage && preview?.state === 'matched'
+  const gif = !loading && !failedImage && preview?.state === 'matched'
     ? preview.gifUrl : null;
 
   const status = !allowed ? 'Demonstração não habilitada'
@@ -61,7 +74,7 @@ export const ExerciseIllustration: React.FC<Props> = ({
     : preview?.state === 'rate_limited' ? 'Limite temporário de consultas'
     : 'Imagem temporariamente indisponível';
 
-  return <div data-foco-media-source="exercisedb"
+  return <div ref={rootRef} data-foco-media-source="exercisedb"
     data-foco-media-status={gif ? 'image' : loading ? 'loading' : 'unavailable'}
     aria-label={'Demonstração do exercício: ' + exerciseName}
     className={'foco-edb-tile relative flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-2xl border border-[#C8F040]/20 bg-[#182317] text-center ' + className}>
@@ -70,7 +83,7 @@ export const ExerciseIllustration: React.FC<Props> = ({
         className="foco-edb-stage-gif" loading="eager" decoding="async" referrerPolicy="no-referrer"
         onError={() => setFailedImage(true)} />
       <span className="foco-edb-stage-attribution">EXERCISEDB</span>
-    </> : activeStage ? <div className="foco-edb-stage-status" role="status" aria-live="polite">
+    </> : (activeStage || visible) ? <div className="foco-edb-stage-status" role="status" aria-live="polite">
       {loading ? <LoaderCircle size={26} className="animate-spin" aria-hidden="true" /> :
         <Dumbbell size={29} strokeWidth={1.35} aria-hidden="true" />}
       <span>{status}</span>
