@@ -50,7 +50,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
         <div key={ex.id||ex.exercise_name+i} className="foco-v6-exercise-row foco-v8-exercise-row">
           <button type="button" className="foco-v8-exercise-thumb"
             aria-label={'Ver demonstração de '+ex.exercise_name} onClick={()=>setPreview(ex)}>
-            <ExerciseIllustration exerciseName={ex.exercise_name} muscleGroup={ex.muscle_group}
+            <ExerciseIllustration exerciseName={ex.exercise_name} exerciseId={ex.repdb_id} muscleGroup={ex.muscle_group}
               className="h-full w-full !rounded-[13px]" presentation="editorial"/>
             <span className="foco-v8-exercise-play" aria-hidden="true"><Play size={15} fill="currentColor"/></span>
           </button>
@@ -93,7 +93,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
         <button type="button" onClick={closePreview} aria-label="Fechar demonstração"><X size={21}/></button>
       </header>
       <div className="foco-v8-demo-content">
-        <ExerciseExecutionGuide exerciseName={preview.exercise_name} muscleGroup={preview.muscle_group}/>
+        <ExerciseExecutionGuide exerciseName={preview.exercise_name} exerciseId={preview.repdb_id} muscleGroup={preview.muscle_group}/>
       </div>
     </dialog>}
     <div className="mt-4 rounded-2xl bg-[#080A07]/80 p-2">
