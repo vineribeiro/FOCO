@@ -656,15 +656,16 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           <h2>{v6CurrentExercise.exercise_name}</h2>
           <span>{v6CurrentExercise.muscle_group || 'Treinamento'} · {v6CurrentExercise.sets.length} séries</span>
         </div>
-        <button type="button" className="foco-v7-stage-expand" aria-label="Ver demonstração completa"
-          onClick={()=>setV6SessionMode('execution')}><ChevronRight size={20}/><span>Execução</span></button>
       </section>}
+      {!sessionStarted && !pendingSubmission && v6CurrentExercise && <button type="button" className="foco-v6-primary foco-v7-session-start" onClick={handleStartWorkout}>
+        Iniciar treino <Play size={17} fill="currentColor"/>
+      </button>}
       {v6CurrentExercise&&<section className="foco-v7-session-series foco-21-series" aria-label="Progresso das séries">
         <div className="foco-v7-series-copy">
           <div><span>SÉRIE ATUAL</span><strong>Série {Math.min(v6SetIndex+1,v6CurrentExercise.sets.length)} de {v6CurrentExercise.sets.length}</strong></div>
           <div className="foco-v7-series-percentage"><strong>{completionRate}%</strong><small>da sessão</small></div>
         </div>
-        <div className="foco-v7-series-dots" aria-label={v7CompletedInExercise+' séries concluídas neste exercício'}>
+        <div className="foco-v7-series-dots" role="img" aria-label={v7CompletedInExercise+' de '+v6CurrentExercise.sets.length+' séries concluídas neste exercício'}>
           {v6CurrentExercise.sets.map((set,index)=><span key={index} className={(set.completed?'is-complete ':'')+(index===v6SetIndex?'is-current':'')}/>)}
         </div>
       </section>}
@@ -695,6 +696,15 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             </div>
           </label>
         </section>
+        {sessionStarted && <div className="foco-v7-session-actions">
+          <button type="button" className="foco-v7-previous" disabled={v6ExIndex===0} onClick={()=>v7GoExercise(-1)}>
+            <ArrowLeft size={16}/> Anterior
+          </button>
+          <button type="button" className="foco-v6-primary" disabled={v6CurrentSet.completed}
+            onClick={()=>{handleToggleSetComplete(v6ExIndex,v6SetIndex);setV7ManualExerciseIndex(null);}}>
+            Concluir série <CheckCircle2 size={18}/>
+          </button>
+        </div>}
         {v6TracksLoad && typeof priorRecordedLoad === 'number' && <div className="foco-v2-prior-load">
           <span>Última carga registrada: <strong>{priorRecordedLoad.toLocaleString('pt-BR')} kg</strong></span>
           <button type="button" onClick={()=>handleUpdateSet(v6ExIndex,v6SetIndex,'load_kg',priorRecordedLoad)} aria-label={'Usar carga anterior de '+priorRecordedLoad.toLocaleString('pt-BR')+' quilogramas'}>
@@ -713,18 +723,6 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             {!restTimerActive||restIsPaused?<Play size={18} fill="currentColor"/>:<Pause size={18} fill="currentColor"/>}
           </button>
         </section>
-        {!sessionStarted?<button type="button" className="foco-v6-primary foco-v7-session-start" onClick={handleStartWorkout}>
-          Iniciar treino <Play size={17} fill="currentColor"/>
-        </button>:
-        <div className="foco-v7-session-actions">
-          <button type="button" className="foco-v7-previous" disabled={v6ExIndex===0} onClick={()=>v7GoExercise(-1)}>
-            <ArrowLeft size={16}/> Anterior
-          </button>
-          <button type="button" className="foco-v6-primary" disabled={v6CurrentSet.completed}
-            onClick={()=>{handleToggleSetComplete(v6ExIndex,v6SetIndex);setV7ManualExerciseIndex(null);}}>
-            Concluir série <CheckCircle2 size={18}/>
-          </button>
-        </div>}
         <button type="button" className="foco-v7-next-exercise" onClick={()=>v7GoExercise(1)}
           disabled={v6ExIndex>=exerciseLogs.length-1}>Próximo exercício <ChevronRight size={17}/></button>
       </>}

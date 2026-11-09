@@ -29,6 +29,22 @@ interface NewWorkoutProps {
 export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   const { profile } = useAuth();
   const [tab, setTab] = useState<'ai' | 'manual'>('ai');
+  const [pendingAiField, setPendingAiField] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (tab !== 'ai' || !pendingAiField) return;
+    // Run after the selected form is mounted, including a mode switch.
+    const field = document.getElementById(pendingAiField);
+    if (field) {
+      field.focus();
+      setPendingAiField(null);
+    }
+  }, [tab, pendingAiField]);
+
+  const focusAiField = (fieldId: string) => {
+    setTab('ai');
+    setPendingAiField(fieldId);
+  };
 
   // AI Generator state
   const [aiGoal, setAiGoal] = useState('Hipertrofia Máxima');
@@ -228,13 +244,48 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   return (
     <div className="foco-v4-page space-y-5 text-white">
       <header className="space-y-2">
-        <p className="foco-v4-eyebrow">FOCO IA · PERSONALIZAÇÃO</p>
+        <p className="foco-v4-eyebrow">{tab === 'ai' ? 'FOCO IA · PERSONALIZAÇÃO' : 'FOCO · MONTADOR MANUAL'}</p>
         <h1 className="foco-v4-heading"><span className="font-normal text-neutral-400">Nova</span> ficha</h1>
         <p className="foco-v4-muted max-w-2xl">
-          Seu plano é personalizado com base no objetivo, nível, dias disponíveis e, quando autorizado, nos dados da avaliação OKOK.
+          {tab === 'ai'
+            ? 'Seu plano é personalizado com base no objetivo, nível, dias disponíveis e, quando autorizado, nos dados da avaliação OKOK.'
+            : 'Defina o nome, a frequência e os exercícios da sua ficha. Você mantém o controle de cada ajuste.'}
         </p>
       </header>
 
+      {/* Selector Tabs */}
+      <div role="group" aria-label="Modo de criação da ficha" className="flex w-full rounded-2xl border border-white/10 bg-[#171717] p-1 sm:w-fit">
+        <button
+          type="button"
+          aria-pressed={tab === 'ai'}
+          onClick={() => { setTab('ai'); setPendingAiField(null); setErrorMsg(null); }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+            tab === 'ai'
+              ? 'bg-white text-black shadow-sm'
+              : 'text-neutral-400 hover:text-white'
+          }`}
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Gerar com IA</span>
+        </button>
+
+        <button
+          type="button"
+          aria-pressed={tab === 'manual'}
+          onClick={() => { setTab('manual'); setPendingAiField(null); setErrorMsg(null); }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+            tab === 'manual'
+              ? 'bg-white text-black shadow-sm'
+              : 'text-neutral-400 hover:text-white'
+          }`}
+        >
+          <Sliders className="w-3.5 h-3.5" />
+          <span>Montador Manual</span>
+        </button>
+      </div>
+
+      {tab === 'ai' && (
+        <>
       <section className="foco-v4-panel foco-v4-surface-photo relative overflow-hidden p-6 sm:p-8" aria-labelledby="foco-ai-intro">
         <div className="relative z-10 max-w-[460px] space-y-3">
           <div className="flex items-center gap-2 text-[10px] font-bold tracking-[.2em] text-neutral-300"><Sparkles className="h-4 w-4" /> FOCO IA</div>
@@ -252,7 +303,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
           {label:'Nível',value:aiExperience,icon:Activity,target:'foco-ai-experience'},
           {label:'Dias',value:aiFrequency+'x por semana',icon:CalendarDays,target:'foco-ai-frequency'},
           {label:'Equipamentos',value:aiEquipment,icon:Dumbbell,target:'foco-ai-equipment'},
-        ].map(item => <button type="button" key={item.label} onClick={() => { setTab('ai'); document.getElementById(item.target)?.focus(); }}
+        ].map(item => <button type="button" key={item.label} onClick={() => focusAiField(item.target)}
           className="foco-v4-panel flex min-h-[90px] items-center gap-3 overflow-hidden p-3 text-left transition hover:border-white/35">
           <item.icon className="h-5 w-5 shrink-0 text-neutral-400" />
           <span className="min-w-0 flex-1">
@@ -266,32 +317,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         <ClipboardList className="h-4 w-4" /> Atualizar anamnese <ChevronRight className="h-4 w-4" />
       </button>
 
-      {/* Selector Tabs */}
-      <div className="flex w-full rounded-2xl border border-white/10 bg-[#171717] p-1 sm:w-fit">
-        <button
-          onClick={() => { setTab('ai'); setErrorMsg(null); }}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-            tab === 'ai'
-              ? 'bg-white text-black shadow-sm'
-              : 'text-neutral-400 hover:text-white'
-          }`}
-        >
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Gerar com IA</span>
-        </button>
-
-        <button
-          onClick={() => { setTab('manual'); setErrorMsg(null); }}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-            tab === 'manual'
-              ? 'bg-white text-black shadow-sm'
-              : 'text-neutral-400 hover:text-white'
-          }`}
-        >
-          <Sliders className="w-3.5 h-3.5" />
-          <span>Montador Manual</span>
-        </button>
-      </div>
+        </>
+      )}
 
       {errorMsg && (
         <div role="alert" className="p-3.5 rounded-xl bg-white/5 border border-white/20 text-neutral-300 text-xs flex items-center gap-2.5">

@@ -84,20 +84,12 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
       <div><p>{greeting},</p><h1>{firstName}<span className="text-[#C8F040]">.</span></h1></div>
       {plan && <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Ver meu calendário"><CalendarDays size={18}/></button>}
     </div>
-    <section className="foco-21-week-pulse" aria-label="Resumo da atividade desta semana">
-      <div className="foco-21-week-pulse-label"><span>ESTA SEMANA</span><span>SEU RITMO</span></div>
-      <div className="foco-21-week-pulse-values">
-        <div><strong>{loading||loadError?'—':completed.length}</strong><span>treinos</span></div>
-        <span className="foco-21-week-pulse-divider" aria-hidden="true" />
-        <div><strong>{loading||loadError?'—':cardioMins}</strong><span>min de cardio</span></div>
-        <span className="foco-21-week-pulse-divider" aria-hidden="true" />
-        <div><strong>{loading||loadError?'—':target||'—'}</strong><span>meta semanal</span></div>
-      </div>
-    </section>
+
     {loadError && <div role="alert" className="foco-v6-glass rounded-2xl p-4 text-sm">
       Não conseguimos consultar seus treinos. Os dados não foram alterados.
       <button type="button" onClick={()=>window.location.reload()} className="ml-2 text-[#C8F040] underline">Recarregar</button>
     </div>}
+    <div className="foco-home-layout">
     <section className="foco-v6-hero foco-motion-hero" aria-labelledby="foco-v6-workout-title">
       <img src={V6_IMAGES.athlete} alt="" loading="eager" decoding="async"/>
       <span className="foco-21-hero-topline">FOCO <span>•</span> PERFORMANCE / 2027 BETA</span>
@@ -118,15 +110,29 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
         </button>
       </div>
     </section>
+      <div className="foco-home-support">
+    <section className="foco-21-week-pulse" aria-label="Resumo da atividade desta semana">
+      <div className="foco-21-week-pulse-label"><span>ESTA SEMANA</span><span>SEU RITMO</span></div>
+      <div className="foco-21-week-pulse-values">
+        <div><strong>{loading||loadError?'—':completed.length}</strong><span>treinos</span></div>
+        <span className="foco-21-week-pulse-divider" aria-hidden="true" />
+        <div><strong>{loading||loadError?'—':cardioMins}</strong><span>min de cardio</span></div>
+        <span className="foco-21-week-pulse-divider" aria-hidden="true" />
+        <div><strong>{loading||loadError?'—':target||'—'}</strong><span>meta semanal</span></div>
+      </div>
+    </section>
     <section aria-label="Frequência dos treinos" className="space-y-2 foco-motion-week foco-21-week-section">
       <div className="foco-v6-week-heading">
         <h2>Sua semana</h2>
         <p>{loading?'—':loadError?'Indisponível':target?Math.min(completed.length,target)+'/'+target+' treinos':'Sem meta semanal'}</p>
       </div>
       <FocoV6WeekStrip
-        labels={WEEK.slice(0,5).map(d=>({day:d.day,short:d.short,done:doneDays.has(d.day),active:today.day===d.day}))}
+        labels={WEEK.map(d=>({day:d.day,short:d.short,label:d.label,done:doneDays.has(d.day),active:today.day===d.day}))}
         onSelect={day=>plan?handleDetail(day):setActiveTab('anamnese')}
       />
+      <button type="button" className="foco-v6-week-complete" onClick={()=>setActiveTab('treinos')}>
+        Ver semana completa <ArrowRight size={14} aria-hidden="true"/>
+      </button>
     </section>
     <div className="foco-21-section-heading"><span>SEU ECOSSISTEMA</span><h2>Além da musculação</h2></div>
     <div className="grid grid-cols-2 gap-2 foco-motion-shortcuts foco-21-shortcut-grid">
@@ -148,5 +154,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
     <button type="button" onClick={()=>setActiveTab('progresso')} className="foco-v6-glass-button w-full justify-between">
       <span className="flex items-center gap-2"><Clock3 size={15} className="text-[#C8F040]"/> Ver minha evolução</span><ChevronRight size={17}/>
     </button>
+      </div>
+    </div>
   </div>;
 };

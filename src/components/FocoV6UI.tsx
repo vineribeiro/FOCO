@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BatteryFull, Signal, Wifi, Dumbbell, CalendarDays, ArrowLeft, Menu, UserRound, ChartNoAxesColumnIncreasing, House } from 'lucide-react';
 
 /** Full-resolution photographic image — never stretch the tiny 3 KB preview
@@ -41,14 +41,71 @@ export const FocoV6MobileTitle: React.FC<{
 </header>;
 
 export const FocoV6WeekStrip: React.FC<{
-  labels:{short:string;day:string;selected?:boolean;done?:boolean;active?:boolean}[];
+  labels:{short:string;day:string;label?:string;selected?:boolean;done?:boolean;active?:boolean}[];
   onSelect?:(day:string)=>void
-}> = ({labels,onSelect}) => <div className="foco-v6-week-strip" aria-label="Treinos desta semana">
-  {labels.map(item=><button type="button" key={item.day} onClick={()=>onSelect?.(item.day)} disabled={!onSelect}
-    className={'foco-v6-week-day '+(item.done?'is-done ':'')+(item.selected||item.active?'is-current':'')} aria-label={item.short+(item.done?', treino concluído':'')}>
-    <span>{item.short}</span>{item.done?<span className="foco-v6-week-check">✓</span>:<span className="foco-v6-week-dash">—</span>}
-  </button>)}
-</div>;
+}> = ({labels,onSelect}) => {
+  const scroller = useRef<HTMLDivElement>(null);
+  const [scrollable, setScrollable] = useState(false);
+  const activeDay = labels.find(item=>item.active)?.day;
+  const revealDay = (button: HTMLButtonElement) => {
+    const element = scroller.current;
+    if (!element) return;
+    const viewport = element.getBoundingClientRect();
+    const target = button.getBoundingClientRect();
+    const inset = 6;
+    const delta = target.left < viewport.left + inset ? target.left - viewport.left - inset
+      : target.right > viewport.right - inset ? target.right - viewport.right + inset : 0;
+    // Scroll this row only. Revealing Sunday on load must never move the page
+    // down past the workout action, and physical deltas also work in RTL.
+    if (delta) element.scrollBy({left:delta,behavior:'auto'});
+  };
+  useEffect(() => {
+    const element = scroller.current;
+    if (!element) return;
+    const measure = () => {
+      setScrollable(element.scrollWidth > element.clientWidth + 1);
+      const active = element.querySelector<HTMLButtonElement>('[aria-current="date"]');
+      if (active) revealDay(active);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [labels.length, activeDay]);
+  const moveFocus = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const element = scroller.current;
+    if (!element) return;
+    const buttons = Array.from(element.querySelectorAll<HTMLButtonElement>('button:not(:disabled)'));
+    const current = buttons.indexOf(document.activeElement as HTMLButtonElement);
+    if (current < 0) return;
+    const rtl = window.getComputedStyle(element).direction === 'rtl';
+    let next = current;
+    if (event.key === 'Home') next = 0;
+    else if (event.key === 'End') next = buttons.length - 1;
+    else if (event.key === 'ArrowRight') next = current + (rtl ? -1 : 1);
+    else if (event.key === 'ArrowLeft') next = current + (rtl ? 1 : -1);
+    else return;
+    event.preventDefault();
+    buttons[Math.max(0, Math.min(buttons.length - 1, next))]?.focus({ preventScroll: true });
+  };
+  return <div className="foco-v6-week-navigation">
+    <div ref={scroller} className="foco-v6-week-scroller" role="group" aria-label="Treinos desta semana" onKeyDown={moveFocus}>
+      <div className="foco-v6-week-strip">
+        {labels.map(item=><button type="button" key={item.day} data-training-day={item.day}
+          onClick={()=>onSelect?.(item.day)} disabled={!onSelect}
+          onFocus={event=>revealDay(event.currentTarget)}
+          className={'foco-v6-week-day '+(item.done?'is-done ':'')+(item.selected||item.active?'is-current':'')}
+          aria-current={item.active?'date':undefined}
+          aria-label={(item.label||item.short)+(item.done?', treino concluído':'')+(item.active?', hoje':'')}>
+          <span>{item.short}</span>
+          {item.active ? <span className="foco-v6-week-today">{item.done?'✓ Hoje':'Hoje'}</span>
+            : item.done ? <span className="foco-v6-week-check">✓</span> : <span className="foco-v6-week-dash">—</span>}
+        </button>)}
+      </div>
+    </div>
+    {scrollable && <p className="foco-v6-week-scroll-hint">Deslize para ver os 7 dias</p>}
+  </div>;
+};
 
 export const FocoV6Segment: React.FC<{options:{value:string;label:string}[];value:string;onChange:(value:string)=>void;label?:string}> = ({options,value,onChange,label='Selecionar'}) => (
   <div role="group" aria-label={label} className="foco-v6-segments">

@@ -93,7 +93,13 @@ body {font-family:Inter,Poppins,'Plus Jakarta Sans',system-ui,sans-serif;backgro
 .foco-v6-week-heading {display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .foco-v6-week-heading h2 {font-size:14px;font-weight:750;letter-spacing:-.035em;}
 .foco-v6-week-heading p {font-size:11px;color:#C6C9C0;}
-.foco-v6-week-strip {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:8px;}
+.foco-v6-week-navigation {min-width:0;}
+.foco-v6-week-scroller {max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;margin-top:8px;padding:6px;scroll-padding-inline:6px;}
+.foco-v6-week-strip {display:grid;grid-template-columns:repeat(7,minmax(44px,1fr));gap:8px;min-width:356px;}
+.foco-v6-week-strip .foco-v6-week-day {min-width:44px;scroll-margin-block-start:80px;scroll-margin-block-end:calc(96px + env(safe-area-inset-bottom,0px));}
+.foco-v6-week-today {font-size:10px;font-weight:750;line-height:1.2;}
+.foco-v6-week-scroll-hint {margin-top:4px;font-size:11px;line-height:1.4;color:#B5BEAF;}
+.foco-v6-week-complete {display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--v6-accent);font-size:12px;font-weight:700;text-decoration:underline;text-underline-offset:3px;}
 .foco-v6-week-day {min-width:0;min-height:54px;border-radius:11px;border:1px solid rgba(240,255,223,.11);background:linear-gradient(135deg,#262A22,#151916);display:flex;flex-direction:column;align-items:center;justify-content:space-around;gap:2px;padding:7px 2px;color:#B6BDB2;font-size:9px;font-weight:700;}
 .foco-v6-week-day.is-done {border-color:rgba(213,255,64,.65);background:linear-gradient(135deg,#252F18,#141A11);color:var(--v6-accent);}
 .foco-v6-week-day.is-current {outline:1px solid rgba(213,255,64,.58);outline-offset:-1px;}
@@ -308,9 +314,8 @@ body {font-family:Inter,Poppins,'Plus Jakarta Sans',system-ui,sans-serif;backgro
 }
 .foco-v6-session-photo>h2 {z-index:3;position:absolute;}
 
-/* V6 fidelity corrections: five real weekday cards, reference athlete imagery,
+/* V6 fidelity corrections: reference athlete imagery,
    optically-layered glass and a stable photography fallback. */
-.foco-v6-week-strip{grid-template-columns:repeat(5,minmax(0,1fr));}
 .foco-v6-hero img{object-position:59% 31%;filter:contrast(1.09) saturate(.84) brightness(.87);}
 .foco-v6-hero:before{background:linear-gradient(0deg,rgba(8,10,7,.99) 0%,rgba(8,10,7,.92) 16%,rgba(8,10,7,.23) 56%,rgba(8,10,7,.02) 91%);}
 .foco-v6-hero:after{background:radial-gradient(ellipse 70% 65% at 100% 30%,rgba(213,255,64,.12),transparent 78%);}

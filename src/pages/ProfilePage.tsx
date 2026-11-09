@@ -114,19 +114,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
       </nav>
       <details className="foco-v6-glass rounded-2xl p-3">
         <summary className="cursor-pointer px-2 py-2 text-sm font-bold text-[#C8F040]">Editar meus dados <ChevronRight size={16} className="ml-2 inline"/></summary>
-    <div className="foco-v5-profile foco-v4-page max-w-3xl space-y-5 text-white">
-      
-      <header className="flex items-start justify-between gap-3">
-        <div>
-          <p className="foco-v4-eyebrow mb-2">FOCO / SUA CONTA</p>
-          <h1 className="foco-v4-heading">Meu perfil</h1>
-          <p className="mt-2 text-xs text-neutral-400">Gerencie suas informações para personalizar a experiência de treino.</p>
-        </div>
-        <button type="button" onClick={() => setActiveTab('configuracoes')}
-          aria-label="Configurações" className="foco-v4-secondary !px-3">
-          <Settings2 className="h-5 w-5" />
-        </button>
-      </header>
+      <section className="foco-v5-profile space-y-5 pt-3 text-white" aria-labelledby="foco-profile-personal-data-title">
+        <h2 id="foco-profile-personal-data-title" className="px-2 text-base font-bold">Dados pessoais</h2>
 
       {msg && (
         <div
@@ -143,19 +132,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
       )}
 
       {/* Profile Form */}
-      <form onSubmit={handleUpdateProfile} className="foco-v4-panel space-y-5 p-5 sm:p-6">
-        
-        {/* User Identity Header */}
-        <div className="flex items-center gap-4 pb-4 border-b border-white/10">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/20 bg-gradient-to-br from-[#333] to-[#111] text-xl font-black text-white">
-            {fullName.charAt(0).toUpperCase() || 'A'}
-          </div>
-          <div>
-            <h3 className="text-base font-black uppercase text-white tracking-wide">{fullName || 'Atleta FOCO'}</h3>
-            <p className="text-xs text-neutral-400 font-mono">{user?.email}</p>
-          </div>
-        </div>
-
+      <form onSubmit={handleUpdateProfile} className="space-y-5 px-2 pb-2 sm:px-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-profile-full-name">Nome Completo</label>
@@ -317,7 +294,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
           </div>
         </AccessibleDialog>
       )}
-    </div>
+      </section>
       </details>
     </div>
   );

@@ -31,7 +31,8 @@
     "test:edge-reliability": "node scripts/test-edge-reliability.mjs",
     "test:backend-transactions": "node scripts/test-backend-transactions.mjs",
     "test:audit-browser": "node scripts/test-audit-browser.mjs",
-    "test:session-retry-browser": "node scripts/test-session-retry-browser.mjs"
+    "test:session-retry-browser": "node scripts/test-session-retry-browser.mjs",
+    "test:layout-regression": "node scripts/test-layout-regression.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
