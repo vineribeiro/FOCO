@@ -87,34 +87,37 @@ try{
     const body=Object.prototype.hasOwnProperty.call(responses,path)?responses[path]:null;
     return route.fulfill({status:body===null?404:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify(body??{error:'No visual fixture for '+path})});
   });
-  // Isolated ExerciseDB responses: no external traffic during screenshot QA.
-  let atlasListRequests=0;
-  await context.route('https://oss.exercisedb.dev/api/v1/exercises?*',async route=>{
-    atlasListRequests++;
-    const after=new URL(route.request().url()).searchParams.get('after');
-    const record=after
-      ? {exerciseId:'EIeI8Vz',name:'dumbbell bench press',bodyParts:['chest'],targetMuscles:['pectorals'],equipments:['dumbbell'],instructions:['Controlled descent'],gifUrl:'https://static.exercisedb.dev/media/EIeI8Vz.gif'}
-      : {exerciseId:'EIeI8Vf',name:'barbell bench press',bodyParts:['chest'],targetMuscles:['pectorals'],equipments:['barbell'],instructions:['Controlled descent'],gifUrl:'https://static.exercisedb.dev/media/EIeI8Vf.gif'};
-    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
-      success:true,data:[record],meta:{total:2,hasNextPage:!after,nextCursor:after?null:'edb_T5uXtLj'}
-    })});
-  });
-  // ExerciseDB is mocked for one active workout image at a time. No external requests.
-  let edbSearchRequests=0;
-  await context.route('https://oss.exercisedb.dev/api/v1/exercises/search*',route=>{
-    const term=(new URL(route.request().url()).searchParams.get('search')||'').toLowerCase();
-    edbSearchRequests++;
-    const record=term.includes('leg press')
-      ? {exerciseId:'10Z2DXU',name:'sled 45° leg press',gifUrl:'https://static.exercisedb.dev/media/10Z2DXU.gif'}
-      : term.includes('bench press')
-        ? {exerciseId:'EIeI8Vf',name:'barbell bench press',gifUrl:'https://static.exercisedb.dev/media/EIeI8Vf.gif'}
-        : null;
-    return route.fulfill({status:200,contentType:'application/json',
-      body:JSON.stringify({success:true,data:record?[record]:[]})});
-  });
-  await context.route('https://static.exercisedb.dev/media/*.gif',route=>
-    route.fulfill({status:200,contentType:'image/gif',body:Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==','base64')}));
-  const page=await context.newPage();
+  // RepDB Free fixture: complete catalog, no network access to the provider.
+  let repdbCatalogRequests=0;
+  const samples=[
+    ['bench-press','Bench Press','chest','barbell'],
+    ['leg-press','Leg Press','legs','machine'],
+    ['db-bench-press','Dumbbell Bench Press','chest','dumbbell'],
+  ];
+  const fixture=[
+    ...samples.map(([id,name_en,body_part,equipment])=>({
+      id,name_en,body_part,equipment,
+      images:{flat:{start:'images/flat/'+id+'-start.webp',peak:'images/flat/'+id+'-peak.webp'}}
+    })),
+    ...Array.from({length:698},(_,i)=>{
+      const id='zz-movement-'+String(i+1).padStart(3,'0');
+      return {id,name_en:'ZZ movement '+String(i+1).padStart(3,'0'),
+        body_part:'general',equipment:'bodyweight',
+        images:{flat:{start:'images/flat/'+id+'-start.webp'}}};
+    })
+  ];
+  for(const url of ['https://raw.githubusercontent.com/RepDB/exercise-dataset/main/exercises.json',
+                     'https://exercise-dataset.com/exercises.json']){
+    await context.route(url,route=>{
+      repdbCatalogRequests++;
+      return route.fulfill({status:200,contentType:'application/json',
+        body:JSON.stringify({count:701,exercises:fixture})});
+    });
+  }
+  const tinyPng=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/L5sAAAAASUVORK5CYII=','base64');
+  await context.route('https://raw.githubusercontent.com/RepDB/exercise-dataset/main/images/flat/**',route=>
+    route.fulfill({status:200,contentType:'image/png',body:tinyPng}));
+    const page=await context.newPage();
   for(const view of views){
    try{
     const jsErrors=[];
@@ -155,11 +158,11 @@ try{
       assert.ok(homeStyle.height>=380,'FOCO V2.1 hero must be visually larger than V2.0');
     }
     if(view==='sessao'){
-      await page.locator('.foco-21-exercise-media [data-foco-media-source="exercisedb"]').waitFor({timeout:7000});
-      await page.locator('.foco-21-exercise-media .foco-edb-stage-gif').waitFor({timeout:10000});
+      await page.locator('.foco-21-exercise-media [data-foco-media-source="repdb"]').waitFor({timeout:7000});
+      await page.locator('.foco-21-exercise-media .foco-repdb-pose').waitFor({timeout:10000});
       assert.equal(await page.locator('.foco-21-exercise-media img').count(),1,
-        'Active workout must show exactly one ExerciseDB GIF instead of an icon');
-      assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.3'),'FOCO 2.3 session marker must be visible');
+        'Active workout must show exactly one RepDB WebP instead of an icon');
+      assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.4'),'FOCO 2.4 session marker must be visible');
       await page.locator('.foco-21-exercise-media').waitFor({timeout:4000});
       const sessionLayout=await page.evaluate(()=>{
         const stage=document.querySelector('.foco-v7-session-stage');
@@ -198,29 +201,27 @@ try{
         });
         assert.ok(overlap&&overlap.position==='static'&&overlap.rest<=overlap.cta+1,'Start CTA must not obscure rest controls');
       }
-      // Switching exercises should display the matching provider GIF, never an old SVG.
+      // Switching exercises should display the matching RepDB pose, never an old SVG.
       await page.waitForTimeout(1600); // Respect rate limit between distinct exercise requests.
       await page.getByRole('button',{name:/Ver exercício 3:/}).click();
       assert.match(await page.locator('.foco-v7-stage-footer h2').innerText(),/Leg press 45 graus/i);
-      await page.locator('.foco-21-exercise-media .foco-edb-stage-gif').waitFor({timeout:10000});
-      assert.equal(await page.locator('.foco-21-exercise-media img').count(),1,'Leg press must display a provider GIF');
-      assert.equal(await page.locator('.foco-21-exercise-media [data-foco-media-source="exercisedb"]').count(),1);
+      await page.locator('.foco-21-exercise-media .foco-repdb-pose').waitFor({timeout:10000});
+      assert.equal(await page.locator('.foco-21-exercise-media img').count(),1,'Leg press must display a RepDB pose');
+      assert.equal(await page.locator('.foco-21-exercise-media [data-foco-media-source="repdb"]').count(),1);
       await page.screenshot({path:out+'/legpress-'+size.name+'.png',fullPage:false,animations:'disabled'});
       if(size.name==='mobile-390'){
-        const requestsBeforeDetail=edbSearchRequests;
         await page.getByRole('button',{name:'Execução',exact:true}).click();
-        const demoButton=page.getByRole('button',{name:'Ver demonstração GIF'});
-        await demoButton.waitFor({timeout:10000});
-        assert.ok(requestsBeforeDetail>=1,'Active training stage must have requested provider media');
-        await page.waitForTimeout(1600);
-        await demoButton.click();
-        await page.locator('.foco-edb-preview img').waitFor({timeout:10000});
-        assert.equal(edbSearchRequests,requestsBeforeDetail+1,'One extra API lookup on explicit detail request');
-        await page.getByRole('button',{name:'Ocultar GIF'}).click();
-        assert.equal(await page.locator('.foco-edb-preview img').count(),0,'Hide must stop GIF rendering');
+        const guide=page.locator('.foco-repdb-guide-visual');
+        await guide.locator('.foco-repdb-pose').waitFor({timeout:10000});
+        await guide.getByRole('button',{name:'02 FINAL'}).click();
+        await page.waitForFunction(()=>
+          document.querySelector('.foco-repdb-guide-visual .foco-repdb-pose')?.getAttribute('src')?.includes('-peak.webp'),
+          {timeout:9000});
+        assert.equal(await guide.getByRole('button',{name:'02 FINAL'}).getAttribute('aria-pressed'),'true');
+        await guide.getByRole('button',{name:'01 INÍCIO'}).click();
         await page.getByRole('button',{name:'Registro',exact:true}).click();
       }
-      assert.equal(await page.locator('.foco-21-exercise-media button').count(),0,'Exercise hero must not contain nested media controls');
+            assert.equal(await page.locator('.foco-21-exercise-media button').count(),0,'Exercise hero must not contain nested media controls');
       assert.equal(await page.locator('.foco-21-exercise-media [class*="bg-white"]').count(),0,'No white gallery overlays in stage');
       await page.getByRole('button',{name:/Ver exercício 1:/}).click();
     }
@@ -261,25 +262,28 @@ try{
         assert.equal(await page.getByRole('button',{name:'Programa',exact:true}).getAttribute('aria-pressed'),'true');
         await page.getByRole('button',{name:'Semana',exact:true}).click();
       }else if(view==='biblioteca'){
-        await page.getByRole('button',{name:'Abrir exercício barbell bench press'}).waitFor({timeout:9000});
-        assert.ok(atlasListRequests>=1,'Library must load ExerciseDB automatically, no old tabs');
-        assert.equal(await page.locator('.foco-atlas-source-tabs').count(),0,'No duplicate catalogue tabs');
-        assert.equal(await page.locator('.foco-atlas-curated-grid').count(),0,'No old FOCO exercise grid');
-        await page.getByRole('button',{name:'Abrir exercício barbell bench press'}).click();
-        assert.equal(await page.locator('.foco-atlas-media-detail img').count(),0,'GIF must be opt-in');
-        await page.getByRole('button',{name:/Carregar GIF de demonstração/}).click();
-        await page.locator('.foco-atlas-media-detail img').waitFor({timeout:5000});
-        await page.getByRole('button',{name:'Usar como referência para minha ficha'}).click();
+        const card=page.getByRole('button',{name:'Ver Supino reto com barra'});
+        await card.waitFor({timeout:9000});
+        assert.ok(repdbCatalogRequests>=1,'RepDB must load one shared catalog');
+        assert.equal(await page.locator('.foco-atlas-source-tabs').count(),0,'No old media tabs');
+        assert.equal(await page.locator('.foco-atlas-curated-grid').count(),0,'No old parallel gallery');
+        await card.click();
+        const dialog=page.getByRole('dialog');
+        await dialog.locator('.foco-repdb-dialog-art .foco-repdb-pose').waitFor({timeout:9000});
+        await dialog.getByRole('button',{name:'02 FINAL'}).click();
+        assert.equal(await dialog.getByRole('button',{name:'02 FINAL'}).getAttribute('aria-pressed'),'true');
+        await dialog.getByRole('button',{name:'Adicionar à minha ficha'}).click();
         const personal=page.getByRole('textbox',{name:'Nome personalizado do exercício'});
         await personal.waitFor({timeout:5000});
-        assert.equal(await personal.inputValue(),'','Never prefill external exercise name in a stored workout');
+        assert.equal(await personal.inputValue(),'Supino reto com barra','RepDB must prefill a Portuguese name');
         await personal.fill('Meu supino de hoje');
         assert.equal(await personal.inputValue(),'Meu supino de hoje');
         await page.getByRole('button',{name:'Fechar',exact:true}).last().click();
         await page.getByRole('button',{name:/Próxima/}).click();
-        await page.getByRole('button',{name:'Abrir exercício dumbbell bench press'}).waitFor({timeout:9000});
+        await page.getByRole('button',{name:'Ver ZZ movement 022'}).waitFor({timeout:9000});
         await page.getByRole('button',{name:/Anterior/}).click();
-        await page.getByRole('button',{name:'Abrir exercício barbell bench press'}).waitFor({timeout:9000});
+        await page.getByRole('button',{name:'Ver Supino reto com barra'}).waitFor({timeout:9000});
+
       }
     }
     const result={viewport:size.name,view,layout_view:'synthetic fixtures',heading:check.title,overflow_px:overflow,status:issue?'FAIL':'PASS',error:issue||undefined,screenshot};
