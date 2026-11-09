@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: TypeScript validation
         run: npm run lint
       - name: Production frontend build
@@ -60,3 +60,47 @@ jobs:
           name: foco-anatomy-254-prompts
           path: anatomy-generation-plan.json
           if-no-files-found: error
+
+  reliability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install locked dependencies
+        run: npm ci
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.5.6
+      - name: Typecheck published Edge Function
+        run: deno check --no-lock --node-modules-dir=none supabase/functions/foco-api/index.ts
+      - name: Authentication, session replay and password security
+        run: |
+          npm run test:auth-reliability
+          npm run test:session-replay
+          npm run test:password-security
+          npm run test:edge-reliability
+      - name: PostgreSQL rollback, RLS and concurrent transaction regression
+        run: npm run test:backend-transactions
+      - name: Install test browser
+        run: npx playwright install --with-deps chromium
+      - name: Build production frontend
+        run: npm run build
+      - name: Start isolated frontend preview
+        run: |
+          mkdir -p work
+          npm run preview -- --host 127.0.0.1 --port 4173 --strictPort > work/preview.log 2>&1 &
+          node --input-type=module -e 'for(let n=0;n<60;n++){try{const r=await fetch("http://127.0.0.1:4173/FOCO/");if(r.ok)process.exit(0)}catch{}await new Promise(r=>setTimeout(r,250))}process.exit(1)'
+      - name: Browser accessibility, failure recovery and preserved auth forms
+        run: npm run test:audit-browser
+      - name: Lost response, reload and storage-quota session regression
+        run: npm run test:session-retry-browser
+      - name: Upload synthetic regression evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: foco-audit-regressions
+          path: work/
+          if-no-files-found: warn

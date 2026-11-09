@@ -294,7 +294,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       </div>
 
       {errorMsg && (
-        <div className="p-3.5 rounded-xl bg-white/5 border border-white/20 text-neutral-300 text-xs flex items-center gap-2.5">
+        <div role="alert" className="p-3.5 rounded-xl bg-white/5 border border-white/20 text-neutral-300 text-xs flex items-center gap-2.5">
           <AlertCircle className="w-4 h-4 shrink-0 text-white" />
           <span>{errorMsg}</span>
         </div>
@@ -314,7 +314,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               
               <div>
-                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
+                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide" htmlFor="foco-ai-goal">
                   Objetivo Principal
                 </label>
                 <select id="foco-ai-goal"
@@ -332,7 +332,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
+                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide" htmlFor="foco-ai-frequency">
                   Frequência Semanal (Dias)
                 </label>
                 <select id="foco-ai-frequency"
@@ -349,7 +349,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
+                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide" htmlFor="foco-ai-experience">
                   Nível de Experiência
                 </label>
                 <select id="foco-ai-experience"
@@ -380,7 +380,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
+                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide" htmlFor="foco-ai-equipment">
                   Equipamentos Disponíveis
                 </label>
                 <input id="foco-ai-equipment"
@@ -393,10 +393,10 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
+                <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide" htmlFor="foco-newworkout-ai-restrictions">
                   Restrições ou Lesões
                 </label>
-                <input
+                <input id="foco-newworkout-ai-restrictions"
                   type="text"
                   value={aiRestrictions}
                   onChange={(e) => setAiRestrictions(e.target.value)}
@@ -627,10 +627,10 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         <form onSubmit={handleSaveManualPlan} className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/10 space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">
+              <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-newworkout-manual-name">
                 Nome da Ficha
               </label>
-              <input
+              <input id="foco-newworkout-manual-name"
                 type="text"
                 required
                 value={manualName}
@@ -640,10 +640,10 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">
+              <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-newworkout-manual-goal">
                 Objetivo
               </label>
-              <input
+              <input id="foco-newworkout-manual-goal"
                 type="text"
                 value={manualGoal}
                 onChange={(e) => setManualGoal(e.target.value)}
@@ -652,10 +652,10 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">
+              <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-newworkout-manual-frequency">
                 Frequência Semanal
               </label>
-              <select
+              <select id="foco-newworkout-manual-frequency"
                 value={manualFrequency}
                 onChange={(e) => setManualFrequency(Number(e.target.value))}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
@@ -692,6 +692,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                     {manualExercises.length > 1 && (
                       <button
                         type="button"
+                        aria-label={`Remover exercício ${idx + 1}${ex.exercise_name ? ': ' + ex.exercise_name : ''}`}
                         onClick={() => handleRemoveManualExercise(idx)}
                         className="text-neutral-500 hover:text-white text-xs p-1 cursor-pointer"
                       >
@@ -702,8 +703,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
                   <div className="grid grid-cols-2 sm:grid-cols-6 gap-2.5">
                     <div className="col-span-2">
-                      <label className="text-[10px] text-neutral-400 block mb-0.5">Nome</label>
-                      <input
+                      <label className="text-[10px] text-neutral-400 block mb-0.5" htmlFor={`foco-manual-${idx}-exercise-name`}>Nome</label>
+                      <input id={`foco-manual-${idx}-exercise-name`}
                         type="text"
                         required
                         value={ex.exercise_name}
@@ -713,8 +714,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] text-neutral-400 block mb-0.5">Músculo</label>
-                      <input
+                      <label className="text-[10px] text-neutral-400 block mb-0.5" htmlFor={`foco-manual-${idx}-muscle-group`}>Músculo</label>
+                      <input id={`foco-manual-${idx}-muscle-group`}
                         type="text"
                         value={ex.muscle_group}
                         onChange={(e) => handleUpdateManualExercise(idx, 'muscle_group', e.target.value)}
@@ -723,8 +724,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] text-neutral-400 block mb-0.5">Séries</label>
-                      <input
+                      <label className="text-[10px] text-neutral-400 block mb-0.5" htmlFor={`foco-manual-${idx}-sets`}>Séries</label>
+                      <input id={`foco-manual-${idx}-sets`}
                         type="number"
                         value={ex.sets}
                         onChange={(e) => handleUpdateManualExercise(idx, 'sets', parseInt(e.target.value) || 3)}
@@ -732,8 +733,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] text-neutral-400 block mb-0.5">Carga (kg)</label>
-                      <input
+                      <label className="text-[10px] text-neutral-400 block mb-0.5" htmlFor={`foco-manual-${idx}-suggested-load-kg`}>Carga (kg)</label>
+                      <input id={`foco-manual-${idx}-suggested-load-kg`}
                         type="number"
                         step="0.5"
                         value={ex.suggested_load_kg}
@@ -742,8 +743,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] text-neutral-400 block mb-0.5">Descanso (s)</label>
-                      <input
+                      <label className="text-[10px] text-neutral-400 block mb-0.5" htmlFor={`foco-manual-${idx}-rest-seconds`}>Descanso (s)</label>
+                      <input id={`foco-manual-${idx}-rest-seconds`}
                         type="number"
                         value={ex.rest_seconds}
                         onChange={(e) => handleUpdateManualExercise(idx, 'rest_seconds', parseInt(e.target.value) || 60)}

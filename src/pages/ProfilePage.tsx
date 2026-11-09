@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { ShieldAlert, CheckCircle2, AlertCircle, Save, Trash2, X, Settings2, ChevronRight, UserRound, Bell, Target, SlidersHorizontal, ScanLine, Activity, CalendarDays } from 'lucide-react';
 import { FocoV6Status } from '../components/FocoV6UI';
+import { AccessibleDialog } from '../components/AccessibleDialog';
 
 interface ProfilePageProps { setActiveTab: (tab: string) => void; }
 export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
@@ -89,6 +90,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
   ];
   return (
     <div className="foco-v6-profile foco-v4-page">
+      <p role="status" className="sr-only">{msg?.type === 'success' ? msg.text : ''}</p>
       <div className="md:hidden"><FocoV6Status/></div>
       <header className="foco-v6-profile-top">
         <h1>Perfil</h1><button className="foco-v6-icon-button" type="button" onClick={()=>setActiveTab('configuracoes')} aria-label="Abrir configurações"><Settings2 size={19}/></button>
@@ -128,6 +130,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
 
       {msg && (
         <div
+          role={msg.type === 'error' ? 'alert' : undefined}
           className={`p-3.5 rounded-xl text-xs flex items-center justify-between border ${
             msg.type === 'success'
               ? 'bg-white/10 border-white/30 text-white'
@@ -135,7 +138,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
           }`}
         >
           <span>{msg.text}</span>
-          <button onClick={() => setMsg(null)} className="font-bold ml-2 cursor-pointer">✕</button>
+          <button type="button" onClick={() => setMsg(null)} aria-label="Fechar aviso" className="font-bold ml-2 cursor-pointer">✕</button>
         </div>
       )}
 
@@ -155,9 +158,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">Nome Completo</label>
-            <input
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-profile-full-name">Nome Completo</label>
+            <input id="foco-profile-full-name"
               type="text"
+              autoComplete="name"
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -166,9 +170,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">E-mail Cadastrado</label>
-            <input
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-profile-email">E-mail Cadastrado</label>
+            <input id="foco-profile-email"
               type="email"
+              autoComplete="email"
               disabled
               value={user?.email || ''}
               className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A]/50 border border-white/5 text-neutral-500 text-xs cursor-not-allowed font-mono"
@@ -176,9 +181,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">Data de Nascimento</label>
-            <input
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-profile-birth-date">Data de Nascimento</label>
+            <input id="foco-profile-birth-date"
               type="date"
+              autoComplete="bday"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-white"
@@ -186,8 +192,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">Nível de Experiência</label>
-            <select
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-profile-experience-level">Nível de Experiência</label>
+            <select id="foco-profile-experience-level"
               value={experienceLevel}
               onChange={(e) => setExperienceLevel(e.target.value as any)}
               className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
@@ -199,8 +205,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">Peso Atual (kg)</label>
-            <input
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-profile-weight-kg">Peso Atual (kg)</label>
+            <input id="foco-profile-weight-kg"
               type="number"
               step="0.1"
               value={weightKg}
@@ -210,8 +216,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">Altura (cm)</label>
-            <input
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-profile-height-cm">Altura (cm)</label>
+            <input id="foco-profile-height-cm"
               type="number"
               value={heightCm}
               onChange={(e) => setHeightCm(e.target.value)}
@@ -254,14 +260,17 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
 
       {/* In-UI Confirmation Modal (No window.alert / window.prompt) */}
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-[#141414] border border-white/20 p-6 space-y-4 shadow-2xl animate-in fade-in">
+        <AccessibleDialog title="Confirmar exclusão da conta" onClose={() => setShowDeleteModal(false)} initialFocus="#foco-delete-cancel" dismissible={!isDeleting}>
+          <div className="w-full rounded-2xl bg-[#141414] p-6 space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-white/10">
               <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-white" />
                 <span>Confirmar Exclusão</span>
               </h3>
               <button
+                type="button"
+                aria-label="Fechar confirmação de exclusão"
+                disabled={isDeleting}
                 onClick={() => setShowDeleteModal(false)}
                 className="p-1 text-neutral-400 hover:text-white"
               >
@@ -274,10 +283,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
             </p>
 
             <div>
-              <label className="block text-[11px] font-mono text-neutral-400 mb-1">
+              <label className="block text-[11px] font-mono text-neutral-400 mb-1" htmlFor="foco-profile-delete-confirmation-text">
                 Digite <strong className="text-white">EXCLUIR</strong> para prosseguir:
               </label>
-              <input
+              <input id="foco-profile-delete-confirmation-text"
                 type="text"
                 value={deleteConfirmationText}
                 onChange={(e) => setDeleteConfirmationText(e.target.value)}
@@ -288,7 +297,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
 
             <div className="flex justify-end gap-2 pt-2">
               <button
+                id="foco-delete-cancel"
                 type="button"
+                disabled={isDeleting}
                 onClick={() => setShowDeleteModal(false)}
                 className="px-4 py-2 rounded-xl bg-white/10 text-neutral-300 text-xs font-bold hover:text-white"
               >
@@ -304,7 +315,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
               </button>
             </div>
           </div>
-        </div>
+        </AccessibleDialog>
       )}
     </div>
       </details>

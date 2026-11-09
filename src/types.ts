@@ -90,6 +90,8 @@ export interface ExerciseSet {
 }
 
 export interface WorkoutSession {
+  /** Stable UUID retained by the draft so retries cannot create another workout. */
+  client_request_id?: string;
   id: string;
   user_id: string;
   plan_id?: string;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Download, Smartphone, Share, X } from 'lucide-react';
+import { AccessibleDialog } from './AccessibleDialog';
 
 type InstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -65,8 +66,8 @@ export const InstallAppButton: React.FC = () => {
       </button>
 
       {showHelp && (
-        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/75 p-3 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="foco-install-title">
-          <div className="w-full max-w-sm rounded-2xl border border-white/15 bg-[#141414] p-5 text-white shadow-2xl">
+        <AccessibleDialog title="Adicionar FOCO à tela inicial" onClose={() => setShowHelp(false)}>
+          <div className="w-full rounded-2xl bg-[#141414] p-5 text-white">
             <div className="mb-4 flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-black"><Smartphone className="h-5 w-5" /></div>
@@ -91,7 +92,7 @@ export const InstallAppButton: React.FC = () => {
             )}
             <button type="button" onClick={() => setShowHelp(false)} className="mt-5 w-full rounded-xl bg-white px-4 py-3 text-xs font-black uppercase tracking-wide text-black">Entendi</button>
           </div>
-        </div>
+        </AccessibleDialog>
       )}
     </>
   );

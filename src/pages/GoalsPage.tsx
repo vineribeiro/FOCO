@@ -6,6 +6,7 @@ import { Target, Plus, Trash2 } from 'lucide-react';
 export const GoalsPage: React.FC = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const [goalType, setGoalType] = useState('Hipertrofia');
@@ -16,11 +17,12 @@ export const GoalsPage: React.FC = () => {
 
   const loadGoals = async () => {
     setIsLoading(true);
+    setLoadError(false);
     try {
       const data = await api.getGoals();
       setGoals(data);
     } catch (e: any) {
-      console.error('Error fetching goals:', e);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -71,6 +73,7 @@ export const GoalsPage: React.FC = () => {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto pb-32 text-white">
+      <p role="status" className="sr-only">{msg?.type === 'success' ? msg.text : ''}</p>
       
       {/* Header */}
       <div>
@@ -82,6 +85,7 @@ export const GoalsPage: React.FC = () => {
 
       {msg && (
         <div
+          role={msg.type === 'error' ? 'alert' : undefined}
           className={`p-3.5 rounded-xl text-xs flex items-center justify-between border ${
             msg.type === 'success'
               ? 'bg-white/10 border-white/30 text-white'
@@ -89,7 +93,7 @@ export const GoalsPage: React.FC = () => {
           }`}
         >
           <span>{msg.text}</span>
-          <button onClick={() => setMsg(null)} className="font-bold ml-2 cursor-pointer">✕</button>
+          <button type="button" onClick={() => setMsg(null)} aria-label="Fechar aviso" className="font-bold ml-2 cursor-pointer">✕</button>
         </div>
       )}
 
@@ -102,8 +106,8 @@ export const GoalsPage: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">Tipo de Meta</label>
-            <select
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-goal-type">Tipo de Meta</label>
+            <select id="foco-goals-goal-type"
               value={goalType}
               onChange={(e) => setGoalType(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
@@ -116,8 +120,8 @@ export const GoalsPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">Prioridade</label>
-            <select
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-priority">Prioridade</label>
+            <select id="foco-goals-priority"
               value={priority}
               onChange={(e) => setPriority(Number(e.target.value))}
               className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
@@ -129,8 +133,8 @@ export const GoalsPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">Data Alvo</label>
-            <input
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-target-date">Data Alvo</label>
+            <input id="foco-goals-target-date"
               type="date"
               value={targetDate}
               onChange={(e) => setTargetDate(e.target.value)}
@@ -140,8 +144,8 @@ export const GoalsPage: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide">Descrição do Alvo</label>
-          <input
+          <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-description">Descrição do Alvo</label>
+          <input id="foco-goals-description"
             type="text"
             required
             value={description}
@@ -165,12 +169,18 @@ export const GoalsPage: React.FC = () => {
       {/* Goals List */}
       <div className="space-y-3">
         <h3 className="text-xs font-black text-white uppercase tracking-wider">
-          Metas Registradas ({goals.length})
+          Metas Registradas{!isLoading && !loadError ? ` (${goals.length})` : ''}
         </h3>
 
-        {goals.length === 0 ? (
+        {isLoading && <p role="status" className="py-4 text-xs text-neutral-400">Carregando metas...</p>}
+        {loadError && <div role="alert" className="rounded-xl border border-white/20 p-4 text-sm text-neutral-300">
+          <p>Não foi possível consultar suas metas. Seus registros não foram alterados. Confira a conexão e tente novamente.</p>
+          <button type="button" onClick={() => void loadGoals()} className="mt-3 min-h-11 rounded-xl bg-white px-4 font-bold text-black">Tentar novamente</button>
+        </div>}
+        {!isLoading && !loadError && goals.length === 0 && (
           <p className="text-xs text-neutral-500 py-6 text-center font-mono">Nenhuma meta ativa cadastrada.</p>
-        ) : (
+        )}
+        {goals.length > 0 && (
           goals.map((g) => (
             <div
               key={g.id}

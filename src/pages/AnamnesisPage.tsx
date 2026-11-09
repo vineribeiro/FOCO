@@ -86,24 +86,32 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
   const [form, setForm] = useState<Anamnesis>(initialAnamnesis);
   const [step, setStep] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
+    setIsLoading(true);
+    setLoadError(false);
+    setErrorMsg(null);
     api.getAnamnesis()
       .then((saved) => {
         if (active && saved) {setForm({ ...initialAnamnesis, ...saved });setIntroStep('form');}
       })
       .catch((error: any) => {
-        if (active) setErrorMsg('Não foi possível carregar a anamnese salva: ' + error.message);
+        if (active) {
+          setLoadError(true);
+          setErrorMsg('Não foi possível consultar suas respostas salvas. Confira a conexão e tente novamente. Seus dados não foram alterados.');
+        }
       })
       .finally(() => {
         if (active) setIsLoading(false);
       });
     return () => { active = false; };
-  }, []);
+  }, [loadAttempt]);
 
   const updateField = (field: keyof Anamnesis, value: any) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -124,6 +132,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
   const sensitiveDataFilled = Boolean(form.pain_or_injuries.trim() || form.health_notes.trim());
 
   const handleSave = async () => {
+    if (isLoading || loadError) return;
     setErrorMsg(null);
     setSuccessMsg(null);
 
@@ -139,7 +148,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
       setForm({ ...initialAnamnesis, ...saved });
       setSuccessMsg('Anamnese salva. A geração de treino vai usar essas respostas como contexto.');
     } catch (error: any) {
-      setErrorMsg('Não foi possível salvar a anamnese: ' + error.message);
+      setErrorMsg('Não foi possível salvar a anamnese. Confira a conexão e tente novamente. ' + error.message);
     } finally {
       setIsSaving(false);
     }
@@ -158,6 +167,12 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
     catch(e){setErrorMsg('Não conseguimos salvar sua altura: '+(e instanceof Error?e.message:'erro de conexão'));}
     finally{setHeightSaving(false);}
   };
+  if (isLoading) return <div className="foco-v4-panel p-5 text-sm text-neutral-300" role="status">Carregando suas respostas...</div>;
+  if (loadError) return <section className="foco-v4-panel space-y-4 p-5">
+    <h1 className="text-xl font-bold">Respostas indisponíveis</h1>
+    <p role="alert" className="text-sm text-neutral-300">{errorMsg}</p>
+    <button type="button" onClick={() => setLoadAttempt(value => value + 1)} className="foco-v6-primary">Tentar novamente</button>
+  </section>;
   if(introStep!=='form') return (
     <div className="foco-v6-onboarding foco-v4-page">
       <div className="md:hidden"><FocoV6Status/></div>
@@ -240,8 +255,9 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
           {errorMsg}
         </div>
       )}
+      <p role="status" className="sr-only">{successMsg || ''}</p>
       {successMsg && (
-        <div role="status" className="flex flex-col gap-3 rounded-xl border border-emerald-400/25 bg-emerald-950/20 p-4 text-sm text-emerald-100 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-xl border border-emerald-400/25 bg-emerald-950/20 p-4 text-sm text-emerald-100 sm:flex-row sm:items-center sm:justify-between">
           <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 shrink-0" /> {successMsg}</span>
           <button type="button" onClick={() => setActiveTab('novo-treino')} className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2 text-xs font-black text-black">
             Gerar treino <ArrowRight className="h-3.5 w-3.5" />
@@ -264,40 +280,40 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className={labelClass}>Objetivo principal</label>
-                  <select className={inputClass} value={form.primary_goal} onChange={(e) => updateField('primary_goal', e.target.value)}>
+                  <label className={labelClass} htmlFor="foco-anamnesis-primary-goal">Objetivo principal</label>
+                  <select id="foco-anamnesis-primary-goal" className={inputClass} value={form.primary_goal} onChange={(e) => updateField('primary_goal', e.target.value)}>
                     {goalOptions.map((goal) => <option key={goal} value={goal}>{goal}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className={labelClass}>Tempo de experiência com musculação</label>
-                  <select className={inputClass} value={form.training_age} onChange={(e) => updateField('training_age', e.target.value)}>
+                  <label className={labelClass} htmlFor="foco-anamnesis-training-age">Tempo de experiência com musculação</label>
+                  <select id="foco-anamnesis-training-age" className={inputClass} value={form.training_age} onChange={(e) => updateField('training_age', e.target.value)}>
                     {['Nunca treinei', 'Menos de 6 meses', '6–12 meses', '1–3 anos', '3 anos ou mais'].map((value) => <option key={value}>{value}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className={labelClass}>Dias disponíveis por semana</label>
-                  <select className={inputClass} value={form.weekly_frequency} onChange={(e) => updateField('weekly_frequency', Number(e.target.value))}>
+                  <label className={labelClass} htmlFor="foco-anamnesis-weekly-frequency">Dias disponíveis por semana</label>
+                  <select id="foco-anamnesis-weekly-frequency" className={inputClass} value={form.weekly_frequency} onChange={(e) => updateField('weekly_frequency', Number(e.target.value))}>
                     {[2, 3, 4, 5, 6, 7].map((value) => <option key={value} value={value}>{value} dias</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className={labelClass}>Tempo por sessão</label>
-                  <select className={inputClass} value={form.session_minutes} onChange={(e) => updateField('session_minutes', Number(e.target.value))}>
+                  <label className={labelClass} htmlFor="foco-anamnesis-session-minutes">Tempo por sessão</label>
+                  <select id="foco-anamnesis-session-minutes" className={inputClass} value={form.session_minutes} onChange={(e) => updateField('session_minutes', Number(e.target.value))}>
                     {[30, 45, 60, 75, 90, 120].map((value) => <option key={value} value={value}>{value} minutos</option>)}
                   </select>
                 </div>
                 <div className="sm:col-span-2">
-                  <label className={labelClass}>Meta mais específica (opcional)</label>
-                  <textarea rows={3} className={inputClass} value={form.goal_details} onChange={(e) => updateField('goal_details', e.target.value)} placeholder="Ex.: desenvolver inferiores, aumentar força nos básicos, voltar a treinar com consistência..." />
+                  <label className={labelClass} htmlFor="foco-anamnesis-goal-details">Meta mais específica (opcional)</label>
+                  <textarea id="foco-anamnesis-goal-details" rows={3} className={inputClass} value={form.goal_details} onChange={(e) => updateField('goal_details', e.target.value)} placeholder="Ex.: desenvolver inferiores, aumentar força nos básicos, voltar a treinar com consistência..." />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className={labelClass}>Como é sua rotina hoje?</label>
-                  <textarea rows={3} className={inputClass} value={form.current_routine} onChange={(e) => updateField('current_routine', e.target.value)} placeholder="Ex.: trabalho sentado, caminho bastante, treino no fim do dia, estou retomando após uma pausa..." />
+                  <label className={labelClass} htmlFor="foco-anamnesis-current-routine">Como é sua rotina hoje?</label>
+                  <textarea id="foco-anamnesis-current-routine" rows={3} className={inputClass} value={form.current_routine} onChange={(e) => updateField('current_routine', e.target.value)} placeholder="Ex.: trabalho sentado, caminho bastante, treino no fim do dia, estou retomando após uma pausa..." />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className={labelClass}>Nível de atividade fora da academia</label>
-                  <select className={inputClass} value={form.activity_level} onChange={(e) => updateField('activity_level', e.target.value)}>
+                  <label className={labelClass} htmlFor="foco-anamnesis-activity-level">Nível de atividade fora da academia</label>
+                  <select id="foco-anamnesis-activity-level" className={inputClass} value={form.activity_level} onChange={(e) => updateField('activity_level', e.target.value)}>
                     {['Pouco ativo', 'Levemente ativo', 'Moderadamente ativo', 'Muito ativo'].map((value) => <option key={value}>{value}</option>)}
                   </select>
                 </div>
@@ -353,8 +369,8 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
               </div>
 
               <div>
-                <label className={labelClass}>Exercícios ou estilos de treino que prefere (opcional)</label>
-                <textarea rows={3} className={inputClass} value={form.exercise_preferences} onChange={(e) => updateField('exercise_preferences', e.target.value)} placeholder="Ex.: gosto de pesos livres, prefiro máquinas, não gosto de correr..." />
+                <label className={labelClass} htmlFor="foco-anamnesis-exercise-preferences">Exercícios ou estilos de treino que prefere (opcional)</label>
+                <textarea id="foco-anamnesis-exercise-preferences" rows={3} className={inputClass} value={form.exercise_preferences} onChange={(e) => updateField('exercise_preferences', e.target.value)} placeholder="Ex.: gosto de pesos livres, prefiro máquinas, não gosto de correr..." />
               </div>
             </section>
           )}
@@ -367,13 +383,13 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
               </div>
 
               <div>
-                <label className={labelClass}>Dores, lesões ou movimentos que precisa evitar (opcional)</label>
-                <textarea rows={3} className={inputClass} value={form.pain_or_injuries} onChange={(e) => updateField('pain_or_injuries', e.target.value)} placeholder="Ex.: desconforto no ombro ao elevar o braço, lesão anterior já avaliada..." />
+                <label className={labelClass} htmlFor="foco-anamnesis-pain-or-injuries">Dores, lesões ou movimentos que precisa evitar (opcional)</label>
+                <textarea id="foco-anamnesis-pain-or-injuries" rows={3} className={inputClass} value={form.pain_or_injuries} onChange={(e) => updateField('pain_or_injuries', e.target.value)} placeholder="Ex.: desconforto no ombro ao elevar o braço, lesão anterior já avaliada..." />
               </div>
 
               <div>
-                <label className={labelClass}>Outras limitações relevantes (opcional)</label>
-                <textarea rows={3} className={inputClass} value={form.health_notes} onChange={(e) => updateField('health_notes', e.target.value)} placeholder="Informe somente algo que realmente deva ser considerado para escolher exercícios com mais segurança." />
+                <label className={labelClass} htmlFor="foco-anamnesis-health-notes">Outras limitações relevantes (opcional)</label>
+                <textarea id="foco-anamnesis-health-notes" rows={3} className={inputClass} value={form.health_notes} onChange={(e) => updateField('health_notes', e.target.value)} placeholder="Informe somente algo que realmente deva ser considerado para escolher exercícios com mais segurança." />
               </div>
 
               {(sensitiveDataFilled || form.consent_health_data) && (
@@ -386,14 +402,14 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className={labelClass}>Como está seu sono em geral?</label>
-                  <select className={inputClass} value={form.sleep_quality} onChange={(e) => updateField('sleep_quality', e.target.value)}>
+                  <label className={labelClass} htmlFor="foco-anamnesis-sleep-quality">Como está seu sono em geral?</label>
+                  <select id="foco-anamnesis-sleep-quality" className={inputClass} value={form.sleep_quality} onChange={(e) => updateField('sleep_quality', e.target.value)}>
                     {['Ruim', 'Regular', 'Bom', 'Muito bom', 'Variável'].map((value) => <option key={value}>{value}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className={labelClass}>Cardio ou outros esportes (opcional)</label>
-                  <input className={inputClass} value={form.cardio_habits} onChange={(e) => updateField('cardio_habits', e.target.value)} placeholder="Ex.: corrida 2x/semana, futebol no domingo..." />
+                  <label className={labelClass} htmlFor="foco-anamnesis-cardio-habits">Cardio ou outros esportes (opcional)</label>
+                  <input id="foco-anamnesis-cardio-habits" className={inputClass} value={form.cardio_habits} onChange={(e) => updateField('cardio_habits', e.target.value)} placeholder="Ex.: corrida 2x/semana, futebol no domingo..." />
                 </div>
               </div>
 

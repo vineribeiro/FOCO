@@ -91,7 +91,7 @@ export function assessTrainingSafety({ notes = "", consent = false } = {}) {
 
 export function buildScientificWorkoutGuidance({
   frequency = 3, experience = "iniciante", goal = "", sessionMinutes = 60,
-  priorityMuscles = [], historyAvailable = false, highRisk = false,
+  priorityMuscles = /** @type {string[]} */ ([]), historyAvailable = false, highRisk = false,
 } = {}) {
   const level = EXPERIENCE[experience] || EXPERIENCE.iniciante;
   const priority = Array.isArray(priorityMuscles) ? priorityMuscles.filter(Boolean).join(", ") : String(priorityMuscles || "");

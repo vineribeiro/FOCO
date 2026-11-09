@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Typecheck
         run: npm run lint
       - name: RepDB licensed imagery contract
@@ -39,6 +39,11 @@ jobs:
         run: npm run test:session-contract
       - name: UI/UX regression tests
         run: npm run test:ui-ux
+      - name: Authentication and replay regression tests
+        run: |
+          npm run test:auth-reliability
+          npm run test:session-replay
+          npm run test:password-security
       - name: Build production site
         run: npm run build
       - name: Configure GitHub Pages
