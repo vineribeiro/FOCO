@@ -152,7 +152,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       if (/usuário não encontrado no armazenamento|usuário não encontrado|sessão não autorizada|token de autenticação/i.test(message)) {
         setErrorMsg(
           'Falha de sessão do FOCO: o servidor não encontrou a conta associada a esta sessão. ' +
-          'Isso não é um erro do Gemini. Não crie outra conta ainda; é necessário confirmar a persistência dos dados do servidor.'
+          'É necessário verificar a sessão e a persistência dos dados no servidor antes de criar outra conta.'
         );
       } else {
         setErrorMsg('Falha ao gerar treino: ' + message);
@@ -480,7 +480,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
                 <div>
                   <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-widest">
-                    <span>Proposta Gerada pelo Gemini</span>
+                    <span>Proposta gerada por IA</span>
                     <span>·</span>
                     <span>{generatedPlan.weekly_frequency}x por semana</span>
                   </div>

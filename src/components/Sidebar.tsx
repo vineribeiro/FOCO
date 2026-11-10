@@ -115,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isOpe
                 </span>
               </div>
               <p className="text-[10px] text-neutral-400 font-mono leading-relaxed">
-                PostgreSQL persistente & Gemini 2.5 Flash.
+                Fichas, histórico e evolução em um só lugar.
               </p>
             </div>
           </div>
