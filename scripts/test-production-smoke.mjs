@@ -31,7 +31,11 @@ await check("Edge Function responde e anuncia o motor correto", async () => {
   assert.equal(data.app, "FOCO");
   assert.equal(data.science_engine, "foco-training-study-2026.3");
   assert.equal(data.database, "supabase-postgres");
-  assert.equal(data.ai_status, "configured", "chave Gemini deve estar configurada");
+  assert.equal(data.ai_status, "configured", "provedor de IA deve estar configurado");
+  if (process.env.FOCO_EXPECT_AI_PROVIDER) {
+    assert.equal(data.ai_provider, process.env.FOCO_EXPECT_AI_PROVIDER, "provedor de texto ativo");
+    assert.equal(data.ai_text_status, "configured");
+  }
   assert.equal(response.headers.get("access-control-allow-origin"), ORIGIN);
 });
 

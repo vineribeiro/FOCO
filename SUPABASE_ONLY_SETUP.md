@@ -1,13 +1,17 @@
 # FOCO — arquitetura sem Render
 
-O frontend publicado no GitHub Pages chama a função `foco-api` no Supabase. O Postgres guarda os dados, o Supabase Auth gerencia sessões e a Edge Function chama o Gemini.
+O frontend publicado no GitHub Pages chama a função `foco-api` no Supabase. O Postgres guarda os dados, o Supabase Auth gerencia sessões e a Edge Function chama os provedores de IA, mantendo as chaves no servidor.
 
 ## Segredo obrigatório da IA
 
 No Supabase Dashboard do projeto, abra **Edge Functions → Secrets** e crie:
 
-- Nome: `GEMINI_API_KEY`
-- Valor: sua chave privada obtida em Google AI Studio
+- Nome: `GROQ_API_KEY`
+- Valor: sua chave privada obtida em Groq Console, no plano Free
+
+A geração e a revisão de treinos usam `openai/gpt-oss-20b`. O modelo pode ser configurado por `GROQ_MODEL`, escolhendo um modelo compatível com JSON Schema estrito e `reasoning_effort: low`.
+
+Para continuar lendo fotos e PDFs, mantenha também `GEMINI_API_KEY`, obtida em Google AI Studio. Essas rotas não enviam arquivos à Groq. Enquanto `GROQ_API_KEY` estiver ausente, o fluxo de texto continua usando Gemini; com a chave Groq cadastrada, falhas de texto não reenviam o contexto automaticamente a outro provedor.
 
 Não coloque essa chave no frontend nem no GitHub.
 
@@ -17,13 +21,19 @@ Opcional: para habilitar exclusão definitiva de contas, verifique se a Edge Fun
 
 A Edge Function `foco-api` é publicada com `verify_jwt = false` porque ela recebe endpoints públicos de login/cadastro; a própria função valida os tokens Supabase nas rotas privadas. O frontend envia a chave publishable no cabeçalho `apikey` (ela é pública por definição).
 
-O frontend é publicado pelo workflow do GitHub Pages. O modelo primário padrão é Gemini 3.8 Flash, com Gemini 3.5 Flash-Lite como fallback. Não desative o serviço Render até terminar os testes do novo endereço.
+O frontend é publicado pelo workflow do GitHub Pages. O fluxo multimodal mantém os modelos Gemini configurados. Não desative o serviço Render até terminar os testes do novo endereço.
 
 ## Teste pós-publicação
 
 1. Abra `https://buoefcnkpdrhevzbakze.supabase.co/functions/v1/foco-api/api/system/status`.
-2. Confirme `database: "supabase-postgres"` e `ai_status: "configured"`.
+2. Confirme `database: "supabase-postgres"`, `ai_status: "configured"`, `ai_provider: "groq"` e `ai_text_status: "configured"`. `ai_media_status` informa separadamente se existe chave para fotos/PDFs. Esses campos verificam configuração, não a validade das chaves ou a disponibilidade do provedor.
 3. Acesse o site FOCO, entre/crie uma conta e teste anamnese, criação de ficha, gravação de sessão e análise de um arquivo.
 4. Verifique no Supabase se cada gravação apareceu na tabela correspondente.
 
-A geração de treinos e a análise de PDFs/imagens requerem `GEMINI_API_KEY` nos segredos do Supabase. O armazenamento atual mantém os dados extraídos do arquivo, não necessariamente o arquivo original.
+## Cotas, formato e privacidade
+
+O plano Free da Groq tem limites por requisições e tokens; consulte os valores da sua organização em https://console.groq.com/docs/rate-limits. Não habilite um plano pago para este fluxo sem decisão do responsável pelo projeto. O FOCO não muda o plano da conta.
+
+Para reduzir tokens, a Groq recebe orientação compacta, o catálogo completo com índices e um schema de transporte com chaves curtas. A resposta é expandida no servidor e passa pelas mesmas validações de catálogo, dias, duração, volume e recuperação; nenhuma ficha reprovada é salva automaticamente. O histórico enviado é resumido, e fotos/PDFs permanecem no provedor multimodal. Erros de cota retornam 429 sem novas tentativas imediatas; timeout de texto é limitado a 45 segundos por chamada de IA.
+
+O contexto de texto inclui objetivo, preferências e dados consentidos, sem nome, email, tokens ou IDs de conta. Restrições e métricas corporais continuam seguindo as opções de consentimento existentes. Revise os controles de retenção na conta Groq: https://console.groq.com/docs/your-data. Não habilitar compartilhamento para treinamento nem registrar prompts, respostas brutas ou chaves em logs.

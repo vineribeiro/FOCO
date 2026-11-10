@@ -5,7 +5,7 @@ import { stripTypeScriptTypes } from 'node:module';
 // Exercise the actual helper with synthetic responses and a virtual clock.
 // No credentials, user data, Gemini requests, or real waits.
 const source = readFileSync(new URL('../supabase/functions/foco-api/index.ts', import.meta.url), 'utf8');
-const helper = stripTypeScriptTypes(source.slice(source.indexOf('async function aiJson('), source.indexOf('async function dispatch(')), { mode: 'transform' });
+const helper = 'const GROQ_KEY = "";\n' + stripTypeScriptTypes(source.slice(source.indexOf('async function aiJson('), source.indexOf('async function dispatch(')), { mode: 'transform' });
 class ApiError extends Error { constructor(status, message) { super(message); this.status = status; } }
 function harness(respond, fallback = 'secondary') {
   let now = 0, timer;

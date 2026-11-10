@@ -28,6 +28,8 @@ jobs:
         run: npm run build
       - name: Scientific workout generation rules and safety regression
         run: npm run test:training-science
+      - name: AI provider routing, structured output and quota regression
+        run: npm run test:groq-reliability
       - name: OKOK assessment trends and data-integrity regression
         run: npm run test:okok
       - name: Premium UI navigation and accessibility regression

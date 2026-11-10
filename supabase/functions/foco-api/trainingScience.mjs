@@ -121,6 +121,31 @@ export function buildScientificWorkoutGuidance({
   ].join("\n");
 }
 
+/** Compact text transport for free inference quotas; audit rules stay identical. */
+export function buildCompactWorkoutGuidance({
+  frequency = 3, experience = "iniciante", goal = "", sessionMinutes = 60,
+  highRisk = false,
+} = {}) {
+  const level = EXPERIENCE[experience] || EXPERIENCE.iniciante;
+  const range = sessionExerciseRange(sessionMinutes);
+  return [
+    "Método FOCO 2026: proposta educacional para revisão profissional; faixas são pontos de partida, não leis clínicas.",
+    "Divisão: " + splitForFrequency(frequency),
+    "Por músculo: partir de " + level.weeklyHint.join("-") + " séries diretas/semana; teto " + level.weeklyCeiling +
+      "; contar sinergistas. Por dia: até " + level.dailyCeiling + " séries, incluindo tempo de aquecimento/transição em " + sessionMinutes + " minutos.",
+    "O teto semanal também inclui Core. Para esta proposta conservadora, Core: no máximo1 exercício/dia,1-2 séries, em até3 dias; não preencher a contagem com abdominais redundantes. Some as séries diretas por grupamento do catálogo antes de responder.",
+    "Preferência de produto: " + range.min + "-" + range.max + " exercícios diferentes/dia; ajustar séries para caber na duração e no volume, sem isolamentos redundantes. Alto risco e recuperação ativa podem ter menos.",
+    goalRules(goal, experience),
+    "RIR " + (highRisk ? "3-4" : level.rir.join("-")) + "; sem falha frequente ou teste de 1RM. Carga inicial zero, ajuste presencial.",
+    "Pausas: compostos pesados 120-240s (força até300); puxadas/remadas/desenvolvimento120-180; isolamentos60-120; core45-75.",
+    "Prioridades redistribuem volume. Alternar grupos exigidos e padrões empurrar/puxar/joelho/quadril/core; evitar dose alta do mesmo grupo em dias seguidos. Cerca de48h é referência, não regra universal.",
+    "Primeiro prioridade, depois auxiliares. Técnica controlada, amplitude tolerada sem dor. Progressão dupla por repetições, depois carga gradual; deload só com fadiga/desempenho que justifique. Reavaliar após15dias.",
+    "Respeitar equipamentos, limitações consentidas e recuperação. Não priorizar por gênero/IMC, inventar diagnóstico/capacidade/RIR histórico, prescrever dieta ou prometer perda de gordura por repetições. Bioimpedância é estimativa.",
+    highRisk ? "ALTO RISCO: até2 séries/exercício, RIR3-4, sem carga máxima/falha/aumento abrupto/sessão extenuante; revisão médica e profissional indispensável." : "Sem histórico, nunca inventar carga ou esforço anterior.",
+    "Notas técnicas breves, específicas; explicação até300 caracteres. Usar TODOS os dias exatos. Retornar apenas JSON.",
+  ].join("\n");
+}
+
 export function normalizeScienceExercises(exercises, { experience = "iniciante", highRisk = false } = {}) {
   const level = EXPERIENCE[experience] || EXPERIENCE.iniciante;
   return exercises.map(ex => {

@@ -387,7 +387,7 @@ export const WorkoutsPage: React.FC<WorkoutsPageProps> = ({ setActiveTab }) => {
           <div>
             <h3 className="text-base font-black uppercase text-white">Nenhuma ficha cadastrada</h3>
             <p className="text-xs text-neutral-400 max-w-sm mx-auto mt-1">
-              Gere uma ficha personalizada usando o Gemini 2.5 Flash ou faça upload de fotos da sua ficha de academia.
+              Gere uma ficha personalizada com IA ou envie fotos da sua ficha de academia.
             </p>
           </div>
           <div className="flex justify-center gap-3">
