@@ -128,20 +128,28 @@ export function expandGroqResult(value, schema, catalog = []) {
   return expand(value, schema);
 }
 
-function rateLimitError(response) {
+/** Return the full provider-requested delay, never a shortened/clamped wait. */
+export function parseRetryAfter(response, now = Date.now()) {
   const raw = response.headers?.get?.("retry-after");
-  let seconds = raw && /^\d{1,6}(?:\.\d{1,3})?$/.test(raw) ? Math.ceil(Number(raw)) : null;
-  if (seconds === null && raw && raw.length <= 80 && /^[A-Za-z]{3},[\s\S]+GMT$/.test(raw)) {
+  if (raw && /^\d{1,6}(?:\.\d{1,3})?$/.test(raw)) return Math.ceil(Number(raw) * 1000);
+  if (raw && raw.length <= 80 && /^[A-Za-z]{3},[\s\S]+GMT$/.test(raw)) {
     const when = Date.parse(raw);
-    if (Number.isFinite(when)) seconds = Math.max(0, Math.ceil((when - Date.now()) / 1000));
+    if (Number.isFinite(when)) return Math.max(0, when - now);
   }
+  return null;
+}
+
+function rateLimitError(response) {
+  const delay = parseRetryAfter(response);
+  const seconds = delay === null ? null : Math.ceil(delay / 1000);
   const wait = seconds !== null ? ` Aguarde ${seconds} segundo(s) antes de tentar novamente.` : " Aguarde a renovação da cota antes de tentar novamente.";
-  return new GroqError(429, "GROQ_RATE_LIMIT", "A cota gratuita da Groq foi atingida." + wait);
+  return new GroqError(429, "GROQ_RATE_LIMIT", "O limite de uso da Groq foi atingido." + wait);
 }
 
 export async function generateGroqJson({
   apiKey, model = "openai/gpt-oss-20b", prompt, schema, catalog,
   fetchImpl = fetch, timeoutMs = 45_000, maxCompletionTokens = 3500,
+  sleepImpl = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds)),
 }) {
   if (typeof apiKey !== "string" || !apiKey.trim()) {
     throw new GroqError(503, "GROQ_MISSING_KEY", "Cadastre GROQ_API_KEY nos Secrets do Supabase para ativar a geração com a Groq.");
@@ -185,7 +193,20 @@ export async function generateGroqJson({
     } finally {
       clearTimeout(timer);
     }
-    if (response.status === 429) throw rateLimitError(response);
+    if (response.status === 429) {
+      const delay = parseRetryAfter(response);
+      // One delayed retry only. Reserve time for a complete response, and never
+      // retry earlier than Retry-After or restart the original request deadline.
+      const wait = delay === null ? null : delay + 250;
+      if (attempt === 0 && delay !== null && delay <= 25_000 && wait + 5_000 <= deadline - Date.now()) {
+        await sleepImpl(wait);
+        continue;
+      }
+      throw rateLimitError(response);
+    }
+    if (response.status === 413) {
+      throw new GroqError(413, "GROQ_REQUEST_TOO_LARGE", "A solicitação excedeu o limite de tokens da Groq. Reduza a frequência ou o contexto opcional e tente novamente.");
+    }
     if ([401, 403].includes(response.status)) {
       // Do not expose an upstream 401 as an invalid FOCO session.
       throw new GroqError(502, "GROQ_AUTH_ERROR", "A chave da Groq foi recusada. Confira GROQ_API_KEY nos Secrets do Supabase.");

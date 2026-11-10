@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { GroqError, generateGroqJson, toGroqSchema, compactSchema, expandGroqResult } from '../supabase/functions/foco-api/groq.mjs';
+import { GroqError, generateGroqJson, toGroqSchema, compactSchema, expandGroqResult, parseRetryAfter } from '../supabase/functions/foco-api/groq.mjs';
 
 // No real requests, account data, API credentials, or billable generations.
 const catalog = ['Supino reto com barra', 'Agachamento com peso corporal'];
@@ -89,11 +89,81 @@ await check('missing key never calls provider and catalog configuration is check
   await assert.rejects(request(fn,{catalog:[]}),e=>safe(e)&&e.code==='GROQ_CATALOG_ERROR');
   assert.equal(calls,0);
 });
-await check('429 preserves safe Retry-After guidance and does not retry',async()=>{
+await check('Retry-After parsing preserves full delays and rejects unsafe or unknown values',()=>{
+  const retry=value=>new Response('',{status:429,headers:{'retry-after':value}});
+  assert.equal(parseRetryAfter(retry('12')),12_000);
+  assert.equal(parseRetryAfter(retry('12.4')),12_400);
+  assert.equal(parseRetryAfter(retry('0')),0);
+  assert.equal(parseRetryAfter(retry('Mon, 01 Jan 2024 00:00:12 GMT'),Date.UTC(2024,0,1)),12_000);
+  for(const value of ['',secret,'-1','NaN','Infinity','9999999','tomorrow']) assert.equal(parseRetryAfter(retry(value)),null);
+  assert.equal(parseRetryAfter(new Response('',{status:429})),null);
+});
+await check('429 waits at least the requested 12 seconds before its single retry',async()=>{
+  const actualNow=Date.now;let clock=0,calls=0;
+  const waits=[],calledAt=[];
+  Date.now=()=>clock;
+  try {
+    const result=await request(async()=>{
+      calls++;calledAt.push(clock);
+      return calls===1?new Response(secret+prompt,{status:429,headers:{'retry-after':'12'}}):response();
+    },{timeoutMs:45_000,sleepImpl:async delay=>{waits.push(delay);clock+=delay;}});
+    assert.equal(result.name,wire.n);assert.equal(calls,2);
+    assert.deepEqual(waits,[12_250]);assert.deepEqual(calledAt,[0,12_250]);
+    assert.ok(calledAt[1]-calledAt[0]>=12_000);
+  } finally {Date.now=actualNow;}
+});
+await check('429 with long, missing, invalid or unaffordable delay is returned without sleeping',async()=>{
+  const actualNow=Date.now;let clock=0;
+  Date.now=()=>clock;
+  try {
+    for(const scenario of [
+      {retry:'26',spent:0},{retry:'86400',spent:0},{retry:undefined,spent:0},
+      {retry:secret,spent:0},{retry:'12',spent:29_000},
+    ]) {
+      clock=0;let calls=0,waits=0;
+      await assert.rejects(request(async()=>{
+        calls++;clock+=scenario.spent;
+        return new Response(secret+prompt,{status:429,...(scenario.retry===undefined?{}:{headers:{'retry-after':scenario.retry}})});
+      },{timeoutMs:45_000,sleepImpl:async()=>{waits++;}}),error=>safe(error)&&error.status===429&&error.code==='GROQ_RATE_LIMIT');
+      assert.equal(calls,1);assert.equal(waits,0);
+    }
+  } finally {Date.now=actualNow;}
+});
+await check('second 429 never creates another wait or provider attempt',async()=>{
+  const actualNow=Date.now;let clock=0,calls=0;
+  const waits=[];
+  Date.now=()=>clock;
+  try {
+    await assert.rejects(request(async()=>{
+      calls++;
+      return new Response(secret+prompt,{status:429,headers:{'retry-after':'12'}});
+    },{timeoutMs:45_000,sleepImpl:async delay=>{waits.push(delay);clock+=delay;}}),error=>safe(error)&&error.status===429);
+    assert.equal(calls,2);assert.deepEqual(waits,[12_250]);
+  } finally {Date.now=actualNow;}
+});
+await check('waiting for quota consumes the original timeout budget',async()=>{
+  const actualNow=Date.now;let clock=0,calls=0;
+  Date.now=()=>clock;
+  try {
+    await assert.rejects(request(async()=>{
+      calls++;
+      return new Response('',{status:429,headers:{'retry-after':'12'}});
+    },{timeoutMs:45_000,sleepImpl:async delay=>{assert.equal(delay,12_250);clock=45_001;}}),error=>safe(error)&&error.status===504&&error.code==='GROQ_TIMEOUT');
+    assert.equal(calls,1);
+  } finally {Date.now=actualNow;}
+});
+await check('429 preserves safe Retry-After guidance when the remaining deadline prevents retry',async()=>{
   let calls=0;
   await assert.rejects(request(async()=>{calls++;return new Response(secret+prompt,{status:429,headers:{'retry-after':'12.4'}});}),e=>safe(e)&&e.status===429&&e.code==='GROQ_RATE_LIMIT'&&/13 segundo/.test(e.message));
   assert.equal(calls,1);
   await assert.rejects(request(async()=>new Response(secret,{status:429,headers:{'retry-after':secret}})),e=>safe(e)&&e.code==='GROQ_RATE_LIMIT');
+});
+await check('413 has a specific redacted error and never retries',async()=>{
+  let calls=0,waits=0;
+  await assert.rejects(request(async()=>{
+    calls++;return new Response(secret+prompt,{status:413});
+  },{sleepImpl:async()=>{waits++;}}),error=>safe(error)&&error.status===413&&error.code==='GROQ_REQUEST_TOO_LARGE');
+  assert.equal(calls,1);assert.equal(waits,0);
 });
 await check('upstream auth errors do not become FOCO session expiry or trigger retries',async()=>{
   for(const status of [401,403]) {
