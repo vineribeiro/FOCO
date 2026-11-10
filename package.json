@@ -29,6 +29,7 @@
     "test:password-security": "tsx scripts/test-password-security.ts",
     "test:session-replay": "tsx scripts/test-session-replay.ts",
     "test:edge-reliability": "node scripts/test-edge-reliability.mjs",
+    "test:gemini-reliability": "node scripts/test-gemini-reliability.mjs",
     "test:backend-transactions": "node scripts/test-backend-transactions.mjs",
     "test:audit-browser": "node scripts/test-audit-browser.mjs",
     "test:session-retry-browser": "node scripts/test-session-retry-browser.mjs",

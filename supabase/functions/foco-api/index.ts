@@ -591,10 +591,12 @@ async function aiJson(prompt: string, schema: any, media?: { data: string; mime:
   const models = [...new Set([GEMINI_MODEL, GEMINI_FALLBACK_MODEL])];
   const deadline = Date.now() + 55_000; // Keep two scientific proposal attempts below Edge Function wall-clock limits.
   let detail = "O Gemini não retornou uma resposta.";
-  modelsLoop: for (const model of models) {
-    for (let attempt = 0; attempt < 2; attempt++) {
+  // Try every model before retrying one: two slow primary calls used to leave
+  // the fallback only ~4 seconds of the shared 55-second budget.
+  attemptsLoop: for (let attempt = 0; attempt < 2; attempt++) {
+    for (const model of models) {
       const remaining = deadline - Date.now();
-      if (remaining < 1500) break modelsLoop;
+      if (remaining < 1500) break attemptsLoop;
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), Math.min(25_000, remaining));
       let result: Response;
@@ -618,13 +620,15 @@ async function aiJson(prompt: string, schema: any, media?: { data: string; mime:
         let data: any = {};
         try { data = JSON.parse(raw); } catch { /* validate below */ }
         const output = (data.candidates?.[0]?.content?.parts || []).map((p: any) => p.text || "").join("").trim();
-        try { return JSON.parse(output); } catch { detail = "O Gemini retornou JSON inválido."; break; }
+        try { return JSON.parse(output); } catch { detail = "O Gemini retornou JSON inválido."; continue; }
       }
       try { detail = JSON.parse(raw)?.error?.message || raw; } catch { detail = raw; }
+      // A removed/unavailable model must not prevent trying the configured fallback.
+      if (result.status === 404) continue;
       if (![408, 429, 500, 502, 503, 504].includes(result.status)) {
         throw new ApiError(502, "Falha na API do Gemini: " + String(detail).slice(0, 400));
       }
-      if (attempt === 0 && deadline - Date.now() > 1000) {
+      if (model === models[models.length - 1] && attempt === 0 && deadline - Date.now() > 1850) {
         await new Promise(resolve => setTimeout(resolve, 350));
       }
     }
