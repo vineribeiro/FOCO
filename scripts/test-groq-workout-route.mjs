@@ -94,19 +94,48 @@ function harness({ consent = false, modifyProposal = () => {}, healthNotes = hea
 
 // Reuse the exact route prompt for a separate, explicitly invoked provider smoke
 // test. This capture itself only calls the synthetic provider above.
-export async function captureSyntheticWorkoutRequest(sessionMinutes = 60) {
+export async function captureSyntheticWorkoutRequest(sessionMinutes = 60, {
+  frequency = 3, experience = 'iniciante', goal = 'Condicionamento', equipment = 'Academia',
+} = {}) {
   const h = harness({ sessionMinutes, healthNotes: '' });
-  await h.run({ weekly_frequency: 3 });
+  await h.run({ weekly_frequency: frequency, experience_level: experience, goal, equipment_available: equipment });
   return {
     prompt: h.calls[0].prompt,
     schema: h.calls[0].schema,
-    days: h.api.scheduleDays(undefined, 3),
-    experience: 'iniciante', sessionMinutes,
+    days: h.api.scheduleDays(undefined, frequency),
+    experience, sessionMinutes,
   };
 }
 
 let checks = 0;
 async function check(label, fn) { await fn(); checks++; console.log('PASS ' + label); }
+
+await check('six-day initial proposals constrain total count, days and starting sets before audit', async () => {
+  const entries = [
+    ['Supino reto com barra', 'Peitoral'], ['Remada curvada com barra', 'Costas'],
+    ['Leg press 45 graus', 'Quadríceps'], ['Mesa flexora', 'Posteriores'],
+    ['Panturrilha em pé na máquina', 'Panturrilhas'],
+  ];
+  const h = harness({ sessionMinutes: 60, modifyProposal: proposal => {
+    const days = [...new Set(proposal.exercises.map(e => e.training_day))];
+    proposal.exercises = days.flatMap(training_day => entries.map(([exercise_name, muscle_group]) => ({
+      exercise_name, muscle_group, training_day, sets: 1, reps_min: 8, reps_max: 12,
+      rest_seconds: 120, rir_target: 3, notes: 'Controle a amplitude.', suggested_load_kg: 0,
+    })));
+  } });
+  const result = await h.run({ weekly_frequency: 6, experience_level: 'iniciante', goal: 'Definição & Emagrecimento' });
+  const data = await result.json();
+  assert.equal(result.status, 200, data.error);
+  assert.equal(data.exercises.length, 30);
+  const schema = h.calls[0].schema.properties.exercises;
+  assert.equal(schema.minItems, 30); assert.equal(schema.maxItems, 36);
+  assert.equal(schema.items.properties.sets.maximum, 2);
+  assert.deepEqual(schema.items.properties.training_day.enum, h.api.scheduleDays(undefined, 6));
+  assert.match(h.calls[0].prompt, /TOTAL 30-36/);
+  const seven = harness();
+  assert.equal((await seven.run({ weekly_frequency: 7 })).status, 200);
+  assert.equal(seven.calls[0].schema.properties.exercises.minItems, undefined);
+});
 
 await check('2, 3, and 7 days retain the whole indexed catalog and pass the real scientific audit', async () => {
   for (const weekly_frequency of [2, 3, 7]) {

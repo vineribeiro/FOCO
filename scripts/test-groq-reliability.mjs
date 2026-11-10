@@ -13,6 +13,7 @@ const wire = {n:'Ficha sintética',g:'Força',f:2,x:'Proposta para revisão',es:
 const secret = 'synthetic-secret-never-print';
 const prompt = 'synthetic-private-prompt-never-print';
 const response = (value = wire, finish = 'stop', extra = {}) => new Response(JSON.stringify({ choices:[{finish_reason:finish,message:{content:JSON.stringify(value),...extra}}] }));
+const rejected = (code, extra = {}, status = 400) => new Response(JSON.stringify({ error: { code, message: secret + prompt, ...extra } }), { status });
 const request = (fetchImpl, options={}) => generateGroqJson({ apiKey:secret,prompt,schema,catalog,fetchImpl,timeoutMs:100,...options });
 let checks=0;
 async function check(label,fn) { await fn(); checks++; console.log('PASS '+label); }
@@ -20,6 +21,24 @@ function safe(error) {
   assert.ok(error instanceof GroqError);
   assert.ok(!String(error).includes(secret)); assert.ok(!String(error).includes(prompt));
   return true;
+}
+async function captureProviderLogs(task) {
+  const original = console.error, logs = [];
+  console.error = (...args) => logs.push(args);
+  try { return await task(logs); } finally { console.error = original; }
+}
+function safeLogs(logs, reason) {
+  assert.ok(logs.length > 0);
+  for (const entry of logs) {
+    assert.equal(entry[0], '[FOCO GROQ]');
+    const data = JSON.parse(entry[1]);
+    assert.deepEqual(Object.keys(data), ['status', 'reason']);
+    assert.ok(Number.isInteger(data.status));
+    if (reason) assert.equal(data.reason, reason);
+  }
+  const serialized = JSON.stringify(logs);
+  assert.ok(!serialized.includes(secret)); assert.ok(!serialized.includes(prompt));
+  assert.ok(!serialized.includes('failed_generation'));
 }
 
 await check('schema translates every nested object to strict JSON without changing input',()=>{
@@ -187,6 +206,112 @@ await check('5xx errors retry once; other errors stop with redacted messages',as
     assert.equal(calls,1);
   }
 });
+await check('known generation failures recover only complete schema-valid candidates',async()=>captureProviderLogs(async logs=>{
+  for (const code of ['json_validate_failed','structured_generation_failed']) {
+    let calls=0;
+    const output=await request(async()=>{
+      calls++;return rejected(code,{failed_generation:JSON.stringify(wire)});
+    });
+    assert.equal(calls,1);assert.equal(output.name,wire.n);
+    assert.equal(output.exercises[0].exercise_name,catalog[0]);
+    assert.equal(output.exercises[0].muscle_group,'Peitoral');
+    assert.equal(output.exercises[0].suggested_load_kg,0);
+  }
+  safeLogs(logs,'generation_format');
+}));
+await check('complete six-day failed candidate expands all 36 exercises without another provider call',async()=>captureProviderLogs(async logs=>{
+  const days=['segunda','terca','quarta','quinta','sexta','sabado'];
+  const names=['Supino reto com barra','Agachamento com peso corporal','Remada curvada com barra',
+    'Mesa flexora','Prancha abdominal','Panturrilha em pé na máquina'];
+  const muscles=['Peitoral','Quadríceps','Costas','Posteriores','Core','Panturrilhas'];
+  const candidate={...wire,n:'Ficha sintética de seis dias',g:'Emagrecimento',f:6,
+    es:days.flatMap(d=>names.map((_name,e)=>({...wire.es[0],e,d}))),
+  };
+  let calls=0;
+  const output=await request(async()=>{
+    calls++;return rejected('json_validate_failed',{failed_generation:JSON.stringify(candidate)});
+  },{catalog:names});
+  assert.equal(calls,1);assert.equal(output.weekly_frequency,6);
+  assert.equal(output.exercises.length,36);
+  for(const [index,exercise] of output.exercises.entries()) {
+    assert.equal(exercise.exercise_name,names[index%6]);
+    assert.equal(exercise.muscle_group,muscles[index%6]);
+    assert.equal(exercise.training_day,days[Math.floor(index/6)]);
+    assert.equal(exercise.suggested_load_kg,0);
+  }
+  safeLogs(logs,'generation_format');
+}));
+await check('invalid failed generations are never repaired and remain bounded to two calls',async()=>captureProviderLogs(async logs=>{
+  const candidates = [
+    undefined, null, secret+prompt, '{"n":', '```json\n'+JSON.stringify(wire)+'\n```',
+    'extra '+JSON.stringify(wire), JSON.stringify(JSON.stringify(wire)), '[]', 'null',
+    JSON.stringify({...wire,es:[{...wire.es[0],e:-1}]}),
+    JSON.stringify({...wire,es:[{...wire.es[0],e:catalog.length}]}),
+    JSON.stringify({...wire,es:[{...wire.es[0],s:'2'}]}),
+    JSON.stringify({...wire,es:[{...wire.es[0],m:'quadril'}]}),
+  ];
+  for (const failed_generation of candidates) {
+    let calls=0;
+    await assert.rejects(request(async()=>{
+      calls++;return rejected('json_validate_failed',{failed_generation});
+    }),error=>safe(error)&&error.status===502&&error.code==='GROQ_GENERATION_FORMAT'&&!/configura/i.test(error.message));
+    assert.equal(calls,2);
+  }
+  safeLogs(logs,'generation_format');
+}));
+await check('failed generation can retry once and recover through a normal successful response',async()=>captureProviderLogs(async logs=>{
+  let calls=0;
+  const output=await request(async()=>++calls===1?rejected('structured_generation_failed',{failed_generation:'{"n":'}):response());
+  assert.equal(calls,2);assert.equal(output.name,wire.n);safeLogs(logs,'generation_format');
+}));
+await check('generation-format retry shares the original deadline',async()=>captureProviderLogs(async logs=>{
+  const actualNow=Date.now;let clock=0,calls=0;
+  Date.now=()=>clock;
+  try {
+    await assert.rejects(request(async()=>{
+      calls++;clock=101;return rejected('json_validate_failed',{failed_generation:'{"n":'});
+    }),error=>safe(error)&&error.status===504&&error.code==='GROQ_TIMEOUT');
+    assert.equal(calls,1);safeLogs(logs,'generation_format');
+  } finally {Date.now=actualNow;}
+}));
+await check('context, unavailable model and invalid schema have separate non-retried errors',async()=>captureProviderLogs(async logs=>{
+  const cases=[
+    ['context_length_exceeded',413,'GROQ_CONTEXT_TOO_LARGE','context_limit'],
+    ['model_not_found',503,'GROQ_MODEL_UNAVAILABLE','model_unavailable'],
+    ['model_decommissioned',503,'GROQ_MODEL_UNAVAILABLE','model_unavailable'],
+    ['invalid_json_schema',502,'GROQ_SCHEMA_ERROR','invalid_schema'],
+  ];
+  for (const [code,status,expected,reason] of cases) {
+    for (const upstreamStatus of [400,404,422]) {
+      let calls=0;const start=logs.length;
+      await assert.rejects(request(async()=>{
+        calls++;return rejected(code,{},upstreamStatus);
+      }),error=>safe(error)&&error.status===status&&error.code===expected);
+      assert.equal(calls,1);safeLogs(logs.slice(start),reason);
+    }
+  }
+}));
+await check('only an anchored invalid-schema description is classified without exposing it',async()=>captureProviderLogs(async logs=>{
+  let calls=0;
+  await assert.rejects(request(async()=>{
+    calls++;return rejected('invalid_request_error',{message:'Invalid JSON schema: '+secret+prompt});
+  }),error=>safe(error)&&error.code==='GROQ_SCHEMA_ERROR');
+  assert.equal(calls,1);safeLogs(logs,'invalid_schema');
+}));
+await check('unknown codes, messages and failed candidates cannot leak through diagnostics',async()=>captureProviderLogs(async logs=>{
+  const cases=[
+    {code:secret+prompt}, {code:'json_validate_failed'+secret}, {code:{secret,prompt}},
+    {code:'unrecognized',message:'User wrote invalid schema '+secret+prompt},
+  ];
+  for(const fields of cases) {
+    let calls=0;
+    await assert.rejects(request(async()=>{
+      calls++;return rejected(fields.code,{...fields,failed_generation:JSON.stringify(wire)});
+    }),error=>safe(error)&&error.code==='GROQ_REQUEST_FAILED'&&error.message==='A Groq não conseguiu processar esta solicitação.');
+    assert.equal(calls,1);
+  }
+  safeLogs(logs,'request_failed');
+}));
 await check('invalid JSON, refusal, truncation and incomplete response are explicit',async()=>{
   const fixtures=[
     [new Response(secret+prompt),'GROQ_INVALID_JSON'],

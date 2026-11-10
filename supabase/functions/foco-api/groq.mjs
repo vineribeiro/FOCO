@@ -146,6 +146,37 @@ function rateLimitError(response) {
   return new GroqError(429, "GROQ_RATE_LIMIT", "O limite de uso da Groq foi atingido." + wait);
 }
 
+/** Classify only known provider failures; raw payloads stay in memory. */
+function requestFailure(raw, status) {
+  let data;
+  try { data = JSON.parse(raw); } catch { /* unknown response remains redacted */ }
+  const error = object(data?.error) ? data.error : {};
+  const code = typeof error.code === "string" ? error.code : "";
+  let reason = "request_failed";
+  if ([400, 404, 422].includes(status)) {
+    if (["json_validate_failed", "structured_generation_failed"].includes(code)) reason = "generation_format";
+    else if (code === "context_length_exceeded") reason = "context_limit";
+    else if (["model_not_found", "model_decommissioned"].includes(code)) reason = "model_unavailable";
+    else if (code === "invalid_json_schema"
+      || typeof error.message === "string" && /^(?:invalid|unsupported) (?:JSON )?schema(?: for response_format)?(?:[.:]|$)/i.test(error.message)) reason = "invalid_schema";
+  }
+  console.error("[FOCO GROQ]", JSON.stringify({ status: Number.isInteger(status) ? status : 0, reason }));
+  return { reason, failedGeneration: typeof error.failed_generation === "string" ? error.failed_generation : null };
+}
+
+function recoverGeneratedObject(raw, schema, catalog) {
+  if (typeof raw !== "string") return null;
+  let candidate;
+  try { candidate = JSON.parse(raw); } catch { return null; }
+  if (!object(candidate)) return null;
+  try { return expandGroqResult(candidate, schema, catalog); }
+  catch (error) {
+    // A technical catalog failure cannot be repaired by asking the model again.
+    if (error instanceof GroqError && error.code === "GROQ_CATALOG_ERROR") throw error;
+    return null;
+  }
+}
+
 export async function generateGroqJson({
   apiKey, model = "openai/gpt-oss-20b", prompt, schema, catalog,
   fetchImpl = fetch, timeoutMs = 45_000, maxCompletionTokens = 3500,
@@ -216,7 +247,25 @@ export async function generateGroqJson({
       throw new GroqError(503, "GROQ_UNAVAILABLE", "A Groq está temporariamente indisponível. Tente novamente em alguns instantes.");
     }
     if (!response.ok) {
-      throw new GroqError(502, "GROQ_REQUEST_FAILED", "A Groq recusou a configuração desta geração. Confira o modelo e o formato configurados no servidor.");
+      const failure = requestFailure(raw, response.status);
+      if (failure.reason === "generation_format") {
+        // Some provider failures carry a complete candidate despite HTTP 400.
+        // Accept only an entire schema-valid object; the caller still audits dose.
+        const recovered = recoverGeneratedObject(failure.failedGeneration, schema, catalog);
+        if (recovered) return recovered;
+        if (attempt === 0) continue;
+        throw new GroqError(502, "GROQ_GENERATION_FORMAT", "A Groq não conseguiu concluir a ficha no formato esperado. Tente gerar novamente.");
+      }
+      if (failure.reason === "context_limit") {
+        throw new GroqError(413, "GROQ_CONTEXT_TOO_LARGE", "O contexto enviado excedeu o limite da Groq. Reduza o contexto opcional e tente novamente.");
+      }
+      if (failure.reason === "model_unavailable") {
+        throw new GroqError(503, "GROQ_MODEL_UNAVAILABLE", "O modelo configurado da Groq não está disponível. É necessário revisar o modelo no servidor.");
+      }
+      if (failure.reason === "invalid_schema") {
+        throw new GroqError(502, "GROQ_SCHEMA_ERROR", "A Groq não aceitou o formato de resposta configurado no servidor.");
+      }
+      throw new GroqError(502, "GROQ_REQUEST_FAILED", "A Groq não conseguiu processar esta solicitação.");
     }
     let data;
     try { data = JSON.parse(raw); }
