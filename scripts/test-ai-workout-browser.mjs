@@ -41,6 +41,7 @@ try {
     const page=await context.newPage();page.setDefaultTimeout(10000);
     const errors=[];page.on('pageerror',error=>errors.push(error.message));
     await page.goto((process.env.FOCO_E2E_BASE_URL||'http://127.0.0.1:4173/FOCO/')+'?view=novo-treino');
+    await page.locator('button[type="submit"]:not([disabled])').waitFor();
     await page.locator('#foco-ai-goal').selectOption('Recomposição corporal');
     await page.getByRole('button',{name:'Gerar ficha personalizada',exact:true}).click();
     await page.getByText('Proposta gerada com Groq',{exact:true}).waitFor();assert.equal(aiCalls,1);

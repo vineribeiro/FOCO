@@ -10,7 +10,8 @@ permissions:
 
 jobs:
   local-visual:
-    runs-on: ubuntu-latest
+    # Match the supported OS for the pinned Playwright 1.56.1 browser.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Checkout code
