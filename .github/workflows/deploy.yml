@@ -35,6 +35,8 @@ jobs:
         run: npm run test:atlas
       - name: Training science tests
         run: npm run test:training-science
+      - name: AI routing and proposal draft regression
+        run: npm run test:ai-routing
       - name: Session persistence contract
         run: npm run test:session-contract
       - name: UI/UX regression tests

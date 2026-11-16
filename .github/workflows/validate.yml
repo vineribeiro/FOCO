@@ -28,6 +28,8 @@ jobs:
         run: npm run build
       - name: Scientific workout generation rules and safety regression
         run: npm run test:training-science
+      - name: Bounded Gemini and Groq routing, priority validation and proposal drafts
+        run: npm run test:ai-routing
       - name: OKOK assessment trends and data-integrity regression
         run: npm run test:okok
       - name: Premium UI navigation and accessibility regression
@@ -62,7 +64,8 @@ jobs:
           if-no-files-found: error
 
   reliability:
-    runs-on: ubuntu-latest
+    # Playwright 1.56.1 supports Ubuntu 24.04; ubuntu-latest now uses 26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -95,6 +98,8 @@ jobs:
           node --input-type=module -e 'for(let n=0;n<60;n++){try{const r=await fetch("http://127.0.0.1:4173/FOCO/");if(r.ok)process.exit(0)}catch{}await new Promise(r=>setTimeout(r,250))}process.exit(1)'
       - name: Browser accessibility, failure recovery and preserved auth forms
         run: npm run test:audit-browser
+      - name: AI provider labels, proposal restoration and explicit regeneration
+        run: node scripts/test-ai-workout-browser.mjs
       - name: Lost response, reload and storage-quota session regression
         run: npm run test:session-retry-browser
       - name: Responsive layout, full notes and navigation regression

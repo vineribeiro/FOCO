@@ -56,7 +56,7 @@ export const ExerciseIllustration:React.FC<Props>=({
   const markBroken=(url:string)=>{setSourceFailed(prev=>prev.includes(url)?prev:[...prev,url]);setPose(0);};
   return <div ref={rootRef} data-foco-media-source="repdb"
     data-foco-media-status={activeUrl?'image':loading?'loading':'unavailable'}
-    aria-label={'Ilustração do exercício '+exerciseName}
+    role="group" aria-label={'Ilustração do exercício '+exerciseName}
     className={'foco-repdb-media relative isolate overflow-hidden rounded-2xl '+(compact?'foco-repdb-media-compact ':'')+className}>
     {activeUrl ? <>
       <img key={activeUrl} src={activeUrl} alt={exerciseName+' — '+(pose===1?'posição final':'posição inicial')}

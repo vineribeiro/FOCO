@@ -78,6 +78,23 @@ export interface WorkoutPlan {
   exercises?: WorkoutExercise[];
 }
 
+export interface AiGenerationInfo {
+  provider: 'gemini' | 'groq';
+  model: string;
+  cache_hit: boolean;
+  calls: number;
+}
+
+export interface GeneratedWorkoutProposal {
+  name: string;
+  goal: string;
+  weekly_frequency: number;
+  explanation: string;
+  exercises: WorkoutExercise[];
+  training_science?: TrainingScienceReport;
+  ai_generation?: AiGenerationInfo;
+}
+
 export interface ExerciseSet {
   id?: string;
   session_id?: string;
