@@ -4,7 +4,7 @@ import {
   buildScientificWorkoutGuidance, assessTrainingSafety, normalizeScienceExercises,
   minimumRestSeconds, classifyMovement, auditScientificWorkout as auditStrictWorkout, sciencePlanSummary,
   sessionExerciseRange, estimateTrainingSessionMinutes,
-  buildCompactWorkoutGuidance,
+  buildCompactWorkoutGuidance, completeMissingCalfPriority,
 } from "../supabase/functions/foco-api/trainingScience.mjs";
 import { FOCO_LAB_SOURCE, FOCO_LAB_KNOWLEDGE, focoLabGuidance, focoLabEvidenceRefs }
   from "../supabase/functions/foco-api/focoLabKnowledge.mjs";
@@ -205,4 +205,61 @@ const recoveryWeek=sevenStrength.filter(e=>e.training_day!=='domingo').concat(
   exercise('Caminhada na esteira','Cardio','domingo',1,45));
 assert.equal(auditStrictWorkout(recoveryWeek,{...countOptions,days:allWeek,requireRecoveryDay:true}).ok,true);
 assert.match(sciencePlanSummary({frequency:2},auditedFour).split_rationale,/Distribuição verificada/);
+
+// Regression: a balanced draft can still omit a requested calf priority. Keep
+// the rejection strict, but complete a safe draft locally before another AI call.
+const calfOptions = { days: ['segunda','quinta'], experience: 'intermediario', sessionMinutes:45,
+  priorityMuscles:['Panturrilhas','Quadríceps','Costas'], requireBalancedCoverage:true, requireRecoveryDay:true };
+const withoutCalves = calfOptions.days.flatMap(day => [
+  exercise('Supino reto com barra','Peitoral',day,2), exercise('Remada curvada com barra','Costas',day,2),
+  exercise('Agachamento livre com barra','Quadríceps',day,2), exercise('Stiff com barra','Posteriores',day,2),
+]);
+const missingCalves = auditStrictWorkout(withoutCalves,calfOptions);
+assert.equal(missingCalves.ok,false);
+assert.equal(missingCalves.code,'MISSING_PRIORITY_COVERAGE');
+assert.deepEqual(missingCalves.missingPriorities,['Panturrilhas']);
+const originalCalfDraft = structuredClone(withoutCalves);
+const calfCompleted = completeMissingCalfPriority(withoutCalves,calfOptions,{equipmentAvailable:'Academia completa'});
+assert.equal(calfCompleted.audit.ok,true);
+assert.equal(calfCompleted.audit.directSetsByGroup.Panturrilhas,2);
+assert.equal(calfCompleted.exercises.length,withoutCalves.length+1);
+assert.equal(calfCompleted.exercises.at(-1).suggested_load_kg,0);
+assert.deepEqual(withoutCalves,originalCalfDraft,'Completing a draft never mutates its input');
+assert.equal(completeMissingCalfPriority(calfCompleted.exercises,calfOptions,{equipmentAvailable:'Academia completa'}).adjustment,null,
+  'A validated proposal is not changed or given duplicate calf work');
+for (const [equipmentAvailable, expected] of [['Halteres','Panturrilha em pé com halteres'],
+  ['Peso corporal','Panturrilha em pé unilateral']]) {
+  const out=completeMissingCalfPriority(withoutCalves,calfOptions,{equipmentAvailable});
+  assert.equal(out.audit.ok,true);assert.equal(out.adjustment.exercise,expected);
+}
+for (const constraints of [['Dor no tornozelo'],['Evitar exercícios unilaterais'],['Sem dor no peito; dor na panturrilha']]) {
+  assert.equal(completeMissingCalfPriority(withoutCalves,calfOptions,{equipmentAvailable:'Academia completa',constraints}).audit.ok,false,
+    'Free-text restrictions cannot be bypassed by local completion');
+}
+for (const equipmentAvailable of ['', 'Elásticos', 'Academia completa sem máquina de panturrilha']) {
+  assert.equal(completeMissingCalfPriority(withoutCalves,calfOptions,{equipmentAvailable}).audit.ok,false);
+}
+const fullDays = withoutCalves.flatMap(ex => ex.exercise_name==='Agachamento livre com barra'
+  ? [ex,exercise('Cadeira extensora','Quadríceps',ex.training_day,2)] : [ex]);
+const substitutionOptions={...calfOptions,priorityMuscles:['Panturrilhas']};
+const calfRedistributed=completeMissingCalfPriority(fullDays,substitutionOptions,{equipmentAvailable:'Academia completa'});
+assert.equal(calfRedistributed.audit.ok,true);
+assert.equal(calfRedistributed.exercises.length,fullDays.length,'Full sessions must not exceed the exercise-count band');
+assert.equal(calfRedistributed.adjustment.replaced,'Cadeira extensora');
+assert.ok(calfRedistributed.audit.directSetsByGroup.Quadríceps>0,'Redistribution must preserve major-group coverage');
+assert.equal(completeMissingCalfPriority(fullDays,calfOptions,{equipmentAvailable:'Academia completa'}).audit.ok,false,
+  'Do not take a selected priority below its starting hint to cover another');
+const fullWithoutRedundancy=withoutCalves.flatMap(ex => ex.exercise_name==='Stiff com barra'
+  ? [ex,exercise('Abdominal crunch','Core',ex.training_day,1,60)] : [ex]);
+assert.equal(completeMissingCalfPriority(fullWithoutRedundancy,substitutionOptions,{equipmentAvailable:'Academia completa'}).audit.ok,false,
+  'Do not remove compounds/core or overflow a full session to hide missing coverage');
+const overdosed=withoutCalves.map(ex=>({...ex,sets:6}));
+assert.equal(completeMissingCalfPriority(overdosed,calfOptions,{equipmentAvailable:'Academia completa'}).adjustment,null,
+  'Local completion never patches a plan rejected for a different safety/dose rule');
+const highRiskOptions={...calfOptions,highRisk:true};
+const highRiskCalves=completeMissingCalfPriority(normalizeScienceExercises(withoutCalves,highRiskOptions),highRiskOptions,
+  {equipmentAvailable:'Academia completa'});
+assert.equal(highRiskCalves.adjustment,null,'High-risk proposals are never expanded automatically');
+assert.match(buildCompactWorkoutGuidance({priorityMuscles:['Panturrilhas']}),/reserve uma vaga/);
+assert.match(buildScientificWorkoutGuidance({priorityMuscles:'Panturrilhas'}),/Reserve uma vaga/);
 console.log("FOCO study 2026: divisions, progression, time bands, safety, official catalog and indirect-volume assertions OK.");

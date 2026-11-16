@@ -5,7 +5,7 @@ import { createAiRouter, AiError } from "./aiRouter.mjs";
 import { catalogExercise } from "./trainingCatalog.mjs";
 import {
   SCIENCE_ENGINE_VERSION, assessTrainingSafety, buildCompactWorkoutGuidance,
-  normalizeScienceExercises, auditScientificWorkout, sciencePlanSummary, sessionExerciseRange,
+  normalizeScienceExercises, auditScientificWorkout, sciencePlanSummary, sessionExerciseRange, completeMissingCalfPriority,
 } from "./trainingScience.mjs";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "https://buoefcnkpdrhevzbakze.supabase.co";
@@ -578,19 +578,29 @@ function verifiedTrainingProposal(result: any, days: string[], experience: strin
   }
   // O estudo 2026 não estabelece 48 h como regra universal; auditar a dose, não apenas o calendário.
   // Corrigir tempos de descanso insuficientes e preservar RIR nas notas (coluna já existente no banco).
-  const scientificExercises = normalizeScienceExercises(exercises, {
+  let scientificExercises = normalizeScienceExercises(exercises, {
     experience, highRisk: studyContext.highRisk === true,
   });
-  const audit = auditScientificWorkout(scientificExercises, {
+  const auditOptions = {
     days, experience, sessionMinutes: studyContext.sessionMinutes,
     highRisk: studyContext.highRisk === true,
     priorityMuscles: studyContext.priorityMuscles || [],
     requireBalancedCoverage: studyContext.requireBalancedCoverage === true,
     requireRecoveryDay: true,
-  });
+  };
+  const completion = studyContext.completePriorities === true
+    ? completeMissingCalfPriority(scientificExercises, auditOptions, {
+      equipmentAvailable: studyContext.equipmentAvailable || '', constraints: studyContext.constraints || [],
+    }) : { exercises: scientificExercises, audit: auditScientificWorkout(scientificExercises, auditOptions), adjustment: null };
+  const { audit, adjustment } = completion;
   if (!audit.ok) throw new ApiError(502, "A proposta de IA não passou na revisão de volume/recuperação: " + audit.issue + " Tente gerar novamente.");
+  scientificExercises = completion.exercises;
+  const adjustmentNote = adjustment ? "\nAjuste automático do FOCO para cobrir Panturrilhas: " + adjustment.exercise +
+    " em " + adjustment.day + " (" + adjustment.sets + " séries)" +
+    (adjustment.replaced ? ", no lugar de " + adjustment.replaced : "") + ". Confira a proposta antes de aprovar." : '';
   return {
     ...result, weekly_frequency: days.length, exercises: scientificExercises,
+    explanation: text(result.explanation, 1000) + adjustmentNote,
     training_science: sciencePlanSummary({
       frequency: days.length, experience, highRisk: studyContext.highRisk === true,
     }, audit),
@@ -627,7 +637,8 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
   if (method === "OPTIONS") return new Response(null, { status: 204, headers: { ...CORS, ...(ORIGINS.includes(origin) ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" } : {}) } });
   if (method === "GET" && path === "/api/system/status") return response({
-    app: "FOCO", version: "2.4.1", build: "2026-11-16-ai-routing", science_engine: SCIENCE_ENGINE_VERSION,
+    app: "FOCO", version: "3.0.1", build: "2026-11-16-priority-coverage", science_engine: SCIENCE_ENGINE_VERSION,
+    ai_priority_completion: "validated-calf-coverage",
     ai_status: GROQ_KEY || GEMINI_KEY ? "configured" : "missing_key",
     ai_provider: aiRouter.status().primary,
     ai_primary_provider: aiRouter.status().primary, ai_fallback_provider: aiRouter.status().fallback,
@@ -1025,6 +1036,9 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
       validate: (generated: any) => verifiedTrainingProposal(generated, days, experience, {
         sessionMinutes, highRisk: safetyContext.highRisk, priorityMuscles,
         requireBalancedCoverage: true,
+        completePriorities: true,
+        equipmentAvailable: text(b.equipment_available || (a.equipment_available || []).join(', '), 500),
+        constraints: [restrictions, suppliedRestrictions, text(a.exercise_preferences, 500)],
       }),
     });
     const moreSafety = safetyContext.warnings.length ? "\nAtenção: " + safetyContext.warnings.join(" ") : "";

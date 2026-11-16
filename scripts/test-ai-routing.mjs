@@ -121,12 +121,12 @@ await check('media availability repair uses one alternative Gemini model and no 
 
 // Execute actual authenticated Edge routes with synthetic Auth/DB/providers.
 const compiled=stripTypeScriptTypes(source.slice(source.indexOf('const SUPABASE_URL')),{mode:'transform'});
-function app(fetchImpl) {
+function app(fetchImpl, anamnesis = {}) {
   let handler;
   globalThis.Deno={env:{get:key=>({GEMINI_API_KEY:'synthetic-gemini-secret',GROQ_API_KEY:'synthetic-groq-secret'}[key]||'')},serve:fn=>{handler=fn;}};
   const user={id:'11111111-1111-4111-8111-111111111111'};
   const data={profiles:{id:user.id,experience_level:'intermediario'},anamneses:{weekly_frequency:2,session_minutes:45,
-    preferred_days:['segunda','quinta'],priority_muscles:['Quadríceps'],equipment_available:['Academia completa'],consent_health_data:false},workout_sessions:[]};
+    preferred_days:['segunda','quinta'],priority_muscles:['Quadríceps'],equipment_available:['Academia completa'],consent_health_data:false,...anamnesis},workout_sessions:[]};
   const db={auth:{getUser:async()=>({data:{user},error:null})},from:table=>{
     const result={data:data[table]??[],error:null};
     const chain={select:()=>chain,eq:()=>chain,order:()=>chain,limit:()=>Promise.resolve(result),maybeSingle:()=>Promise.resolve(result)};return chain;
@@ -149,6 +149,45 @@ await check('HTTP route keeps leg coverage even when the selected priority is ba
     ? exercise(e.muscle_group==='Quadríceps'?'Rosca direta com barra reta':'Tríceps pulley com corda',e.training_day):e)};
   let calls=0;const handler=app(async()=>{calls++;return gemini(upper);});
   const response=await handler(request({focus_muscles:'Costas'}));assert.equal(response.status,502);assert.equal(calls,2);assert.match((await response.json()).error,/Quadríceps/);
+});
+await check('HTTP quota fallback completes an omitted calf priority within two calls and caches only the audited plan',async()=>{
+  const withoutCalves={...plan,exercises:plan.exercises.map(e=>e.exercise_name==='Mesa flexora'?exercise('Stiff com barra',e.training_day):e)};
+  let calls=0;const handler=app(async url=>{calls++;return url.includes('generativelanguage')
+    ? new Response('{}',{status:429,headers:{'retry-after':'60'}}):groq(withoutCalves);});
+  const body={focus_muscles:'Costas, Quadríceps, Panturrilhas'};
+  const response=await handler(request(body));const result=await response.json();
+  assert.equal(response.status,200,JSON.stringify(result));assert.equal(calls,2);
+  assert.equal(result.ai_generation.provider,'groq');assert.equal(result.ai_generation.calls,2);
+  assert.equal(result.training_science.direct_sets_by_group.Panturrilhas,2);
+  assert.match(result.explanation,/Ajuste automático do FOCO para cobrir Panturrilhas/);
+  assert.ok(science.auditScientificWorkout(result.exercises,{days:['segunda','quinta'],experience:'intermediario',sessionMinutes:45,
+    priorityMuscles:['Panturrilhas','Costas','Quadríceps'],requireBalancedCoverage:true,requireRecoveryDay:true}).ok);
+  const cached=await (await handler(request(body))).json();
+  assert.equal(calls,2);assert.equal(cached.ai_generation.cache_hit,true);assert.equal(cached.ai_generation.calls,0);
+  assert.equal(cached.training_science.direct_sets_by_group.Panturrilhas,2);
+});
+await check('HTTP calf completion respects constraints and a full session without hiding missing coverage',async()=>{
+  const withoutCalves={...plan,exercises:plan.exercises.map(e=>e.exercise_name==='Mesa flexora'?exercise('Stiff com barra',e.training_day):e)};
+  const full={...plan,exercises:plan.exercises.flatMap(e=>e.exercise_name==='Mesa flexora'
+    ? [exercise('Stiff com barra',e.training_day),exercise('Abdominal crunch',e.training_day)]:[e])};
+  for (const scenario of [
+    { proposal:full },
+    { proposal:withoutCalves, body:{restrictions:'Evitar flexão plantar.'} },
+    { proposal:withoutCalves, anamnesis:{exercise_preferences:'Evitar treino de panturrilha em pé.'} },
+    { proposal:withoutCalves, body:{equipment_available:'Elásticos'} },
+  ]) {
+    let calls=0;const handler=app(async()=>{calls++;return gemini(scenario.proposal);},scenario.anamnesis);
+    const response=await handler(request({focus_muscles:'Panturrilhas',...scenario.body}));assert.equal(response.status,502);assert.equal(calls,2);
+    assert.match((await response.json()).error,/Panturrilhas/);
+  }
+});
+await check('HTTP primary completes calf coverage in one call instead of spending a second generation',async()=>{
+  const withoutCalves={...plan,exercises:plan.exercises.map(e=>e.exercise_name==='Mesa flexora'?exercise('Stiff com barra',e.training_day):e)};
+  let calls=0;const handler=app(async()=>{calls++;return gemini(withoutCalves);});
+  const response=await handler(request({focus_muscles:'Panturrilhas',equipment_available:'Peso corporal'}));
+  const result=await response.json();assert.equal(response.status,200,JSON.stringify(result));assert.equal(calls,1);
+  assert.equal(result.ai_generation.calls,1);assert.equal(result.ai_generation.provider,'gemini');
+  assert.ok(result.exercises.some(e=>e.exercise_name==='Panturrilha em pé unilateral'));
 });
 await check('Auth and affirmative clinical symptoms block before any upstream request',async()=>{
   let calls=0;const handler=app(async()=>{calls++;return gemini(plan);});

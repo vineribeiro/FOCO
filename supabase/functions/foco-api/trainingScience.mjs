@@ -109,6 +109,8 @@ export function buildScientificWorkoutGuidance({
     "6. RIR alvo inicial de " + level.rir[0] + "-" + level.rir[1] + " (repetições em reserva). Não exigir falha muscular em todas as séries; jamais inventar cargas em kg sem histórico.",
     "7. Pausas: multiarticulares pesados 120-240 s (força muito pesada pode precisar 180-300 s); remadas/puxadas/desenvolvimento 120-180 s; isolamentos 60-120 s. Ajuste a execução e a recuperação do indivíduo.",
     "8. Prioridades musculares: " + (priority || "equilíbrio global") + ". Aumente prioridade redistribuindo volume semanal; não apenas somando séries indiscriminadamente.",
+    !highRisk && priority.split(',').some(value => muscleKey(value) === "Panturrilhas")
+      ? "Reserve uma vaga semanal para flexão plantar dedicada às panturrilhas, com equipamento compatível. Agachamento, leg press de quadríceps e terra não substituem esse exercício prioritário. Confira a cobertura antes de responder." : "",
     "9. Ordem: primeiro o padrão/exercício prioritário, depois auxiliares; combine estímulos diretos/indiretos sem sobrecarga repetida. Recuperação aproximada de 48 h entre sessões exigentes do mesmo grupo é referência, não regra universal. Não repetir o mesmo grupo com dose alta em dias seguidos.",
     "10. Progressão dupla: primeiro ampliar repetições dentro da faixa; ao atingir limite superior em todas as séries com técnica, amplitude e RIR compatíveis, aumentar a carga gradualmente e reiniciar na faixa inferior. Deload somente se fadiga/desempenho justificarem.",
     "11. Técnica: movimentos controlados, amplitude individual sem dor, ajustes de banco/apoios. Supino punhos alinhados, agachamento pés estáveis, leg press pelve apoiada, remada tronco estabilizado, terra romeno dobradiça de quadril, desenvolvimento ombro tolerado.",
@@ -140,6 +142,8 @@ export function buildCompactWorkoutGuidance({
     "RIR " + (highRisk ? "3-4" : level.rir.join("-")) + "; sem falha frequente ou teste de 1RM. Carga inicial zero, ajuste presencial.",
     "Pausas: compostos pesados 120-240s (força até300); puxadas/remadas/desenvolvimento120-180; isolamentos60-120; core45-75.",
     "Prioridades escolhidas: " + (priorityMuscles.join(', ') || 'equilíbrio global') + ". Redistribuir volume, sem omitir prioridades nem os grandes grupos (peitoral, costas, quadríceps, posteriores/glúteos) ao longo da semana. Alternar padrões empurrar/puxar/joelho/quadril/core; evitar dose alta do mesmo grupo em dias seguidos. Cerca de48h é referência, não regra universal.",
+    !highRisk && priorityMuscles.some(value => muscleKey(value) === "Panturrilhas")
+      ? "PANTURRILHAS são prioridade obrigatória: reserve uma vaga na semana para Panturrilha em pé na máquina, Panturrilha em pé com halteres ou Panturrilha em pé unilateral, conforme equipamento/restrições. Redistribua um isolamento redundante se necessário; agachamento, leg press de quadríceps e terra não cobrem essa prioridade." : "",
     "Primeiro prioridade, depois auxiliares. Técnica controlada, amplitude tolerada sem dor. Progressão dupla por repetições, depois carga gradual; deload só com fadiga/desempenho que justifique. Reavaliar após15dias.",
     "Respeitar equipamentos, limitações consentidas e recuperação. Não priorizar por gênero/IMC, inventar diagnóstico/capacidade/RIR histórico, prescrever dieta ou prometer perda de gordura por repetições. Bioimpedância é estimativa.",
     highRisk ? "ALTO RISCO: até2 séries/exercício, RIR3-4, sem carga máxima/falha/aumento abrupto/sessão extenuante; revisão médica e profissional indispensável." : historyAvailable ? "Use somente o desempenho registrado para personalizar; não inventar esforço/técnica anteriores." : "Sem histórico, nunca inventar carga ou esforço anterior.",
@@ -328,7 +332,8 @@ export function auditScientificWorkout(exercises, {
   const missingPriorities = [...new Set(priorityMuscles.map(muscleKey))]
     .filter(group => group !== 'Geral' && !supported.has(group));
   if (!highRisk && missingPriorities.length) return {
-    ok: false, issue: 'Prioridades sem nenhum trabalho direto ou indireto: ' + missingPriorities.join(', ') + '. Redistribua a ficha respeitando tempo e volume.',
+    ok: false, code: 'MISSING_PRIORITY_COVERAGE', missingPriorities,
+    issue: 'Prioridades sem nenhum trabalho direto ou indireto: ' + missingPriorities.join(', ') + '. Redistribua a ficha respeitando tempo e volume.',
   };
   if (!highRisk && requireBalancedCoverage && uncoveredMajorGroups.length) return {
     ok: false, issue: 'A ficha solicitada como corpo inteiro omitiu: ' + uncoveredMajorGroups.join(', ') + '. Corrija a cobertura semanal.',
@@ -360,6 +365,70 @@ export function auditScientificWorkout(exercises, {
     warnings: [...new Set(warnings)].slice(0, 4),
     guidance: "Faixas e tetos são pontos de partida; ajustar conforme desempenho, esforço e recuperação.",
   };
+}
+
+/**
+ * Limited completion of a NEW draft, never a saved/manual plan. Calves can be
+ * omitted after the router spends its second call on an availability fallback.
+ * Try a small, catalogued accessory without another inference call. Accept it
+ * only if the entire proposal passes the SAME audit. Unknown restrictions,
+ * equipment or another validation failure leave the proposal rejected.
+ */
+export function completeMissingCalfPriority(exercises, options = {}, {
+  equipmentAvailable = "", constraints = /** @type {string[]} */ ([]),
+} = {}) {
+  const originalAudit = auditScientificWorkout(exercises, options);
+  const unchanged = { exercises, audit: originalAudit, adjustment: null };
+  if (originalAudit.ok || originalAudit.code !== 'MISSING_PRIORITY_COVERAGE'
+      || originalAudit.missingPriorities.length !== 1
+      || originalAudit.missingPriorities[0] !== 'Panturrilhas' || options.highRisk) return unchanged;
+  // Match only complete, explicitly benign answers; never infer that free-text
+  // preferences or a negated symptom mean every other constraint is absent.
+  const benign = /^(sem (restricoes|lesoes|dores|limitacoes)|nenhuma|nenhum|nao tenho (restricoes|lesoes|dores|limitacoes))$/;
+  if (constraints.some(value => NORMALIZE(value) && !benign.test(NORMALIZE(value)))) return unchanged;
+  const equipment = NORMALIZE(equipmentAvailable);
+  if (!equipment || /\b(sem|nao|exceto|evitar|apenas|somente)\b/.test(equipment)) return unchanged;
+  const name = /\bacademia completa\b/.test(equipment) ? 'Panturrilha em pé na máquina'
+    : /\bhalteres\b/.test(equipment) ? 'Panturrilha em pé com halteres'
+    : /\b(peso corporal|treino em casa)\b/.test(equipment) ? 'Panturrilha em pé unilateral' : null;
+  if (!name || !catalogExercise(name)?.primary.includes('Panturrilhas')) return unchanged;
+  const level = EXPERIENCE[options.experience] || EXPERIENCE.iniciante;
+  const priorities = new Set((options.priorityMuscles || []).map(muscleKey));
+  const lower = new Set(['Quadríceps', 'Posteriores', 'Glúteos']);
+  const range = sessionExerciseRange(options.sessionMinutes);
+  const days = options.days || WEEKDAYS.slice(0, 3);
+  for (const day of days) {
+    const daily = exercises.filter(ex => ex.training_day === day);
+    if (!daily.some(ex => catalogExercise(ex.exercise_name)?.primary.some(group => lower.has(group)))) continue;
+    const [addition] = normalizeScienceExercises([{
+      exercise_name: name, muscle_group: 'Panturrilhas', training_day: day,
+      sets: 2, reps_min: 10, reps_max: 15, rest_seconds: 60,
+      suggested_load_kg: 0, notes: 'Suba e desça de forma controlada, com amplitude confortável e apoio estável.',
+    }], options);
+    const replacements = daily.filter(ex => {
+      if (classifyMovement(ex.exercise_name, ex.muscle_group) !== 'accessory') return false;
+      const group = muscleKey(ex.muscle_group);
+      if (!daily.some(other => other !== ex && muscleKey(other.muscle_group) === group)) return false;
+      // Preserve every group's remaining direct work. A selected priority must
+      // also retain its starting volume hint; it cannot pay for another omission.
+      const remainingSets = exercises.filter(other => other !== ex && muscleKey(other.muscle_group) === group)
+        .reduce((total, other) => total + Number(other.sets), 0);
+      return remainingSets > 0 && (!priorities.has(group) || remainingSets >= level.weeklyHint[0]);
+    }).sort((a, b) => Number(priorities.has(muscleKey(a.muscle_group))) - Number(priorities.has(muscleKey(b.muscle_group))));
+    // Prefer redistribution over increasing the total workload. Each candidate
+    // must satisfy duration, exercise counts, all priorities and recovery.
+    for (const replaced of [...replacements, ...(daily.length < range.max ? [null] : [])]) {
+      const proposed = replaced ? { ...addition, sets: Math.min(addition.sets, Number(replaced.sets)) } : addition;
+      const candidate = replaced ? exercises.map(ex => ex === replaced ? proposed : ex) : [...exercises, proposed];
+      if (candidate.length > 75) continue;
+      const audit = auditScientificWorkout(candidate, options);
+      if (audit.ok) return {
+        exercises: candidate, audit,
+        adjustment: { day, exercise: name, sets: proposed.sets, replaced: replaced?.exercise_name || null },
+      };
+    }
+  }
+  return unchanged;
 }
 
 export function sciencePlanSummary({ frequency = 3, experience = "iniciante", highRisk = false } = {}, audit) {
