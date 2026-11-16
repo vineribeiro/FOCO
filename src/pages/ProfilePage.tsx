@@ -82,6 +82,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
 
   const initials=(fullName||user?.full_name||'F').trim().split(/\s+/).slice(0,2).map(part=>part[0]?.toUpperCase()).join('');
   const routes=[
+    {label:'Personal FOCO',icon:Activity,tab:'personal'},
     {label:'Meus dados corporais',icon:ScanLine,tab:'arquivos'},
     {label:'Metas e objetivos',icon:Target,tab:'objetivos'},
     {label:'Preferências de treino',icon:SlidersHorizontal,tab:'anamnese'},

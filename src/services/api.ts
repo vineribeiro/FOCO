@@ -1,3 +1,4 @@
+import { clearAllPersonalConversations } from '../utils/personalConversation';
 import {
   User,
   Profile,
@@ -66,6 +67,7 @@ export function setStoredToken(token: string, refreshToken?: string, expiresAt?:
 }
 
 export function removeStoredToken(): void {
+  clearAllPersonalConversations();
   tokenRefresh?.controller.abort();
   tokenRefresh = null;
   try {
@@ -843,8 +845,8 @@ export const api = {
     }
   },
 
-  // Authenticated generation with bounded Gemini/Groq routing.
-  async generateAiWorkout(payload: {
+  // Automatic rules preview: this operation never invokes an AI provider.
+  async generateAutomaticWorkout(payload: {
     goal: string;
     experience_level: string;
     weekly_frequency: number;
@@ -852,13 +854,19 @@ export const api = {
     equipment_available?: string;
     restrictions?: string;
     include_body_metrics?: boolean;
+    session_minutes?: number;
     medical_clearance_confirmed?: boolean;
     force_refresh?: boolean;
   }) {
-    return await request<GeneratedWorkoutProposal>('/api/ai/generate-workout', {
+    return await request<GeneratedWorkoutProposal>('/api/workouts/preview', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
+  },
+
+  async askPersonal(payload:{message:string;history:{role:'user'|'assistant';content:string}[];share_training_context:boolean}) {
+    return request<{answer:string;references:{id:string;page:number;rule:string}[];ai_generation?:{provider:'gemini'|'groq'}}>(
+      '/api/ai/personal',{method:'POST',body:JSON.stringify(payload)});
   },
 
   async extractWorkoutFromSheet(payload: {

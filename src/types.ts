@@ -93,6 +93,7 @@ export interface GeneratedWorkoutProposal {
   exercises: WorkoutExercise[];
   training_science?: TrainingScienceReport;
   ai_generation?: AiGenerationInfo;
+  generation?: {method: 'rules'; version:string; ai_calls:0};
 }
 
 export interface ExerciseSet {

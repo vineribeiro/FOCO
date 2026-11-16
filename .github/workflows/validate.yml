@@ -28,7 +28,11 @@ jobs:
         run: npm run build
       - name: Scientific workout generation rules and safety regression
         run: npm run test:training-science
-      - name: Bounded Gemini and Groq routing, priority validation and proposal drafts
+      - name: Deterministic training and isolated Personal conversation
+        run: |
+          npm run test:automatic-planner
+          npm run test:personal-cache
+      - name: Bounded AI routing, Personal and proposal drafts
         run: npm run test:ai-routing
       - name: OKOK assessment trends and data-integrity regression
         run: npm run test:okok
@@ -99,7 +103,7 @@ jobs:
       - name: Browser accessibility, failure recovery and preserved auth forms
         run: npm run test:audit-browser
       - name: AI provider labels, proposal restoration and explicit regeneration
-        run: node scripts/test-ai-workout-browser.mjs
+        run: npm run test:rules-personal-browser
       - name: Lost response, reload and storage-quota session regression
         run: npm run test:session-retry-browser
       - name: Responsive layout, full notes and navigation regression

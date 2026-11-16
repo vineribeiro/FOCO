@@ -33,7 +33,10 @@
     "test:backend-transactions": "node scripts/test-backend-transactions.mjs",
     "test:audit-browser": "node scripts/test-audit-browser.mjs",
     "test:session-retry-browser": "node scripts/test-session-retry-browser.mjs",
-    "test:layout-regression": "node scripts/test-layout-regression.mjs"
+    "test:layout-regression": "node scripts/test-layout-regression.mjs",
+    "test:automatic-planner": "node scripts/test-automatic-planner.mjs",
+    "test:personal-cache": "tsx scripts/test-personal-conversation.ts",
+    "test:rules-personal-browser": "node scripts/test-rules-personal-browser.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

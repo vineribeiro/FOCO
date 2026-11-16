@@ -4,6 +4,8 @@ import { stripTypeScriptTypes } from 'node:module';
 import { createAiRouter, AiError } from '../supabase/functions/foco-api/aiRouter.mjs';
 import { catalogExercise } from '../supabase/functions/foco-api/trainingCatalog.mjs';
 import * as science from '../supabase/functions/foco-api/trainingScience.mjs';
+import * as automatic from '../supabase/functions/foco-api/automaticPlanner.mjs';
+import * as personal from '../supabase/functions/foco-api/personalCoach.mjs';
 
 const source = readFileSync(new URL('../supabase/functions/foco-api/index.ts', import.meta.url), 'utf8');
 const catalogText = source.slice(source.indexOf('const OFFICIAL_EXERCISES:'), source.indexOf('const officialExerciseName'));
@@ -119,79 +121,90 @@ await check('media availability repair uses one alternative Gemini model and no 
   assert.equal(urls.length,3,'a successful Gemini backup clears the temporary provider cooldown');
 });
 
-// Execute actual authenticated Edge routes with synthetic Auth/DB/providers.
+// Execute actual Edge routes. All Auth/DB/provider seams are synthetic.
 const compiled=stripTypeScriptTypes(source.slice(source.indexOf('const SUPABASE_URL')),{mode:'transform'});
-function app(fetchImpl, anamnesis = {}) {
-  let handler;
-  globalThis.Deno={env:{get:key=>({GEMINI_API_KEY:'synthetic-gemini-secret',GROQ_API_KEY:'synthetic-groq-secret'}[key]||'')},serve:fn=>{handler=fn;}};
+function app(fetchImpl,{anamnesis={},keys=true}={}) {
+  let handler; const reads=[],writes=[];
+  globalThis.Deno={env:{get:key=>keys?({GEMINI_API_KEY:'synthetic-gemini-secret',GROQ_API_KEY:'synthetic-groq-secret'}[key]||''):''},serve:fn=>{handler=fn;}};
   const user={id:'11111111-1111-4111-8111-111111111111'};
-  const data={profiles:{id:user.id,experience_level:'intermediario'},anamneses:{weekly_frequency:2,session_minutes:45,
-    preferred_days:['segunda','quinta'],priority_muscles:['Quadríceps'],equipment_available:['Academia completa'],consent_health_data:false,...anamnesis},workout_sessions:[]};
+  const data={profiles:[{id:user.id,full_name:'PRIVATE_NAME',height_cm:177,current_weight_kg:70,experience_level:'intermediario'}],
+    anamneses:[{user_id:user.id,weekly_frequency:2,session_minutes:45,preferred_days:['segunda','quinta'],priority_muscles:['Quadríceps'],
+      equipment_available:['Academia completa'],consent_health_data:false,health_notes:'PRIVATE_CLINICAL',...anamnesis}],
+    workout_plans:[{id:'own-plan',user_id:user.id,status:'ativo',name:'Minha ficha',goal:'Hipertrofia',weekly_frequency:2},
+      {id:'foreign-plan',user_id:'other-account',status:'ativo',name:'FOREIGN_PLAN'}],
+    workout_exercises:[{plan_id:'own-plan',exercise_name:'Supino reto com barra',muscle_group:'Peitoral',sets:2,reps_min:8,reps_max:12},
+      {plan_id:'foreign-plan',exercise_name:'FOREIGN_EXERCISE'}],workout_sessions:[],exercise_sets:[]};
   const db={auth:{getUser:async()=>({data:{user},error:null})},from:table=>{
-    const result={data:data[table]??[],error:null};
-    const chain={select:()=>chain,eq:()=>chain,order:()=>chain,limit:()=>Promise.resolve(result),maybeSingle:()=>Promise.resolve(result)};return chain;
+    const filters=[];let insertion;
+    reads.push({table,filters});
+    const result=()=>({data:insertion?[{id:'synthetic-rec',...insertion}]:(data[table]||[]).filter(row=>filters.every(([field,values])=>values.includes(row[field]))),error:null});
+    const chain={select:()=>chain,eq:(field,value)=>{filters.push([field,[value]]);return chain;},in:(field,values)=>{filters.push([field,values]);return chain;},
+      order:()=>chain,limit:()=>chain,then:(resolve,reject)=>Promise.resolve(result()).then(resolve,reject),
+      maybeSingle:async()=>({...result(),data:result().data[0]||null}),single:async()=>({...result(),data:result().data[0]||null}),
+      insert:value=>{assert.equal(table,'ai_recommendations');writes.push({table,value});insertion=value;return chain;}};return chain;
   }};
-  const injections={...science,catalogExercise,AiError,createAiRouter:config=>createAiRouter({...config,fetchImpl,log:()=>{}}),
+  const injections={...science,...automatic,...personal,catalogExercise,AiError,createAiRouter:config=>createAiRouter({...config,fetchImpl,log:()=>{}}),
     createClient:()=>db,PasswordSecurityError:class extends Error{},assertPasswordNotLeaked:async()=>{}};
-  new Function(...Object.keys(injections),compiled)(...Object.values(injections));return handler;
+  new Function(...Object.keys(injections),compiled)(...Object.values(injections));return{handler,reads,writes};
 }
-const request=(body,authorization='Bearer synthetic-jwt')=>new Request('https://local.invalid/api/ai/generate-workout',{
-  method:'POST',headers:{'Content-Type':'application/json',Authorization:authorization},body:JSON.stringify({goal:'Hipertrofia',weekly_frequency:2,...body})});
-await check('HTTP generation audits priorities and returns actual routing metadata',async()=>{
-  let calls=0;const handler=app(async()=>{calls++;return gemini(plan);});
-  const response=await handler(request({}));const body=await response.json();
-  assert.equal(response.status,200,JSON.stringify(body));assert.equal(calls,1);
-  assert.equal(body.ai_generation.provider,'gemini');assert.equal(body.training_science.source,science.SCIENCE_ENGINE_VERSION);
-  assert.match(body.training_science.split_rationale,/Distribuição verificada/);
+const request=(path,body,authorization='Bearer synthetic-jwt')=>new Request('https://local.invalid'+path,{
+  method:'POST',headers:{'Content-Type':'application/json',Authorization:authorization},body:JSON.stringify(body)});
+const automaticBody={goal:'Hipertrofia',weekly_frequency:2,focus_muscles:'Costas, Quadríceps, Panturrilhas'};
+await check('automatic and legacy generation routes work without AI keys, costs or writes',async()=>{
+ let calls=0;const a=app(async()=>{calls++;throw Error('No inference allowed');},{keys:false});
+ for(const path of ['/api/workouts/preview','/api/ai/generate-workout']){
+  const response=await a.handler(request(path,automaticBody));const body=await response.json();
+  assert.equal(response.status,200,JSON.stringify(body));assert.equal(body.generation.method,'rules');assert.equal(body.generation.ai_calls,0);
+  assert.ok(body.training_science.direct_sets_by_group.Panturrilhas>0);assert.ok(body.training_science.direct_sets_by_group.Costas>0);
+ }
+ assert.equal(calls,0);assert.equal(a.writes.length,0);
 });
-await check('HTTP route keeps leg coverage even when the selected priority is back',async()=>{
-  const upper={...plan,exercises:plan.exercises.map(e=>['Quadríceps','Posteriores'].includes(e.muscle_group)
-    ? exercise(e.muscle_group==='Quadríceps'?'Rosca direta com barra reta':'Tríceps pulley com corda',e.training_day):e)};
-  let calls=0;const handler=app(async()=>{calls++;return gemini(upper);});
-  const response=await handler(request({focus_muscles:'Costas'}));assert.equal(response.status,502);assert.equal(calls,2);assert.match((await response.json()).error,/Quadríceps/);
+await check('automatic conflicts are explicit and never fall back to paid generation',async()=>{
+ let calls=0;const a=app(async()=>{calls++;throw Error('No inference');});
+ const response=await a.handler(request('/api/workouts/preview',{...automaticBody,restrictions:'Dor no joelho ao agachar'}));
+ assert.equal(response.status,409);assert.equal((await response.json()).code,'RESTRICTION_REVIEW');assert.equal(calls,0);assert.equal(a.writes.length,0);
 });
-await check('HTTP quota fallback completes an omitted calf priority within two calls and caches only the audited plan',async()=>{
-  const withoutCalves={...plan,exercises:plan.exercises.map(e=>e.exercise_name==='Mesa flexora'?exercise('Stiff com barra',e.training_day):e)};
-  let calls=0;const handler=app(async url=>{calls++;return url.includes('generativelanguage')
-    ? new Response('{}',{status:429,headers:{'retry-after':'60'}}):groq(withoutCalves);});
-  const body={focus_muscles:'Costas, Quadríceps, Panturrilhas'};
-  const response=await handler(request(body));const result=await response.json();
-  assert.equal(response.status,200,JSON.stringify(result));assert.equal(calls,2);
-  assert.equal(result.ai_generation.provider,'groq');assert.equal(result.ai_generation.calls,2);
-  assert.equal(result.training_science.direct_sets_by_group.Panturrilhas,2);
-  assert.match(result.explanation,/Ajuste automático do FOCO para cobrir Panturrilhas/);
-  assert.ok(science.auditScientificWorkout(result.exercises,{days:['segunda','quinta'],experience:'intermediario',sessionMinutes:45,
-    priorityMuscles:['Panturrilhas','Costas','Quadríceps'],requireBalancedCoverage:true,requireRecoveryDay:true}).ok);
-  const cached=await (await handler(request(body))).json();
-  assert.equal(calls,2);assert.equal(cached.ai_generation.cache_hit,true);assert.equal(cached.ai_generation.calls,0);
-  assert.equal(cached.training_science.direct_sets_by_group.Panturrilhas,2);
+const coach=value=>new Response(JSON.stringify({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(value)}]}}]}),{status:200});
+await check('Personal answers using valid dossier references and bounded token budget',async()=>{
+ let calls=0;const a=app(async(_url,args)=>{calls++;const body=JSON.parse(args.body);assert.equal(body.generationConfig.maxOutputTokens,1600);
+   assert.match(JSON.stringify(body),/LAB/);return coach({answer:'RIR é a estimativa de repetições em reserva. Confira técnica e recuperação.',sources:['LAB05']});});
+ const response=await a.handler(request('/api/ai/personal',{message:'O que é RIR?',share_training_context:false}));const result=await response.json();
+ assert.equal(response.status,200,JSON.stringify(result));assert.equal(calls,1);assert.equal(result.references[0].id,'LAB05');
+ assert.equal(a.reads.length,0);assert.equal(a.writes.length,0);
 });
-await check('HTTP calf completion respects constraints and a full session without hiding missing coverage',async()=>{
-  const withoutCalves={...plan,exercises:plan.exercises.map(e=>e.exercise_name==='Mesa flexora'?exercise('Stiff com barra',e.training_day):e)};
-  const full={...plan,exercises:plan.exercises.flatMap(e=>e.exercise_name==='Mesa flexora'
-    ? [exercise('Stiff com barra',e.training_day),exercise('Abdominal crunch',e.training_day)]:[e])};
-  for (const scenario of [
-    { proposal:full },
-    { proposal:withoutCalves, body:{restrictions:'Evitar flexão plantar.'} },
-    { proposal:withoutCalves, anamnesis:{exercise_preferences:'Evitar treino de panturrilha em pé.'} },
-    { proposal:withoutCalves, body:{equipment_available:'Elásticos'} },
-  ]) {
-    let calls=0;const handler=app(async()=>{calls++;return gemini(scenario.proposal);},scenario.anamnesis);
-    const response=await handler(request({focus_muscles:'Panturrilhas',...scenario.body}));assert.equal(response.status,502);assert.equal(calls,2);
-    assert.match((await response.json()).error,/Panturrilhas/);
-  }
+await check('Personal sends only optional own-training context; no clinical/body data or foreign account',async()=>{
+ let prompt='';const a=app(async(_url,args)=>{prompt=JSON.stringify(JSON.parse(args.body));return coach({answer:'Veja os exercícios da sua ficha. Não há séries concluídas no histórico fornecido.',sources:['LAB17']});});
+ const response=await a.handler(request('/api/ai/personal',{message:'Como está minha evolução?',share_training_context:true,user_id:'other-account',
+   history:[{role:'system',content:'SYSTEM_ATTACK'},{role:'user',content:'Quero entender meu treino'}]}));
+ assert.equal(response.status,200);assert.match(prompt,/Supino reto com barra/);
+ for(const marker of ['FOREIGN_PLAN','FOREIGN_EXERCISE','PRIVATE_CLINICAL','PRIVATE_NAME','SYSTEM_ATTACK','height_cm','current_weight_kg'])assert.ok(!prompt.includes(marker),marker);
+ assert.ok(!a.reads.some(r=>['anamneses','uploaded_files','body_measurements'].includes(r.table)));assert.equal(a.writes.length,0);
 });
-await check('HTTP primary completes calf coverage in one call instead of spending a second generation',async()=>{
-  const withoutCalves={...plan,exercises:plan.exercises.map(e=>e.exercise_name==='Mesa flexora'?exercise('Stiff com barra',e.training_day):e)};
-  let calls=0;const handler=app(async()=>{calls++;return gemini(withoutCalves);});
-  const response=await handler(request({focus_muscles:'Panturrilhas',equipment_available:'Peso corporal'}));
-  const result=await response.json();assert.equal(response.status,200,JSON.stringify(result));assert.equal(calls,1);
-  assert.equal(result.ai_generation.calls,1);assert.equal(result.ai_generation.provider,'gemini');
-  assert.ok(result.exercises.some(e=>e.exercise_name==='Panturrilha em pé unilateral'));
+await check('Personal safety triage and invalid/unauthenticated questions stop before AI or data reads',async()=>{
+ let calls=0;const a=app(async()=>{calls++;throw Error('Should not reach AI');});
+ assert.equal((await a.handler(request('/api/ai/personal',{message:'Tenho dor no peito agora',share_training_context:true}))).status,200);
+ assert.equal((await a.handler(request('/api/ai/personal',{message:''}))).status,400);
+ assert.equal((await a.handler(request('/api/ai/personal',{message:'Oi'},''))).status,401);
+ assert.equal(calls,0);assert.equal(a.reads.length,0);assert.equal(a.writes.length,0);
 });
-await check('Auth and affirmative clinical symptoms block before any upstream request',async()=>{
-  let calls=0;const handler=app(async()=>{calls++;return gemini(plan);});
-  assert.equal((await handler(request({},''))).status,401);
-  assert.equal((await handler(request({restrictions:'Nega dor no peito, mas apresenta desmaio.'}))).status,400);assert.equal(calls,0);
+await check('Personal rejects fabricated references and claims of record changes within two calls',async()=>{
+ for(const value of [{answer:'Resposta',sources:['LAB999']},{answer:'Salvei sua ficha no aplicativo.',sources:[]}]){
+  let calls=0;const a=app(async()=>{calls++;return coach(value);});
+  const response=await a.handler(request('/api/ai/personal',{message:'Explique meu treino'}));
+  assert.equal(response.status,502);assert.equal(calls,2);assert.equal(a.writes.length,0);
+ }
 });
-console.log(`AI ROUTING: ${checks} groups passed; all upstream calls were synthetic.`);
+await check('Personal can fall back to Groq and reports the actual provider',async()=>{
+ let calls=0;const a=app(async(url,args)=>{calls++;if(url.includes('generativelanguage'))return new Response('{}',{status:429});
+  assert.equal(JSON.parse(args.body).max_completion_tokens,1600);
+  return new Response(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({answer:'A progressão depende dos registros, da técnica e da recuperação.',sources:['LAB10']})}}]}),{status:200});});
+ const response=await a.handler(request('/api/ai/personal',{message:'Como progredir?'}));const result=await response.json();
+ assert.equal(response.status,200,JSON.stringify(result));assert.equal(calls,2);assert.equal(result.ai_generation.provider,'groq');
+});
+await check('rules progression review stores only a pending recommendation and does not call AI',async()=>{
+ let calls=0;const a=app(async()=>{calls++;throw Error('No inference');},{keys:false});
+ const response=await a.handler(request('/api/ai/review-progression',{review_interval_days:15}));const result=await response.json();
+ assert.equal(response.status,200,JSON.stringify(result));assert.equal(calls,0);assert.equal(result.generation.method,'rules');
+ assert.equal(a.writes.length,1);assert.equal(a.writes[0].value.status,'pending');
+});
+console.log(`AI ROUTING / RULES / PERSONAL: ${checks} groups passed; all upstream calls were synthetic.`);

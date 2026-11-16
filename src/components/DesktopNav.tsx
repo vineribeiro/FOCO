@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, FileUp, House, ScanLine, Settings2, Sparkles, Target, UserRound, Activity } from 'lucide-react';
+import { MessageCircle, BookOpen, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, FileUp, House, ScanLine, Settings2, Sparkles, Target, UserRound, Activity } from 'lucide-react';
 import { FocoV6Lockup } from './FocoV6UI';
 
 interface DesktopNavProps {
@@ -14,6 +14,7 @@ const primary = [
   { id: 'perfil', label: 'Perfil', icon: UserRound },
 ];
 const tools = [
+  { id: 'personal', label: 'Personal FOCO', icon: MessageCircle },
   { id: 'treinos', label: 'Minhas fichas', icon: ClipboardList },
   { id: 'cardio', label: 'Cardio livre', icon: Activity },
   { id: 'novo-treino', label: 'Nova ficha', icon: Sparkles },

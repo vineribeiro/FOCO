@@ -72,7 +72,7 @@ const responses = {
 };
 const viewports=[{name:'mobile-320',width:320,height:720},{name:'mobile-390',width:390,height:844},
  {name:'tablet-768',width:768,height:1024},{name:'desktop-1440',width:1440,height:900}];
-const views=['dashboard','detalhes','sessao','treinos','progresso','perfil','anamnese','arquivos','novo-treino','biblioteca'];
+const views=['dashboard','detalhes','sessao','treinos','progresso','perfil','anamnese','arquivos','novo-treino','biblioteca','personal','revisao'];
 const browser=await chromium.launch({headless:true,
  ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{})});
 let failed=false; const results=[];
