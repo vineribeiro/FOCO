@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {readPersonalConversation,savePersonalConversation,clearPersonalConversation,clearAllPersonalConversations} from '../src/utils/personalConversation';
+import {validatePersonalAnswer} from '../supabase/functions/foco-api/personalCoach.mjs';
+const data:Record<string,string>={};
+const storage=new Proxy({getItem:(key:string)=>data[key]??null,setItem:(key:string,value:string)=>{data[key]=value;},removeItem:(key:string)=>{delete data[key];}},
+ {ownKeys:()=>Reflect.ownKeys(data),getOwnPropertyDescriptor:()=>({configurable:true,enumerable:true})});
+Object.defineProperty(globalThis,'sessionStorage',{configurable:true,value:storage});
+const messages=[{role:'user' as const,content:'Como progredir?'},{role:'assistant' as const,content:'Confira as repetições, técnica e recuperação.'}];
+assert.equal(savePersonalConversation('account-a',messages),true);
+assert.deepEqual(readPersonalConversation('account-a').map(({role,content})=>({role,content})),messages);
+assert.deepEqual(readPersonalConversation('account-b'),[]);
+const key=Object.keys(data)[0];const value=JSON.parse(data[key]);data[key]=JSON.stringify({...value,expiresAt:Date.now()-1});assert.deepEqual(readPersonalConversation('account-a'),[]);
+data[key]=JSON.stringify({...value,expiresAt:null});assert.deepEqual(readPersonalConversation('account-a'),[]);
+savePersonalConversation('account-a',messages);clearPersonalConversation('account-a');assert.deepEqual(readPersonalConversation('account-a'),[]);
+savePersonalConversation('account-a',messages);savePersonalConversation('account-b',messages);clearAllPersonalConversations();assert.deepEqual(Object.keys(data),[]);
+assert.doesNotThrow(()=>validatePersonalAnswer({answer:'Eu não alterei sua ficha; posso explicar como revisar.',sources:['LAB17']}));
+assert.throws(()=>validatePersonalAnswer({answer:'Salvei sua sessão no app.',sources:[]}));
+Object.defineProperty(globalThis,'sessionStorage',{value:{getItem:()=>{throw Error('blocked')},setItem:()=>{throw Error('full')},removeItem:()=>{throw Error('blocked')}}});
+assert.equal(savePersonalConversation('account-a',messages),false);assert.deepEqual(readPersonalConversation('account-a'),[]);
+console.log('PERSONAL CACHE: account isolation, expiry, logout cleanup, storage failure and answer integrity passed.');

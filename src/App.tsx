@@ -18,6 +18,7 @@ import { CardioPage } from './pages/CardioPage';
 import { ComplementaryPage } from './pages/ComplementaryPage';
 import { AiLabPage } from './pages/AiLabPage';
 import { WorkoutsPage } from './pages/WorkoutsPage';
+import { PersonalCoachPage } from './pages/PersonalCoachPage';
 import { NewWorkoutPage } from './pages/NewWorkoutPage';
 import { AnamnesisPage } from './pages/AnamnesisPage';
 import { ProgressionReviewPage } from './pages/ProgressionReviewPage';
@@ -40,7 +41,7 @@ const VIEW_TITLES: Record<string, string> = {
   historico: 'Histórico de treinos', treinos: 'Minhas fichas', 'novo-treino': 'Nova ficha',
   anamnese: 'Anamnese', revisao: 'Revisão de progressão', arquivos: 'Fichas e avaliações',
   objetivos: 'Metas e objetivos', atlas: 'Atlas muscular', cardio: 'Cardio livre',
-  complementares: 'Exercícios complementares', 'em-casa': 'FOCO em Casa',
+  personal: 'Personal FOCO', complementares: 'Exercícios complementares', 'em-casa': 'FOCO em Casa',
 };
 
 function MainApp() {
@@ -168,6 +169,8 @@ function MainApp() {
         return <HistoryPage setActiveTab={setActiveTab} />;
       case 'treinos':
         return <WorkoutsPage setActiveTab={setActiveTab} />;
+      case 'personal':
+        return <PersonalCoachPage key={user?.id} setActiveTab={setActiveTab} />;
       case 'novo-treino':
         return <NewWorkoutPage setActiveTab={setActiveTab} />;
       case 'anamnese':

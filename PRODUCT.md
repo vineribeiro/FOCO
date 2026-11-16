@@ -46,3 +46,6 @@ Contas isoladas; operações de salvar/recuperar verídicas; nenhuma perda de tr
 
 ## Fonte dos princípios de design
 `DESIGN.md`, `docs/FOCO_PRO_2027.md`, `docs/FOCO_SKILLS_DECISIONS.md`.
+
+## Montagem e Personal — decisão de 16/11/2026
+A ficha automática e sua revisão usam o motor de regras FOCO, sem inferência. A IA atua no Personal FOCO para perguntas e explicações baseadas no dossiê e, por escolha do usuário, em sua ficha e registros. O chat não executa alterações na conta. Propostas precisam de aprovação explícita; condições incompatíveis precisam de uma explicação acionável.

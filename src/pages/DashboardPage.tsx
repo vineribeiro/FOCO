@@ -1,6 +1,6 @@
 import { conciseWorkoutName } from '../utils/workoutTitles';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowUpRight, BookOpen, Settings2, ArrowRight, Dumbbell, House, ScanLine, Sparkles } from 'lucide-react';
+import { MessageCircle, Activity, ArrowUpRight, BookOpen, Settings2, ArrowRight, Dumbbell, House, ScanLine, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { savePreferredTrainingDay } from '../data/exerciseLibrary';
@@ -95,6 +95,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
           <div className="foco-home-hero-art" aria-hidden="true"><img src={V6_IMAGES.athlete} alt="" loading="eager" decoding="async"/></div>
           {target>0&&!loading&&!loadError&&<div className="foco-goal-ring" style={{'--goal-progress':weekProgress+'%'} as React.CSSProperties} aria-label={weekProgress+'% da meta semanal de treinos concluída'}><span>{weekProgress}%<small>da semana</small></span></div>}
         </section>
+        <button type="button" className="foco-home-personal" onClick={()=>setActiveTab('personal')}><MessageCircle size={23}/><span><strong>Personal FOCO</strong><small>Tire suas dúvidas sobre treino</small></span><ArrowUpRight size={20}/></button>
         <section className="foco-home-plans" aria-labelledby="foco-home-plan-title">
           <div className="foco-section-heading"><h2 id="foco-home-plan-title">Seu plano</h2><button type="button" onClick={()=>setActiveTab('treinos')} aria-label="Ver todos os treinos"><ArrowUpRight size={22}/></button></div>
           <FocoV6Segment label="Filtrar treinos por região" options={[{value:'all',label:'Todos'},{value:'lower',label:'Inferiores'},{value:'upper',label:'Superiores'}]} value={planFilter} onChange={setPlanFilter}/>

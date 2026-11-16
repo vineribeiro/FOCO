@@ -1,6 +1,6 @@
 import type { GeneratedWorkoutProposal } from '../types';
 
-const prefix = 'foco:ai-workout-draft:v1:';
+const prefix = 'foco:workout-draft:rules-v1:';
 const ttl = 10 * 60_000;
 export interface AiWorkoutFormDraft {
   goal: string;
@@ -9,6 +9,7 @@ export interface AiWorkoutFormDraft {
   focus: string[];
   equipment: string;
   includeBodyMetrics: boolean;
+  sessionMinutes?:number;
   medicalClearanceConfirmed: boolean;
 }
 export function readAiWorkoutFormDraft(userId: string, baseFingerprint: string): AiWorkoutFormDraft | null {

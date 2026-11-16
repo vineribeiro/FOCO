@@ -1,8 +1,8 @@
-/* FOCO offline worker — release 2026-11-16-v30-pastel.
+/* FOCO offline worker — release 2026-11-16-v31-rules-personal.
  * Network-first navigation with a strict revalidation of the application shell.
  * Old caches are removed on activation; user data/local auth is never altered.
  */
-const CACHE_NAME = 'foco-shell-20261116-v30-pastel';
+const CACHE_NAME = 'foco-shell-20261116-v31-rules-personal';
 const APP_ROOT = '/FOCO/';
 const APP_ASSETS = [
   APP_ROOT,

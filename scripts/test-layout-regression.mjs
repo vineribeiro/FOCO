@@ -299,7 +299,7 @@ async function manualAndProfile(page, view, viewport) {
     assert.ok(box.y >= 0 && box.y + box.height < viewport.height, 'The first manual field must be visible after selecting its mode');
     await name.fill('Rascunho manual preservado');
     await page.getByLabel('Nome', { exact: true }).first().fill('Exercício manual preservado');
-    await page.getByRole('button', { name: 'Gerar com IA', exact: true }).click();
+    await page.getByRole('button', { name: 'Montagem automática', exact: true }).click();
     assert.equal(await goal.inputValue(), 'Força Pura & Cargas', 'Switching modes must preserve the AI fields');
     await page.getByRole('button', { name: 'Montador Manual', exact: true }).click();
     assert.equal(await name.inputValue(), 'Rascunho manual preservado', 'Switching modes must preserve the manual plan name');

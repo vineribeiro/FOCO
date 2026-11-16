@@ -29,11 +29,11 @@ interface NewWorkoutProps {
 
 export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   const { profile } = useAuth();
-  const [tab, setTab] = useState<'ai' | 'manual'>('ai');
+  const [tab, setTab] = useState<'automatic' | 'manual'>('automatic');
   const [pendingAiField, setPendingAiField] = useState<string | null>(null);
 
   useEffect(() => {
-    if (tab !== 'ai' || !pendingAiField) return;
+    if (tab !== 'automatic' || !pendingAiField) return;
     // Run after the selected form is mounted, including a mode switch.
     const field = document.getElementById(pendingAiField);
     if (field) {
@@ -43,13 +43,14 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   }, [tab, pendingAiField]);
 
   const focusAiField = (fieldId: string) => {
-    setTab('ai');
+    setTab('automatic');
     setPendingAiField(fieldId);
   };
 
   // AI Generator state
   const [aiGoal, setAiGoal] = useState('Hipertrofia Máxima');
   const [aiFrequency, setAiFrequency] = useState(4);
+  const [sessionMinutes,setSessionMinutes]=useState(60);
   const [aiExperience, setAiExperience] = useState(profile?.experience_level || 'intermediario');
   const [aiFocus, setAiFocus] = useState<string[]>([]);
   const muscleOptions = [
@@ -63,7 +64,6 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
     current.includes(muscle) ? current.filter((item) => item !== muscle) : [...current, muscle]);
   const [aiEquipment, setAiEquipment] = useState('Academia Completa com Polias e Barras');
   const [aiRestrictions, setAiRestrictions] = useState('');
-  const [includeBodyMetrics, setIncludeBodyMetrics] = useState(false);
   const [medicalClearanceConfirmed, setMedicalClearanceConfirmed] = useState(false);
   const requiresClinicalReview = /rabdomi[oó]l|rhabdomyol|miopatia/i.test(aiRestrictions);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -79,11 +79,11 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
     goal: aiGoal, experience_level: aiExperience, weekly_frequency: Number(aiFrequency),
     focus_muscles: aiFocus.length ? aiFocus.join(', ') : 'Corpo inteiro com distribuição equilibrada',
     equipment_available: aiEquipment, restrictions: aiRestrictions,
-    include_body_metrics: includeBodyMetrics,
+    session_minutes: sessionMinutes,
     medical_clearance_confirmed: requiresClinicalReview && medicalClearanceConfirmed,
-  }), [aiGoal, aiExperience, aiFrequency, aiFocus, aiEquipment, aiRestrictions, includeBodyMetrics, requiresClinicalReview, medicalClearanceConfirmed]);
+  }), [aiGoal, aiExperience, aiFrequency, aiFocus, aiEquipment, aiRestrictions, sessionMinutes, requiresClinicalReview, medicalClearanceConfirmed]);
   const draftContext = JSON.stringify({ payload: aiPayload, anamnesisRevision,
-    profileRevision: profile?.updated_at, engine: '2026.4' });
+    profileRevision: profile?.updated_at, engine: 'foco-rules-2026.1' });
   useEffect(() => {
     let active = true;
     requestVersion.current++;
@@ -136,6 +136,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       setAnamnesisRevision(anamnesis.updated_at || '');
       setAiGoal(anamnesis.primary_goal || 'Hipertrofia Máxima');
       setAiFrequency(anamnesis.weekly_frequency || 4);
+      setSessionMinutes(anamnesis.session_minutes||60);
       setAiFocus(anamnesis.priority_muscles || []);
       setAiEquipment(anamnesis.equipment_available?.join(', ') || 'Academia Completa com Polias e Barras');
       const experience = anamnesis.training_age === 'Nunca treinei' || anamnesis.training_age === 'Menos de 6 meses'
@@ -156,9 +157,10 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         if (!active) return;
         const previous = readAiWorkoutFormDraft(profile.id, baseFingerprint);
         if (previous) {
+          setSessionMinutes(previous.sessionMinutes||anamnesis.session_minutes||60);
           setAiGoal(previous.goal); setAiFrequency(previous.frequency); setAiExperience(previous.experience);
           setAiFocus(previous.focus); setAiEquipment(previous.equipment);
-          setIncludeBodyMetrics(previous.includeBodyMetrics); setMedicalClearanceConfirmed(previous.medicalClearanceConfirmed);
+          setMedicalClearanceConfirmed(previous.medicalClearanceConfirmed);
         }
       }
     }).catch(() => {
@@ -174,7 +176,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
     const version = requestVersion.current;
 
     try {
-      const result = await api.generateAiWorkout({ ...aiPayload, force_refresh: !!generatedPlan });
+      const result = await api.generateAutomaticWorkout({ ...aiPayload, force_refresh: !!generatedPlan });
       if (version !== requestVersion.current) return;
       setGeneratedPlan(result);
       setDraftRestored(false);
@@ -183,7 +185,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
           profileRevision: profile.updated_at, healthContext: aiRestrictions }));
         saveAiWorkoutDraft(profile.id, draftFingerprint, result, { baseFingerprint, form: {
           goal: aiGoal, frequency: Number(aiFrequency), experience: aiExperience, focus: aiFocus,
-          equipment: aiEquipment, includeBodyMetrics, medicalClearanceConfirmed,
+          equipment: aiEquipment, includeBodyMetrics:false, medicalClearanceConfirmed, sessionMinutes,
         } });
       }
     } catch (err: any) {
@@ -284,11 +286,11 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   return (
     <div className="foco-v4-page space-y-5 text-white">
       <header className="space-y-2">
-        <p className="foco-v4-eyebrow">{tab === 'ai' ? 'FOCO IA · PERSONALIZAÇÃO' : 'FOCO · MONTADOR MANUAL'}</p>
+        <p className="foco-v4-eyebrow">{tab === 'automatic' ? 'MÉTODO FOCO · PERSONALIZAÇÃO' : 'FOCO · MONTADOR MANUAL'}</p>
         <h1 className="foco-v4-heading"><span className="font-normal text-neutral-400">Nova</span> ficha</h1>
         <p className="foco-v4-muted max-w-2xl">
-          {tab === 'ai'
-            ? 'Seu plano é personalizado com base no objetivo, nível, dias disponíveis e, quando autorizado, nos dados da avaliação OKOK.'
+          {tab === 'automatic'
+            ? 'Monte sua ficha por regras, sem consumir créditos de IA. Revise a proposta antes de ativar.'
             : 'Defina o nome, a frequência e os exercícios da sua ficha. Você mantém o controle de cada ajuste.'}
         </p>
       </header>
@@ -297,16 +299,16 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       <div role="group" aria-label="Modo de criação da ficha" className="flex w-full rounded-2xl border border-white/10 bg-[#171717] p-1 sm:w-fit">
         <button
           type="button"
-          aria-pressed={tab === 'ai'}
-          onClick={() => { setTab('ai'); setPendingAiField(null); setErrorMsg(null); }}
+          aria-pressed={tab === 'automatic'}
+          onClick={() => { setTab('automatic'); setPendingAiField(null); setErrorMsg(null); }}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-            tab === 'ai'
+            tab === 'automatic'
               ? 'bg-white text-black shadow-sm'
               : 'text-neutral-400 hover:text-white'
           }`}
         >
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Gerar com IA</span>
+          <span>Montagem automática</span>
         </button>
 
         <button
@@ -324,16 +326,16 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         </button>
       </div>
 
-      {tab === 'ai' && (
+      {tab === 'automatic' && (
         <>
       <section className="foco-v4-panel foco-v4-surface-photo relative overflow-hidden p-6 sm:p-8" aria-labelledby="foco-ai-intro">
         <div className="relative z-10 max-w-[460px] space-y-3">
-          <div className="flex items-center gap-2 text-[10px] font-bold tracking-[.2em] text-neutral-300"><Sparkles className="h-4 w-4" /> FOCO IA</div>
+          <div className="flex items-center gap-2 text-[10px] font-bold tracking-[.2em] text-neutral-300"><Sparkles className="h-4 w-4" /> MÉTODO FOCO</div>
           <h2 id="foco-ai-intro" className="text-[25px] font-semibold leading-tight tracking-[-.04em] sm:text-[32px]">
             Treino recomendado para <strong className="font-extrabold">{aiGoal.toLowerCase()}</strong>
-            {includeBodyMetrics ? <> com apoio da <strong className="font-extrabold">avaliação OKOK.</strong></> : '.'}
+            .
           </h2>
-          <p className="max-w-sm text-[12px] leading-relaxed text-neutral-300">A IA propõe o treino com base no seu perfil. Você revisa tudo antes de salvar.</p>
+          <p className="max-w-sm text-[12px] leading-relaxed text-neutral-300">Modelos e regras do seu estudo montam a semana com dias, duração, equipamentos e prioridades. Você revisa antes de salvar.</p>
         </div>
       </section>
 
@@ -368,7 +370,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       )}
 
       {/* TAB 1: AI GENERATOR */}
-      {tab === 'ai' && (
+      {tab === 'automatic' && (
         <div className="space-y-6">
           <form onSubmit={handleGenerateAi} className="foco-v4-panel space-y-5 p-4 sm:p-6">
             <div className="flex items-center justify-between gap-3">
@@ -379,7 +381,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               <Sliders className="h-5 w-5 text-neutral-400" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              
+
               <div>
                 <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide" htmlFor="foco-ai-goal">
                   Objetivo Principal
@@ -407,14 +409,15 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                   onChange={(e) => setAiFrequency(Number(e.target.value))}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
                 >
-                  <option value={2}>2 dias por semana (corpo inteiro ou superior/inferior)</option>
-                  <option value={3}>3 dias por semana (Divisão ABC)</option>
+                  <option value={2}>2 dias por semana (corpo inteiro A/B)</option>
+                  <option value={3}>3 dias por semana (corpo inteiro A/B/C)</option>
                   <option value={4}>4 dias por semana (Divisão ABCD / Upper-Lower)</option>
-                  <option value={5}>5 dias por semana (Divisão ABCDE)</option>
-                  <option value={6}>6 dias por semana (Divisão Push-Pull-Legs 2x)</option>
+                  <option value={5}>5 dias por semana (superior / inferior + corpo inteiro)</option>
+                  <option value={6}>6 dias por semana (Empurrar / puxar / pernas)</option><option value={7}>7 dias disponíveis (inclui recuperação ativa)</option>
                 </select>
               </div>
 
+              <div><label className="block text-xs font-bold text-neutral-300 mb-1.5" htmlFor="foco-automatic-minutes">Tempo por sessão (min)</label><input id="foco-automatic-minutes" type="number" min="20" max="180" step="5" value={sessionMinutes} onChange={e=>setSessionMinutes(Number(e.target.value))} className="w-full px-3.5 py-2.5 border" required/></div>
               <div>
                 <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide" htmlFor="foco-ai-experience">
                   Nível de Experiência
@@ -443,7 +446,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       <span className={`block text-[10px] mt-1 ${selected ? 'text-neutral-700' : 'text-neutral-500'}`}>{muscle.detail}</span>
                     </button>); })}
                 </div>
-                <p className="text-[10px] text-neutral-500 mt-2">Glúteos, quadríceps, posteriores e panturrilhas são opções de foco para quem quer priorizar inferiores. Sem seleção, a IA distribui o treino de forma equilibrada.</p>
+                <p className="text-[10px] text-neutral-500 mt-2">Glúteos, quadríceps, posteriores e panturrilhas são opções de foco para quem quer priorizar inferiores. Sem seleção, o motor distribui o treino de forma equilibrada.</p>
               </div>
 
               <div>
@@ -473,43 +476,16 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
             </div>
 
-            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/15 bg-[#090909] p-4 text-sm">
-              <input type="checkbox" checked={includeBodyMetrics} onChange={(e) => setIncludeBodyMetrics(e.target.checked)}
-                className="mt-1 h-4 w-4 accent-white" />
-              <span>
-                <strong className="block text-white">Usar meu último relatório corporal (OKOK ou similar)</strong>
-                <span className="mt-1 block text-xs leading-relaxed text-neutral-400">
-                  Opcional. Autoriza o FOCO a considerar apenas as métricas extraídas de um relatório já enviado.
-                  A bioimpedância é uma estimativa, não um diagnóstico, e não substitui os teus objetivos, a anamnese ou a recuperação.
-                </span>
-              </span>
-            </label>
-            {requiresClinicalReview && (
-              <div className="rounded-2xl border border-white/30 bg-white/[.05] p-4">
-                <div className="flex items-start gap-3">
-                  <HeartPulse className="mt-0.5 h-5 w-5 shrink-0 text-white" />
-                  <div>
-                    <strong className="text-sm">Revisão médica e profissional necessária</strong>
-                    <p className="mt-1 text-xs leading-relaxed text-neutral-300">
-                      O relato inclui uma possível condição muscular relevante. O FOCO só pode preparar uma proposta educativa conservadora; ela não substitui sua liberação individual e a revisão por profissional habilitado.
-                    </p>
-                    <label className="mt-3 flex cursor-pointer items-start gap-2.5 text-xs leading-relaxed">
-                      <input type="checkbox" className="mt-0.5 h-4 w-4 shrink-0 accent-white"
-                        checked={medicalClearanceConfirmed} onChange={(event) => setMedicalClearanceConfirmed(event.target.checked)} />
-                      <span>Confirmo que recebi liberação médica para iniciar ou retomar treinamento e que a proposta será revisada antes de praticá-la.</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            )}
+
+            {requiresClinicalReview && <div className="foco-v4-panel-soft p-4 text-sm"><p>As condições informadas precisam de ajuste individual. Use a montagem manual com orientação profissional.</p><button type="button" className="foco-inline-link" onClick={()=>setTab('manual')}>Abrir montagem manual</button></div>}
             <div className="pt-2">
               <button
                 type="submit"
-                disabled={isGenerating || !anamnesisLoaded || !draftFingerprint || (requiresClinicalReview && !medicalClearanceConfirmed)}
+                disabled={isGenerating || !anamnesisLoaded || !draftFingerprint || requiresClinicalReview}
                 className="foco-v4-action !w-full disabled:opacity-50"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>{isGenerating ? 'Montando sua ficha...' : generatedPlan ? 'Gerar outra proposta' : 'Gerar ficha personalizada'}</span>
+                <span>{isGenerating ? 'Montando sua ficha...' : generatedPlan ? 'Recalcular ficha' : 'Montar ficha automática'}</span>
               </button>
             </div>
           </form>
@@ -520,7 +496,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
                 <div>
                   <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-widest">
-                    <span>{generatedPlan.ai_generation?.provider === 'groq' ? 'Proposta gerada com Groq' : generatedPlan.ai_generation?.provider === 'gemini' ? 'Proposta gerada com Gemini' : 'Proposta de treino'}</span>
+                    <span>{generatedPlan.generation?.method === 'rules' ? 'Montada por regras · sem IA' : 'Proposta de treino'}</span>
                     <span>·</span>
                     <span>{generatedPlan.weekly_frequency}x por semana</span>
                   </div>
@@ -541,7 +517,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 </button>
               </div>
 
-              {(draftRestored || generatedPlan.ai_generation?.cache_hit) && <p role="status" className="text-xs leading-relaxed text-neutral-300">Proposta recuperada sem uma nova chamada à IA. Use “Gerar outra proposta” para solicitar uma nova versão.</p>}
+              {(draftRestored || generatedPlan.ai_generation?.cache_hit) && <p role="status" className="text-xs leading-relaxed text-neutral-300">Proposta recuperada sem recalcular a ficha. Ajuste as preferências para montar uma ficha diferente.</p>}
               <p className="text-xs leading-relaxed text-neutral-400">Revise a divisão semanal e cada exercício antes de ativar. Cargas iniciais ficam em aberto até serem ajustadas individualmente.</p>
               {generatedPlan.training_science && (
                 <section className="foco-v4-panel-soft space-y-4 p-4 sm:p-5" aria-labelledby="foco-science">
@@ -604,7 +580,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-neutral-300" />{alert}
                     </p>
                   ))}
-                  <p className="text-[10px] text-neutral-500">Referência: Estudo Profissional de Musculação 2026. A IA propõe e o motor valida parâmetros educacionais; validação presencial continua importante.</p>
+                  <p className="text-[10px] text-neutral-500">Referência: Estudo Profissional de Musculação 2026. Regras versionadas montam e validam a proposta. Confira execução, progressão e recuperação com orientação individual.</p>
                 </section>
               )}
               <section className="foco-v4-panel-soft p-3 sm:p-4" aria-labelledby="foco-generated-week">
@@ -628,15 +604,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       </div>;
                     })}
                   </div>
-                ) : <p className="text-xs text-neutral-400">A IA não atribuiu dias específicos a esta proposta. Revise os exercícios abaixo antes de ativar.</p>}
+                ) : <p className="text-xs text-neutral-400">Esta proposta não contém dias atribuídos. Revise os exercícios abaixo antes de ativar.</p>}
               </section>
-              {includeBodyMetrics && <div className="foco-v4-panel-soft flex items-start gap-3 p-4">
-                <Target className="h-5 w-5 shrink-0 text-neutral-300" />
-                <div>
-                  <h4 className="text-sm font-extrabold">Avaliação OKOK na personalização</h4>
-                  <p className="mt-1 text-xs leading-relaxed text-neutral-400">Você autorizou o uso das métricas existentes nesta geração. A proposta continua sujeita à sua revisão.</p>
-                </div>
-              </div>}
               {/* Exercises Table */}
               <div className="overflow-x-auto" role="region" aria-label="Exercícios da proposta" tabIndex={0}>
                 <table className="w-full text-left text-xs">

@@ -23,7 +23,7 @@ export const BottomNavBar:React.FC<BottomNavBarProps>=({activeTab,setActiveTab})
           (id==='sessao'&&['detalhes','biblioteca','novo-treino','cardio'].includes(activeTab))||
           (id==='treinos'&&['revisao'].includes(activeTab))||
           (id==='progresso'&&['arquivos','historico'].includes(activeTab))||
-          (id==='perfil'&&['anamnese','configuracoes','objetivos'].includes(activeTab));
+          (id==='perfil'&&['anamnese','configuracoes','objetivos','personal'].includes(activeTab));
         return <button type="button" key={id} onClick={()=>route(id)} aria-current={selected?'page':undefined}
           aria-label={label} className={'foco-v4-tab '+(selected?'foco-v4-tab-active':'')}>
           <span className="foco-tab-icon"><Icon strokeWidth={selected?2.2:1.6} aria-hidden="true"/></span>

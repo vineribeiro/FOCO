@@ -30,8 +30,9 @@ await check("Edge Function responde e anuncia o motor correto", async () => {
   const data = await response.json();
   assert.equal(data.app, "FOCO");
   assert.equal(data.science_engine, "foco-training-study-2026.4");
-  assert.equal(data.build, "2026-11-16-priority-coverage");
-  assert.equal(data.ai_priority_completion, "validated-calf-coverage");
+  assert.equal(data.build, "2026-11-16-rules-personal");
+  assert.equal(data.automatic_planner, "foco-rules-2026.1");
+  assert.equal(data.personal_coach, "foco-personal-2026.1");
   assert.equal(data.database, "supabase-postgres");
   assert.equal(data.ai_status, "configured", "ao menos uma chave deve estar configurada");
   assert.equal(data.ai_routing, "automatic-fallback");
@@ -58,7 +59,7 @@ for (const pathname of ["/api/auth/me", "/api/profile", "/api/files", "/api/work
     assert.ok(body.error.length > 0);
   });
 }
-for (const pathname of ["/api/ai/generate-workout", "/api/ai/analyze-bioimpedance", "/api/ai/extract-sheet", "/api/ai/review-progression"]) {
+for (const pathname of ["/api/workouts/preview", "/api/ai/personal", "/api/ai/generate-workout", "/api/ai/analyze-bioimpedance", "/api/ai/extract-sheet", "/api/ai/review-progression"]) {
   await check("Sem JWT: POST " + pathname + " → 401", async () => {
     const response = await request(API + pathname, {
       method: "POST",
@@ -76,7 +77,7 @@ await check("GitHub Pages entrega HTML do FOCO", async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") || "", /text\/html/);
   const html = await response.text();
-  assert.match(html, /<meta name="foco-release" content="2026-11-16-v30-pastel"/, 'O site publicado precisa conter a versão 3.0, não apenas o workflow concluído');
+  assert.match(html, /<meta name="foco-release" content="2026-11-16-v31-rules-personal"/, 'O site publicado precisa conter a versão 3.1, não apenas o workflow concluído');
   assert.match(html, /<div[^>]+id=["']root["']/);
   const scripts = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/g)].map(match => match[1]);
   const asset = scripts.find(source => /(?:^|\/)assets\/[^/]+\.js(?:\?.*)?$/.test(source));

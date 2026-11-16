@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { User, Profile } from '../types';
+import { clearPersonalConversation } from '../utils/personalConversation';
 import { api, getStoredToken, removeStoredToken, isAuthenticationFailure } from '../services/api';
 
 interface AuthContextType {
@@ -135,6 +136,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    if (user?.id) clearPersonalConversation(user.id);
     restoreController.current?.abort();
     removeStoredToken();
     setIsLoading(false);

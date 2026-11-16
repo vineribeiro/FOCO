@@ -19,7 +19,6 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
   const [isRequesting, setIsRequesting] = useState(false);
 
   const [intervalDays, setIntervalDays] = useState<15 | 30>(15);
-  const [userFeedback, setUserFeedback] = useState('');
   const [actionMsg, setActionMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const loadData = async () => {
@@ -58,19 +57,19 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
     try {
       await api.reviewProgression({
         review_interval_days: intervalDays,
-        user_feedback: userFeedback,
+
       });
 
       setActionMsg({
         type: 'success',
-        text: `Ciclo de ${intervalDays} dias processado! Uma proposta com progressão foi gerada para sua avaliação.`,
+        text: `Ciclo de ${intervalDays} dias processado! Uma proposta por regras foi montada para sua avaliação.`,
       });
 
       loadData();
     } catch (err: any) {
       setActionMsg({
         type: 'error',
-        text: 'Falha ao processar ciclo com IA: ' + err.message,
+        text: 'Falha ao revisar o ciclo: ' + err.message,
       });
     } finally {
       setIsRequesting(false);
@@ -110,18 +109,19 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-32 text-white">
+    <div className="foco-v4-page foco-progression-review space-y-6 max-w-4xl mx-auto pb-32 text-white">
       
       {/* Header */}
       <div>
-        <h2 className="text-xl font-black uppercase tracking-tight text-white">Ciclos de Revisão (15 ou 30 Dias)</h2>
+        <h1>Revisão do treino</h1>
         <p className="text-xs text-neutral-400 mt-0.5">
-          O algoritmo analisa seu volume real, tonelagem levantada e tempo de descanso para recalibrar as cargas e evitar a acomodação neuromuscular.
+          Confira a distribuição proposta por regras e os registros concluídos no período. A ficha atual só muda depois da sua aprovação.
         </p>
       </div>
 
       {actionMsg && (
         <div
+          role={actionMsg.type==='error'?'alert':'status'}
           className={`p-3.5 rounded-xl text-xs flex items-center justify-between border ${
             actionMsg.type === 'success'
               ? 'bg-white/10 border-white/30 text-white'
@@ -170,22 +170,11 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
               </button>
             </div>
             <p className="text-[10px] text-neutral-500 mt-1 font-mono">
-              {intervalDays === 15 ? 'Micro-ciclo rápido de ajuste fino de carga' : 'Meso-ciclo completo de variação de estímulo'}
+              {intervalDays === 15 ? 'Revisar registros dos últimos 15 dias' : 'Revisar registros dos últimos 30 dias'}
             </p>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
-              Feedback do Aluno sobre o Período
-            </label>
-            <input
-              type="text"
-              value={userFeedback}
-              onChange={(e) => setUserFeedback(e.target.value)}
-              placeholder="Ex: Carga do supino está leve; quero mais ênfase em tríceps."
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-white"
-            />
-          </div>
+          <div className="foco-v4-panel-soft p-4 text-sm"><p>A revisão usa regras e os registros do período, sem créditos de IA.</p><button type="button" className="foco-inline-link" onClick={()=>setActiveTab('personal')}>Conversar com o Personal sobre meu treino</button></div>
         </div>
 
         <div className="pt-2 flex justify-end">
