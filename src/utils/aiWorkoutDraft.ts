@@ -2,6 +2,12 @@ import type { GeneratedWorkoutProposal } from '../types';
 
 const prefix = 'foco:workout-draft:rules-v1:';
 const ttl = 10 * 60_000;
+export const AUTOMATIC_PLANNER_VERSION = 'foco-rules-2026.2';
+export const AVAILABLE_WEEKDAYS = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
+export function defaultAvailableDays(count: number): string[] {
+  return ({2:['segunda','quinta'],3:['segunda','quarta','sexta'],4:['segunda','terca','quinta','sexta'],
+    5:AVAILABLE_WEEKDAYS.slice(0,5),6:AVAILABLE_WEEKDAYS.slice(0,6),7:AVAILABLE_WEEKDAYS}[count] || []).slice();
+}
 export interface AiWorkoutFormDraft {
   goal: string;
   frequency: number;
@@ -10,6 +16,7 @@ export interface AiWorkoutFormDraft {
   equipment: string;
   includeBodyMetrics: boolean;
   sessionMinutes?:number;
+  availableDays?:string[];
   medicalClearanceConfirmed: boolean;
 }
 export function readAiWorkoutFormDraft(userId: string, baseFingerprint: string): AiWorkoutFormDraft | null {
@@ -21,7 +28,10 @@ export function readAiWorkoutFormDraft(userId: string, baseFingerprint: string):
       || form.frequency < 2 || form.frequency > 7 || !['iniciante','intermediario','avancado'].includes(form.experience)
       || !Array.isArray(form.focus) || form.focus.some((value: unknown) => typeof value !== 'string')
       || typeof form.equipment !== 'string' || typeof form.includeBodyMetrics !== 'boolean'
-      || typeof form.medicalClearanceConfirmed !== 'boolean') return null;
+      || typeof form.medicalClearanceConfirmed !== 'boolean'
+      || form.sessionMinutes !== undefined && (!Number.isFinite(form.sessionMinutes) || form.sessionMinutes < 20 || form.sessionMinutes > 180)
+      || form.availableDays !== undefined && (!Array.isArray(form.availableDays) || form.availableDays.length !== form.frequency
+        || new Set(form.availableDays).size !== form.availableDays.length || form.availableDays.some((day: string) => !AVAILABLE_WEEKDAYS.includes(day)))) return null;
     return form;
   } catch { return null; }
 }
@@ -36,7 +46,8 @@ export function readAiWorkoutDraft(userId: string, fingerprint: string): Generat
       clearAiWorkoutDraft(userId); return null;
     }
     if (draft.fingerprint !== fingerprint || typeof draft.plan?.name !== 'string'
-      || !Array.isArray(draft.plan?.exercises) || !draft.plan.exercises.length) return null;
+      || !Array.isArray(draft.plan?.exercises) || !draft.plan.exercises.length
+      || draft.plan.generation?.version !== AUTOMATIC_PLANNER_VERSION) return null;
     return draft.plan;
   } catch { return null; }
 }

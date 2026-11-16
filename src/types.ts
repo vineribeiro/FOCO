@@ -94,6 +94,16 @@ export interface GeneratedWorkoutProposal {
   training_science?: TrainingScienceReport;
   ai_generation?: AiGenerationInfo;
   generation?: {method: 'rules'; version:string; ai_calls:0};
+  planning?: {
+    available_days: string[];
+    strength_days: string[];
+    recovery_days: string[];
+    goal_profile: string;
+    priority_mode: 'balanced' | 'focused';
+    priorities: string[];
+    recovery_policy: 'full-calendar-day';
+    reason: string;
+  };
 }
 
 export interface ExerciseSet {

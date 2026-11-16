@@ -25,7 +25,7 @@ const exercise = (name, group, day, sets = 3, rest = 120) => ({
   sets, reps_min: 8, reps_max: 12, rest_seconds: rest, suggested_load_kg: 110,
   notes: "Controle a amplitude.", rir_target: 2,
 });
-assert.match(SCIENCE_ENGINE_VERSION, /2026\.4$/);
+assert.match(SCIENCE_ENGINE_VERSION, /2026\.5$/);
 assert.equal(FOCO_LAB_SOURCE.pages, 16);
 assert.equal(FOCO_LAB_SOURCE.methodology, "revisao-narrativa-tecnica");
 assert.ok(FOCO_LAB_KNOWLEDGE.length >= 14, "O dossiê foi convertido em regras rastreáveis");

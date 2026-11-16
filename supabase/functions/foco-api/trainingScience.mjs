@@ -11,7 +11,7 @@
 import { catalogExercise } from "./trainingCatalog.mjs";
 import { focoLabGuidance, focoLabEvidenceRefs, FOCO_LAB_SOURCE } from "./focoLabKnowledge.mjs";
 
-export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.4";
+export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.5";
 const WEEKDAYS = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
 const NORMALIZE = (value) => String(value || "").normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -222,7 +222,7 @@ export function estimateTrainingSessionMinutes(exercises = []) {
 export function auditScientificWorkout(exercises, {
   days = WEEKDAYS.slice(0, 3), experience = "iniciante", sessionMinutes = 60, highRisk = false,
   enforceExerciseRange = true, priorityMuscles = [], requireBalancedCoverage = false,
-  requireRecoveryDay = false,
+  requireRecoveryDay = false, countCatalogPrimary = false,
 } = {}) {
   const config = EXPERIENCE[experience] || EXPERIENCE.iniciante;
   const volume = new Map();
@@ -255,7 +255,8 @@ export function auditScientificWorkout(exercises, {
       return { ok: false, issue: "Condição clínica relatada exige ficha inicial mais conservadora." };
     dayVolume.set(day, (dayVolume.get(day) || 0) + sets);
     if (group !== "Cardio") {
-      volume.set(group, (volume.get(group) || 0) + sets);
+      const directGroups = countCatalogPrimary ? catalog.primary : [group];
+      for (const primary of new Set(directGroups)) volume.set(primary, (volume.get(primary) || 0) + sets);
       // Indirect-series accounting is a practical estimate (0.5), not measured stimulus.
       // Data comes from FOCO's exercise catalog, not an unconstrained AI classification.
       for (const secondary of new Set(catalog.secondary)) {
