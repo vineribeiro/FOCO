@@ -75,7 +75,7 @@ async function until(predicate, message, timeout = 10000) {
   assert.fail(message);
 }
 
-async function fixturePage(viewport, { overrides = {}, mockProfileUpdate = false } = {}) {
+async function fixturePage(viewport, { overrides = {}, mockProfileUpdate = false, workoutDelayMs = 0 } = {}) {
   const context = await browser.newContext({ viewport, reducedMotion: 'reduce',
     colorScheme: 'dark', serviceWorkers: 'block' });
   contexts.add(context);
@@ -123,6 +123,7 @@ async function fixturePage(viewport, { overrides = {}, mockProfileUpdate = false
         safety.unmockedApiRequests.push(key);
         return json(404, { error: 'Missing synthetic API fixture' });
       }
+      if(workoutDelayMs && path === '/api/workouts/active')await delay(workoutDelayMs);
       return json(200, fixtures[path]);
     }
     // Same write firewall and optional verified-TLS cloud bridge as audit-browser.
@@ -380,10 +381,21 @@ try {
     await axe(page, 'extracted-review-' + viewport.width);
   });
 
+  await check('calendar-waits-for-workout-before-navigation', viewports[0], async ({page})=>{
+    await openView(page,'dashboard');
+    const button=page.locator('.foco-home-calendar [data-training-day="terca"]');
+    await button.waitFor();
+    assert.equal(await button.isDisabled(),true,'Unloaded calendar cannot redirect to onboarding');
+    await until(()=>button.isEnabled(),'Calendar becomes available after loading the plan');
+    await button.focus();await page.keyboard.press('Enter');
+    await until(()=>page.url().includes('view=detalhes'),'Loaded Tuesday must open workout details');
+  },{workoutDelayMs:1000});
+
   await check('all-seven-weekdays-filter-and-keyboard', viewports[0], async ({ page }) => {
     for (const [day, label] of days) {
       await openView(page, 'dashboard');
       const button = page.locator('.foco-home-calendar [data-training-day="' + day + '"]');
+      await until(()=>button.isEnabled(), 'Calendar must wait for the workout before accepting a weekday');
       await button.focus();
       await page.keyboard.press('Enter');
       await until(() => page.url().includes('view=detalhes'), 'Choosing ' + label + ' must open its workout detail');

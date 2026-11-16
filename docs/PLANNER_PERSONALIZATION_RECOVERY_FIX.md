@@ -69,3 +69,9 @@ proxy configurados passou, sem alteração do produto para contornar a falha.
 Pendente de validação: uso em aparelho físico e recuperação individual observada.
 Não iniciado nesta entrega: tradução integral do catálogo e substituição de imagens
 por IA, que continuam regidas pelo documento de idioma/mídia já aprovado.
+
+A primeira execução completa no GitHub identificou uma corrida preexistente no
+calendário: os dias estavam clicáveis antes de consultar a ficha e podiam abrir a
+anamnese. Agora aguardam o carregamento e ficam indisponíveis em erro; a navegação
+não desloca o foco de um controle que a pessoa já alcançou no conteúdo. O teste
+por teclado aguarda a disponibilidade real do calendário antes de selecionar.

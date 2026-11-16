@@ -117,9 +117,9 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
         </section>
       </div>
       <div className="foco-home-support">
-        <section className="foco-home-calendar foco-motion-week" aria-label="Frequência dos treinos">
+        <section className="foco-home-calendar foco-motion-week" aria-label="Frequência dos treinos" aria-busy={loading}>
           <div className="foco-section-heading"><h2>Sua semana</h2><span>{loading?'—':loadError?'Indisponível':target?Math.min(completed.length,target)+'/'+target+' treinos':'Sem meta semanal'}</span></div>
-          <FocoV6WeekStrip labels={WEEK.map((day,index)=>{const date=new Date(weekStart);date.setDate(date.getDate()+index);return {...day,date:String(date.getDate()).padStart(2,'0'),done:doneDays.has(day.day),active:today.day===day.day};})} onSelect={day=>plan?handleDetail(day):setActiveTab('anamnese')}/>
+          <FocoV6WeekStrip labels={WEEK.map((day,index)=>{const date=new Date(weekStart);date.setDate(date.getDate()+index);return {...day,date:String(date.getDate()).padStart(2,'0'),done:doneDays.has(day.day),active:today.day===day.day};})} onSelect={loading||loadError?undefined:day=>plan?handleDetail(day):setActiveTab('anamnese')}/>
           <button type="button" className="foco-inline-link" onClick={()=>setActiveTab('treinos')}>Ver semana completa <ArrowRight size={16}/></button>
         </section>
         <section className="foco-home-stat-grid" aria-label="Resumo da atividade desta semana">

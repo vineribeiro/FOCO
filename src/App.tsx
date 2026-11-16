@@ -68,8 +68,9 @@ function MainApp() {
     // Focus the stable landmark after route replacement. Native dialogs retain
     // their own focus, including onboarding dialogs opened on first render.
     const frame = window.requestAnimationFrame(() => {
-      if (!document.querySelector('dialog[open]')) {
-        document.getElementById('foco-main-content')?.focus({ preventScroll: true });
+      const main=document.getElementById('foco-main-content');
+      if (!document.querySelector('dialog[open]') && !main?.contains(document.activeElement)) {
+        main?.focus({ preventScroll: true });
       }
     });
     return () => window.cancelAnimationFrame(frame);
