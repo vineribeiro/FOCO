@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { api } from '../services/api';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { useAuth } from '../context/AuthContext';
-import { WorkoutExercise, TrainingScienceReport } from '../types';
+import { WorkoutExercise, GeneratedWorkoutProposal } from '../types';
+import { aiWorkoutFingerprint, readAiWorkoutDraft, readAiWorkoutFormDraft, saveAiWorkoutDraft, clearAiWorkoutDraft } from '../utils/aiWorkoutDraft';
 import {
   Sparkles,
   Dumbbell,
@@ -68,14 +69,35 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Generated Plan State
-  const [generatedPlan, setGeneratedPlan] = useState<{
-    name: string;
-    goal: string;
-    weekly_frequency: number;
-    explanation: string;
-    exercises: WorkoutExercise[];
-    training_science?: TrainingScienceReport;
-  } | null>(null);
+  const [generatedPlan, setGeneratedPlan] = useState<GeneratedWorkoutProposal | null>(null);
+  const [anamnesisLoaded, setAnamnesisLoaded] = useState(false);
+  const [anamnesisRevision, setAnamnesisRevision] = useState('');
+  const [draftFingerprint, setDraftFingerprint] = useState('');
+  const [draftRestored, setDraftRestored] = useState(false);
+  const requestVersion = useRef(0);
+  const aiPayload = useMemo(() => ({
+    goal: aiGoal, experience_level: aiExperience, weekly_frequency: Number(aiFrequency),
+    focus_muscles: aiFocus.length ? aiFocus.join(', ') : 'Corpo inteiro com distribuição equilibrada',
+    equipment_available: aiEquipment, restrictions: aiRestrictions,
+    include_body_metrics: includeBodyMetrics,
+    medical_clearance_confirmed: requiresClinicalReview && medicalClearanceConfirmed,
+  }), [aiGoal, aiExperience, aiFrequency, aiFocus, aiEquipment, aiRestrictions, includeBodyMetrics, requiresClinicalReview, medicalClearanceConfirmed]);
+  const draftContext = JSON.stringify({ payload: aiPayload, anamnesisRevision,
+    profileRevision: profile?.updated_at, engine: '2026.4' });
+  useEffect(() => {
+    let active = true;
+    requestVersion.current++;
+    setGeneratedPlan(null); setDraftRestored(false); setDraftFingerprint('');
+    if (profile?.id && anamnesisLoaded) {
+      void aiWorkoutFingerprint(draftContext).then(fingerprint => {
+        if (!active) return;
+        setDraftFingerprint(fingerprint);
+        const previous = readAiWorkoutDraft(profile.id, fingerprint);
+        if (previous) { setGeneratedPlan(previous); setDraftRestored(true); }
+      }).catch(() => { if (active) setDraftFingerprint('storage-unavailable'); });
+    }
+    return () => { active = false; };
+  }, [draftContext, profile?.id, anamnesisLoaded]);
 
   // Manual Builder state
   const [manualName, setManualName] = useState('');
@@ -109,8 +131,9 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
   useEffect(() => {
     let active = true;
-    api.getAnamnesis().then((anamnesis) => {
+    api.getAnamnesis().then(async (anamnesis) => {
       if (!active || !anamnesis) return;
+      setAnamnesisRevision(anamnesis.updated_at || '');
       setAiGoal(anamnesis.primary_goal || 'Hipertrofia Máxima');
       setAiFrequency(anamnesis.weekly_frequency || 4);
       setAiFocus(anamnesis.priority_muscles || []);
@@ -124,9 +147,23 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       setAiRestrictions(anamnesis.consent_health_data
         ? [anamnesis.pain_or_injuries, anamnesis.health_notes].filter(Boolean).join('; ')
         : '');
+      if (profile?.id) {
+        const baseFingerprint = await aiWorkoutFingerprint(JSON.stringify({
+          anamnesisRevision: anamnesis.updated_at || '', profileRevision: profile.updated_at,
+          healthContext: anamnesis.consent_health_data
+            ? [anamnesis.pain_or_injuries, anamnesis.health_notes].filter(Boolean).join('; ') : '',
+        }));
+        if (!active) return;
+        const previous = readAiWorkoutFormDraft(profile.id, baseFingerprint);
+        if (previous) {
+          setAiGoal(previous.goal); setAiFrequency(previous.frequency); setAiExperience(previous.experience);
+          setAiFocus(previous.focus); setAiEquipment(previous.equipment);
+          setIncludeBodyMetrics(previous.includeBodyMetrics); setMedicalClearanceConfirmed(previous.medicalClearanceConfirmed);
+        }
+      }
     }).catch(() => {
       // Keep defaults if a saved server profile is not available.
-    });
+    }).finally(() => { if (active) setAnamnesisLoaded(true); });
     return () => { active = false; };
   }, []);
 
@@ -134,25 +171,27 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
     e.preventDefault();
     setIsGenerating(true);
     setErrorMsg(null);
+    const version = requestVersion.current;
 
     try {
-      const result = await api.generateAiWorkout({
-        goal: aiGoal,
-        experience_level: aiExperience,
-        weekly_frequency: Number(aiFrequency),
-        focus_muscles: aiFocus.length ? aiFocus.join(', ') : 'Corpo inteiro com distribuição equilibrada',
-        equipment_available: aiEquipment,
-        restrictions: aiRestrictions,
-        include_body_metrics: includeBodyMetrics,
-        medical_clearance_confirmed: requiresClinicalReview && medicalClearanceConfirmed,
-      });
+      const result = await api.generateAiWorkout({ ...aiPayload, force_refresh: !!generatedPlan });
+      if (version !== requestVersion.current) return;
       setGeneratedPlan(result);
+      setDraftRestored(false);
+      if (profile?.id && draftFingerprint !== 'storage-unavailable') {
+        const baseFingerprint = await aiWorkoutFingerprint(JSON.stringify({ anamnesisRevision,
+          profileRevision: profile.updated_at, healthContext: aiRestrictions }));
+        saveAiWorkoutDraft(profile.id, draftFingerprint, result, { baseFingerprint, form: {
+          goal: aiGoal, frequency: Number(aiFrequency), experience: aiExperience, focus: aiFocus,
+          equipment: aiEquipment, includeBodyMetrics, medicalClearanceConfirmed,
+        } });
+      }
     } catch (err: any) {
       const message = err instanceof Error ? err.message : String(err || 'Erro desconhecido');
       if (/usuário não encontrado no armazenamento|usuário não encontrado|sessão não autorizada|token de autenticação/i.test(message)) {
         setErrorMsg(
           'Falha de sessão do FOCO: o servidor não encontrou a conta associada a esta sessão. ' +
-          'Isso não é um erro do Gemini. Não crie outra conta ainda; é necessário confirmar a persistência dos dados do servidor.'
+          'Entre novamente para confirmar a sessão e tente gerar a ficha.'
         );
       } else {
         setErrorMsg('Falha ao gerar treino: ' + message);
@@ -175,6 +214,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         status: 'ativo',
         exercises: generatedPlan.exercises,
       });
+      if (profile?.id) clearAiWorkoutDraft(profile.id);
       setActiveTab('treinos');
     } catch (err: any) {
       setErrorMsg('Erro ao salvar ficha no banco: ' + err.message);
@@ -465,11 +505,11 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
             <div className="pt-2">
               <button
                 type="submit"
-                disabled={isGenerating || (requiresClinicalReview && !medicalClearanceConfirmed)}
+                disabled={isGenerating || !anamnesisLoaded || !draftFingerprint || (requiresClinicalReview && !medicalClearanceConfirmed)}
                 className="foco-v4-action !w-full disabled:opacity-50"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>{isGenerating ? 'Montando sua ficha...' : 'Gerar ficha personalizada'}</span>
+                <span>{isGenerating ? 'Montando sua ficha...' : generatedPlan ? 'Gerar outra proposta' : 'Gerar ficha personalizada'}</span>
               </button>
             </div>
           </form>
@@ -480,7 +520,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
                 <div>
                   <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-widest">
-                    <span>Proposta Gerada pelo Gemini</span>
+                    <span>{generatedPlan.ai_generation?.provider === 'groq' ? 'Proposta gerada com Groq' : generatedPlan.ai_generation?.provider === 'gemini' ? 'Proposta gerada com Gemini' : 'Proposta de treino'}</span>
                     <span>·</span>
                     <span>{generatedPlan.weekly_frequency}x por semana</span>
                   </div>
@@ -501,6 +541,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 </button>
               </div>
 
+              {(draftRestored || generatedPlan.ai_generation?.cache_hit) && <p role="status" className="text-xs leading-relaxed text-neutral-300">Proposta recuperada sem uma nova chamada à IA. Use “Gerar outra proposta” para solicitar uma nova versão.</p>}
               <p className="text-xs leading-relaxed text-neutral-400">Revise a divisão semanal e cada exercício antes de ativar. Cargas iniciais ficam em aberto até serem ajustadas individualmente.</p>
               {generatedPlan.training_science && (
                 <section className="foco-v4-panel-soft space-y-4 p-4 sm:p-5" aria-labelledby="foco-science">
@@ -572,7 +613,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                   <span className="text-[11px] text-neutral-400">{generatedPlan.weekly_frequency} dias de treino</span>
                 </div>
                 {generatedPlan.exercises.some(ex => !!ex.training_day) ? (
-                  <div className="foco-v4-week">
+                  <div className="foco-v4-week" role="region" aria-label="Dias da proposta semanal" tabIndex={0}>
                     {[
                       {day:'segunda',short:'Seg'}, {day:'terca',short:'Ter'}, {day:'quarta',short:'Qua'},
                       {day:'quinta',short:'Qui'}, {day:'sexta',short:'Sex'}, {day:'sabado',short:'Sáb'}, {day:'domingo',short:'Dom'},
@@ -597,7 +638,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 </div>
               </div>}
               {/* Exercises Table */}
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto" role="region" aria-label="Exercícios da proposta" tabIndex={0}>
                 <table className="w-full text-left text-xs">
                   <thead>
                     <tr className="text-neutral-500 font-bold border-b border-white/10 uppercase text-[10px]">

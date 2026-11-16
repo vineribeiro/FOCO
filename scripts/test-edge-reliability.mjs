@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
+import { createAiRouter } from '../supabase/functions/foco-api/aiRouter.mjs';
 
 // Run the actual Edge route/helper implementations with isolated service seams.
 // Storage/Auth/RPC are in memory: no production accounts, emails or AI calls.
@@ -9,9 +10,9 @@ const compiled = stripTypeScriptTypes(source.slice(source.indexOf('const SUPABAS
 let currentDb, currentAdmin, handler;
 globalThis.Deno = { env: { get: key => key === 'SUPABASE_SERVICE_ROLE_KEY' ? 'synthetic-admin' : '' }, serve: value => { handler = value; } };
 class PasswordSecurityError extends Error { constructor(message, status) { super(message); this.status = status; } }
-const api = new Function('createClient', 'PasswordSecurityError', 'assertPasswordNotLeaked', compiled + '\nreturn {auth,dispatch,deleteOwnAccount,legacySessionRequestId,sessions};')(
+const api = new Function('createClient', 'PasswordSecurityError', 'assertPasswordNotLeaked', 'createAiRouter', compiled + '\nreturn {auth,dispatch,deleteOwnAccount,legacySessionRequestId,sessions};')(
   (_url,key) => key === 'synthetic-admin' ? currentAdmin : currentDb,
-  PasswordSecurityError, async () => {},
+  PasswordSecurityError, async () => {}, createAiRouter,
 );
 const user = { id: '11111111-1111-4111-8111-111111111111' };
 const other = '22222222-2222-4222-8222-222222222222';

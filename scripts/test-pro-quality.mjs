@@ -46,5 +46,5 @@ assert.ok(read('src/foco-21-redesign.css').includes("min-height:clamp(272px,38dv
 assert.ok(!read('src/pages/ActiveSessionPage.tsx').includes('legpress-45-foco.svg'));
 assert.ok(!read('src/pages/ActiveSessionPage.tsx').includes('supino-reto-foco.svg'));
 assert.ok(!read('src/components/ExerciseExecutionGuide.tsx').includes('ExercisePhaseGallery'));
-assert.match(read('public/sw.js'),/foco-shell-20261109-v24/);
+assert.match(read('public/sw.js'),/foco-shell-20261116-v24-ai-routing/);
 console.log('FOCO PRO: product contract, skill hierarchy, 2.4 RepDB release sync and beta QA verified.');

@@ -4,6 +4,7 @@ import {
   buildScientificWorkoutGuidance, assessTrainingSafety, normalizeScienceExercises,
   minimumRestSeconds, classifyMovement, auditScientificWorkout as auditStrictWorkout, sciencePlanSummary,
   sessionExerciseRange, estimateTrainingSessionMinutes,
+  buildCompactWorkoutGuidance,
 } from "../supabase/functions/foco-api/trainingScience.mjs";
 import { FOCO_LAB_SOURCE, FOCO_LAB_KNOWLEDGE, focoLabGuidance, focoLabEvidenceRefs }
   from "../supabase/functions/foco-api/focoLabKnowledge.mjs";
@@ -24,7 +25,7 @@ const exercise = (name, group, day, sets = 3, rest = 120) => ({
   sets, reps_min: 8, reps_max: 12, rest_seconds: rest, suggested_load_kg: 110,
   notes: "Controle a amplitude.", rir_target: 2,
 });
-assert.match(SCIENCE_ENGINE_VERSION, /2026\.3$/);
+assert.match(SCIENCE_ENGINE_VERSION, /2026\.4$/);
 assert.equal(FOCO_LAB_SOURCE.pages, 16);
 assert.equal(FOCO_LAB_SOURCE.methodology, "revisao-narrativa-tecnica");
 assert.ok(FOCO_LAB_KNOWLEDGE.length >= 14, "O dossiê foi convertido em regras rastreáveis");
@@ -180,4 +181,28 @@ assert.equal(auditStrictWorkout(onlyCardio, countOptions).ok, true,
   "Dia exclusivamente aeróbico não precisa atingir contagem de musculação");
 assert.match(buildScientificWorkoutGuidance({ sessionMinutes: 45 }), /4-5 exercícios/);
 assert.match(buildScientificWorkoutGuidance({ sessionMinutes: 60 }), /5-6 exercícios/);
+assert.equal(assessTrainingSafety({notes:'Sem dor no peito; urina escura.',consent:true}).acuteRedFlag,true);
+assert.equal(assessTrainingSafety({notes:'Nega dor no peito, mas apresenta desmaio.',consent:true}).acuteRedFlag,true);
+assert.equal(assessTrainingSafety({notes:'Sem dor no peito e sem urina escura.',consent:true}).acuteRedFlag,false);
+assert.match(buildCompactWorkoutGuidance({goal:'Hipertrofia'}), /FOCO-LAB-DOSSIE-2026-10-28/);
+assert.match(buildCompactWorkoutGuidance({goal:'Hipertrofia'}), /LAB04/);
+const upperOnly=[
+  exercise('Supino reto com barra','Peitoral','segunda',2),
+  exercise('Remada curvada com barra','Costas','segunda',2),
+  exercise('Rosca direta com barra reta','Bíceps','segunda',2),
+  exercise('Tríceps pulley com corda','Tríceps','segunda',2),
+];
+assert.equal(auditStrictWorkout(upperOnly,{...countOptions,priorityMuscles:['Quadríceps']}).ok,false);
+assert.equal(auditStrictWorkout(upperOnly,{...countOptions,requireBalancedCoverage:true}).ok,false);
+assert.equal(auditStrictWorkout(upperOnly,{...countOptions,priorityMuscles:['Tríceps']}).ok,true);
+assert.equal(auditStrictWorkout(fourExercises.map(e=>({...e,reps_min:1,reps_max:1})),{
+  ...countOptions,experience:'iniciante',
+}).ok,false,'Compostos de iniciante não podem prescrever uma repetição');
+const allWeek=['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
+const sevenStrength=allWeek.flatMap(day=>fourExercises.map(e=>({...e,training_day:day,sets:1})));
+assert.equal(auditStrictWorkout(sevenStrength,{...countOptions,days:allWeek,requireRecoveryDay:true}).ok,false);
+const recoveryWeek=sevenStrength.filter(e=>e.training_day!=='domingo').concat(
+  exercise('Caminhada na esteira','Cardio','domingo',1,45));
+assert.equal(auditStrictWorkout(recoveryWeek,{...countOptions,days:allWeek,requireRecoveryDay:true}).ok,true);
+assert.match(sciencePlanSummary({frequency:2},auditedFour).split_rationale,/Distribuição verificada/);
 console.log("FOCO study 2026: divisions, progression, time bands, safety, official catalog and indirect-volume assertions OK.");

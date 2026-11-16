@@ -11,7 +11,7 @@
 import { catalogExercise } from "./trainingCatalog.mjs";
 import { focoLabGuidance, focoLabEvidenceRefs, FOCO_LAB_SOURCE } from "./focoLabKnowledge.mjs";
 
-export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.3";
+export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.4";
 const WEEKDAYS = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
 const NORMALIZE = (value) => String(value || "").normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -80,9 +80,10 @@ export function assessTrainingSafety({ notes = "", consent = false } = {}) {
   if (!consent) return { highRisk: false, acuteRedFlag: false, warnings: [] };
   const normalized = NORMALIZE(notes);
   const highRisk = /(rabdomiol|rhabdomyol|recorrenc.*renal|miopatia)/.test(normalized);
-  const redFlag = /(urina escura|dor no peito|dor toracica|desmaio|falta de ar desproporcional|fraqueza intensa|sintoma neurologico)/.test(normalized);
-  const negated = /(sem|nega|nao apresenta|ausencia de)\s+.{0,28}(urina escura|dor no peito|dor toracica|desmaio|falta de ar|fraqueza intensa)/.test(normalized);
-  const acuteRedFlag = redFlag && !negated;
+  // Negation applies only to the immediately following symptom, never to a
+  // different affirmative symptom later in the same sentence.
+  const acuteRedFlag = [...normalized.matchAll(/urina escura|dor no peito|dor toracica|desmaio|falta de ar desproporcional|fraqueza intensa|sintoma neurologico/g)]
+    .some(match => !/(?:\bsem|\bnega|\bnao apresenta|\bausencia de)\s+(?:(?:sinais|episodios) de\s+)?$/.test(normalized.slice(0, match.index)));
   const warnings = [];
   if (highRisk) warnings.push("Histórico de rabdomiólise/risco de recorrência: solicite revisão de profissional habilitado em articulação com o médico. Não prescrever teste máximo, falha frequente ou aumento abrupto do volume.");
   if (acuteRedFlag) warnings.push("Há relato compatível com sinal de alerta. Não iniciar treino nem gerar cargas antes de avaliação médica.");
@@ -118,6 +119,32 @@ export function buildScientificWorkoutGuidance({
     "16. Para cada exercício inclua rir_target inteiro compatível com as orientações acima (tipicamente " + level.rir[0] + "-" + level.rir[1] + "); notes com cue técnico breve, sem alegações médicas.",
     focoLabGuidance({ goal, highRisk }),
     "Retorne a ficha em JSON, sem instruções fora do schema.",
+  ].join("\n");
+}
+
+/** Compact text transport for free inference quotas; audit rules stay identical. */
+export function buildCompactWorkoutGuidance({
+  frequency = 3, experience = "iniciante", goal = "", sessionMinutes = 60,
+  highRisk = false, priorityMuscles = /** @type {string[]} */ ([]), historyAvailable = false,
+} = {}) {
+  const level = EXPERIENCE[experience] || EXPERIENCE.iniciante;
+  const range = sessionExerciseRange(sessionMinutes);
+  return [
+    "Método FOCO 2026, fonte " + FOCO_LAB_SOURCE.id + ": proposta educacional para revisão profissional; faixas são pontos de partida, não leis clínicas.",
+    "Divisão: " + splitForFrequency(frequency),
+    "Por músculo: partir de " + level.weeklyHint.join("-") + " séries diretas/semana; teto " + level.weeklyCeiling +
+      "; contar sinergistas. Por dia: até " + level.dailyCeiling + " séries, incluindo tempo de aquecimento/transição em " + sessionMinutes + " minutos.",
+    "O teto semanal também inclui Core. Para esta proposta conservadora, Core: no máximo1 exercício/dia,1-2 séries, em até3 dias; não preencher a contagem com abdominais redundantes. Some as séries diretas por grupamento do catálogo antes de responder.",
+    "Preferência de produto: " + range.min + "-" + range.max + " exercícios diferentes/dia; ajustar séries para caber na duração e no volume, sem isolamentos redundantes. Alto risco e recuperação ativa podem ter menos.",
+    goalRules(goal, experience),
+    "RIR " + (highRisk ? "3-4" : level.rir.join("-")) + "; sem falha frequente ou teste de 1RM. Carga inicial zero, ajuste presencial.",
+    "Pausas: compostos pesados 120-240s (força até300); puxadas/remadas/desenvolvimento120-180; isolamentos60-120; core45-75.",
+    "Prioridades escolhidas: " + (priorityMuscles.join(', ') || 'equilíbrio global') + ". Redistribuir volume, sem omitir prioridades nem os grandes grupos (peitoral, costas, quadríceps, posteriores/glúteos) ao longo da semana. Alternar padrões empurrar/puxar/joelho/quadril/core; evitar dose alta do mesmo grupo em dias seguidos. Cerca de48h é referência, não regra universal.",
+    "Primeiro prioridade, depois auxiliares. Técnica controlada, amplitude tolerada sem dor. Progressão dupla por repetições, depois carga gradual; deload só com fadiga/desempenho que justifique. Reavaliar após15dias.",
+    "Respeitar equipamentos, limitações consentidas e recuperação. Não priorizar por gênero/IMC, inventar diagnóstico/capacidade/RIR histórico, prescrever dieta ou prometer perda de gordura por repetições. Bioimpedância é estimativa.",
+    highRisk ? "ALTO RISCO: até2 séries/exercício, RIR3-4, sem carga máxima/falha/aumento abrupto/sessão extenuante; revisão médica e profissional indispensável." : historyAvailable ? "Use somente o desempenho registrado para personalizar; não inventar esforço/técnica anteriores." : "Sem histórico, nunca inventar carga ou esforço anterior.",
+    focoLabGuidance({ goal, highRisk }),
+    "Notas técnicas breves, específicas; explicação até300 caracteres. Usar TODOS os dias exatos. Retornar apenas JSON.",
   ].join("\n");
 }
 
@@ -190,7 +217,8 @@ export function estimateTrainingSessionMinutes(exercises = []) {
 
 export function auditScientificWorkout(exercises, {
   days = WEEKDAYS.slice(0, 3), experience = "iniciante", sessionMinutes = 60, highRisk = false,
-  enforceExerciseRange = true,
+  enforceExerciseRange = true, priorityMuscles = [], requireBalancedCoverage = false,
+  requireRecoveryDay = false,
 } = {}) {
   const config = EXPERIENCE[experience] || EXPERIENCE.iniciante;
   const volume = new Map();
@@ -212,6 +240,10 @@ export function auditScientificWorkout(exercises, {
     if (!WEEKDAYS.includes(day) || !days.includes(day) || !Number.isInteger(sets) || sets < 1)
       return { ok: false, issue: "Dia ou série inválida." };
     const type = classifyMovement(ex.exercise_name, ex.muscle_group);
+    if (experience === 'iniciante' && (type === 'heavy_compound' || type === 'pull_push_compound')
+      && Number(ex.reps_min) < 6) return {
+      ok: false, issue: 'Compostos para iniciantes devem priorizar domínio técnico a partir de 6 repetições: ' + ex.exercise_name,
+    };
     const secs = Number(ex.rest_seconds);
     if (!Number.isFinite(secs) || secs < minimumRestSeconds(ex.exercise_name, ex.muscle_group))
       return { ok: false, issue: "Descanso incompatível com o tipo de exercício: " + ex.exercise_name };
@@ -290,6 +322,22 @@ export function auditScientificWorkout(exercises, {
   if (uncoveredMajorGroups.length && !highRisk) {
     warnings.push("Revisar cobertura semanal: " + uncoveredMajorGroups.join(", ") + ". Uma omissão pode ser intencional conforme a avaliação.");
   }
+  // These are explicit product constraints for NEW AI proposals, not universal
+  // clinical minimum volumes and not retroactive edits to saved/manual plans.
+  const supported = new Set([...volume.keys(), ...indirect.keys()]);
+  const missingPriorities = [...new Set(priorityMuscles.map(muscleKey))]
+    .filter(group => group !== 'Geral' && !supported.has(group));
+  if (!highRisk && missingPriorities.length) return {
+    ok: false, issue: 'Prioridades sem nenhum trabalho direto ou indireto: ' + missingPriorities.join(', ') + '. Redistribua a ficha respeitando tempo e volume.',
+  };
+  if (!highRisk && requireBalancedCoverage && uncoveredMajorGroups.length) return {
+    ok: false, issue: 'A ficha solicitada como corpo inteiro omitiu: ' + uncoveredMajorGroups.join(', ') + '. Corrija a cobertura semanal.',
+  };
+  const recoveryDays = days.filter(day => exercises.some(ex => ex.training_day === day)
+    && exercises.filter(ex => ex.training_day === day).every(ex => classifyMovement(ex.exercise_name, ex.muscle_group) === 'cardio'));
+  if (!highRisk && requireRecoveryDay && days.length === 7 && recoveryDays.length === 0) return {
+    ok: false, issue: 'Sete dias disponíveis exigem um dia dedicado à recuperação ativa/cardio leve na proposta FOCO. Não preencher os sete dias com musculação.',
+  };
   // Incidental stabilizer recruitment in a squat or a press is not a
   // dedicated core session. Count only explicitly assigned core work.
   const coreDays = new Set(exercises.filter(ex =>
@@ -304,6 +352,8 @@ export function auditScientificWorkout(exercises, {
     sessionTimeByDay,
     uncoveredMajorGroups,
     coreExposureDays: coreDays.size,
+    muscleGroupsByDay: Object.fromEntries(days.map(day => [day, [...new Set(exercises
+      .filter(ex => ex.training_day === day).map(ex => muscleKey(ex.muscle_group)))]])),
     directSetsByGroup: Object.fromEntries(volume.entries()),
     estimatedEffectiveSetsByGroup: estimatedEffective,
     totalSetsByDay: Object.fromEntries(dayVolume.entries()),
@@ -320,7 +370,9 @@ export function sciencePlanSummary({ frequency = 3, experience = "iniciante", hi
     session_time_minutes_by_day: audit.sessionTimeByDay || {},
     uncovered_major_groups: audit.uncoveredMajorGroups || [],
     core_exposure_days: audit.coreExposureDays ?? 0,
-    split_rationale: splitForFrequency(frequency),
+    split_rationale: audit.muscleGroupsByDay
+      ? 'Distribuição verificada: ' + Object.entries(audit.muscleGroupsByDay).map(([day, groups]) => day + ': ' + groups.join(', ')).join('; ') + '.'
+      : splitForFrequency(frequency),
     dose: "Referência inicial para " + experience + ": " + level.weeklyHint[0] + "-" + level.weeklyHint[1] +
       " séries diretas por grupo/semana. O volume indireto conta e não é idêntico às séries diretas.",
     direct_sets_by_group: audit.directSetsByGroup || {},

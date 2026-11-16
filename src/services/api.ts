@@ -10,6 +10,7 @@ import {
   AIRecommendation,
   Anamnesis,
   TrainingScienceReport,
+  GeneratedWorkoutProposal,
 } from '../types';
 
 const TOKEN_KEY = 'foco_auth_token';
@@ -842,7 +843,7 @@ export const api = {
     }
   },
 
-  // AI with Gemini 2.5 Flash
+  // Authenticated generation with bounded Gemini/Groq routing.
   async generateAiWorkout(payload: {
     goal: string;
     experience_level: string;
@@ -852,15 +853,9 @@ export const api = {
     restrictions?: string;
     include_body_metrics?: boolean;
     medical_clearance_confirmed?: boolean;
+    force_refresh?: boolean;
   }) {
-    return await request<{
-      name: string;
-      goal: string;
-      weekly_frequency: number;
-      explanation: string;
-      exercises: WorkoutExercise[];
-      training_science?: TrainingScienceReport;
-    }>('/api/ai/generate-workout', {
+    return await request<GeneratedWorkoutProposal>('/api/ai/generate-workout', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
