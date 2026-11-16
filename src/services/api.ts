@@ -850,6 +850,7 @@ export const api = {
     goal: string;
     experience_level: string;
     weekly_frequency: number;
+    available_days?: string[];
     focus_muscles?: string;
     equipment_available?: string;
     restrictions?: string;

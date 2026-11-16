@@ -159,6 +159,23 @@ await check('automatic and legacy generation routes work without AI keys, costs 
  }
  assert.equal(calls,0);assert.equal(a.writes.length,0);
 });
+await check('preview uses the edited weekdays, goal, level, time and focus instead of saved defaults',async()=>{
+ let calls=0;const a=app(async()=>{calls++;throw Error('No inference');},{keys:false});
+ const body={...automaticBody,weekly_frequency:4,available_days:['terca','quarta','sexta','sabado'],experience_level:'intermediario',session_minutes:60,equipment_available:'Academia completa',focus_muscles:'Bíceps'};
+ const read=async b=>{const response=await a.handler(request('/api/workouts/preview',b));const out=await response.json();assert.equal(response.status,200,JSON.stringify(out));return out;};
+ const first=await read({...body,goal:'Hipertrofia Máxima'});
+ assert.deepEqual(first.planning.available_days,body.available_days);assert.equal(first.weekly_frequency,4);
+ assert.ok(first.exercises.every(e=>body.available_days.includes(e.training_day)));
+ const health=await read({...body,goal:'Saúde e qualidade de vida'});
+ assert.notDeepEqual(health.exercises,first.exercises);
+ const lessTime=await read({...body,session_minutes:30});assert.notDeepEqual(lessTime.exercises,first.exercises);
+ const balanced=await read({...body,focus_muscles:'Corpo inteiro com distribuição equilibrada'});
+ assert.ok(first.training_science.direct_sets_by_group['Bíceps']>balanced.training_science.direct_sets_by_group['Bíceps']);
+ for(const available_days of [['terca','terca','sexta','sabado'],['terca','quarta'],['terca','quarta','sexta','INVALID']]){
+  const response=await a.handler(request('/api/workouts/preview',{...body,available_days}));assert.equal(response.status,400);
+ }
+ assert.equal(calls,0);assert.equal(a.writes.length,0);
+});
 await check('automatic conflicts are explicit and never fall back to paid generation',async()=>{
  let calls=0;const a=app(async()=>{calls++;throw Error('No inference');});
  const response=await a.handler(request('/api/workouts/preview',{...automaticBody,restrictions:'Dor no joelho ao agachar'}));

@@ -55,7 +55,7 @@
       }
       status.textContent = 'Atualização preparada. Abrindo o FOCO...';
       const dest = new URL('/FOCO/', location.origin);
-      dest.searchParams.set('foco_refresh', '20261116-v31-rules-personal');
+      dest.searchParams.set('foco_refresh', '20261116-v32-recovery');
       dest.searchParams.set('nocache', String(Date.now()));
       location.replace(dest.href);
     } catch (err) {

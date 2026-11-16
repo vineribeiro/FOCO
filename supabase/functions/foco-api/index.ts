@@ -568,7 +568,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
   if (method === "OPTIONS") return new Response(null, { status: 204, headers: { ...CORS, ...(ORIGINS.includes(origin) ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" } : {}) } });
   if (method === "GET" && path === "/api/system/status") return response({
-    app: "FOCO", version: "3.1.0", build: "2026-11-16-rules-personal", science_engine: SCIENCE_ENGINE_VERSION,
+    app: "FOCO", version: "3.2.0", build: "2026-11-16-rules-recovery", science_engine: SCIENCE_ENGINE_VERSION,
     automatic_planner: AUTOMATIC_PLANNER_VERSION, personal_coach: PERSONAL_COACH_VERSION,
     ai_status: GROQ_KEY || GEMINI_KEY ? "configured" : "missing_key",
     ai_provider: aiRouter.status().primary,
@@ -853,9 +853,13 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     const an = await db.from("anamneses").select("*").eq("user_id", user.id).maybeSingle();
     fail(an.error, "Falha ao carregar anamnese.");
     const a = an.data || {};
-    const frequency = Number(b.weekly_frequency || a.weekly_frequency || 3);
+    const frequency = Number(b.weekly_frequency ?? a.weekly_frequency ?? 3);
     if (!Number.isInteger(frequency) || frequency < 2 || frequency > 7) throw new ApiError(400, "Escolha de 2 a 7 dias.");
-    const days = scheduleDays(a.preferred_days, frequency);
+    if (b.available_days !== undefined && (!Array.isArray(b.available_days)
+      || b.available_days.length !== frequency || new Set(b.available_days.map(normalizedDay)).size !== frequency
+      || b.available_days.some((day: unknown) => !normalizedDay(day))))
+      throw new ApiError(400, "Confira os dias disponíveis: selecione de 2 a 7 dias distintos, de acordo com a frequência.");
+    const days = scheduleDays(b.available_days ?? a.preferred_days, frequency);
     const activePlans = await plans(db, user.id);
     const previous = activePlans.find((plan: any) => plan.status === "ativo");
     try {
@@ -865,7 +869,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
         priorityMuscles: text(b.focus_muscles || (a.priority_muscles || []).join(','), 500).split(','),
         equipmentAvailable: text(b.equipment_available || (a.equipment_available || []).join(','), 500),
         restrictions: [text(b.restrictions, 800), ...(a.consent_health_data ? [a.pain_or_injuries, a.health_notes] : [])].filter(Boolean).join('; '),
-        preferences: text(a.exercise_preferences, 500), previousExercises: previous?.exercises || [],
+        preferences: text(a.exercise_preferences, 500), previousExercises: previous?.exercises || [], previousGoal: previous?.goal || '',
         excludedExercises: arr(b.excluded_exercises, 30),
       });
       return response(result, 200, origin);
@@ -967,17 +971,18 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     const a = an.data || {}, p = await profile(db,user);
     if (text(b.user_feedback,1200)) throw new ApiError(409,"Para interpretar seu relato, pergunte ao Personal FOCO. A revisão automática usa os registros e as preferências estruturadas.","FEEDBACK_REVIEW");
     let proposal;
+    const currentDays = [...new Set((active.exercises||[]).map((ex:any)=>normalizedDay(ex.training_day)).filter(Boolean))] as string[];
     try {
-      proposal=buildAutomaticWorkout({days:scheduleDays(a.preferred_days,Number(active.weekly_frequency)||3),
+      proposal=buildAutomaticWorkout({days:currentDays.length>=2?currentDays:scheduleDays(a.preferred_days,Number(active.weekly_frequency)||3),
         experience:p.experience_level||'iniciante',goal:active.goal,sessionMinutes:Number(a.session_minutes)||60,
         priorityMuscles:a.priority_muscles||[],equipmentAvailable:(a.equipment_available||[]).join(', '),
         restrictions:a.consent_health_data?[a.pain_or_injuries,a.health_notes].filter(Boolean).join('; '):'',
-        preferences:text(a.exercise_preferences,500),previousExercises:active.exercises||[]});
+        preferences:text(a.exercise_preferences,500),previousExercises:active.exercises||[],previousGoal:active.goal});
     }catch(error){if(error instanceof PlannerError)throw new ApiError(error.status,error.message,error.code);throw error;}
     const since=Date.now()-interval*86400000;
     const completed=history.filter((session:any)=>session.status==='completed'&&Date.parse(session.started_at)>=since);
     const completedSets=completed.reduce((sum:number,session:any)=>sum+(session.sets||[]).filter((set:any)=>set.completed).length,0);
-    const result={review_interval_days:interval,generation:proposal.generation,training_science:proposal.training_science,
+    const result={review_interval_days:interval,generation:proposal.generation,planning:proposal.planning,training_science:proposal.training_science,
       proposed_plan:{name:proposal.name,goal:proposal.goal,weekly_frequency:proposal.weekly_frequency,exercises:proposal.exercises},
       explanation:'Revisão pelo motor de regras FOCO, sem chamada à IA. Foram encontrados '+completed.length+' treinos e '+completedSets+' séries concluídas nos últimos '+interval+' dias. A ficha atual só muda se você aprovar esta proposta. Cargas iniciais ficam a seu critério; confira os registros anteriores antes de ajustá-las.',
       progression_summary:{strength_delta:completed.length+' treinos e '+completedSets+' séries concluídas nos últimos '+interval+' dias. Repetições e cargas não comprovam técnica ou RIR.',

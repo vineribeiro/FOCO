@@ -3,7 +3,8 @@ import { api } from '../services/api';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { useAuth } from '../context/AuthContext';
 import { WorkoutExercise, GeneratedWorkoutProposal } from '../types';
-import { aiWorkoutFingerprint, readAiWorkoutDraft, readAiWorkoutFormDraft, saveAiWorkoutDraft, clearAiWorkoutDraft } from '../utils/aiWorkoutDraft';
+import { aiWorkoutFingerprint, readAiWorkoutDraft, readAiWorkoutFormDraft, saveAiWorkoutDraft, clearAiWorkoutDraft, AUTOMATIC_PLANNER_VERSION, defaultAvailableDays, AVAILABLE_WEEKDAYS } from '../utils/aiWorkoutDraft';
+import { TRAINING_DAYS } from '../data/exerciseLibrary';
 import {
   Sparkles,
   Dumbbell,
@@ -50,6 +51,13 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   // AI Generator state
   const [aiGoal, setAiGoal] = useState('Hipertrofia Máxima');
   const [aiFrequency, setAiFrequency] = useState(4);
+  const [availableDays,setAvailableDays]=useState<string[]>(defaultAvailableDays(4));
+  const changeFrequency=(count:number)=>{setAiFrequency(count);setAvailableDays(defaultAvailableDays(count));};
+  const toggleAvailableDay=(day:string)=>{
+    const next=AVAILABLE_WEEKDAYS.filter(d=>d===day?!availableDays.includes(d):availableDays.includes(d));
+    if(next.length<2)return;
+    setAvailableDays(next);setAiFrequency(next.length);
+  };
   const [sessionMinutes,setSessionMinutes]=useState(60);
   const [aiExperience, setAiExperience] = useState(profile?.experience_level || 'intermediario');
   const [aiFocus, setAiFocus] = useState<string[]>([]);
@@ -77,23 +85,28 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
   const requestVersion = useRef(0);
   const aiPayload = useMemo(() => ({
     goal: aiGoal, experience_level: aiExperience, weekly_frequency: Number(aiFrequency),
+    available_days:availableDays,
     focus_muscles: aiFocus.length ? aiFocus.join(', ') : 'Corpo inteiro com distribuição equilibrada',
     equipment_available: aiEquipment, restrictions: aiRestrictions,
     session_minutes: sessionMinutes,
     medical_clearance_confirmed: requiresClinicalReview && medicalClearanceConfirmed,
-  }), [aiGoal, aiExperience, aiFrequency, aiFocus, aiEquipment, aiRestrictions, sessionMinutes, requiresClinicalReview, medicalClearanceConfirmed]);
+  }), [aiGoal, aiExperience, aiFrequency, availableDays, aiFocus, aiEquipment, aiRestrictions, sessionMinutes, requiresClinicalReview, medicalClearanceConfirmed]);
   const draftContext = JSON.stringify({ payload: aiPayload, anamnesisRevision,
-    profileRevision: profile?.updated_at, engine: 'foco-rules-2026.1' });
+    profileRevision: profile?.updated_at, engine: AUTOMATIC_PLANNER_VERSION });
+  const currentContext=useRef(draftContext);
+  currentContext.current=draftContext;
+  const generatedContext=useRef('');
   useEffect(() => {
     let active = true;
     requestVersion.current++;
     setGeneratedPlan(null); setDraftRestored(false); setDraftFingerprint('');
+    generatedContext.current='';
     if (profile?.id && anamnesisLoaded) {
       void aiWorkoutFingerprint(draftContext).then(fingerprint => {
         if (!active) return;
         setDraftFingerprint(fingerprint);
         const previous = readAiWorkoutDraft(profile.id, fingerprint);
-        if (previous) { setGeneratedPlan(previous); setDraftRestored(true); }
+        if (previous) { generatedContext.current=draftContext;setGeneratedPlan(previous); setDraftRestored(true); }
       }).catch(() => { if (active) setDraftFingerprint('storage-unavailable'); });
     }
     return () => { active = false; };
@@ -135,7 +148,9 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       if (!active || !anamnesis) return;
       setAnamnesisRevision(anamnesis.updated_at || '');
       setAiGoal(anamnesis.primary_goal || 'Hipertrofia Máxima');
-      setAiFrequency(anamnesis.weekly_frequency || 4);
+      const savedDays=AVAILABLE_WEEKDAYS.filter(day=>anamnesis.preferred_days?.includes(day));
+      const initialDays=savedDays.length>=2?savedDays:defaultAvailableDays(anamnesis.weekly_frequency || 4);
+      setAiFrequency(initialDays.length);setAvailableDays(initialDays);
       setSessionMinutes(anamnesis.session_minutes||60);
       setAiFocus(anamnesis.priority_muscles || []);
       setAiEquipment(anamnesis.equipment_available?.join(', ') || 'Academia Completa com Polias e Barras');
@@ -159,6 +174,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         if (previous) {
           setSessionMinutes(previous.sessionMinutes||anamnesis.session_minutes||60);
           setAiGoal(previous.goal); setAiFrequency(previous.frequency); setAiExperience(previous.experience);
+          setAvailableDays(previous.availableDays || (initialDays.length===previous.frequency?initialDays:defaultAvailableDays(previous.frequency)));
           setAiFocus(previous.focus); setAiEquipment(previous.equipment);
           setMedicalClearanceConfirmed(previous.medicalClearanceConfirmed);
         }
@@ -174,10 +190,12 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
     setIsGenerating(true);
     setErrorMsg(null);
     const version = requestVersion.current;
+    const context=draftContext;
 
     try {
       const result = await api.generateAutomaticWorkout({ ...aiPayload, force_refresh: !!generatedPlan });
-      if (version !== requestVersion.current) return;
+      if (version !== requestVersion.current || context !== currentContext.current) return;
+      generatedContext.current=context;
       setGeneratedPlan(result);
       setDraftRestored(false);
       if (profile?.id && draftFingerprint !== 'storage-unavailable') {
@@ -185,10 +203,11 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
           profileRevision: profile.updated_at, healthContext: aiRestrictions }));
         saveAiWorkoutDraft(profile.id, draftFingerprint, result, { baseFingerprint, form: {
           goal: aiGoal, frequency: Number(aiFrequency), experience: aiExperience, focus: aiFocus,
-          equipment: aiEquipment, includeBodyMetrics:false, medicalClearanceConfirmed, sessionMinutes,
+          equipment: aiEquipment, includeBodyMetrics:false, medicalClearanceConfirmed, sessionMinutes, availableDays,
         } });
       }
     } catch (err: any) {
+      if (version !== requestVersion.current || context !== currentContext.current) return;
       const message = err instanceof Error ? err.message : String(err || 'Erro desconhecido');
       if (/usuário não encontrado no armazenamento|usuário não encontrado|sessão não autorizada|token de autenticação/i.test(message)) {
         setErrorMsg(
@@ -205,6 +224,9 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
   const handleSaveGeneratedPlan = async () => {
     if (!generatedPlan) return;
+    if(generatedContext.current!==currentContext.current || generatedPlan.generation?.version!==AUTOMATIC_PLANNER_VERSION){
+      setGeneratedPlan(null);setErrorMsg('Os ajustes mudaram. Monte uma nova prévia antes de aprovar.');return;
+    }
     setIsSaving(true);
     setErrorMsg(null);
 
@@ -343,7 +365,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         {[
           {label:'Objetivo',value:aiGoal,icon:Target,target:'foco-ai-goal'},
           {label:'Nível',value:aiExperience,icon:Activity,target:'foco-ai-experience'},
-          {label:'Dias',value:aiFrequency+'x por semana',icon:CalendarDays,target:'foco-ai-frequency'},
+          {label:'Disponibilidade',value:aiFrequency+' dias na semana',icon:CalendarDays,target:'foco-ai-frequency'},
           {label:'Equipamentos',value:aiEquipment,icon:Dumbbell,target:'foco-ai-equipment'},
         ].map(item => <button type="button" key={item.label} onClick={() => focusAiField(item.target)}
           className="foco-v4-panel flex min-h-[90px] items-center gap-3 overflow-hidden p-3 text-left transition hover:border-white/35">
@@ -373,6 +395,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       {tab === 'automatic' && (
         <div className="space-y-6">
           <form onSubmit={handleGenerateAi} className="foco-v4-panel space-y-5 p-4 sm:p-6">
+            <fieldset disabled={!anamnesisLoaded || isSaving} className="min-w-0 space-y-5">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="foco-v4-eyebrow">Preferências e objetivos</p>
@@ -380,6 +403,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
               <Sliders className="h-5 w-5 text-neutral-400" />
             </div>
+            <p className="text-xs leading-relaxed text-neutral-300">Os ajustes montam uma nova prévia. Sua ficha ativa muda quando você escolher <strong>Aprovar e Ativar Ficha</strong>.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
               <div>
@@ -402,20 +426,26 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
               <div>
                 <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide" htmlFor="foco-ai-frequency">
-                  Frequência Semanal (Dias)
+                  Dias disponíveis na semana
                 </label>
                 <select id="foco-ai-frequency"
                   value={aiFrequency}
-                  onChange={(e) => setAiFrequency(Number(e.target.value))}
+                  onChange={(e) => changeFrequency(Number(e.target.value))}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
                 >
-                  <option value={2}>2 dias por semana (corpo inteiro A/B)</option>
-                  <option value={3}>3 dias por semana (corpo inteiro A/B/C)</option>
-                  <option value={4}>4 dias por semana (Divisão ABCD / Upper-Lower)</option>
-                  <option value={5}>5 dias por semana (superior / inferior + corpo inteiro)</option>
-                  <option value={6}>6 dias por semana (Empurrar / puxar / pernas)</option><option value={7}>7 dias disponíveis (inclui recuperação ativa)</option>
+                  {[2,3,4,5,6,7].map(count=><option key={count} value={count}>{count} dias disponíveis</option>)}
                 </select>
               </div>
+
+              <fieldset className="sm:col-span-2 min-w-0" aria-describedby="foco-availability-hint">
+                <legend className="mb-2 text-xs font-bold text-neutral-300">Em quais dias você pode treinar?</legend>
+                <div className="flex flex-wrap gap-2">
+                  {TRAINING_DAYS.map(day=><button key={day.value} type="button" aria-pressed={availableDays.includes(day.value)}
+                    disabled={availableDays.length===2&&availableDays.includes(day.value)} onClick={()=>toggleAvailableDay(day.value)}
+                    className={`foco-availability-day ${availableDays.includes(day.value)?'is-selected':''}`}>{day.shortLabel}</button>)}
+                </div>
+                <p id="foco-availability-hint" className="mt-2 text-xs leading-relaxed text-neutral-400">Selecione pelo menos dois dias. O motor pode usar menos sessões de força para respeitar objetivo, nível e descanso.</p>
+              </fieldset>
 
               <div><label className="block text-xs font-bold text-neutral-300 mb-1.5" htmlFor="foco-automatic-minutes">Tempo por sessão (min)</label><input id="foco-automatic-minutes" type="number" min="20" max="180" step="5" value={sessionMinutes} onChange={e=>setSessionMinutes(Number(e.target.value))} className="w-full px-3.5 py-2.5 border" required/></div>
               <div>
@@ -446,7 +476,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       <span className={`block text-[10px] mt-1 ${selected ? 'text-neutral-700' : 'text-neutral-500'}`}>{muscle.detail}</span>
                     </button>); })}
                 </div>
-                <p className="text-[10px] text-neutral-500 mt-2">Glúteos, quadríceps, posteriores e panturrilhas são opções de foco para quem quer priorizar inferiores. Sem seleção, o motor distribui o treino de forma equilibrada.</p>
+                <p className="text-xs text-neutral-400 mt-2">{aiFocus.length===muscleOptions.length?'Todos selecionados: distribuição equilibrada. Para dar mais volume a um grupo, selecione apenas suas prioridades.':'Sem seleção, a distribuição é equilibrada. Selecionar um grupo redistribui o volume a favor dele, dentro do tempo e da recuperação.'}</p>
               </div>
 
               <div>
@@ -488,6 +518,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 <span>{isGenerating ? 'Montando sua ficha...' : generatedPlan ? 'Recalcular ficha' : 'Montar ficha automática'}</span>
               </button>
             </div>
+            </fieldset>
           </form>
 
           {/* Generated Plan Review */}
@@ -519,6 +550,12 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
               {(draftRestored || generatedPlan.ai_generation?.cache_hit) && <p role="status" className="text-xs leading-relaxed text-neutral-300">Proposta recuperada sem recalcular a ficha. Ajuste as preferências para montar uma ficha diferente.</p>}
               <p className="text-xs leading-relaxed text-neutral-400">Revise a divisão semanal e cada exercício antes de ativar. Cargas iniciais ficam em aberto até serem ajustadas individualmente.</p>
+              {generatedPlan.planning&&<div className="foco-v4-panel-soft p-4 space-y-2" role="status">
+                <p className="text-sm font-bold">{generatedPlan.planning.available_days.length} dias disponíveis · {generatedPlan.weekly_frequency} sessões de força</p>
+                <p className="text-xs leading-relaxed text-neutral-300">{generatedPlan.planning.reason}</p>
+                <p className="text-xs leading-relaxed text-neutral-300">Sem musculação: {generatedPlan.planning.recovery_days.map(day=>TRAINING_DAYS.find(d=>d.value===day)?.shortLabel).join(', ')}. Descanso ou atividade leve conforme sua recuperação.</p>
+                <p className="text-xs leading-relaxed text-neutral-400">Um dia completo de intervalo entre estímulos direcionados do mesmo grupo, considerando os auxiliares dos exercícios compostos e a virada da semana. Horários reais também precisam ser respeitados.</p>
+              </div>}
               {generatedPlan.training_science && (
                 <section className="foco-v4-panel-soft space-y-4 p-4 sm:p-5" aria-labelledby="foco-science">
                   <div className="flex items-center gap-3">

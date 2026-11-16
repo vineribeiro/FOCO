@@ -2,7 +2,7 @@ import { catalogExercise } from './trainingCatalog.mjs';
 import { assessTrainingSafety, normalizeScienceExercises, auditScientificWorkout, sciencePlanSummary,
   sessionExerciseRange, estimateTrainingSessionMinutes } from './trainingScience.mjs';
 
-export const AUTOMATIC_PLANNER_VERSION = 'foco-rules-2026.1';
+export const AUTOMATIC_PLANNER_VERSION = 'foco-rules-2026.2';
 export class PlannerError extends Error {
   constructor(code, message) { super(message); this.name='PlannerError'; this.status=409; this.code=code; }
 }
@@ -35,15 +35,78 @@ const ROLES = {
   Core:[choice('Abdominal reverso','corpo','Controle a elevação da pelve sem embalar as pernas.'),choice('Abdominal crunch','corpo','Controle o movimento sem puxar o pescoço.'),choice('Dead bug','corpo','Mantenha a lombar confortável e respire durante o movimento.')],
 };
 const MAJOR=['Peitoral','Costas','Quadríceps','Posteriores'];
+const WEEKDAYS=['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
+const BALANCED=['Peitoral','Costas','Quadríceps','Posteriores','Glúteos','Ombros','Bíceps','Tríceps','Panturrilhas','Core'];
 const TEMPLATES={
-  full:['Peitoral','Costas','Quadríceps','Posteriores','Core','Panturrilhas','Ombros','Glúteos','Bíceps','Tríceps','Trapézio','Antebraços','Lombar','Adutores','Abdutores'],
-  upper:['Peitoral','Costas','Ombros','Bíceps','Tríceps','Core','Trapézio','Antebraços'],
-  lower:['Quadríceps','Posteriores','Glúteos','Panturrilhas','Core','Adutores','Abdutores','Lombar'],
-  push:['Peitoral','Ombros','Tríceps','Core'],
-  pull:['Costas','Bíceps','Core','Ombros','Trapézio','Antebraços'],
+  full:['Peitoral','Costas','Quadríceps','Posteriores','Panturrilhas','Core','Ombros','Glúteos','Bíceps','Tríceps','Trapézio','Antebraços','Lombar','Adutores','Abdutores'],
+  upper:['Peitoral','Costas','Ombros','Bíceps','Tríceps','Trapézio','Antebraços'],
+  lower:['Quadríceps','Posteriores','Panturrilhas','Glúteos','Core','Adutores','Abdutores','Lombar'],
+  push:['Peitoral','Ombros','Tríceps'],
+  pull:['Costas','Bíceps','Trapézio','Antebraços'],
 };
-const SPLITS={2:['full','full'],3:['full','full','full'],4:['upper','lower','upper','lower'],
-  5:['upper','lower','full','upper','lower'],6:['push','pull','lower','push','pull','lower'],7:['push','pull','lower','push','pull','lower','recovery']};
+// Calendar policy for NEW automatic proposals only. One full calendar day
+// separates targeted work, including compound synergists and the week boundary.
+// Stabilizer recruitment is not treated as a dedicated training session.
+const SYNERGISTS=new Set(['Peitoral','Costas','Ombros','Bíceps','Tríceps','Quadríceps','Posteriores','Glúteos','Panturrilhas']);
+function exposure(ex) {
+  const c=catalogExercise(ex.exercise_name);
+  const direct=new Set(c?.primary || [ex.muscle_group]);
+  const secondary=new Set((c?.secondary || []).filter(g=>SYNERGISTS.has(g)&&!direct.has(g)));
+  if (/agachamento|leg press/i.test(ex.exercise_name)&&direct.has('Quadríceps')) secondary.add('Glúteos');
+  return {direct,secondary};
+}
+export function auditAutomaticRecovery(exercises) {
+  const byDay=Object.fromEntries(WEEKDAYS.map(d=>[d,{}]));
+  for(const ex of exercises){
+    if(!byDay[ex.training_day])return {ok:false,issue:'Dia inválido na revisão de recuperação.'};
+    const {direct,secondary}=exposure(ex);
+    for(const group of new Set([...direct,...secondary])){
+      const dose=byDay[ex.training_day][group] ||= {direct:0,indirect:0};
+      dose[direct.has(group)?'direct':'indirect']+=Number(ex.sets);
+    }
+  }
+  const conflicts=[];
+  for(let i=0;i<7;i++){
+    const a=WEEKDAYS[i],b=WEEKDAYS[(i+1)%7];
+    for(const group of Object.keys(byDay[a])){
+      const x=byDay[a][group],y=byDay[b][group];if(!y)continue;
+      // 0.5 is a planning estimate, not a measured biological equivalent.
+      if(x.direct&&y.direct || x.direct&&y.indirect || x.indirect&&y.direct || x.indirect*.5>=2&&y.indirect*.5>=2)
+        conflicts.push({group,days:[a,b]});
+    }
+  }
+  return {ok:conflicts.length===0,conflicts,exposureByDay:byDay,
+    issue:conflicts.length?'Sem um dia completo de intervalo para '+conflicts.map(c=>c.group+' ('+c.days.join('/')+')').join(', ')+'.':null};
+}
+function goalProfile(goal,experience) {
+  const n=normalize(goal),novice=experience==='iniciante',advanced=experience==='avancado';
+  if(/forca|powerbuilding|cargas/.test(n))return {id:'strength',label:'Força e técnica',days:novice?3:4,sets:novice?2:3,reps:novice?[6,10]:[4,6],accessory:[8,12],rest:novice?180:240,accessoryRest:90,rir:novice?4:3,target:novice?6:10};
+  if(/resistencia|condicionamento/.test(n))return {id:'endurance',label:'Resistência muscular',days:novice?3:4,sets:2,reps:[15,20],accessory:[15,20],rest:120,accessoryRest:60,rir:novice?4:3,target:novice?6:10};
+  if(/saude|qualidade de vida/.test(n))return {id:'health',label:'Saúde e consistência',days:3,sets:2,reps:[10,15],accessory:[12,15],rest:120,accessoryRest:60,rir:novice?4:3,target:novice?6:8};
+  if(/emagrec|definicao/.test(n))return {id:'fat-loss',label:'Preservação de força e massa',days:novice?3:4,sets:novice?2:3,reps:[6,10],accessory:[10,15],rest:150,accessoryRest:75,rir:novice?3:2,target:novice?6:10};
+  if(/recompos/.test(n))return {id:'recomposition',label:'Força e hipertrofia',days:novice?3:4,sets:novice?2:3,reps:[8,12],accessory:[12,15],rest:150,accessoryRest:75,rir:novice?3:2,target:novice?8:12};
+  return {id:'hypertrophy',label:'Hipertrofia',days:novice?3:advanced?6:4,sets:novice?2:3,reps:[8,12],accessory:[10,15],rest:120,accessoryRest:75,rir:novice?3:2,target:novice?8:advanced?16:12};
+}
+function combinations(values,size,start=0,prefix=[]) {
+  if(prefix.length===size)return [prefix];
+  return values.slice(start).flatMap((value,offset)=>combinations(values,size,start+offset+1,[...prefix,value]));
+}
+function scheduleCandidates(available,desired) {
+  const result=[];
+  for(let count=Math.min(desired,available.length);count>=2;count--){
+    const schedules=combinations(available,count).map(days=>{
+      const gaps=days.map((d,i)=>(WEEKDAYS.indexOf(days[(i+1)%days.length])-WEEKDAYS.indexOf(d)+7)%7);
+      return {days,gaps,score:Math.min(...gaps)*100-gaps.reduce((n,g)=>n+g*g,0)};
+    }).sort((a,b)=>b.score-a.score||WEEKDAYS.indexOf(a.days[0])-WEEKDAYS.indexOf(b.days[0]));
+    for(const {days,gaps} of schedules){
+      if(count<=3&&gaps.every(g=>g>=2))result.push({days,kinds:days.map(()=>'full')});
+      else if(count===2)result.push({days,kinds:['upper','lower']});
+      else if(count===4)result.push({days,kinds:['upper','lower','upper','lower']});
+      else if(count===6)result.push({days,kinds:['push','pull','lower','push','pull','lower']});
+    }
+  }
+  return result;
+}
 export function plannerEquipment(value) {
   const n=normalize(value), set=new Set(['corpo']);
   const residual=n.replace(/\b(?:sem|evitar) (?:uso de )?(?:equipamentos?|barras?|halteres?|maquinas?|polias?|cabos?|bancos?|esteiras?)\b/g,'');
@@ -63,10 +126,9 @@ export function plannerEquipment(value) {
 const benign = value => String(value||'').split(/[;,]/).every(part=>!normalize(part) || /^(sem (restricoes|lesoes|dores|limitacoes|preferencias)( conhecidas| atuais| especificas)?|nenhuma|nenhum|nao tenho (restricoes|lesoes|dores|limitacoes))$/.test(normalize(part)));
 
 export function buildAutomaticWorkout({ days=/** @type {string[]} */([]), experience='iniciante', goal='Hipertrofia', sessionMinutes=60,
-  priorityMuscles=/** @type {string[]} */([]), equipmentAvailable='', restrictions='', preferences='', previousExercises=/** @type {(string|{exercise_name:string})[]} */([]), excludedExercises=/** @type {string[]} */([]) }={}) {
-  if(!Array.isArray(days)||days.length<2||days.length>7||new Set(days).size!==days.length
-    ||days.some(d=>!['segunda','terca','quarta','quinta','sexta','sabado','domingo'].includes(d)))
-    throw new PlannerError('SCHEDULE_INVALID','Escolha de 2 a 7 dias diferentes para montar a semana.');
+  priorityMuscles=/** @type {string[]} */([]), equipmentAvailable='', restrictions='', preferences='', previousExercises=/** @type {(string|{exercise_name:string})[]} */([]), previousGoal='', excludedExercises=/** @type {string[]} */([]) }={}) {
+  if(!Array.isArray(days)||days.length<2||days.length>7||new Set(days).size!==days.length||days.some(d=>!WEEKDAYS.includes(d)))
+    throw new PlannerError('SCHEDULE_INVALID','Escolha de 2 a 7 dias diferentes disponíveis para montar a semana.');
   if(!['iniciante','intermediario','avancado'].includes(experience)||!Number.isFinite(sessionMinutes)||sessionMinutes<20||sessionMinutes>180)
     throw new PlannerError('PROFILE_INVALID','Confira experiência e duração da sessão, entre 20 e 180 minutos.');
   const safety=assessTrainingSafety({notes:restrictions,consent:true});
@@ -75,91 +137,115 @@ export function buildAutomaticWorkout({ days=/** @type {string[]} */([]), experi
   if(!benign(preferences))throw new PlannerError('PREFERENCE_REVIEW','Há preferências livres na anamnese que precisam ser conferidas. Revise-as na anamnese ou use a montagem manual para preservar suas escolhas.');
   const unsupported=priorityMuscles.filter(value=>normalize(value)&&!key(value)&&!['corpo inteiro','equilibrio global','corpo inteiro com distribuicao equilibrada'].includes(normalize(value)));
   if(unsupported.length)throw new PlannerError('PRIORITY_UNSUPPORTED','Confira os nomes dos grupos prioritários: '+unsupported.join(', ')+'.');
-  const priorities=[...new Set(priorityMuscles.map(key).filter(Boolean))];
+  const selected=[...new Set(priorityMuscles.map(key).filter(Boolean))];
+  const balanced=selected.length===0||selected.length===BALANCED.length&&BALANCED.every(group=>selected.includes(group));
+  const priorities=balanced?[]:selected;
   if(excludedExercises.some(name=>!catalogExercise(name)))throw new PlannerError('EXCLUSION_UNKNOWN','Selecione os exercícios a evitar usando os nomes completos do catálogo.');
   const equipment=plannerEquipment(equipmentAvailable), excluded=new Set(excludedExercises.map(normalize));
-  const history=new Set(previousExercises.map(ex=>normalize(typeof ex==='string'?ex:ex.exercise_name)));
-  const max=sessionExerciseRange(sessionMinutes).max, kinds=SPLITS[days.length];
-  const entries=[];
-  const auditOptions={days,experience,sessionMinutes,enforceExerciseRange:false};
-  const fits=items=>days.every(day=>{
-    const daily=items.filter(ex=>ex.training_day===day);
-    return daily.length<=max&&estimateTrainingSessionMinutes(daily)<=sessionMinutes;
-  })&&auditScientificWorkout(items,auditOptions).ok;
-  const eligible=(role,di)=>ROLES[role].filter(c=>c.equipment.every(tag=>equipment.has(tag))&&!excluded.has(normalize(c.name)))
-    .map((c,i)=>({...c,rank:history.has(normalize(c.name))?-100:(i-di+ROLES[role].length)%ROLES[role].length}))
-    .sort((a,b)=>a.rank-b.rank);
-  const make=(choice,role,di,sets)=>{
-    const force=/forca|powerbuilding/.test(normalize(goal)), endurance=/resistencia|condicionamento/.test(normalize(goal));
-    const reps=role==='Core'?[10,15]:force&&experience!=='iniciante'&&MAJOR.includes(role)?[4,6]:endurance?[12,20]:[8,12];
-    return normalizeScienceExercises([{exercise_name:choice.name,muscle_group:role,training_day:days[di],sets,
-      reps_min:reps[0],reps_max:reps[1],rest_seconds:force?180:120,suggested_load_kg:0,
-      notes:choice.cue}],{experience})[0];
-  };
-  const place=(role,onlyDay=-1,second=false)=>{
-    const ranked=days.map((day,di)=>({di,count:entries.filter(e=>e.training_day===day).length}))
-      .filter(({di})=>kinds[di]!=='recovery'&&(onlyDay<0||di===onlyDay)&&TEMPLATES[kinds[di]].includes(role))
-      .sort((a,b)=>a.count-b.count||a.di-b.di);
-    for(const {di} of ranked){
-      const existing=entries.filter(e=>e.training_day===days[di]&&e.muscle_group===role);
-      if(existing.length>=(second?2:1))continue;
-      if(role==='Core'&&new Set(entries.filter(e=>e.muscle_group==='Core').map(e=>e.training_day)).size>=3)continue;
-      for(const c of eligible(role,di)){
-        if(entries.some(e=>e.training_day===days[di]&&e.exercise_name===c.name))continue;
-        const sets=role==='Core'?2:experience==='iniciante'?2:3;
-        // A small template may need two sets to respect the user's hard time cap.
-        for(const count of [...new Set([sets,2,1])]){
-          const ex=make(c,role,di,count);
-          if(!catalogExercise(ex.exercise_name)?.primary.includes(role))continue;
-          if(fits([...entries,ex])){entries.push(ex);return true;}
+  const profile=goalProfile(goal,experience);
+  const history=new Set(goalProfile(previousGoal,experience).id===profile.id?previousExercises.map(ex=>normalize(typeof ex==='string'?ex:ex.exercise_name)):[]);
+  const available=WEEKDAYS.filter(d=>days.includes(d)),max=sessionExerciseRange(sessionMinutes).max;
+  // The screen supplies availability, not an instruction to train every day.
+  // Try recoverable calendars; never silently relax recovery to fit more days.
+  let lastIssue='Tempo insuficiente para cobrir os padrões e prioridades.';
+  for(const schedule of scheduleCandidates(available,profile.days)){
+    const trainingDays=schedule.days,kinds=schedule.kinds,entries=[];
+    const auditOptions={days:trainingDays,experience,sessionMinutes,enforceExerciseRange:false,countCatalogPrimary:true};
+    const fits=items=>trainingDays.every(day=>{
+      const daily=items.filter(ex=>ex.training_day===day);
+      return daily.length<=max&&estimateTrainingSessionMinutes(daily)<=sessionMinutes;
+    })&&auditAutomaticRecovery(items).ok&&auditScientificWorkout(items,auditOptions).ok;
+    const eligible=(role,di)=>ROLES[role].filter(c=>c.equipment.every(tag=>equipment.has(tag))&&!excluded.has(normalize(c.name)))
+      .map((c,i)=>{
+        const stable=c.equipment.some(tag=>tag==='maquina'||tag==='polia')||/goblet|dead bug/.test(normalize(c.name));
+        const bar=/com barra|terra romeno/.test(c.name);
+        // Goal/level choices outrank continuity; history is only a tie-breaker.
+        const preferred=profile.id==='strength'?bar:experience==='iniciante'||profile.id==='health'||profile.id==='endurance'?stable:false;
+        return {...c,rank:(preferred?0:20)+(history.has(normalize(c.name))?0:8)+((i-Math.floor(di/2)+ROLES[role].length)%ROLES[role].length)};
+      }).sort((a,b)=>a.rank-b.rank);
+    const make=(choice,role,di,sets)=>{
+      const compound=MAJOR.includes(role)||role==='Glúteos';
+      const reps=role==='Core'?[10,15]:compound?profile.reps:profile.accessory;
+      return normalizeScienceExercises([{exercise_name:choice.name,muscle_group:role,training_day:trainingDays[di],sets,
+        reps_min:reps[0],reps_max:reps[1],rest_seconds:role==='Core'?60:compound?profile.rest:profile.accessoryRest,
+        rir_target:profile.rir,suggested_load_kg:0,notes:choice.cue}],{experience})[0];
+    };
+    const place=(role,onlyDay=-1)=>{
+      const ranked=trainingDays.map((day,di)=>({di,count:entries.filter(e=>e.training_day===day).length}))
+        .filter(({di})=>(onlyDay<0||di===onlyDay)&&TEMPLATES[kinds[di]].includes(role))
+        .sort((a,b)=>a.count-b.count||a.di-b.di);
+      for(const {di} of ranked){
+        if(entries.some(e=>e.training_day===trainingDays[di]&&e.muscle_group===role))continue;
+        for(const c of eligible(role,di)){
+          if(!catalogExercise(c.name)?.primary.includes(role))continue;
+          for(const count of [...new Set([role==='Core'?2:profile.sets,2,1])]){
+            const ex=make(c,role,di,count);
+            if(fits([...entries,ex])){entries.push(ex);return true;}
+          }
         }
       }
+      return false;
+    };
+    const coverage=()=>new Set(entries.flatMap(ex=>{
+      const catalog=catalogExercise(ex.exercise_name);return [...catalog.primary,...catalog.secondary];
+    }));
+    let failed=false;
+    // Reserve major patterns and chosen priorities before spending room on extras.
+    for(const role of [...new Set([...MAJOR,...priorities])]){
+      if(priorities.includes(role)&&!MAJOR.includes(role)&&entries.some(e=>exposure(e).direct.has(role)))continue;
+      if(!place(role)){lastIssue='Não foi possível reservar '+role+' no tempo e equipamento disponíveis.';failed=true;break;}
     }
-    return false;
-  };
-  // Reserve weekly coverage first; never fill cosmetic exercise counts before
-  // the user's priorities or invent a movement to hide insufficient equipment.
-  for(const role of MAJOR)if(!place(role))throw new PlannerError('COVERAGE_CONFLICT',
-    'Não foi possível cobrir '+role+' com esse tempo e equipamento. Confira os equipamentos, amplie a duração ou use a montagem manual.');
-  for(const role of priorities)if(!entries.some(e=>e.muscle_group===role)&&!place(role))throw new PlannerError('PRIORITY_CONFLICT',
-    'A prioridade '+role+' não cabe com as condições escolhidas. Amplie o tempo, reveja os equipamentos ou redistribua as prioridades; nenhuma ficha foi salva.');
-  // Fill the selected split purposefully. Repeated days use catalogue variants,
-  // with a preference for exercises already present in the person's own plan.
-  for(let di=0;di<days.length;di++){
-    if(kinds[di]==='recovery'){
-      if(!equipment.has('esteira'))throw new PlannerError('RECOVERY_SCHEDULE','Para sete dias, é preciso reservar recuperação ativa. Escolha até seis dias de força e registre o cardio livre separadamente.');
-      entries.push({exercise_name:'Caminhada na esteira',muscle_group:'Cardio',training_day:days[di],sets:1,reps_min:1,reps_max:1,
-        rest_seconds:45,suggested_load_kg:0,rir_target:4,notes:'Recuperação ativa: cerca de 8 minutos em ritmo leve, conversável e confortável. Sem meta de carga.'});
-      continue;
-    }
-    for(const role of TEMPLATES[kinds[di]])place(role,di);
-  }
-  // Allocate remaining room to selected priorities. Targets are conservative
-  // starting heuristics, never guarantees of optimal individual stimulus.
-  const target=experience==='iniciante'?4:experience==='intermediario'?8:10;
-  for(const role of priorities){
-    while(entries.filter(e=>e.muscle_group===role).reduce((n,e)=>n+e.sets,0)<target){
-      let improved=false;
-      for(let i=0;i<entries.length;i++){
-        const ex=entries[i];if(ex.muscle_group!==role||ex.sets>=4||role==='Core'&&ex.sets>=2)continue;
-        const candidate=entries.map((e,j)=>j===i?{...e,sets:e.sets+1}:e);
-        if(fits(candidate)){entries[i]=candidate[i];improved=true;break;}
+    if(failed)continue;
+    // Dedicated calves and core are not covered by a squat/row stabilizer label.
+    for(const role of ['Panturrilhas','Core'])if(!entries.some(e=>exposure(e).direct.has(role)))place(role);
+    // Keep every chosen strength day useful; short days may contain two patterns.
+    for(let di=0;di<trainingDays.length;di++){
+      const daily=()=>entries.filter(e=>e.training_day===trainingDays[di]);
+      for(const role of TEMPLATES[kinds[di]]){
+        if(daily().length>=2)break;
+        place(role,di);
       }
-      if(!improved&&MAJOR.includes(role))improved=place(role,-1,true);
-      if(!improved)break;
+      if(daily().length<2){failed=true;break;}
     }
+    if(failed)continue;
+    // Allocate focus dose BEFORE generic filling. Round-robin avoids starving a
+    // later priority; caps and time can still limit the requested emphasis.
+    let improved=true;
+    while(improved){
+      improved=false;
+      for(const role of priorities){
+        const total=entries.filter(e=>exposure(e).direct.has(role)).reduce((n,e)=>n+e.sets,0);
+        if(total>=profile.target)continue;
+        const indices=entries.map((e,i)=>({e,i})).filter(({e})=>exposure(e).direct.has(role)&&e.sets<(role==='Core'?2:4)).sort((a,b)=>a.e.sets-b.e.sets);
+        for(const {i} of indices){const candidate=entries.map((e,j)=>j===i?{...e,sets:e.sets+1}:e);
+          if(fits(candidate)){entries[i]=candidate[i];improved=true;break;}}
+        if(total<profile.target&&place(role))improved=true;
+      }
+    }
+    // Balance major exposure across eligible days, then cover useful accessories.
+    for(let di=0;di<trainingDays.length;di++){
+      for(const role of TEMPLATES[kinds[di]].filter(r=>MAJOR.includes(r)))place(role,di);
+    }
+    for(const role of ['Panturrilhas','Core','Ombros','Glúteos','Bíceps','Tríceps']){
+      if(!coverage().has(role))place(role);
+    }
+    for(let di=0;di<trainingDays.length;di++){
+      for(const role of TEMPLATES[kinds[di]].filter(r=>['Panturrilhas','Core','Ombros','Bíceps','Tríceps'].includes(r)))place(role,di);
+    }
+    const audit=auditScientificWorkout(entries,{...auditOptions,priorityMuscles:balanced?BALANCED:priorities,requireBalancedCoverage:true});
+    if(!audit.ok||!fits(entries)){lastIssue=audit.issue||'A combinação não respeita a recuperação.';continue;}
+    const report=sciencePlanSummary({frequency:trainingDays.length,experience},audit);
+    report.recovery='Um dia completo sem trabalho direcionado do mesmo grupo entre sessões, incluindo sinergistas relevantes e domingo/segunda. É uma regra conservadora de calendário: horários reais e recuperação individual precisam ser acompanhados.';
+    report.split_rationale=profile.label+': '+trainingDays.length+' sessões de força em '+available.length+' dias disponíveis. '+(kinds[0]==='full'?'Corpo inteiro em dias intercalados.':kinds[0]==='push'?'Empurrar, puxar e pernas, com sinergias conferidas.':'Superiores e inferiores alternados.');
+    if(priorities.some(p=>(audit.directSetsByGroup[p]||0)<profile.target))report.alerts.unshift('Tempo e recuperação limitaram a dose de algumas prioridades; confira as séries por grupo antes de aprovar.');
+    if(profile.id==='fat-loss')report.alerts.unshift('A musculação preserva força e massa; repetições altas não garantem emagrecimento. Cardio pode ser registrado separadamente conforme tolerância.');
+    const ordered=entries.map((ex,i)=>({ex,i})).sort((a,b)=>trainingDays.indexOf(a.ex.training_day)-trainingDays.indexOf(b.ex.training_day)||Number(!priorities.includes(a.ex.muscle_group))-Number(!priorities.includes(b.ex.muscle_group))||a.i-b.i).map(x=>x.ex);
+    return {name:'FOCO · '+profile.label+' · '+trainingDays.length+' dias',goal,weekly_frequency:trainingDays.length,
+      explanation:report.split_rationale+' Objetivo e nível definem repetições, séries, pausas e escolhas. A ficha ativa só muda após sua aprovação.',
+      exercises:ordered,training_science:report,generation:{method:'rules',version:AUTOMATIC_PLANNER_VERSION,ai_calls:0},
+      planning:{available_days:available,strength_days:trainingDays,recovery_days:WEEKDAYS.filter(d=>!trainingDays.includes(d)),
+        goal_profile:profile.id,priority_mode:balanced?'balanced':'focused',priorities,
+        recovery_policy:'full-calendar-day',reason:trainingDays.length<available.length?'Dias disponíveis são possibilidades, não sessões obrigatórias. Objetivo, nível, tempo e recuperação definiram a frequência de força.':'A divisão usa os dias disponíveis e preserva o intervalo entre estímulos do mesmo grupo.'}};
   }
-  const finalOptions={...auditOptions,priorityMuscles:priorities,requireBalancedCoverage:true,requireRecoveryDay:true};
-  const audit=auditScientificWorkout(entries,finalOptions);
-  if(!audit.ok||!fits(entries)||days.some(day=>!entries.some(e=>e.training_day===day)))
-    throw new PlannerError('PLAN_CONFLICT','As condições escolhidas não produziram uma semana recuperável dentro do tempo. Ajuste dias, duração ou prioridades; nenhuma ficha foi salva.');
-  const ordered=entries.map((ex,i)=>({ex,i})).sort((a,b)=>days.indexOf(a.ex.training_day)-days.indexOf(b.ex.training_day)
-    ||Number(!priorities.includes(a.ex.muscle_group))-Number(!priorities.includes(b.ex.muscle_group))||a.i-b.i).map(x=>x.ex);
-  const report=sciencePlanSummary({frequency:days.length,experience},audit);
-  const limited=priorities.filter(p=>(audit.directSetsByGroup[p]||0)<target);
-  if(limited.length)report.alerts.unshift('Tempo e recuperação limitaram a dose inicial de '+limited.join(', ')+'. A cobertura foi mantida; acompanhe a resposta antes de aumentar o volume.');
-  return {name:'FOCO · '+({2:'Corpo inteiro A/B',3:'Corpo inteiro A/B/C',4:'Superior / inferior A/B',5:'Superior / inferior + corpo inteiro',6:'Empurrar / puxar / pernas A/B',7:'Força + recuperação'})[days.length],
-    goal,weekly_frequency:days.length,explanation:'Ficha montada pelo motor de regras FOCO, sem chamada à IA. As escolhas consideram dias, tempo, equipamentos, prioridades e exercícios já cadastrados. Mesmas condições geram a mesma proposta. Revise antes de aprovar.',
-    exercises:ordered,training_science:report,generation:{method:'rules',version:AUTOMATIC_PLANNER_VERSION,ai_calls:0},
-  };
+  throw new PlannerError('COVERAGE_CONFLICT',lastIssue+' Amplie a duração, disponibilize dias intercalados ou reveja equipamentos/prioridades. Nenhuma ficha foi salva.');
 }
