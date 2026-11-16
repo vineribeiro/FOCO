@@ -10,7 +10,9 @@ export class AiError extends Error {
 export async function generateGeminiJson({ apiKey, model, prompt, schema, catalog, media,
   fetchImpl = fetch, timeoutMs = 25_000, onUsage = (_usage) => {} }) {
   const compact = !media && Array.isArray(catalog);
-  const wireSchema = compact ? compactSchema(schema, catalog) : toGroqSchema(schema);
+  // Multimodal extraction preserves optional fields: an absent RIR/observation
+  // must never become a field the model is forced to invent.
+  const wireSchema = compact ? compactSchema(schema, catalog) : toGroqSchema(schema, false);
   const parts = media ? [{ inline_data: { mime_type: media.mime, data: media.data } }] : [];
   parts.push({ text: prompt });
   const controller = new AbortController();
@@ -119,6 +121,7 @@ export function createAiRouter({ geminiKey = '', groqKey = '', geminiModel = 'ge
             throw invalid;
           }
           attempt.status = 'accepted';
+          cooldowns.delete(provider);
           const result = { ...value, ai_generation: { provider, model, cache_hit: false, calls, attempts: structuredClone(attempts) } };
           if (cacheResult && !media) {
             for (const [cacheKey, item] of cache) if (item.expiresAt <= now()) cache.delete(cacheKey);

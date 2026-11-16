@@ -94,6 +94,30 @@ await check('token logs contain no keys, prompts or account IDs',async()=>{
   for(const value of ['synthetic-gemini-secret','synthetic-groq-secret',options.prompt,options.scope]) assert.ok(!serialized.includes(value));
   assert.ok(logs.some(e=>e.total_tokens===2000));
 });
+await check('media extraction preserves optional fields and never reaches Groq',async()=>{
+  let calls=0;
+  const mediaSchema={type:'OBJECT',properties:{summary:{type:'STRING'},rir_target:{type:'INTEGER'}},required:['summary']};
+  const r=router(async(url,args)=>{
+    calls++;assert.ok(url.includes('generativelanguage'));
+    const sent=JSON.parse(args.body);
+    assert.deepEqual(sent.generationConfig.responseJsonSchema.required,['summary']);
+    assert.ok(sent.contents[0].parts[0].inline_data);
+    return new Response(JSON.stringify({candidates:[{finishReason:'STOP',content:{parts:[{text:'{"summary":"Somente texto legível"}'}]}}]}),{status:200});
+  });
+  const out=await r.generate({...options,schema:mediaSchema,media:{mime:'image/png',data:'synthetic'},cacheResult:false});
+  assert.equal(calls,1);assert.equal(out.rir_target,undefined);assert.equal(out.summary,'Somente texto legível');
+  assert.equal(out.ai_generation.attempts[0].total_tokens,null,'missing provider usage must remain unknown');
+});
+await check('media availability repair uses one alternative Gemini model and no extra calls',async()=>{
+  const urls=[];const mediaSchema={type:'OBJECT',properties:{summary:{type:'STRING'}},required:['summary']};
+  const r=router(async url=>{urls.push(url);return urls.length===1?new Response('{}',{status:503}):
+    new Response(JSON.stringify({candidates:[{finishReason:'STOP',content:{parts:[{text:'{"summary":"Legível"}'}]}}]}),{status:200});});
+  const out=await r.generate({...options,schema:mediaSchema,media:{mime:'application/pdf',data:'synthetic'},cacheResult:false});
+  assert.equal(urls.length,2);assert.ok(urls.every(url=>url.includes('generativelanguage')));
+  assert.notEqual(urls[0],urls[1]);assert.equal(out.ai_generation.calls,2);
+  await r.generate({...options,schema:mediaSchema,media:{mime:'application/pdf',data:'second-synthetic'},cacheResult:false});
+  assert.equal(urls.length,3,'a successful Gemini backup clears the temporary provider cooldown');
+});
 
 // Execute actual authenticated Edge routes with synthetic Auth/DB/providers.
 const compiled=stripTypeScriptTypes(source.slice(source.indexOf('const SUPABASE_URL')),{mode:'transform'});

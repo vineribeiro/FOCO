@@ -20,7 +20,7 @@ const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
 
 /** Convert Gemini schema types to strict JSON Schema without mutating the input. */
-export function toGroqSchema(schema) {
+export function toGroqSchema(schema, strict = true) {
   if (!object(schema)) throw new GroqError(500, "GROQ_SCHEMA_ERROR", "O formato da resposta de IA é inválido.");
   const result = { ...schema };
   if (typeof result.type === "string") result.type = result.type.toLowerCase();
@@ -28,13 +28,13 @@ export function toGroqSchema(schema) {
   if (schema.nullable === true && result.type) result.type = [...new Set([].concat(result.type, "null"))];
   delete result.nullable;
   if (schema.properties || result.type === "object" || Array.isArray(result.type) && result.type.includes("object")) {
-    result.properties = Object.fromEntries(Object.entries(schema.properties || {}).map(([key, value]) => [key, toGroqSchema(value)]));
-    result.required = Object.keys(result.properties);
+    result.properties = Object.fromEntries(Object.entries(schema.properties || {}).map(([key, value]) => [key, toGroqSchema(value, strict)]));
+    result.required = strict ? Object.keys(result.properties) : [...(schema.required || [])];
     result.additionalProperties = false;
   }
-  if (schema.items) result.items = toGroqSchema(schema.items);
+  if (schema.items) result.items = toGroqSchema(schema.items, strict);
   for (const key of ["anyOf", "oneOf", "allOf"]) {
-    if (schema[key]) result[key] = schema[key].map(toGroqSchema);
+    if (schema[key]) result[key] = schema[key].map(child => toGroqSchema(child, strict));
   }
   return result;
 }
