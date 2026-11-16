@@ -1,5 +1,6 @@
-# Regra ativa de mídia — FOCO / RepDB Free / 09-11-2026
-A **RepDB Free** é a única fonte de ilustrações de exercícios nas telas do FOCO.
+# Regra ativa de idioma e mídia — FOCO / 16-11-2026
+O proprietário pediu PT-BR para nomes/explicações e, em etapa posterior, avaliação de ilustrações próprias de IA. Aplicar `docs/EXERCISE_LANGUAGE_AND_AI_MEDIA_RULES.md`. As regras foram definidas; não afirmar que o catálogo já foi traduzido ou que imagens próprias já foram publicadas.
+A **RepDB Free** permanece a fonte de ilustrações técnicas publicadas até a revisão individual dos substitutos próprios. Protótipos de IA independentes são autorizados, com descrições próprias, origem e revisão rastreáveis; nunca usar as imagens RepDB como entrada ou referência de geração.
 Usar imagens WebP originais de posição inicial/final, com associação por `repdb_id` quando disponível. Nunca substituir uma variação por movimento semelhante.
 Fichas, histórico, dados técnicos do motor e catálogos internos de instrução permanecem preservados. Não apagar registros reais.
 Licença: https://github.com/RepDB/exercise-dataset/blob/main/LICENSE-DATA.md — uso dentro de aplicativos com atribuição visível: "Exercise data by RepDB (repdb.co)".
