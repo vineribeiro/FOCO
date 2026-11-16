@@ -204,19 +204,19 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
           <div className="min-w-0"><p id="foco-progress-weight-title" className="text-xs text-neutral-300">Peso corporal</p>
             <div className="foco-v6-progress-value">{heroValue}</div>
           </div>
-          {!isLoading && !dataUnavailable && heroDelta !== null && <span className="foco-progress-delta inline-flex shrink-0 items-center gap-1 rounded-full bg-[#D5FF40]/10 px-2 py-1 text-xs font-semibold text-[#D5FF40]">
+          {!isLoading && !dataUnavailable && heroDelta !== null && <span className="foco-progress-delta inline-flex shrink-0 items-center gap-1 rounded-full bg-[#E5F88A]/10 px-2 py-1 text-xs font-semibold text-[#E5F88A]">
             {heroDelta<0 ? <ArrowDownRight size={14} aria-hidden="true"/> : heroDelta>0 ? <ArrowUpRight size={14} aria-hidden="true"/> : null}
             <span className="sr-only">Variação no período: </span>{heroDelta>0?'+':''}{heroDelta.toLocaleString('pt-BR',{maximumFractionDigits:2})} {heroUnit}
           </span>}
         </div>
         {!isLoading && !dataUnavailable && numericSeries.length>=2?<svg className="foco-v6-progress-svg" viewBox="0 0 300 106" preserveAspectRatio="none" role="img" aria-label={'Tendência do peso no período: '+numericSeries[0].value.toLocaleString('pt-BR')+' '+heroUnit+' em '+numericSeries[0].date+', '+numericSeries[numericSeries.length-1].value.toLocaleString('pt-BR')+' '+heroUnit+' em '+numericSeries[numericSeries.length-1].date}>
           <defs><linearGradient id="v6-weight-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#D5FF40" stopOpacity=".32"/><stop offset="100%" stopColor="#D5FF40" stopOpacity="0"/>
+            <stop offset="0%" stopColor="#E5F88A" stopOpacity=".32"/><stop offset="100%" stopColor="#E5F88A" stopOpacity="0"/>
           </linearGradient></defs>
           <path d={'M'+pathPoints.replaceAll(' ',' L')+' L294 104 L6 104Z'} fill="url(#v6-weight-gradient)"/>
-          <polyline points={pathPoints} fill="none" stroke="#D5FF40" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/>
-          {svgPoints.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===svgPoints.length-1?3.6:2.2} fill="#D5FF40"/>)}
-        </svg>:<div className="my-5 flex h-[92px] items-center justify-center rounded-xl border border-dashed border-[#D5FF40]/15 text-center text-xs text-[#A5B09E]">
+          <polyline points={pathPoints} fill="none" stroke="#E5F88A" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/>
+          {svgPoints.map(([x,y],i)=><circle key={i} cx={x} cy={y} r={i===svgPoints.length-1?3.6:2.2} fill="#E5F88A"/>)}
+        </svg>:<div className="my-5 flex h-[92px] items-center justify-center rounded-xl border border-dashed border-[#E5F88A]/15 text-center text-xs text-[#A5B09E]">
           <p className="min-w-0 max-w-full px-3 leading-relaxed">{isLoading?'Consultando dados...':dataUnavailable?'Dados temporariamente indisponíveis.':'Amplie o período ou adicione outro registro para visualizar a tendência.'}</p>
         </div>}
         {!isLoading && !dataUnavailable && numericSeries.length>=2&&<div className="foco-progress-chart-dates flex justify-between text-[10px] text-[#B0B8AB]"><span>{numericSeries[0].date}</span><span>{numericSeries[numericSeries.length-1].date}</span></div>}
@@ -252,7 +252,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         <p className="foco-v2-insights-note">Resumo calculado das sessões salvas, incluindo cardio. Não estima recuperação muscular nem substitui orientação profissional.</p>
       </section>
       <details ref={reportRef} id="foco-v6-report" className="foco-v6-glass rounded-2xl p-3">
-        <summary className="cursor-pointer px-2 py-3 text-sm font-bold text-[#D5FF40]">Histórico, gráficos e ajustes</summary>
+        <summary className="cursor-pointer px-2 py-3 text-sm font-bold text-[#E5F88A]">Histórico, gráficos e ajustes</summary>
     <div className="foco-v5-evolution foco-progress-report space-y-5 pt-4">
       
       {/* Header */}
@@ -325,8 +325,8 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
               <AreaChart data={visibleWeightData}>
                 <defs>
                   <linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#D5FF40" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#D5FF40" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#E5F88A" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#E5F88A" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#303030" />
@@ -350,7 +350,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                   type="monotone"
                   dataKey="peso"
                   name="Peso (kg)"
-                  stroke="#D5FF40"
+                  stroke="#E5F88A"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#monoGrad)"
@@ -398,7 +398,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                 <Bar
                   dataKey="tonelagem"
                   name="Tonelagem (kg)"
-                  fill="#D5FF40"
+                  fill="#E5F88A"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>

@@ -190,7 +190,7 @@ function MainApp() {
   const avatarInitials = (user?.full_name || 'FOCO').trim().split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
 
   return (
-    <div className="foco-v6-shell foco-v5-shell foco-v4-shell min-h-screen text-white antialiased flex justify-center">
+    <div className="foco-app foco-v6-shell foco-v5-shell foco-v4-shell min-h-screen text-white antialiased flex justify-center">
       <a href="#foco-main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-50 focus:rounded-xl focus:bg-white focus:px-4 focus:py-3 focus:text-sm focus:font-bold focus:text-black">Pular para o conteúdo</a>
       
       {/* Mobile Ergonomic Container Shell (Zero-Overlap Guarantee) */}
@@ -198,12 +198,12 @@ function MainApp() {
         <div className="flex min-h-screen flex-1">
           <DesktopNav activeTab={activeTab} navigate={setActiveTab} />
           <div className="min-w-0 flex flex-1 flex-col">
-        <header className="hidden sticky top-0 z-30 md:flex h-[76px] items-center justify-between bg-[#0A0D0A]/95 px-5 backdrop-blur-xl sm:px-7 md:h-[70px] md:border-b md:border-white/10">
+        <header className="foco-app-topbar hidden sticky top-0 z-30 md:flex h-[76px] items-center justify-between px-5 sm:px-7 md:h-[70px]">
           <button type="button" onClick={() => setActiveTab('dashboard')}
             className="inline-flex items-center justify-center md:hidden" aria-label="FOCO — início">
             <FocoV6Lockup compact />
           </button>
-          <span className="hidden text-[10px] font-bold tracking-[.2em] text-[#D5FF40] md:block">TREINO. EVOLUÇÃO. PERFORMANCE.</span>
+          <span className="foco-app-location hidden md:block">{VIEW_TITLES[activeTab]}</span>
           <div className="flex items-center gap-2.5">
             <div className="hidden sm:block"><InstallAppButton /></div>
             <button type="button" onClick={() => setActiveTab('configuracoes')} aria-label="Configurações"

@@ -79,7 +79,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
           <p className="mt-1 text-xs text-neutral-400">FOCO Visual {FOCO_VISUAL_RELEASE} · {FOCO_VISUAL_DATE}. Se a interface anterior aparecer, atualize os arquivos sem excluir o histórico salvo.</p>
         </div>
         <a href={import.meta.env.BASE_URL + 'atualizar.html'}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#D5FF40] px-4 text-xs font-extrabold text-[#10160D]">
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#E5F88A] px-4 text-xs font-extrabold text-[#10160D]">
           <RefreshCcw className="h-4 w-4"/> Atualizar
         </a>
       </section>
@@ -95,7 +95,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
             {([['comfortable','Confortável'],['compact','Compacto']] as const).map(([value,label])=>
               <button key={value} type="button" aria-pressed={uiPreferences.density===value}
                 onClick={()=>changeUiPreferences({density:value})}
-                className={'min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8F040] '+(uiPreferences.density===value?'border-[#C8F040] bg-[#C8F040] text-[#10160D]':'border-white/20 bg-white/5 text-white')}>
+                className={'min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E5F88A] '+(uiPreferences.density===value?'border-[#E5F88A] bg-[#E5F88A] text-[#10160D]':'border-white/20 bg-white/5 text-white')}>
                 {label}
               </button>)}
           </div>
@@ -106,7 +106,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
             {([['balanced','Equilibrada'],['reduced','Reduzida']] as const).map(([value,label])=>
               <button key={value} type="button" aria-pressed={uiPreferences.glass===value}
                 onClick={()=>changeUiPreferences({glass:value})}
-                className={'min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8F040] '+(uiPreferences.glass===value?'border-[#C8F040] bg-[#C8F040] text-[#10160D]':'border-white/20 bg-white/5 text-white')}>
+                className={'min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E5F88A] '+(uiPreferences.glass===value?'border-[#E5F88A] bg-[#E5F88A] text-[#10160D]':'border-white/20 bg-white/5 text-white')}>
                 {label}
               </button>)}
           </div>
@@ -144,7 +144,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
       <section className="rounded-2xl border border-white/10 bg-[#141414] p-5" aria-labelledby="foco-image-credit-title">
         <h2 id="foco-image-credit-title" className="text-sm font-bold text-white">Créditos das ilustrações</h2>
         <p className="mt-2 text-xs leading-5 text-neutral-400">As posições dos exercícios são imagens estáticas do catálogo gratuito da RepDB. O crédito e a licença acompanham a biblioteca.</p>
-        <a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-xs font-bold text-[#D5FF40] underline underline-offset-4">{REPDB_CREDIT_TEXT}</a>
+        <a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-xs font-bold text-[#E5F88A] underline underline-offset-4">{REPDB_CREDIT_TEXT}</a>
       </section>
 
       <button type="button" onClick={logout} className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-xs font-black uppercase tracking-wide text-white transition hover:border-white/35 hover:bg-white/10">

@@ -257,7 +257,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
     const W = 1080, H = 1920;
-    const lime = '#D5FF40', white = '#F6F7F3', muted = '#A6ADA5';
+    const lime = '#E5F88A', white = '#F6F7F3', muted = '#A6ADA5';
     const minutes = Math.max(0, Math.round(Number(completed.duration || 0) / 60));
     const date = new Date(completed.finishedAt || Date.now());
     const dateLabel = date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '').toUpperCase();
@@ -657,6 +657,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           <span>{v6CurrentExercise.muscle_group || 'Treinamento'} · {v6CurrentExercise.sets.length} séries</span>
         </div>
       </section>}
+      <div className="foco-session-console">
       {!sessionStarted && !pendingSubmission && v6CurrentExercise && <button type="button" className="foco-v6-primary foco-v7-session-start" onClick={handleStartWorkout}>
         Iniciar treino <Play size={17} fill="currentColor"/>
       </button>}
@@ -744,8 +745,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <CheckCircle2 size={17}/>{isSaving?'Salvando sessão...':pendingSubmission?'Tentar salvar o mesmo treino':'Finalizar e salvar treino'}
       </button>}
       {errorAlert&&<p role="alert" className="foco-v6-glass rounded-xl p-3 text-sm">{errorAlert}</p>}
+      </div>
       {!pendingSubmission && <details className="foco-v6-glass rounded-2xl p-3">
-        <summary className="cursor-pointer p-2 text-xs font-bold text-[#C8F040]">Ficha completa e ajustes avançados</summary>
+        <summary className="cursor-pointer p-2 text-xs font-bold text-[#E5F88A]">Ficha completa e ajustes avançados</summary>
       <div className="foco-v5-session foco-v4-page max-w-3xl space-y-4 pb-8">
       <header className="space-y-1">
         <p className="foco-v4-eyebrow">{sessionStarted ? 'Sessão ativa' : 'Sua sessão'}</p>
@@ -765,7 +767,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <Clock className="ml-auto mb-3 h-6 w-6 text-[#C8F040]" aria-hidden="true"/>
+          <Clock className="ml-auto mb-3 h-6 w-6 text-[#E5F88A]" aria-hidden="true"/>
           <span className="block text-[10px] font-bold uppercase tracking-wider text-[#A7B39D]">Tempo</span>
           <span className="foco-v5-session-poster-clock">{formatTime(elapsedSeconds)}</span>
         </div>
@@ -776,7 +778,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-[#C8F040] animate-ping' : 'bg-neutral-600'}`} />
+              <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-[#E5F88A] animate-ping' : 'bg-neutral-600'}`} />
               <span className="text-xs uppercase font-extrabold tracking-wider text-white">
                 {sessionStarted ? 'Treino em Andamento' : 'Sessão Pronta'}
               </span>

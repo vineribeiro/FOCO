@@ -29,7 +29,7 @@ Ferramenta de organização e acompanhamento de treinos com personalização, UX
 - **Autonomia:** editar ficha e exercícios, distinguir “apenas hoje” de “salvar sempre”, sem alterar calendário involuntariamente.
 - **Privacidade:** avaliações e anamnese podem conter dados de saúde sensíveis. Reavaliar base legal, finalidade, consentimento quando aplicável, direitos dos titulares e segurança antes da comercialização.
 - **Acessibilidade:** meta WCAG 2.2 AA, incluindo teclado, zoom, foco, alvos táteis e movimento reduzido; comprovação prática pendente.
-- **Visual:** preservar linguagem escura editorial com acento lima e marca FOCO aprovada; não copiar telas de terceiros.
+- **Visual:** aplicar a direção aprovada em 16/11/2026: grafite, lima, lilás e rosa, tipografia geométrica e navegação flutuante. Manter a marca FOCO, dados verdadeiros e autoria própria na adaptação da referência fornecida.
 - **Performance:** treinar com uma mão, em ambiente de academia, sem bloqueios ou efeitos que ocultem controles.
 
 ## Fatos confirmados no código (não são garantias comerciais)

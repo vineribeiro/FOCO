@@ -23,7 +23,7 @@ const tools = [
 ];
 
 export const DesktopNav: React.FC<DesktopNavProps> = ({ activeTab, navigate }) => (
-  <aside aria-label="Navegação do FOCO" className="foco-v5-sidebar hidden md:sticky md:top-0 md:flex md:h-screen md:overflow-y-auto w-60 shrink-0 flex-col border-r border-[#D5FF40]/10 bg-[#0C100C] px-4 py-6 lg:w-64">
+  <aside aria-label="Navegação do FOCO" className="foco-v5-sidebar hidden md:sticky md:top-0 md:flex md:h-screen md:overflow-y-auto w-60 shrink-0 flex-col border-r border-[#E5F88A]/10 bg-[#222222] px-4 py-6 lg:w-64">
     <div className="mb-10 flex flex-col gap-2 px-2"><FocoV6Lockup compact /><span className="text-[9px] font-bold tracking-[.16em] text-[#AEBDA0]">TREINO. EVOLUÇÃO. PERFORMANCE.</span></div>
     <nav aria-label="Principal" className="space-y-1">
       {primary.map(({ id, label, icon: Icon }) => {
