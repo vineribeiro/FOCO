@@ -3,7 +3,7 @@ import { BatteryFull, Signal, Wifi, Dumbbell, CalendarDays, ArrowLeft, Menu, Use
 
 /** Full-resolution photographic image — never stretch the tiny 3 KB preview
  * formerly embedded in focoReferencePortrait. */
-const ATHLETE_HERO_QUALITY='https://images.unsplash.com/photo-1637651684506-07e16fcf7b06?auto=format&fit=crop&w=2400&q=90';
+const ATHLETE_HERO_QUALITY=import.meta.env.BASE_URL+'assets/photos/foco-athlete.jpg';
 export const V6_IMAGES = {
   portrait: ATHLETE_HERO_QUALITY,
   athlete: ATHLETE_HERO_QUALITY,
@@ -15,9 +15,9 @@ export const V6_IMAGES = {
 
 export const FocoV6Mark: React.FC<{ size?: number; className?: string; light?: boolean }> = ({ size=48, className='',light=false }) => (
   <svg aria-label="Símbolo FOCO" role="img" className={className} width={size} height={size} viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M7 47L19 17H35L22 47H7Z" fill={light ? '#F5F5F2' : '#D5FF40'}/>
-    <path d="M28 69L53 6H69L44 69H28Z" fill={light ? '#F5F5F2' : '#D5FF40'}/>
-    <path d="M57 43L65 23H78L70 43H57Z" fill={light ? '#F5F5F2' : '#D5FF40'}/>
+    <path d="M7 47L19 17H35L22 47H7Z" fill={light ? '#F5F5F2' : '#E5F88A'}/>
+    <path d="M28 69L53 6H69L44 69H28Z" fill={light ? '#F5F5F2' : '#E5F88A'}/>
+    <path d="M57 43L65 23H78L70 43H57Z" fill={light ? '#F5F5F2' : '#E5F88A'}/>
   </svg>
 );
 
@@ -41,7 +41,7 @@ export const FocoV6MobileTitle: React.FC<{
 </header>;
 
 export const FocoV6WeekStrip: React.FC<{
-  labels:{short:string;day:string;label?:string;selected?:boolean;done?:boolean;active?:boolean}[];
+  labels:{short:string;day:string;label?:string;date?:string;selected?:boolean;done?:boolean;active?:boolean}[];
   onSelect?:(day:string)=>void
 }> = ({labels,onSelect}) => {
   const scroller = useRef<HTMLDivElement>(null);
@@ -98,7 +98,8 @@ export const FocoV6WeekStrip: React.FC<{
           aria-current={item.active?'date':undefined}
           aria-label={(item.label||item.short)+(item.done?', treino concluído':'')+(item.active?', hoje':'')}>
           <span>{item.short}</span>
-          {item.active ? <span className="foco-v6-week-today">{item.done?'✓ Hoje':'Hoje'}</span>
+          {item.date ? <span className="foco-calendar-date">{item.date}{item.done&&<small aria-hidden="true">✓</small>}</span>
+            : item.active ? <span className="foco-v6-week-today">{item.done?'✓ Hoje':'Hoje'}</span>
             : item.done ? <span className="foco-v6-week-check">✓</span> : <span className="foco-v6-week-dash">—</span>}
         </button>)}
       </div>

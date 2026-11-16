@@ -97,10 +97,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
       </header>
       <section className="foco-v6-profile-card foco-profile-identity" aria-labelledby="foco-profile-name">
         <div className="foco-v6-profile-avatar grid place-items-center" aria-hidden="true">
-          <span className="grid h-full w-full place-items-center rounded-full bg-gradient-to-br from-[#303B23] to-[#0C100B] text-2xl font-black text-[#D5FF40]">{initials}</span>
+          <span className="grid h-full w-full place-items-center rounded-full bg-gradient-to-br from-[#303B23] to-[#0C100B] text-2xl font-black text-[#E5F88A]">{initials}</span>
         </div>
         <h2 id="foco-profile-name">{fullName||user?.full_name||'Atleta FOCO'}</h2>
-        <span className="mt-1 rounded-full bg-[#D5FF40]/10 px-3 py-1 text-[10px] font-bold text-[#D5FF40]">Plano pessoal</span>
+        <span className="mt-1 rounded-full bg-[#E5F88A]/10 px-3 py-1 text-[10px] font-bold text-[#E5F88A]">Plano pessoal</span>
       </section>
       <section className="foco-v6-profile-kpis" aria-label="Resumo dos seus treinos">
         <div className="foco-v6-profile-kpi"><strong>{trainingSummary?.completed??'—'}</strong><p>Treinos</p></div>
@@ -113,7 +113,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
         </button>)}
       </nav>
       <details className="foco-profile-edit foco-v6-glass rounded-2xl p-3">
-        <summary className="cursor-pointer px-2 py-2 text-sm font-bold text-[#D5FF40]">Editar meus dados <ChevronRight size={16} className="ml-2 inline"/></summary>
+        <summary className="cursor-pointer px-2 py-2 text-sm font-bold text-[#E5F88A]">Editar meus dados <ChevronRight size={16} className="ml-2 inline"/></summary>
       <section className="foco-v5-profile space-y-5 pt-3 text-white" aria-labelledby="foco-profile-personal-data-title">
         <h2 id="foco-profile-personal-data-title" className="px-2 text-base font-bold">Dados pessoais</h2>
 

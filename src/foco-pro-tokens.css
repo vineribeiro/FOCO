@@ -1,21 +1,13 @@
-/* FOCO PRO — tokens semânticos canônicos.
- * Migração incremental; valores 2026 aprovados preservados, sem trocar paleta por uma skill. */
+/* FOCO — reference-led system approved by the owner, 16 November 2026. */
 :root {
-  --foco-pro-canvas: #080A07;
-  --foco-pro-panel: #191C15;
-  --foco-pro-panel-raised: #23261D;
-  --foco-pro-accent: #D5FF40;
-  --foco-pro-ink: #F7F8F4;
-  --foco-pro-muted: #B5BEAF;
-  --foco-pro-border: rgba(239,244,226,.14);
-  --foco-pro-liquid: rgba(30,34,26,.64);
-  --foco-pro-radius-card: 20px;
-  --foco-pro-radius-control: 999px;
-  --foco-pro-tap-target: 44px;
-  --foco-pro-motion-fast: 140ms;
-  --foco-pro-motion-standard: 260ms;
-  --foco-pro-motion-slow: 420ms;
-  --foco-pro-font-body: 'Plus Jakarta Sans',Poppins,system-ui,sans-serif;
-  --foco-pro-font-display: Poppins,'Plus Jakarta Sans',system-ui,sans-serif;
-  --foco-pro-font-metric: 'JetBrains Mono',ui-monospace,monospace;
+  --foco-pro-canvas:#222222; --foco-pro-panel:#2D2D2D; --foco-pro-panel-raised:#363636;
+  --foco-pro-accent:#E5F88A; --foco-pro-lilac:#B6A1F3; --foco-pro-rose:#EDC3F7;
+  --foco-pro-paper:#FAFAF7; --foco-pro-dark-ink:#22231C;
+  --foco-pro-ink:#F7F7F3; --foco-pro-muted:#BCBCB8;
+  --foco-pro-border:rgba(255,255,255,.14); --foco-pro-liquid:#2D2D2D;
+  --foco-pro-radius-card:24px; --foco-pro-radius-control:999px; --foco-pro-tap-target:44px;
+  --foco-pro-motion-fast:140ms; --foco-pro-motion-standard:260ms; --foco-pro-motion-slow:420ms;
+  --foco-pro-font-body:'Space Grotesk',system-ui,sans-serif;
+  --foco-pro-font-display:'Michroma','Space Grotesk',sans-serif;
+  --foco-pro-font-metric:'Michroma','Space Grotesk',sans-serif;
 }

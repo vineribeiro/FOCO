@@ -165,49 +165,31 @@ try{
         width:img.naturalWidth,height:img.naturalHeight,
       }));
       assert.ok(hero.loaded,'FOCO hero athlete media must decode, not show a broken-image icon');
-      // The current reference uses a compact photo card, quiet chrome and a
-      // week immediately beneath it. Keep the release visible without forcing
-      // the previous oversized promotional header back into the product.
-      const visualRelease=page.locator('.foco-21-version-pill');
-      assert.ok((await visualRelease.innerText()).includes('V2.4'),'FOCO 2.4 release badge must be visible');
-      await page.locator('.foco-21-week-pulse').waitFor({timeout:4000});
-      const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>{
-        const heading=el.querySelector('h2');
-        const greeting=document.querySelector('.foco-v6-home-intro h1');
-        const action=el.querySelector('.foco-v6-primary');
-        return {radius:getComputedStyle(el).borderRadius,height:el.getBoundingClientRect().height,
-          titleFont:heading?parseFloat(getComputedStyle(heading).fontSize):null,
-          greetingFont:greeting?parseFloat(getComputedStyle(greeting).fontSize):null,
-          actionHeight:action?.getBoundingClientRect().height??0};
-      });
-      assert.equal(homeStyle.radius,'20px','Home must use the reference\'s restrained 20px card radius');
-      assert.ok(homeStyle.actionHeight>=44&&homeStyle.actionHeight<=56,
-        'Home action must retain a comfortable target within the compact card');
-      const expandedHome=size.width>=1200;
-      assert.ok(expandedHome?homeStyle.titleFont>=36&&homeStyle.titleFont<=40
-        :homeStyle.titleFont>=26&&homeStyle.titleFont<=34,
-        'Home workout title must keep the reference\'s hierarchy at '+size.name+': '+JSON.stringify(homeStyle));
-      assert.ok(expandedHome?homeStyle.greetingFont>=34&&homeStyle.greetingFont<=38
-        :homeStyle.greetingFont>=25&&homeStyle.greetingFont<=32,
-        'Home greeting must keep the reference\'s hierarchy at '+size.name+': '+JSON.stringify(homeStyle));
-      assert.ok(size.width<768?homeStyle.height>=271&&homeStyle.height<=321
-        :size.width<1200?homeStyle.height>=370&&homeStyle.height<=400
-        :homeStyle.height>=430&&homeStyle.height<=460,
-        'Home photo card must match the compact reference scale at '+size.name+': '+JSON.stringify(homeStyle));
-      assert.equal(await page.locator('.foco-21-week-section [data-training-day]').count(),7,
-        'The compact reference must preserve access to all seven weekdays');
+      await page.evaluate(()=>document.fonts.ready);
+      const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>({
+        radius:getComputedStyle(el).borderRadius,
+        background:getComputedStyle(el).backgroundColor,
+        headingFont:getComputedStyle(el.querySelector('h2')).fontFamily,
+        bodyFont:getComputedStyle(document.body).fontFamily,
+        actionHeight:el.querySelector('button').getBoundingClientRect().height,
+      }));
+      assert.equal(homeStyle.background,'rgb(229, 248, 138)','Home hero must use the approved pastel lime');
+      assert.equal(homeStyle.radius,'26px');
+      assert.match(homeStyle.headingFont,/Michroma/);
+      assert.match(homeStyle.bodyFont,/Space Grotesk/);
+      assert.ok(homeStyle.actionHeight>=44,'Home primary action must have a usable target');
+      assert.equal(await page.locator('.foco-home-calendar [data-training-day]').count(),7,
+        'All seven weekdays must remain accessible');
+      assert.ok(await page.locator('.foco-plan-card').count()>0,'Stored workouts must appear as real plan cards');
+      await page.getByRole('button',{name:'Inferiores',exact:true}).click();
+      assert.equal(await page.getByRole('button',{name:'Inferiores',exact:true}).getAttribute('aria-pressed'),'true');
+      await page.getByRole('button',{name:'Todos',exact:true}).click();
       if(size.width<768){
-        const placement=await page.evaluate(()=>{
-          const hero=document.querySelector('.foco-v6-hero').getBoundingClientRect();
-          const week=document.querySelector('.foco-21-week-section').getBoundingClientRect();
-          const strip=document.querySelector('.foco-21-week-section .foco-v6-week-scroller').getBoundingClientRect();
-          const nav=document.querySelector('nav[aria-label="Navegação principal"]').getBoundingClientRect();
-          return {gap:week.top-hero.bottom,stripBottom:strip.bottom,navTop:nav.top};
-        });
-        assert.ok(placement.gap>=0&&placement.gap<=24,
-          'The weekly schedule must follow the hero directly on mobile: '+JSON.stringify(placement));
-        assert.ok(size.width<390||placement.stripBottom<=placement.navTop,
-          'The week must be visible above mobile navigation: '+JSON.stringify(placement));
+        const nav=page.getByRole('navigation',{name:'Navegação principal',exact:true});
+        assert.equal(await nav.getByRole('button').count(),5);
+        const bounds=await nav.boundingBox();
+        assert.ok(bounds.x>=0&&bounds.x+bounds.width<=size.width,'All five navigation destinations must fit on screen');
+        assert.equal(await nav.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(250, 250, 247)');
       }
     }
     if(view==='sessao'){
@@ -215,7 +197,7 @@ try{
       await page.locator('.foco-21-exercise-media .foco-repdb-pose').waitFor({timeout:10000});
       assert.equal(await page.locator('.foco-21-exercise-media img').count(),1,
         'Active workout must show exactly one RepDB WebP instead of an icon');
-      assert.ok((await page.locator('.foco-21-session-mark').innerText()).includes('FOCO 2.4'),'FOCO 2.4 session marker must be visible');
+      assert.equal(await page.locator('.foco-session-console').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(250, 250, 247)','The recording console must use the light reference panel');
       await page.locator('.foco-21-exercise-media').waitFor({timeout:4000});
       const sessionLayout=await page.evaluate(()=>{
         const stage=document.querySelector('.foco-v7-session-stage');
@@ -236,11 +218,11 @@ try{
           visualScale:viewport?.scale??1,
         };
       });
-      assert.equal(sessionLayout.stageRadius,'20px','Session must share the restrained 20px reference radius');
-      assert.ok(sessionLayout.screenWidth<=Math.min(size.width,505),'Workout cannot expand past its intended width');
+      assert.equal(sessionLayout.stageRadius,'26px 26px 0px 0px','Stage must join the light recording console');
+      assert.ok(sessionLayout.screenWidth<=Math.min(size.width,760),'Workout cannot expand past its intended width');
       assert.ok(sessionLayout.stageWidth<=sessionLayout.screenWidth+1,'Exercise hero cannot overrun session container');
       assert.ok(sessionLayout.headerFont<=28&&sessionLayout.titleFont<=30,'Training headings must not be zoomed');
-      assert.ok(sessionLayout.inputFont===null||(sessionLayout.inputFont>=16&&sessionLayout.inputFont<=28),'Workout input font must be ergonomic without triggering browser auto-zoom');
+      assert.ok(sessionLayout.inputFont===null||(sessionLayout.inputFont>=16&&sessionLayout.inputFont<=30),'Workout input font must be ergonomic without triggering browser auto-zoom');
       assert.ok(sessionLayout.visualScale<=1.01,'No accidental browser viewport magnification');
       assert.ok(size.width<768
         ? sessionLayout.stageHeight>=210&&sessionLayout.stageHeight<=305
@@ -297,7 +279,7 @@ try{
     // Synthetic, local-only interaction smoke: exercises are editable and route transitions are real.
     if(!issue && size.name==='mobile-390'){
       if(view==='dashboard'){
-        await page.getByRole('button',{name:/Visualizar os exercícios do dia/}).click();
+        await page.locator('.foco-plan-card').first().click();
         await page.locator('.foco-v6-detail h1').first().waitFor({timeout:4000});
         // Route navigation is synchronous; workout data arrives asynchronously.
         // Wait for the fixture exercise rather than asserting against the loading skeleton.

@@ -70,7 +70,7 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
         <section role="alert" className="rounded-2xl border border-amber-200/30 bg-[#1C1C13] p-6">
           <h3 className="text-base font-bold">Histórico indisponível</h3>
           <p className="mt-2 text-sm leading-relaxed text-neutral-300">Não foi possível consultar as sessões salvas. Seus registros não foram apagados.</p>
-          <button type="button" onClick={()=>setReloadKey(n=>n+1)} className="mt-4 min-h-11 rounded-xl bg-[#C8F040] px-5 text-sm font-bold text-black">Tentar novamente</button>
+          <button type="button" onClick={()=>setReloadKey(n=>n+1)} className="mt-4 min-h-11 rounded-xl bg-[#E5F88A] px-5 text-sm font-bold text-black">Tentar novamente</button>
         </section>
       ) : sessions.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-[#141414] border border-dashed border-white/10 space-y-3">
@@ -102,7 +102,7 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                   aria-expanded={isExpanded}
                   aria-controls={'foco-history-details-'+sess.id}
                   onClick={() => setExpandedSessionId(isExpanded ? null : sess.id)}
-                  className="w-full p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer text-left hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#C8F040] transition-colors"
+                  className="w-full p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer text-left hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#E5F88A] transition-colors"
                 >
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white shrink-0">

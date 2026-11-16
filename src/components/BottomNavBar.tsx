@@ -26,8 +26,8 @@ export const BottomNavBar:React.FC<BottomNavBarProps>=({activeTab,setActiveTab})
           (id==='perfil'&&['anamnese','configuracoes','objetivos'].includes(activeTab));
         return <button type="button" key={id} onClick={()=>route(id)} aria-current={selected?'page':undefined}
           aria-label={label} className={'foco-v4-tab '+(selected?'foco-v4-tab-active':'')}>
-          <Icon strokeWidth={selected?2.4:1.65} aria-hidden="true"/>
-          <span className="sr-only">{label}</span>
+          <span className="foco-tab-icon"><Icon strokeWidth={selected?2.2:1.6} aria-hidden="true"/></span>
+          <span className="foco-tab-label">{label}</span>
         </button>;
       })}
     </div>

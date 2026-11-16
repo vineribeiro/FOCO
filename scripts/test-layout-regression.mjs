@@ -210,7 +210,7 @@ async function precedes(first, second, message) {
 
 async function homeLayout(page, viewport) {
   const hero = page.locator('.foco-v6-hero');
-  const week = page.locator('.foco-21-week-section');
+  const week = page.locator('.foco-home-calendar');
   const start = hero.getByRole('button', { name: 'Iniciar treino', exact: true });
   await until(() => start.isEnabled(), 'Home must expose its loaded primary workout action');
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -383,7 +383,7 @@ try {
   await check('all-seven-weekdays-filter-and-keyboard', viewports[0], async ({ page }) => {
     for (const [day, label] of days) {
       await openView(page, 'dashboard');
-      const button = page.locator('.foco-21-week-section [data-training-day="' + day + '"]');
+      const button = page.locator('.foco-home-calendar [data-training-day="' + day + '"]');
       await button.focus();
       await page.keyboard.press('Enter');
       await until(() => page.url().includes('view=detalhes'), 'Choosing ' + label + ' must open its workout detail');

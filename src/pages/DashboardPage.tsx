@@ -1,13 +1,13 @@
 import { conciseWorkoutName } from '../utils/workoutTitles';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowRight, CalendarDays, ChevronRight, Clock3, Dumbbell, House, Menu, Play, ScanLine, Sparkles } from 'lucide-react';
+import { Activity, ArrowUpRight, BookOpen, Settings2, ArrowRight, Dumbbell, House, ScanLine, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { savePreferredTrainingDay } from '../data/exerciseLibrary';
 import type { WorkoutPlan, WorkoutSession } from '../types';
-import { FocoV6Lockup, FocoV6WeekStrip, V6_IMAGES } from '../components/FocoV6UI';
+import { FocoV6WeekStrip, FocoV6Segment, V6_IMAGES } from '../components/FocoV6UI';
+import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { isCardioSession } from '../utils/cardio';
-import { FOCO_VISUAL_RELEASE } from '../utils/release';
 
 const WEEK=[
   {day:'segunda',short:'SEG',label:'Segunda-feira'},
@@ -26,6 +26,7 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
   const [sessions,setSessions]=useState<WorkoutSession[]>([]);
   const [loading,setLoading]=useState(true);
   const [loadError,setLoadError]=useState(false);
+  const [planFilter,setPlanFilter]=useState('all');
   useEffect(()=>{
     let mounted=true;
     Promise.all([api.getActiveWorkout(),api.getSessions()]).then(([p,s])=>{
@@ -68,89 +69,72 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
     savePreferredTrainingDay(today.day);
     setActiveTab('sessao');
   };
-  return <div className="foco-v6-dashboard foco-v4-page">
-    <header className="foco-v6-home-header">
-      <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('configuracoes')} aria-label="Abrir menu e configurações"><Menu size={20}/></button>
-      <div className="foco-21-brand-block">
-        <FocoV6Lockup compact />
-      </div>
-      <span className="foco-21-version-pill" aria-label={'FOCO Visual '+FOCO_VISUAL_RELEASE}>
-        V{FOCO_VISUAL_RELEASE}
-      </span>
+  const weekProgress=target?Math.min(100,Math.round(completed.length/target*100)):0;
+  const dailyPlans=hasDaySplit?WEEK.map(day=>({day:day.day,label:day.label,exercises:exercises.filter(ex=>!ex.training_day||ex.training_day===day.day)})).filter(day=>day.exercises.length)
+    :exercises.length?[{day:'',label:'Ficha geral',exercises}]:[];
+  const visiblePlans=dailyPlans.filter(day=>planFilter==='all'||day.exercises.some(ex=>planFilter==='lower'
+    ?/quadr|posterior|gl[uú]te|panturr|adutor|abdutor/i.test(ex.muscle_group)
+    :/peito|peitoral|costas|ombro|b[ií]cep|tr[ií]cep|trap[eé]z|antebra/i.test(ex.muscle_group)));
+  const initials=(user?.full_name||'FOCO').split(/\s+/).slice(0,2).map(part=>part[0]).join('');
+  return <div className="foco-v6-dashboard foco-v4-page foco-home">
+    <header className="foco-home-greeting">
+      <button type="button" className="foco-home-avatar" onClick={()=>setActiveTab('perfil')} aria-label="Meu perfil">{initials}</button>
+      <div><h1>Olá, {firstName}</h1><p>{greeting}. Vamos no seu ritmo.</p></div>
+      <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('configuracoes')} aria-label="Abrir menu e configurações"><Settings2 size={19}/></button>
     </header>
-    <div className="foco-v6-home-intro">
-      <div><p>{greeting},</p><h1>{firstName}</h1></div>
-      {plan && <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('treinos')} aria-label="Ver meu calendário"><CalendarDays size={18}/></button>}
-    </div>
-
-    {loadError && <div role="alert" className="foco-v6-glass rounded-2xl p-4 text-sm">
-      Não conseguimos consultar seus treinos. Os dados não foram alterados.
-      <button type="button" onClick={()=>window.location.reload()} className="ml-2 text-[#D5FF40] underline">Recarregar</button>
-    </div>}
+    {loadError&&<div role="alert" className="foco-v6-glass p-4 text-sm">Não conseguimos consultar seus treinos. <button type="button" onClick={()=>window.location.reload()} className="underline">Recarregar</button></div>}
     <div className="foco-home-layout">
-    <section className="foco-v6-hero foco-motion-hero" aria-labelledby="foco-v6-workout-title">
-      <img src={V6_IMAGES.athlete} alt="" loading="eager" decoding="async"/>
-      {plan && selectedExercises.length>0&&<button type="button" onClick={()=>handleDetail(today.day)}
-        aria-label="Visualizar os exercícios do dia" title="Visualizar os exercícios do dia"
-        className="foco-v6-hero-detail"><ArrowRight size={17}/></button>}
-      <div className="foco-v6-hero-body">
-        <p className="foco-v6-hero-eyebrow">{plan?'TREINO DO DIA':'SEU TREINO, SUA JORNADA'}</p>
-        <h2 id="foco-v6-workout-title">{loading?'Preparando sua jornada':plan?(selectedExercises.length?title:'Recuperação ativa'):'Sua evolução começa aqui.'}</h2>
-        <div className="foco-v6-pills">
-          {plan&&<span className="foco-v6-pill"><Dumbbell size={12}/>{selectedExercises.length} {selectedExercises.length===1?'exercício':'exercícios'}</span>}
-          {plan&&<span className="foco-v6-pill"><CalendarDays size={12}/>{target} dias/semana</span>}
-          {plan&&muscles.length>0&&<span className="foco-v6-pill"><strong>FOCO:</strong> {muscles.join(' · ')}</span>}
-          {!plan&&<span className="foco-v6-pill"><Sparkles size={12}/>Programa individual</span>}
-        </div>
-        <button type="button" className="foco-v6-primary" disabled={loading||loadError} onClick={handleStart}>
-          {!plan?'Personalizar treino':selectedExercises.length?'Iniciar treino':'Fazer cardio'}<Play size={15} fill="currentColor"/>
-        </button>
+      <div className="foco-home-primary">
+        <section className="foco-v6-hero foco-home-hero foco-motion-hero" aria-labelledby="foco-v6-workout-title">
+          <div className="foco-home-hero-copy">
+            <span className="foco-home-hero-caption">{plan?'Seu treino de hoje':'Seu próximo passo'}</span>
+            <h2 id="foco-v6-workout-title">{loading?'Preparando seu treino':plan?(selectedExercises.length?title:'Recuperação ativa'):'Vamos começar?'}</h2>
+            <p>{plan?selectedExercises.length+' exercícios · '+target+' dias por semana':'Monte seu plano com suas preferências.'}</p>
+            <button type="button" className="foco-v6-primary" disabled={loading||loadError} onClick={handleStart}>{!plan?'Personalizar treino':selectedExercises.length?'Iniciar treino':'Fazer cardio'}<ArrowUpRight size={18}/></button>
+          </div>
+          <div className="foco-home-hero-art" aria-hidden="true"><img src={V6_IMAGES.athlete} alt="" loading="eager" decoding="async"/></div>
+          {target>0&&!loading&&!loadError&&<div className="foco-goal-ring" style={{'--goal-progress':weekProgress+'%'} as React.CSSProperties} aria-label={weekProgress+'% da meta semanal de treinos concluída'}><span>{weekProgress}%<small>da semana</small></span></div>}
+        </section>
+        <section className="foco-home-plans" aria-labelledby="foco-home-plan-title">
+          <div className="foco-section-heading"><h2 id="foco-home-plan-title">Seu plano</h2><button type="button" onClick={()=>setActiveTab('treinos')} aria-label="Ver todos os treinos"><ArrowUpRight size={22}/></button></div>
+          <FocoV6Segment label="Filtrar treinos por região" options={[{value:'all',label:'Todos'},{value:'lower',label:'Inferiores'},{value:'upper',label:'Superiores'}]} value={planFilter} onChange={setPlanFilter}/>
+          <div className="foco-home-plan-grid">
+            {visiblePlans.slice(0,2).map((day,index)=>{
+              const groups=[...new Set(day.exercises.map(ex=>ex.muscle_group).filter(Boolean))];
+              const estimate=Math.ceil(6+day.exercises.reduce((sum,ex)=>sum+(ex.sets||0)+Math.max(0,(ex.sets||0)-1)*(ex.rest_seconds||0)/60+1.5,0));
+              return <button type="button" key={day.day||'general'} className="foco-plan-card" data-tone={index%2?'rose':'lilac'} onClick={()=>day.day?handleDetail(day.day):setActiveTab('treinos')} aria-label={'Abrir '+day.label+': '+groups.join(', ')}>
+                <h3>{conciseWorkoutName(groups,plan?.name||'Meu treino')}</h3>
+                <span className="foco-plan-duration" aria-label={'Duração estimada de '+estimate+' minutos'}><strong>~{estimate}</strong><small>min</small></span>
+                <span className="foco-plan-card-art"><ExerciseIllustration exerciseName={day.exercises[0].exercise_name} exerciseId={day.exercises[0].repdb_id} muscleGroup={day.exercises[0].muscle_group} className="h-full w-full"/></span>
+                <span className="foco-plan-card-meta"><span>{day.label}</span><strong>{day.exercises.length} exercícios</strong><small>{groups.slice(0,3).join(' / ')}{groups.length>3?' +'+(groups.length-3):''}</small></span>
+                <ArrowUpRight size={18} className="foco-plan-open" aria-hidden="true"/>
+              </button>;
+            })}
+          </div>
+          {!loading&&!visiblePlans.length&&<p className="foco-empty-note">{plan?'Nenhum treino desta região na ficha atual.':'Sua ficha aparecerá aqui quando você criar um plano.'}</p>}
+          {visiblePlans.length>2&&<button type="button" className="foco-inline-link" onClick={()=>setActiveTab('treinos')}>Ver todos os {visiblePlans.length} treinos <ArrowRight size={16}/></button>}
+        </section>
       </div>
-    </section>
       <div className="foco-home-support">
-    <section aria-label="Frequência dos treinos" className="space-y-2 foco-motion-week foco-21-week-section">
-      <div className="foco-v6-week-heading">
-        <h2>Sua semana</h2>
-        <p>{loading?'—':loadError?'Indisponível':target?Math.min(completed.length,target)+'/'+target+' treinos':'Sem meta semanal'}</p>
-      </div>
-      <FocoV6WeekStrip
-        labels={WEEK.map(d=>({day:d.day,short:d.short,label:d.label,done:doneDays.has(d.day),active:today.day===d.day}))}
-        onSelect={day=>plan?handleDetail(day):setActiveTab('anamnese')}
-      />
-      <button type="button" className="foco-v6-week-complete" onClick={()=>setActiveTab('treinos')}>
-        Ver semana completa <ArrowRight size={14} aria-hidden="true"/>
-      </button>
-    </section>
-    <section className="foco-21-week-pulse" aria-label="Resumo da atividade desta semana">
-      <div className="foco-21-week-pulse-label"><span>ESTA SEMANA</span><span>SEU RITMO</span></div>
-      <div className="foco-21-week-pulse-values">
-        <div><strong>{loading||loadError?'—':completed.length}</strong><span>treinos</span></div>
-        <span className="foco-21-week-pulse-divider" aria-hidden="true" />
-        <div><strong>{loading||loadError?'—':cardioMins}</strong><span>min de cardio</span></div>
-        <span className="foco-21-week-pulse-divider" aria-hidden="true" />
-        <div><strong>{loading||loadError?'—':target||'—'}</strong><span>meta semanal</span></div>
-      </div>
-    </section>
-    <div className="foco-21-section-heading"><h2>Além da musculação</h2></div>
-    <div className="grid grid-cols-2 gap-2 foco-motion-shortcuts foco-21-shortcut-grid">
-      <button type="button" onClick={()=>setActiveTab('cardio')} className="foco-v6-mini-panel foco-v6-glass text-left">
-        <span><strong>Cardio livre</strong><p>{cardioMins} min nesta semana</p></span><Activity size={20}/>
-      </button>
-      <button type="button" onClick={()=>{sessionStorage.setItem('foco_upload_mode','body');setActiveTab('arquivos');}} className="foco-v6-mini-panel foco-v6-glass text-left">
-        <span><strong>Avaliação OKOK</strong><p>Atualizar medidas</p></span><ScanLine size={20}/>
-      </button>
-    </div>
-    <section aria-label="Outras modalidades" className="grid grid-cols-2 gap-2 foco-motion-shortcuts foco-21-shortcut-grid">
-      <button type="button" onClick={()=>setActiveTab('em-casa')} className="foco-v6-mini-panel foco-v6-glass text-left">
-        <span><strong>FOCO em Casa</strong><p>Treinos guiados sem academia</p></span><House size={20}/>
-      </button>
-      <button type="button" onClick={()=>setActiveTab('complementares')} className="foco-v6-mini-panel foco-v6-glass text-left">
-        <span><strong>Exercícios complementares</strong><p>Core, mobilidade e extras</p></span><Dumbbell size={20}/>
-      </button>
-    </section>
-    <button type="button" onClick={()=>setActiveTab('progresso')} className="foco-v6-glass-button w-full justify-between">
-      <span className="flex items-center gap-2"><Clock3 size={15} className="text-[#D5FF40]"/> Ver minha evolução</span><ChevronRight size={17}/>
-    </button>
+        <section className="foco-home-calendar foco-motion-week" aria-label="Frequência dos treinos">
+          <div className="foco-section-heading"><h2>Sua semana</h2><span>{loading?'—':loadError?'Indisponível':target?Math.min(completed.length,target)+'/'+target+' treinos':'Sem meta semanal'}</span></div>
+          <FocoV6WeekStrip labels={WEEK.map((day,index)=>{const date=new Date(weekStart);date.setDate(date.getDate()+index);return {...day,date:String(date.getDate()).padStart(2,'0'),done:doneDays.has(day.day),active:today.day===day.day};})} onSelect={day=>plan?handleDetail(day):setActiveTab('anamnese')}/>
+          <button type="button" className="foco-inline-link" onClick={()=>setActiveTab('treinos')}>Ver semana completa <ArrowRight size={16}/></button>
+        </section>
+        <section className="foco-home-stat-grid" aria-label="Resumo da atividade desta semana">
+          <button type="button" data-tone="rose" onClick={()=>setActiveTab('historico')}><span>Treinos</span><Dumbbell size={24}/><strong>{loading||loadError?'—':completed.length}</strong><small>concluídos na semana</small></button>
+          <button type="button" data-tone="lilac" onClick={()=>setActiveTab('cardio')}><span>Cardio</span><Activity size={24}/><strong>{loading||loadError?'—':cardioMins}<small> min</small></strong><small>registrados na semana</small></button>
+        </section>
+        <section className="foco-home-tools foco-motion-shortcuts" aria-label="Seu FOCO, do seu jeito">
+          <h2>Além da musculação</h2>
+          <div>
+            <button type="button" onClick={()=>setActiveTab('biblioteca')}><BookOpen size={20}/><span>Biblioteca</span><ArrowUpRight size={15}/></button>
+            <button type="button" onClick={()=>setActiveTab('novo-treino')}><Sparkles size={20}/><span>Nova ficha</span><ArrowUpRight size={15}/></button>
+            <button type="button" onClick={()=>{sessionStorage.setItem('foco_upload_mode','body');setActiveTab('arquivos');}}><ScanLine size={20}/><span>Avaliação OKOK</span><ArrowUpRight size={15}/></button>
+            <button type="button" onClick={()=>setActiveTab('em-casa')}><House size={20}/><span>FOCO em Casa</span><ArrowUpRight size={15}/></button>
+            <button type="button" onClick={()=>setActiveTab('complementares')}><Dumbbell size={20}/><span>Exercícios complementares</span><ArrowUpRight size={15}/></button>
+          </div>
+        </section>
       </div>
     </div>
   </div>;

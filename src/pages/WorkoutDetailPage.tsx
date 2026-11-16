@@ -79,7 +79,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
       <button type="button" className="foco-v6-glass-button mt-4 w-full" onClick={()=>setActiveTab('treinos')}>Trocar treino da semana <CalendarDays size={15}/></button>
     </div>}
     {tab==='substitutions'&&<div className="foco-v6-glass rounded-2xl p-4">
-      <RotateCcw size={23} className="text-[#D5FF40]"/>
+      <RotateCcw size={23} className="text-[#E5F88A]"/>
       <h2 className="mt-2 font-bold">Substituir um exercício</h2>
       <p className="mt-2 text-xs leading-5 text-[#C2C8BE]">Consulte equipamentos alternativos e personalize sua ficha sem perder seu histórico.</p>
       <button type="button" onClick={()=>setActiveTab('biblioteca')} className="foco-v6-glass-button mt-4 w-full">Abrir biblioteca <ChevronRight size={15}/></button>

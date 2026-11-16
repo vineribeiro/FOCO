@@ -170,20 +170,18 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
   const isReset = mode === 'reset';
 
   return (
-    <main style={{ '--foco-v6-portrait': `url("${V6_IMAGES.portrait}")` } as React.CSSProperties} className="foco-v6-auth foco-v5-auth relative min-h-screen overflow-hidden bg-[#090C09] text-white selection:bg-[#D5FF40] selection:text-black">
-      <img className="foco-v7-auth-photo" src={V6_IMAGES.login} alt="" aria-hidden="true"
-        loading="eager" decoding="async" fetchPriority="high"
-        onError={(event)=>{ /* Do not upscale the old 3 KB reference. Keep the premium gradient instead. */ event.currentTarget.hidden=true; }} />
+    <main style={{ '--foco-v6-portrait': `url("${V6_IMAGES.portrait}")` } as React.CSSProperties} className="foco-v6-auth foco-v5-auth relative min-h-screen overflow-hidden bg-[#222222] text-white selection:bg-[#E5F88A] selection:text-black">
       <div className="foco-auth-layout relative mx-auto grid min-h-screen w-full max-w-[1320px] grid-cols-1 items-center gap-8 px-4 py-6 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(420px,520px)] lg:gap-14 lg:px-12 lg:py-10">
-        <section className="foco-v6-auth-editorial foco-auth-stage hidden min-w-0 flex-col justify-end self-stretch lg:flex" aria-label="FOCO — treino, evolução e performance">
+        <section className="foco-v6-auth-editorial foco-auth-stage" aria-label="FOCO — treino, evolução e performance">
+          <img className="foco-v7-auth-photo" src={V6_IMAGES.athlete} alt="" aria-hidden="true" decoding="async"/>
           <div className="foco-auth-stage-brand">
             <FocoV6Lockup />
-            <p>TREINO · EVOLUÇÃO · PERFORMANCE</p>
+            <p>Seu treino.<br/>Seu ritmo.<br/>Seu FOCO.</p>
           </div>
         </section>
 
         <section className="foco-auth-form-column mx-auto w-full max-w-[500px]">
-          <div className="foco-v7-auth-brand foco-auth-brand mb-7 flex flex-col items-center text-center lg:hidden">
+          <div className="foco-v7-auth-brand foco-auth-brand mb-7 hidden">
             <FocoV6Lockup />
             <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.28em] text-neutral-400">TREINO · EVOLUÇÃO · PERFORMANCE</p>
           </div>
