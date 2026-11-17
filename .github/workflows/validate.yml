@@ -103,7 +103,9 @@ jobs:
       - name: Browser accessibility, failure recovery and preserved auth forms
         run: npm run test:audit-browser
       - name: AI provider labels, proposal restoration and explicit regeneration
-        run: npm run test:rules-personal-browser
+        run: |
+          npm run test:rules-personal-browser
+          npm run test:ptbr-browser
       - name: Lost response, reload and storage-quota session regression
         run: npm run test:session-retry-browser
       - name: Responsive layout, full notes and navigation regression

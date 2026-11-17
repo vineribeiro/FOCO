@@ -11,7 +11,7 @@
 import { catalogExercise } from "./trainingCatalog.mjs";
 import { focoLabGuidance, focoLabEvidenceRefs, FOCO_LAB_SOURCE } from "./focoLabKnowledge.mjs";
 
-export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.5";
+export const SCIENCE_ENGINE_VERSION = "foco-training-study-2026.6";
 const WEEKDAYS = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
 const NORMALIZE = (value) => String(value || "").normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -61,7 +61,7 @@ function splitForFrequency(frequency) {
   if (frequency === 4) return "Upper/Lower A/B: 2 sessões superiores e 2 inferiores, sem concentração excessiva da dose.";
   if (frequency === 5) return "Híbrida: superiores A, inferiores A, sessão de prioridade recuperável, superiores B, inferiores B.";
   if (frequency === 6) return "Push/Pull/Legs A/B ou outra divisão equilibrada em seis dias, sem treinar o mesmo grupo pesado em dias seguidos.";
-  return "Sete dias disponíveis: até seis sessões de força e um dia de recuperação ativa/cardio leve; não exigir sete sessões pesadas.";
+  return "Sete dias escolhidos: distribuir empurrar, puxar e pernas, com uma sessão de core/acessórios de dose reduzida. Recuperação por grupo, sem impor sete sessões pesadas nem reduzir silenciosamente a frequência.";
 }
 function goalRules(goal, experience) {
   const n = NORMALIZE(goal);

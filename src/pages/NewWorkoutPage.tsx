@@ -149,7 +149,8 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       setAnamnesisRevision(anamnesis.updated_at || '');
       setAiGoal(anamnesis.primary_goal || 'Hipertrofia Máxima');
       const savedDays=AVAILABLE_WEEKDAYS.filter(day=>anamnesis.preferred_days?.includes(day));
-      const initialDays=savedDays.length>=2?savedDays:defaultAvailableDays(anamnesis.weekly_frequency || 4);
+      const requestedFrequency=anamnesis.weekly_frequency>=2&&anamnesis.weekly_frequency<=7?anamnesis.weekly_frequency:4;
+      const initialDays=savedDays.length>=requestedFrequency?savedDays.slice(0,requestedFrequency):defaultAvailableDays(requestedFrequency);
       setAiFrequency(initialDays.length);setAvailableDays(initialDays);
       setSessionMinutes(anamnesis.session_minutes||60);
       setAiFocus(anamnesis.priority_muscles || []);
@@ -365,7 +366,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         {[
           {label:'Objetivo',value:aiGoal,icon:Target,target:'foco-ai-goal'},
           {label:'Nível',value:aiExperience,icon:Activity,target:'foco-ai-experience'},
-          {label:'Disponibilidade',value:aiFrequency+' dias na semana',icon:CalendarDays,target:'foco-ai-frequency'},
+          {label:'Frequência',value:aiFrequency+' treinos na semana',icon:CalendarDays,target:'foco-ai-frequency'},
           {label:'Equipamentos',value:aiEquipment,icon:Dumbbell,target:'foco-ai-equipment'},
         ].map(item => <button type="button" key={item.label} onClick={() => focusAiField(item.target)}
           className="foco-v4-panel flex min-h-[90px] items-center gap-3 overflow-hidden p-3 text-left transition hover:border-white/35">
@@ -426,25 +427,25 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
               <div>
                 <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide" htmlFor="foco-ai-frequency">
-                  Dias disponíveis na semana
+                  Frequência de treino na semana
                 </label>
                 <select id="foco-ai-frequency"
                   value={aiFrequency}
                   onChange={(e) => changeFrequency(Number(e.target.value))}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
                 >
-                  {[2,3,4,5,6,7].map(count=><option key={count} value={count}>{count} dias disponíveis</option>)}
+                  {[2,3,4,5,6,7].map(count=><option key={count} value={count}>{count} treinos por semana</option>)}
                 </select>
               </div>
 
               <fieldset className="sm:col-span-2 min-w-0" aria-describedby="foco-availability-hint">
-                <legend className="mb-2 text-xs font-bold text-neutral-300">Em quais dias você pode treinar?</legend>
+                <legend className="mb-2 text-xs font-bold text-neutral-300">Em quais dias você quer treinar?</legend>
                 <div className="flex flex-wrap gap-2">
                   {TRAINING_DAYS.map(day=><button key={day.value} type="button" aria-pressed={availableDays.includes(day.value)}
                     disabled={availableDays.length===2&&availableDays.includes(day.value)} onClick={()=>toggleAvailableDay(day.value)}
                     className={`foco-availability-day ${availableDays.includes(day.value)?'is-selected':''}`}>{day.shortLabel}</button>)}
                 </div>
-                <p id="foco-availability-hint" className="mt-2 text-xs leading-relaxed text-neutral-400">Selecione pelo menos dois dias. O motor pode usar menos sessões de força para respeitar objetivo, nível e descanso.</p>
+                <p id="foco-availability-hint" className="mt-2 text-xs leading-relaxed text-neutral-400">Selecione de dois a sete dias. Cada dia escolhido terá uma sessão. O motor distribui grupos e volume para respeitar a recuperação.</p>
               </fieldset>
 
               <div><label className="block text-xs font-bold text-neutral-300 mb-1.5" htmlFor="foco-automatic-minutes">Tempo por sessão (min)</label><input id="foco-automatic-minutes" type="number" min="20" max="180" step="5" value={sessionMinutes} onChange={e=>setSessionMinutes(Number(e.target.value))} className="w-full px-3.5 py-2.5 border" required/></div>
@@ -551,9 +552,9 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               {(draftRestored || generatedPlan.ai_generation?.cache_hit) && <p role="status" className="text-xs leading-relaxed text-neutral-300">Proposta recuperada sem recalcular a ficha. Ajuste as preferências para montar uma ficha diferente.</p>}
               <p className="text-xs leading-relaxed text-neutral-400">Revise a divisão semanal e cada exercício antes de ativar. Cargas iniciais ficam em aberto até serem ajustadas individualmente.</p>
               {generatedPlan.planning&&<div className="foco-v4-panel-soft p-4 space-y-2" role="status">
-                <p className="text-sm font-bold">{generatedPlan.planning.available_days.length} dias disponíveis · {generatedPlan.weekly_frequency} sessões de força</p>
+                <p className="text-sm font-bold">{generatedPlan.weekly_frequency} treinos por semana · frequência respeitada</p>
                 <p className="text-xs leading-relaxed text-neutral-300">{generatedPlan.planning.reason}</p>
-                <p className="text-xs leading-relaxed text-neutral-300">Sem musculação: {generatedPlan.planning.recovery_days.map(day=>TRAINING_DAYS.find(d=>d.value===day)?.shortLabel).join(', ')}. Descanso ou atividade leve conforme sua recuperação.</p>
+                {generatedPlan.planning.recovery_days.length>0&&<p className="text-xs leading-relaxed text-neutral-300">Dias sem sessão: {generatedPlan.planning.recovery_days.map(day=>TRAINING_DAYS.find(d=>d.value===day)?.shortLabel).join(', ')}. Descanso ou atividade leve conforme sua recuperação.</p>}
                 <p className="text-xs leading-relaxed text-neutral-400">Um dia completo de intervalo entre estímulos direcionados do mesmo grupo, considerando os auxiliares dos exercícios compostos e a virada da semana. Horários reais também precisam ser respeitados.</p>
               </div>}
               {generatedPlan.training_science && (
@@ -637,7 +638,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                         <span className="text-xs text-neutral-300">{short}</span>
                         <Dumbbell className="h-6 w-6 text-neutral-400" />
                         <strong className="line-clamp-2 min-h-[30px] text-[11px] leading-tight">{groups.length ? groups.slice(0,2).join(' + ') : 'Descanso'}</strong>
-                        <span className="mt-auto text-[10px] text-neutral-400">{planned.length ? planned.length + ' exercícios' : '—'}</span>
+                        <span className="mt-auto text-[10px] text-neutral-400">{planned.length ? planned.length + ' exercícios' : '—'}</span>{generatedPlan.planning?.session_focus?.[day]&&<span className="text-[10px] leading-tight text-neutral-300">{generatedPlan.planning.session_focus[day]}</span>}
                       </div>;
                     })}
                   </div>

@@ -2,7 +2,7 @@ import type { GeneratedWorkoutProposal } from '../types';
 
 const prefix = 'foco:workout-draft:rules-v1:';
 const ttl = 10 * 60_000;
-export const AUTOMATIC_PLANNER_VERSION = 'foco-rules-2026.2';
+export const AUTOMATIC_PLANNER_VERSION = 'foco-rules-2026.3';
 export const AVAILABLE_WEEKDAYS = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
 export function defaultAvailableDays(count: number): string[] {
   return ({2:['segunda','quinta'],3:['segunda','quarta','sexta'],4:['segunda','terca','quinta','sexta'],

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {existsSync,readFileSync,readdirSync} from 'node:fs';
 import {
  repdbIdForExercise,repdbDisplayName,repdbImageUrl,repdbImageUrls,
- safeRepDBImagePath,normalizeRepDBName,REPDB_CREDIT_URL,
+ safeRepDBImagePath,normalizeRepDBName,REPDB_CREDIT_URL,REPDB_SOURCE_REVISION,
 } from '../src/data/repdbAssets';
 const read=(p:string)=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 
@@ -20,7 +20,7 @@ for(const unsafe of [
  'images/flat/BENCH.webp','images/flat/bench.webp?tracking=1',null,42
 ]) assert.equal(safeRepDBImagePath(unsafe),null);
 assert.equal(repdbImageUrl('images/flat/bench-press-peak.webp'),
- 'https://raw.githubusercontent.com/RepDB/exercise-dataset/main/images/flat/bench-press-peak.webp');
+ 'https://raw.githubusercontent.com/RepDB/exercise-dataset/'+REPDB_SOURCE_REVISION+'/images/flat/bench-press-peak.webp');
 assert.deepEqual(repdbImageUrls({id:'bench-press',name_en:'Bench Press',
  images:{flat:{start:'images/flat/bench-press-start.webp',peak:'images/flat/bench-press-peak.webp'}}}).length,2);
 assert.equal(repdbImageUrls({id:'plank',name_en:'Plank',
@@ -37,7 +37,7 @@ assert.match(component,/onError=\{\(\)=>markBroken\(activeUrl\)\}/,'Broken WebP 
 assert.match(component,/aria-pressed=\{pose===0\}/,'Pose controls must expose current state');
 assert.match(browser,/loadRepDBCatalog/);
 assert.match(browser,/PER_PAGE=24/,'Large catalogs need local pagination');
-assert.match(browser,/repdbImageUrls/);
+assert.match(browser,/repdbImagePoses/,'Cards must retain initial/final/reference metadata');
 assert.match(page,/repdb_id:selected\?\.id/,'New workouts must preserve media ID after renaming');
 assert.match(server,/repdb_id: typeof input\.repdb_id/,'Backend must persist media ID');
 assert.match(read('src/types.ts'),/repdb_id\?: string \| null/);

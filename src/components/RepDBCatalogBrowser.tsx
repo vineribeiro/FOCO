@@ -2,23 +2,18 @@ import React,{useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,ArrowRight,Dumbbell,Search,X,Plus,SlidersHorizontal,Image as ImageIcon} from 'lucide-react';
 import {AccessibleDialog} from './AccessibleDialog';
 import {ExerciseIllustration} from './ExerciseIllustration';
+import {repdbLabel as label,repdbEquipmentLabel} from '../data/repdbLocale';
+import {repdbMediaReview} from '../data/repdbMediaReview';
+import type {RepDBPortugueseCopy} from '../data/repdbInstructionsPtBR';
 import {
-  loadRepDBCatalog,repdbDisplayName,repdbImageUrls,normalizeRepDBName,
+  loadRepDBCatalog,repdbDisplayName,repdbImagePoses,normalizeRepDBName,repdbSearchTerms,loadRepDBPortugueseCopy,
   REPDB_CREDIT_TEXT,REPDB_CREDIT_URL,type RepDBExercise,
 } from '../data/repdbAssets';
 
 const PER_PAGE=24;
-const GROUPS:Record<string,string>={
- chest:'Peito',back:'Costas',shoulders:'Ombros',arms:'Braços',biceps:'Bíceps',
- triceps:'Tríceps',legs:'Pernas',quadriceps:'Quadríceps',hamstrings:'Posteriores',
- glutes:'Glúteos',calves:'Panturrilhas',abs:'Abdômen',core:'Core',abdominals:'Abdômen',
- forearms:'Antebraços',cardio:'Cardio',full_body:'Corpo inteiro','full body':'Corpo inteiro',
- stretching:'Alongamento',neck:'Pescoço',lower_back:'Lombar'
-};
-const label=(value:string|undefined)=>value ? GROUPS[value.toLowerCase()] || value.replace(/_/g,' ') : 'Geral';
 interface Props{onUseExercise:(exercise:RepDBExercise)=>void}
 
-/** One library: 701 original RepDB Free records, filtered locally, no GIF/API paging. */
+/** One library, locally filtered, with versioned PT-BR and exact media IDs. */
 export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
  const [catalog,setCatalog]=useState<RepDBExercise[]>([]);
  const [status,setStatus]=useState<'loading'|'ready'|'error'>('loading');
@@ -26,6 +21,14 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
  const [group,setGroup]=useState('all');
  const [page,setPage]=useState(1);
  const [detail,setDetail]=useState<RepDBExercise|null>(null);
+ const [copy,setCopy]=useState<RepDBPortugueseCopy|null>(null);
+ const [copyStatus,setCopyStatus]=useState<'loading'|'ready'|'error'>('loading');
+ const [copyRetry,setCopyRetry]=useState(0);
+ useEffect(()=>{
+  let active=true;setCopy(null);setCopyStatus('loading');
+  if(detail)void loadRepDBPortugueseCopy(detail.id).then(value=>{if(active){setCopy(value);setCopyStatus('ready');}}).catch(()=>{if(active)setCopyStatus('error');});
+  return()=>{active=false;};
+ },[detail?.id,copyRetry]);
  const load=()=>{
   setStatus('loading');
   void loadRepDBCatalog().then(items=>{setCatalog(items);setStatus('ready');})
@@ -42,8 +45,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
   return catalog.filter(item=>{
     if(group!=='all'&&item.body_part!==group)return false;
     if(!q)return true;
-    return [item.name_en,repdbDisplayName(item),item.id,item.body_part||'',item.equipment||'',
-      ...(item.primary_muscles||[])].some(value=>normalizeRepDBName(value).includes(q));
+    return repdbSearchTerms(item).some(value=>normalizeRepDBName(value).includes(q));
   }).sort((a,b)=>repdbDisplayName(a).localeCompare(repdbDisplayName(b),'pt-BR'));
  },[catalog,term,group]);
  const totalPages=Math.max(1,Math.ceil(matches.length/PER_PAGE));
@@ -87,13 +89,13 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
       Nenhum movimento corresponde à pesquisa. Tenta outro nome ou grupo muscular.
     </div>:<div className="foco-atlas-external-grid foco-repdb-grid">
       {visible.map((item,index)=>{
-        const image=repdbImageUrls(item)[0];
+        const pose=repdbImagePoses(item)[0];
         return <article key={item.id} className="foco-atlas-exercise-card foco-repdb-exercise-card">
           <button type="button" className="foco-atlas-card-open"
             onClick={()=>setDetail(item)} aria-label={'Ver '+repdbDisplayName(item)}>
             <span className="foco-atlas-media-placeholder foco-repdb-card-image">
-              {image?<img loading="lazy" decoding="async" src={image}
-                alt={'Posição inicial de '+repdbDisplayName(item)}
+              {pose?<img loading="lazy" decoding="async" src={pose.url}
+                alt={(pose.phase==='reference'?'Posição de referência':pose.phase==='peak'?'Posição final':'Posição inicial')+' de '+repdbDisplayName(item)}
                 onError={event=>{event.currentTarget.style.display='none';}}/>:
                 <Dumbbell size={30} strokeWidth={1.25}/>}
               <span className="foco-repdb-card-index">{String((page-1)*PER_PAGE+index+1).padStart(3,'0')}</span>
@@ -101,7 +103,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
             <span className="foco-atlas-card-copy">
               <span>{label(item.body_part)}</span>
               <strong>{repdbDisplayName(item)}</strong>
-              <small>{label(item.equipment)||'Peso corporal'}</small>
+              <small>{repdbEquipmentLabel(item)}</small>
             </span>
           </button>
         </article>;
@@ -128,13 +130,22 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
         presentation="editorial" interactive className="foco-repdb-dialog-art w-full"/>
       <div className="foco-atlas-meta">
         <div><span>Região</span><strong>{label(detail.body_part)}</strong></div>
-        <div><span>Equipamento</span><strong>{label(detail.equipment)}</strong></div>
+        <div><span>Equipamento</span><strong>{repdbEquipmentLabel(detail)}</strong></div>
         <div><span>Músculos</span><strong>{(detail.primary_muscles||[]).map(label).join(', ')||'Não informado'}</strong></div>
       </div>
-      {Boolean(detail.instructions_en?.length)&&<section className="foco-atlas-steps">
-        <h3>Instruções da fonte (inglês)</h3>
-        <ol>{detail.instructions_en!.map((line,i)=><li key={i}>{line}</li>)}</ol>
-      </section>}
+      {repdbMediaReview(detail.id)&&<p className="foco-atlas-alert" role="status">{repdbMediaReview(detail.id)}</p>}
+      {copyStatus==='loading'&&<p role="status">Carregando orientações em português...</p>}
+      {copyStatus==='error'&&<div className="foco-atlas-alert" role="alert">Não foi possível abrir as orientações. <button type="button" onClick={()=>setCopyRetry(n=>n+1)}>Tentar novamente</button></div>}
+      {copy&&<>
+        <p className="text-sm leading-relaxed">{copy.description}</p>
+        <section className="foco-atlas-steps" lang="pt-BR"><h3>Como executar</h3>
+          <ol>{copy.instructions.map((line,i)=><li key={i}>{line}</li>)}</ol>
+        </section>
+        {copy.tips.length>0&&<section className="foco-atlas-steps"><h3>Cuidados e dicas</h3>
+          <ul>{copy.tips.map((line,i)=><li key={i}>{line}</li>)}</ul>
+        </section>}
+      </>}
+      {copyStatus==='ready'&&!copy&&<p role="status">As orientações desta variação estão em revisão de idioma.</p>}
       <button type="button" className="foco-atlas-open-foco" onClick={()=>{onUseExercise(detail);setDetail(null);}}>
         <Plus size={17}/> Adicionar à minha ficha
       </button>

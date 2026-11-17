@@ -1,5 +1,5 @@
 # Regra ativa de idioma e mídia — FOCO / 16-11-2026
-O proprietário pediu PT-BR para nomes/explicações e, em etapa posterior, avaliação de ilustrações próprias de IA. Aplicar `docs/EXERCISE_LANGUAGE_AND_AI_MEDIA_RULES.md`. As regras foram definidas; não afirmar que o catálogo já foi traduzido ou que imagens próprias já foram publicadas.
+O proprietário pediu PT-BR para nomes/explicações e, em etapa posterior, avaliação de ilustrações próprias de IA. Aplicar `docs/EXERCISE_LANGUAGE_AND_AI_MEDIA_RULES.md`. A revisão de 17/11/2026 implementa um pacote PT-BR para os 708 IDs da revisão RepDB 4b1358a63c9f78f982867726f2a73c0f6cb21475. Ver `docs/EXERCISE_CATALOG_REVIEW_2026_11_17.md` para cobertura, revisão editorial e limites. Não afirmar que a coleção de imagens próprias já foi publicada.
 A **RepDB Free** permanece a fonte de ilustrações técnicas publicadas até a revisão individual dos substitutos próprios. Protótipos de IA independentes são autorizados, com descrições próprias, origem e revisão rastreáveis; nunca usar as imagens RepDB como entrada ou referência de geração.
 Usar imagens WebP originais de posição inicial/final, com associação por `repdb_id` quando disponível. Nunca substituir uma variação por movimento semelhante.
 Fichas, histórico, dados técnicos do motor e catálogos internos de instrução permanecem preservados. Não apagar registros reais.

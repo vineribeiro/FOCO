@@ -29,7 +29,6 @@ Mesa flexora|leg-curl
 Cadeira flexora|seated-leg-curl
 Flexora unilateral|single-leg-lying-leg-curl
 Stiff com barra|stiff-leg-deadlift
-Stiff com halteres|dumbbell-romanian-deadlift
 Levantamento terra romeno|romanian-deadlift
 Levantamento terra romeno com halteres|dumbbell-romanian-deadlift
 Levantamento terra convencional|deadlift
@@ -51,7 +50,6 @@ Coice de glúteo no cabo|cable-kickback
 Extensão de quadril em quatro apoios|glute-kickback
 Agachamento sumô|sumo-squat
 Avanço reverso|reverse-lunge
-Abdução de quadril com mini band|banded-lateral-walk
 Abdução de quadril em pé sem carga|standing-hip-abduction
 Panturrilha em pé na máquina|machine-calf-raise
 Panturrilha sentada na máquina|seated-calf-raise
@@ -59,9 +57,7 @@ Panturrilha em pé unilateral|single-leg-calf-raise
 Panturrilha em pé no Smith|smith-machine-calf-raise
 Panturrilha em pé com halteres|dumbbell-calf-raise
 Panturrilha no degrau com peso corporal|bodyweight-calf-raise
-Panturrilha unilateral com halter|single-leg-calf-raise
 Panturrilha donkey|donkey-calf-raise
-Elevação de ponta dos pés|bodyweight-calf-raise
 Abdominal crunch|crunches
 Abdominal reverso|reverse-crunches
 Abdominal bicicleta|bicycle-crunch
