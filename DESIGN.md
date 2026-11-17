@@ -14,13 +14,13 @@ Tokens: `src/foco-pro-tokens.css`. Único proprietário visual: `src/foco-ui.css
 
 ## Composição
 
-1. Início: saudação, destaque lima para o treino do dia e meta semanal real, calendário, cartões lilás/rosa da ficha e atalhos de modalidades.
+1. Início: saudação, destaque lima para o treino do dia e meta semanal real, calendário, cartões da ficha com cabeçalhos lilás/rosa e área grafite integrada para a ilustração, e atalhos de modalidades.
 2. Agenda: semana e cartões coloridos por dia com exercício ilustrado correto. Escolher não inicia a sessão nem altera os outros dias.
 3. Sessão: ilustração RepDB e painel claro com série, carga, repetições, descanso e concluir. Rascunho e envio idempotente preservados.
 4. Evolução: períodos, tendência e indicadores pastel com fontes e datas dos registros. Valores ausentes ficam ausentes.
 5. Perfil e formulários: mesmos tokens e hierarquia. Navegação desktop equivalente à móvel.
 
-Calorias, passos, notificações e percentuais dos mockups não são inventados. Fotografias decorativas de marca não representam exercícios nem atletas do usuário. Mídia de movimentos usa a coleção humana autoral FOCO de 167 variações por ID e RepDB Free para os demais exercícios/fallback, com origem identificada. Na sessão, o movimento ocupa o destaque principal e os controles permanecem no fluxo, sem encobrir a imagem.
+Calorias, passos, notificações e percentuais dos mockups não são inventados. Fotografias decorativas de marca não representam exercícios nem atletas do usuário. Mídia de movimentos usa a coleção humana autoral FOCO de 167 variações por ID e RepDB Free para os demais exercícios/fallback, com origem identificada. A revisão 3.6 ajusta 98 enquadramentos, refaz cinco imagens e mantém 330 posições estáticas. No detalhe, a área visual acompanha a proporção do movimento. Na sessão, o movimento ocupa o destaque principal e os controles permanecem no fluxo, sem encobrir a imagem.
 
 ## Validação
 

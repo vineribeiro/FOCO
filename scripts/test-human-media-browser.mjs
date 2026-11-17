@@ -4,18 +4,22 @@ import {chromium} from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 import {auditCredentials,createAuditFixtures} from './fixtures/audit-browser.mjs';
 const base=process.env.FOCO_E2E_BASE_URL||'http://127.0.0.1:4173/FOCO/';
-const out='work/human-media-browser';mkdirSync(out,{recursive:true});
+const out='work/human-media-corrections-browser';mkdirSync(out,{recursive:true});
 import {humanExamples} from './fixtures/human-media.mjs';
-const sessionIds=['db-bench-press','goblet-squat','lat-pulldown','hammer-curl','plank','leg-press','bench-press','leg-extension','cable-reverse-fly','db-goblet-squat','foco-rope-triceps-pushdown','foco-dumbbell-stiff-leg-deadlift'];
+const sessionIds=['db-bench-press','bench-press','barbell-row','leg-press','plank','hammer-curl','db-goblet-squat','bicycle-crunch','barbell-wrist-curl','cable-wrist-curl','db-reverse-wrist-curl','cable-external-rotation'];
 const examples=sessionIds.map(id=>humanExamples.find(e=>e.id===id));
 const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/L5sAAAAASUVORK5CYII=','base64');
 const results=[];let externalWrites=0;
 const browser=await chromium.launch({headless:true,...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{})});
-async function setup(width,{breakOwn=false}={}){
+async function setup(width,{breakOwn=false,cards=false}={}){
  const context=await browser.newContext({viewport:{width,height:width===320?720:900},serviceWorkers:'block',reducedMotion:'reduce'});
  const fixtures=createAuditFixtures(),plan=fixtures['/api/workouts/active'];
  plan.exercises=examples.map((e,i)=>({id:'human-synthetic-'+i,plan_id:plan.id,exercise_name:i===0?'Supino personalizado do piloto':e.name,
   repdb_id:e.id,muscle_group:({chest:'Peitoral',upper_legs:'Pernas',back:'Costas',lower_legs:'Panturrilhas',core:'Abdômen e core',shoulders:'Ombros',upper_arms:'Braços'})[e.bodyPart]||'Corpo',training_day:'segunda',sets:3,reps_min:8,reps_max:12,rest_seconds:90,suggested_load_kg:20,notes:''}));
+ if(cards){
+  const pairs=[['bench-press','segunda','Peitoral'],['tricep-pushdown','segunda','Tríceps'],['barbell-row','terca','Costas'],['barbell-curl','terca','Bíceps']];
+  plan.exercises=pairs.map(([id,day,muscle],i)=>({...plan.exercises[0],id:'card-fixture-'+i,exercise_name:humanExamples.find(e=>e.id===id).name,repdb_id:id,muscle_group:muscle,training_day:day}));
+ }
  const catalog=[...humanExamples.map(e=>({id:e.id,name_en:e.sourceName,body_part:e.bodyPart,equipment:e.equipment,is_bodyweight:e.isBodyweight,primary_muscles:e.primaryMuscles||[],images:{flat:{start:'images/flat/'+e.id+'-start.webp',peak:'images/flat/'+e.id+'-peak.webp'}}})),
   ...Array.from({length:100},(_,i)=>({id:'future-pilot-'+i,name_en:'Future movement '+i,images:{flat:{main:'images/flat/future-pilot-'+i+'.webp'}}}))];
  await context.route('**/*',async route=>{
@@ -48,6 +52,9 @@ try{
    await art.locator('svg image[href$="/'+e.asset+'"]').waitFor();
    const phase=e.frames[0].phase;await page.waitForFunction(p=>document.querySelector('.foco-21-exercise-media [data-foco-media-phase]')?.getAttribute('data-foco-media-phase')===p,phase);
    const href=await art.locator('svg image').getAttribute('href');assert.ok(href.endsWith('/'+e.asset));
+   const illustrationBounds=await art.locator('.foco-exercise-visual').boundingBox();
+   const counterBounds=await stage.locator('.foco-v7-stage-tag').boundingBox();
+   assert.ok(counterBounds.y+counterBounds.height<=illustrationBounds.y+1,'Exercise counter must stay in the header above the picture');
    await page.evaluate(async url=>{const im=new Image();im.src=url;await im.decode();},href);
    const controls=art.getByRole('group',{name:'Posições do exercício'});
    if(e.frames.length===1){assert.equal(await controls.count(),0);assert.match(await art.getByRole('img').getAttribute('aria-label'),/posição de referência/);}
@@ -83,6 +90,13 @@ try{
      assert.equal(Number(await art.locator('svg image').getAttribute('y')),0-e.frames[0].y);
      const href=await art.locator('svg image').getAttribute('href');await page.evaluate(async url=>{const im=new Image();im.src=url;await im.decode();},href);
      await dialog.getByRole('heading',{name:'Como executar',exact:true}).waitFor();
+     if(e.id==='bicycle-crunch'){
+      assert.equal(await art.getAttribute('data-foco-media-layout'),'landscape');
+      const dimensions=await art.boundingBox();assert.ok(dimensions.height<420,'Landscape bicycle must not keep an oversized square container');
+      assert.equal(await dialog.locator('.foco-repdb-detail').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(34, 34, 34)');
+      await art.screenshot({path:out+'/bicycle-detail-390.png'});
+     }
+
      if(e.frames.length===2){
       await art.getByRole('button',{name:'02 FINAL',exact:true}).click();assert.equal(await art.getAttribute('data-foco-media-phase'),'peak');
       assert.equal(Number(await art.locator('svg image').getAttribute('x')),0-e.frames[1].x);
@@ -99,6 +113,28 @@ try{
   await page.evaluate(()=>window.scrollTo(0,0));
   await page.screenshot({path:out+'/library-'+width+'.png',fullPage:true});
   assert.deepEqual(errors,[]);results.push({width,status:'PASS',exercises:examples.length,libraryVariants:humanExamples.length,externalWrites:0});console.log('PASS '+width+': '+examples.length+' session variants, '+humanExamples.length+' library variants, exact static frames and preserved live draft');await context.close();
+ }
+ for(const width of [320,390,768,1440]){
+  const {context,page,errors}=await setup(width,{cards:true});await page.goto(base+'?view=dashboard');
+  const cards=page.locator('.foco-plan-card');await cards.first().waitFor();assert.equal(await cards.count(),2);
+  for(const card of await cards.all()){
+   await card.scrollIntoViewIfNeeded();await card.locator('svg.foco-human-pose').waitFor();
+   const geometry=await card.evaluate(el=>{
+    const art=el.querySelector('.foco-plan-card-art'),meta=el.querySelector('.foco-plan-card-meta'),media=art.querySelector('.foco-repdb-media');
+    const a=art.getBoundingClientRect(),m=meta.getBoundingClientRect();
+    return {artRight:a.right,metaLeft:m.left,artHeight:a.height,border:getComputedStyle(media).borderWidth,background:getComputedStyle(el.querySelector('.foco-plan-card-body')).backgroundColor,mainColor:getComputedStyle(meta.querySelector('strong')).color,secondaryColor:getComputedStyle(meta.querySelector('small')).color};
+   });
+   assert.ok(geometry.artRight+8<=geometry.metaLeft,'Card text and illustration need a real gap');
+   assert.ok(geometry.artHeight>=140);assert.equal(geometry.border,'0px');assert.equal(geometry.background,'rgb(34, 34, 34)');
+   assert.equal(geometry.mainColor,'rgb(247, 247, 243)','The pastel card theme cannot make the graphite panel text dark');
+   assert.equal(geometry.secondaryColor,'rgb(188, 188, 184)');
+   assert.equal(await card.locator('.foco-media-heading').count(),0,'Compact card pictures must not contain source badges or pose controls');
+  }
+  await page.locator('.foco-home-plans').screenshot({path:out+'/plan-cards-'+width+'.png'});
+  if(width===390){const a=await new AxeBuilder({page}).include('.foco-home-plans').withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();writeFileSync(out+'/cards-axe.json',JSON.stringify(a.violations,null,2));assert.deepEqual(a.violations,[]);}
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
+  await cards.first().focus();await page.keyboard.press('Enter');await page.getByRole('heading',{name:'Peito + Tríceps',exact:true}).waitFor();
+  assert.deepEqual(errors,[]);await context.close();console.log('PASS '+width+': integrated graphite card media, full figures, no text overlap and keyboard navigation');
  }
  const {context,page}=await setup(390,{breakOwn:true});await page.goto(base+'?view=sessao');
  await page.getByRole('button',{name:new RegExp('^Ver exercício '+(sessionIds.indexOf('hammer-curl')+1)+':')}).click();

@@ -1,0 +1,6108 @@
+{
+  "version": "foco-human-corrections-2026.1",
+  "date": "2026-11-17",
+  "origin": "ai",
+  "tool": "image_gen.imagegen",
+  "modelVersion": "not-exposed-by-tool",
+  "repdbImagesUsedAsInput": false,
+  "professionalBiomechanicalReview": false,
+  "visualReviewer": "Codex (assistant visual screening)",
+  "collectionCount": 167,
+  "poseCount": 330,
+  "notes": "Five exact variants regenerated and visually screened. Existing asset pixels are unchanged. Conservative SVG viewBox trims were inspected as rendered static frames, preserving a common scale/center within each pair. Explicit clipPaths prevent adjacent sheet cells from showing through SVG letterboxing. Isometric holds remain single-frame. This is assistant screening, not professional certification.",
+  "assets": {
+    "bicycle-crunch": {
+      "asset": "media/foco-human/2026-11-17-corrected/bicycle-crunch.webp",
+      "width": 2172,
+      "height": 724,
+      "bytes": 51064,
+      "assetSha256": "89037942f3d934a2e44af39c7dd8700bd5574a1880ef9012a5775b361cb0c8e3",
+      "generatedFileSha256": "9276abf9326c53aecb49306734f80effc896f3e609d7b24cb4d31526d5b5d816",
+      "prompt": "Create a corrected ORIGINAL FOCO exercise illustration using ONLY this OWN previously generated reference for the person's identity, human rendering, and graphite clothing with small lime/lilac trim. Replace pose/apparatus as specified. Semi-realistic human editorial 3D illustration, natural joints, hands and proportions. A diptych with exactly TWO separate scenes, LEFT first pose, RIGHT second pose, exactly same camera, person, scale, apparatus and floor level. Full person and required apparatus comfortably inside each scene, 5% margins, no crossing center. Plain perfectly opaque matte #222222 graphite background, no glow, no labels, no lettering, no arrows, no logos, no visible numbers. Keep neck neutral and all anatomical contacts credible.\nPanoramic 3:1 diptych, adult medium-brown-skinned curly-haired woman around32. BICYCLE CRUNCH: LEFT is neutral PREPARATION, RIGHT is one cycling contraction. LEFT: woman lies on back, hands lightly beside ears, shoulder blades slightly lifted, BOTH knees bent90degrees over hips, both lower legs horizontal, no torso twist. RIGHT: rotate RIGHT shoulder/elbow toward LEFT knee bent near chest while RIGHT leg extends straight low above mat. Two clearly different poses. Do not repeat right pose in left panel. Full body and mat, same fixed three-quarter front elevated camera in both. This is a start/setup and working-pose pair, not two identical cycling poses.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "cde36a5cb74a1130ba845a8cd6e94c06c92f693f31348a9492b443d752868d2c"
+        }
+      ],
+      "review": "assistant-visual-screening-complete"
+    },
+    "barbell-wrist-curl": {
+      "asset": "media/foco-human/2026-11-17-corrected/barbell-wrist-curl.webp",
+      "width": 1774,
+      "height": 887,
+      "bytes": 60012,
+      "assetSha256": "322f4299055e02ca4abeff738ebfcee161ee384b36aef2672f2cd2c7534c114b",
+      "generatedFileSha256": "b9dc53fe0e64db148991a2b89da5d4eba0d1f0f91e001310a28e03981ea2bc73",
+      "prompt": "Create a corrected ORIGINAL FOCO exercise illustration using ONLY this OWN previously generated reference for the person's identity, human rendering, and graphite clothing with small lime/lilac trim. Replace pose/apparatus as specified. Semi-realistic human editorial 3D illustration, natural joints, hands and proportions. A diptych with exactly TWO separate scenes, LEFT first pose, RIGHT second pose, exactly same camera, person, scale, apparatus and floor level. Full person and required apparatus comfortably inside each scene, 5% margins, no crossing center. Plain perfectly opaque matte #222222 graphite background, no glow, no labels, no lettering, no arrows, no logos, no visible numbers. Keep neck neutral and all anatomical contacts credible.\nWide 2:1 diptych. Woman around32, medium-brown skin, dark curly tied hair. Seated BARBELL WRIST FLEXION, palms face UP, supinated underhand grip. Side-front camera. Feet grounded, elbows and full FOREARMS REST ON THIGHS from elbow to just before wrist. Wrists project just beyond knees. A small straight bar supported firmly by both hands, no elbow curl. LEFT: wrists mildly extended downward. RIGHT: wrists flex upward about25 degrees. Only the hands/bar rotate around the wrists. Forearms, elbows, upper arms and torso IDENTICAL in both panels, remain in physical contact with thighs. Clearly show knuckle/palm grip and wrist angle, do not lift forearms from thighs. Critical physical setup: torso HINGED FORWARD about45 degrees, shoulders over knees, elbows placed on MID-THIGH, BOTH ENTIRE FOREARMS nearly HORIZONTAL and visibly REST FLAT against the TOPS OF THIGHS from elbows to wrist pivots just beyond knees. Do not depict an upright seated curl. Knee and wrist pivots remain at exactly same horizontal height in both images. ",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "cde36a5cb74a1130ba845a8cd6e94c06c92f693f31348a9492b443d752868d2c"
+        }
+      ],
+      "review": "assistant-visual-screening-complete"
+    },
+    "cable-wrist-curl": {
+      "asset": "media/foco-human/2026-11-17-corrected/cable-wrist-curl.webp",
+      "width": 1774,
+      "height": 887,
+      "bytes": 55482,
+      "assetSha256": "115999bbafc61cf7e83ad8e6c94b941c966e1052b049fb1a23e5155cb3c60aa9",
+      "generatedFileSha256": "f27860ad3ffa008375c0f1e1ff62e0457a8df68d48c1efececc48ae08e1337de",
+      "prompt": "Create a corrected ORIGINAL FOCO exercise illustration using ONLY this OWN previously generated reference for the person's identity, human rendering, and graphite clothing with small lime/lilac trim. Replace pose/apparatus as specified. Semi-realistic human editorial 3D illustration, natural joints, hands and proportions. A diptych with exactly TWO separate scenes, LEFT first pose, RIGHT second pose, exactly same camera, person, scale, apparatus and floor level. Full person and required apparatus comfortably inside each scene, 5% margins, no crossing center. Plain perfectly opaque matte #222222 graphite background, no glow, no labels, no lettering, no arrows, no logos, no visible numbers. Keep neck neutral and all anatomical contacts credible.\nWide 2:1 diptych. Dark-brown-skinned45year-old man with short hair and beard. Seated LOW-CABLE WRIST FLEXION, SUPINATED palms UP. Small low pulley in FRONT of knees, cable connected to center of short straight bar. Both forearms rest immobile on thighs with elbows near hips; wrists extend just past knees, palms up. LEFT hands/bar tipped down20degrees at wrists. RIGHT hands/bar curled up20degrees at wrists, with BOTH FOREARMS STILL FLAT ON THIGHS, exactly same height elbow/wrist pivot in both. No elbow curl, no lifting forearms, no shrugging, no pronated grip. Entire seated person and pulley visible. Critical physical setup: torso HINGED FORWARD about45 degrees, shoulders over knees, elbows placed on MID-THIGH, BOTH ENTIRE FOREARMS nearly HORIZONTAL and visibly REST FLAT against the TOPS OF THIGHS from elbows to wrist pivots just beyond knees. Do not depict an upright seated curl. Knee and wrist pivots remain at exactly same horizontal height in both images. ",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "016ed79808d285447386959f0c3878f8da5ab27588c77c91f13337b123202dab"
+        }
+      ],
+      "review": "assistant-visual-screening-complete"
+    },
+    "db-reverse-wrist-curl": {
+      "asset": "media/foco-human/2026-11-17-corrected/db-reverse-wrist-curl.webp",
+      "width": 1774,
+      "height": 887,
+      "bytes": 54840,
+      "assetSha256": "ebbe8ef676a1c039eae45c51eb4131ba0a92721022dd4cee95bee7009f85dd80",
+      "generatedFileSha256": "5f4a16ab66e7ce22de337caba049c2aeb05bf4b9fca7d568420bf571197205e4",
+      "prompt": "Create a corrected ORIGINAL FOCO exercise illustration using ONLY this OWN previously generated reference for the person's identity, human rendering, and graphite clothing with small lime/lilac trim. Replace pose/apparatus as specified. Semi-realistic human editorial 3D illustration, natural joints, hands and proportions. A diptych with exactly TWO separate scenes, LEFT first pose, RIGHT second pose, exactly same camera, person, scale, apparatus and floor level. Full person and required apparatus comfortably inside each scene, 5% margins, no crossing center. Plain perfectly opaque matte #222222 graphite background, no glow, no labels, no lettering, no arrows, no logos, no visible numbers. Keep neck neutral and all anatomical contacts credible.\nWide 2:1 diptych. Medium-brown-skinned curly-haired32year-old woman. Seated DUMBBELL REVERSE WRIST CURL with palms facing DOWN, pronated grip. Both FOREARMS LIE FLAT ON THIGHS, elbows immobile near hips, wrists just beyond knees. Exactly two small dumbbells one per hand. LEFT wrists gently flexed down20degrees. RIGHT wrists extended up15degrees, backs of hands moving toward forearms. Forearms remain resting against thighs, elbows unchanged, NO lifting of forearms or bending elbow. Full seated person, shoes, bench, hands and dumbbells visible. Close enough to read wrist angle, same front-three-quarter camera in both. Critical physical setup: torso HINGED FORWARD about45 degrees, shoulders over knees, elbows placed on MID-THIGH, BOTH ENTIRE FOREARMS nearly HORIZONTAL and visibly REST FLAT against the TOPS OF THIGHS from elbows to wrist pivots just beyond knees. Do not depict an upright seated curl. Knee and wrist pivots remain at exactly same horizontal height in both images. ",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "cde36a5cb74a1130ba845a8cd6e94c06c92f693f31348a9492b443d752868d2c"
+        }
+      ],
+      "review": "assistant-visual-screening-complete"
+    },
+    "cable-external-rotation": {
+      "asset": "media/foco-human/2026-11-17-corrected/cable-external-rotation.webp",
+      "width": 1774,
+      "height": 887,
+      "bytes": 55880,
+      "assetSha256": "ccba712515779bfcc8f0f48ce54817fe64a550528f471cbd6b3699a1f3ba4d6a",
+      "generatedFileSha256": "1a318eb02a122669ae6655373018d0e318548e4ee98c7a6e44e999ac995291a6",
+      "prompt": "Create a corrected ORIGINAL FOCO exercise illustration using ONLY this OWN previously generated reference for the person's identity, human rendering, and graphite clothing with small lime/lilac trim. Replace pose/apparatus as specified. Semi-realistic human editorial 3D illustration, natural joints, hands and proportions. A diptych with exactly TWO separate scenes, LEFT first pose, RIGHT second pose, exactly same camera, person, scale, apparatus and floor level. Full person and required apparatus comfortably inside each scene, 5% margins, no crossing center. Plain perfectly opaque matte #222222 graphite background, no glow, no labels, no lettering, no arrows, no logos, no visible numbers. Keep neck neutral and all anatomical contacts credible.\nWide 2:1 diptych. Mature50year-old woman with short brown-grey hair and natural face. Standing SINGLE-ARM CABLE EXTERNAL ROTATION. Fixed three-quarter front camera that clearly shows right elbow and forearm. Low cable machine at ELBOW HEIGHT to athlete's LEFT. Work with athlete's RIGHT hand, single D handle. Right upper arm vertical pressed gently to right ribs, elbow bent90degrees, shoulder never abducts. LEFT: right forearm crosses abdomen, right hand near belly. RIGHT: rotate right forearm OUTWARD to athlete's RIGHT, hand moves laterally away from belly while elbow stays glued to same right rib and forearm stays horizontal. Cable resists from the left across front of body. Free left hand at hip. Entire person, pulley and taut cable visible. No torso twist, no row, no elbow translation. Show two genuinely different forearm angles.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "4ce9382425c21c881485f3a62f4af16a59fea6c822bf89fd4236278d50882259"
+        }
+      ],
+      "review": "assistant-visual-screening-complete"
+    }
+  },
+  "exercises": [
+    {
+      "id": "goblet-squat",
+      "name": "Agachamento com carga à frente do peito (goblet) com kettlebell",
+      "asset": "media/foco-human/2026-11-17/goblet-squat.webp",
+      "width": 1774,
+      "height": 887,
+      "frames": [
+        {
+          "x": 214,
+          "y": 0,
+          "width": 455,
+          "height": 887,
+          "phase": "start"
+        },
+        {
+          "x": 1074,
+          "y": 0,
+          "width": 455,
+          "height": 887,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.242,
+      "protectedSourceFrames": [
+        {
+          "x": 160,
+          "y": 0,
+          "width": 600,
+          "height": 887,
+          "phase": "start"
+        },
+        {
+          "x": 1020,
+          "y": 0,
+          "width": 600,
+          "height": 887,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17/goblet-squat.webp",
+        "frames": [
+          {
+            "x": 160,
+            "y": 0,
+            "width": 600,
+            "height": 887,
+            "phase": "start"
+          },
+          {
+            "x": 1020,
+            "y": 0,
+            "width": 600,
+            "height": 887,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "812ff5f545b4d2416739a17ea46b39100c7593d160e1980da196e5df649fca9c"
+    },
+    {
+      "id": "dumbbell-calf-raise",
+      "name": "Elevação de panturrilhas com halteres",
+      "asset": "media/foco-human/2026-11-17/dumbbell-calf-raise.webp",
+      "width": 1958,
+      "height": 803,
+      "frames": [
+        {
+          "x": 394,
+          "y": 0,
+          "width": 391,
+          "height": 803,
+          "phase": "start"
+        },
+        {
+          "x": 1194,
+          "y": 0,
+          "width": 391,
+          "height": 803,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.218,
+      "protectedSourceFrames": [
+        {
+          "x": 350,
+          "y": 0,
+          "width": 500,
+          "height": 803,
+          "phase": "start"
+        },
+        {
+          "x": 1150,
+          "y": 0,
+          "width": 500,
+          "height": 803,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17/dumbbell-calf-raise.webp",
+        "frames": [
+          {
+            "x": 350,
+            "y": 0,
+            "width": 500,
+            "height": 803,
+            "phase": "start"
+          },
+          {
+            "x": 1150,
+            "y": 0,
+            "width": 500,
+            "height": 803,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "912dffd18d1f67d782579366fb741dda17651c8fa5337cffc0ed022434129b6c"
+    },
+    {
+      "id": "hammer-curl",
+      "name": "Rosca martelo com halteres",
+      "asset": "media/foco-human/2026-11-17/hammer-curl.webp",
+      "width": 1958,
+      "height": 803,
+      "frames": [
+        {
+          "x": 355,
+          "y": 0,
+          "width": 433,
+          "height": 803,
+          "phase": "start"
+        },
+        {
+          "x": 1155,
+          "y": 0,
+          "width": 433,
+          "height": 803,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.278,
+      "protectedSourceFrames": [
+        {
+          "x": 300,
+          "y": 0,
+          "width": 600,
+          "height": 803,
+          "phase": "start"
+        },
+        {
+          "x": 1100,
+          "y": 0,
+          "width": 600,
+          "height": 803,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17/hammer-curl.webp",
+        "frames": [
+          {
+            "x": 300,
+            "y": 0,
+            "width": 600,
+            "height": 803,
+            "phase": "start"
+          },
+          {
+            "x": 1100,
+            "y": 0,
+            "width": 600,
+            "height": 803,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "7f57f180d8a7f44c24839d1cd0c72e031a3e1fe2ec5e36d4abf98e30941c9d2d"
+    },
+    {
+      "id": "bench-press",
+      "name": "Supino reto com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-01.webp",
+      "width": 1024,
+      "height": 1536,
+      "frames": [
+        {
+          "x": 21,
+          "y": 67,
+          "width": 485,
+          "height": 434,
+          "phase": "start"
+        },
+        {
+          "x": 533,
+          "y": 67,
+          "width": 485,
+          "height": 434,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.171,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 504,
+          "height": 504,
+          "phase": "start"
+        },
+        {
+          "x": 516,
+          "y": 4,
+          "width": 504,
+          "height": 504,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-01.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 504,
+            "height": 504,
+            "phase": "start"
+          },
+          {
+            "x": 516,
+            "y": 4,
+            "width": 504,
+            "height": 504,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "25f1725ec9a67fb3794224a1720a66371fc6395af6a12f6a9cdc0edcb4dd3f3d"
+    },
+    {
+      "id": "push-up",
+      "name": "Flexão de braços",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-01.webp",
+      "width": 1024,
+      "height": 1536,
+      "frames": [
+        {
+          "x": 11,
+          "y": 1113,
+          "width": 492,
+          "height": 313,
+          "phase": "start"
+        },
+        {
+          "x": 523,
+          "y": 1113,
+          "width": 492,
+          "height": 313,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.394,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1028,
+          "width": 504,
+          "height": 504,
+          "phase": "start"
+        },
+        {
+          "x": 516,
+          "y": 1028,
+          "width": 504,
+          "height": 504,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-01.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1028,
+            "width": 504,
+            "height": 504,
+            "phase": "start"
+          },
+          {
+            "x": 516,
+            "y": 1028,
+            "width": 504,
+            "height": 504,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "25f1725ec9a67fb3794224a1720a66371fc6395af6a12f6a9cdc0edcb4dd3f3d"
+    },
+    {
+      "id": "leg-press",
+      "name": "Leg press 45 graus",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-02.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 510,
+          "width": 435,
+          "height": 335,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 510,
+          "width": 436,
+          "height": 335,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.23,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-02.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "e7a07721ac29ec5b1c4fd6e2e734b308905e0cc4c74206ecbc93656123cf9005"
+    },
+    {
+      "id": "barbell-row",
+      "name": "Remada curvada com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-03.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 43,
+          "y": 4,
+          "width": 358,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 486,
+          "y": 4,
+          "width": 358,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.177,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-03.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "f259d978b841f23b0fdf76102fbdaf43dd42d4575456e3b1042e08f46f0ebce2"
+    },
+    {
+      "id": "dumbbell-shoulder-press",
+      "name": "Desenvolvimento de ombros com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-03.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 61,
+          "y": 891,
+          "width": 321,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 504,
+          "y": 891,
+          "width": 321,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.262,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-03.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "f259d978b841f23b0fdf76102fbdaf43dd42d4575456e3b1042e08f46f0ebce2"
+    },
+    {
+      "id": "barbell-curl",
+      "name": "Rosca direta com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-04.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 80,
+          "y": 4,
+          "width": 305,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 523,
+          "y": 4,
+          "width": 305,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.299,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-04.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "82aff51f6e4a6f4ae67740d5a7abfb4618e98915932a7907acbabe72ec14b644"
+    },
+    {
+      "id": "bicep-curl",
+      "name": "Rosca de bíceps com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-04.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 123,
+          "y": 448,
+          "width": 223,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 566,
+          "y": 448,
+          "width": 223,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.487,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-04.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "82aff51f6e4a6f4ae67740d5a7abfb4618e98915932a7907acbabe72ec14b644"
+    },
+    {
+      "id": "tricep-pushdown",
+      "name": "Extensão de tríceps na polia com barra reta",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-04.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 69,
+          "y": 1334,
+          "width": 344,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 512,
+          "y": 1334,
+          "width": 344,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.209,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-04.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "82aff51f6e4a6f4ae67740d5a7abfb4618e98915932a7907acbabe72ec14b644"
+    },
+    {
+      "id": "romanian-deadlift",
+      "name": "Levantamento terra romeno com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-05.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 76,
+          "y": 4,
+          "width": 303,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 519,
+          "y": 4,
+          "width": 303,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.303,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-05.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "8b643b9b4784fc37e976383b7384c824e94ccfe044d52f4120d4464551175d06"
+    },
+    {
+      "id": "db-goblet-squat",
+      "name": "Agachamento com carga à frente do peito (goblet) com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-05.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 116,
+          "y": 1334,
+          "width": 212,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 559,
+          "y": 1334,
+          "width": 212,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.513,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-05.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "8b643b9b4784fc37e976383b7384c824e94ccfe044d52f4120d4464551175d06"
+    },
+    {
+      "id": "machine-calf-raise",
+      "name": "Panturrilha em pé na máquina",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-06.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 53,
+          "y": 4,
+          "width": 346,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 496,
+          "y": 4,
+          "width": 346,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.205,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-06.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "ff65c28a7c3c0e077bf192dd367c9effd36f4c7f300655b2227da733826b1342"
+    },
+    {
+      "id": "single-leg-calf-raise",
+      "name": "Elevação de panturrilha unilateral com peso corporal",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-06.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 116,
+          "y": 891,
+          "width": 270,
+          "height": 432,
+          "phase": "start"
+        },
+        {
+          "x": 559,
+          "y": 891,
+          "width": 270,
+          "height": 432,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.384,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-06.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "ff65c28a7c3c0e077bf192dd367c9effd36f4c7f300655b2227da733826b1342"
+    },
+    {
+      "id": "bodyweight-calf-raise",
+      "name": "Elevação de panturrilhas com peso corporal",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-06.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 124,
+          "y": 1334,
+          "width": 222,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 567,
+          "y": 1334,
+          "width": 222,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.49,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-06.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "ff65c28a7c3c0e077bf192dd367c9effd36f4c7f300655b2227da733826b1342"
+    },
+    {
+      "id": "reverse-crunches",
+      "name": "Abdominal reverso",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-07.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 138,
+          "width": 435,
+          "height": 279,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 138,
+          "width": 436,
+          "height": 279,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.36,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-07.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "13877a5558a845fd6f37457c33c86628d27eb8e02cb2cc94d37e125d0abcce4d"
+    },
+    {
+      "id": "crunches",
+      "name": "Abdominal crunch",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-07.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 620,
+          "width": 435,
+          "height": 216,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 620,
+          "width": 436,
+          "height": 216,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.503,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-07.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "13877a5558a845fd6f37457c33c86628d27eb8e02cb2cc94d37e125d0abcce4d"
+    },
+    {
+      "id": "dead-bug",
+      "name": "Abdominal com extensão alternada de braços e pernas",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-07.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 968,
+          "width": 435,
+          "height": 277,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 968,
+          "width": 436,
+          "height": 277,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.363,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-07.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "13877a5558a845fd6f37457c33c86628d27eb8e02cb2cc94d37e125d0abcce4d"
+    },
+    {
+      "id": "db-shrug",
+      "name": "Encolhimento de ombros com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-08.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 109,
+          "y": 448,
+          "width": 217,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 552,
+          "y": 448,
+          "width": 217,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.501,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-08.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "fbc81316d5aa19e915b3ee2df933c486256c6e126104818762ace994406762fc"
+    },
+    {
+      "id": "barbell-wrist-curl",
+      "name": "Flexão de punhos com barra",
+      "asset": "media/foco-human/2026-11-17-corrected/barbell-wrist-curl.webp",
+      "width": 1774,
+      "height": 887,
+      "frames": [
+        {
+          "x": 21,
+          "y": 4,
+          "width": 819,
+          "height": 879,
+          "phase": "start"
+        },
+        {
+          "x": 908,
+          "y": 4,
+          "width": 819,
+          "height": 879,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": true,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.068,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 879,
+          "height": 879,
+          "phase": "start"
+        },
+        {
+          "x": 891,
+          "y": 4,
+          "width": 879,
+          "height": 879,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-09.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "reference"
+          }
+        ]
+      },
+      "assetSha256": "322f4299055e02ca4abeff738ebfcee161ee384b36aef2672f2cd2c7534c114b"
+    },
+    {
+      "id": "hip-abduction",
+      "name": "Abdução de quadril na máquina",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-09.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 53,
+          "y": 448,
+          "width": 341,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 496,
+          "y": 448,
+          "width": 341,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.216,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-09.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "1de82e1188d642c3fdff95c4aae56bda3ff6d4c18bf41207a02221e6201d5b2e"
+    },
+    {
+      "id": "hip-adduction",
+      "name": "Adução de quadril na máquina",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-09.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 54,
+          "y": 891,
+          "width": 340,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 497,
+          "y": 891,
+          "width": 340,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.218,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-09.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "1de82e1188d642c3fdff95c4aae56bda3ff6d4c18bf41207a02221e6201d5b2e"
+    },
+    {
+      "id": "side-lying-hip-abduction",
+      "name": "Abdução de quadril na posição deitada de lado",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-09.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 1480,
+          "width": 435,
+          "height": 182,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1480,
+          "width": 436,
+          "height": 182,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.583,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-09.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "1de82e1188d642c3fdff95c4aae56bda3ff6d4c18bf41207a02221e6201d5b2e"
+    },
+    {
+      "id": "side-lying-hip-adduction",
+      "name": "Adução de quadril na posição deitada de lado",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-10.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 160,
+          "width": 435,
+          "height": 207,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 160,
+          "width": 436,
+          "height": 207,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.525,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-10.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "8eadc84f35ea8de7dbc93f5e1efce6503c394a0d72bbaf7ad0a37dcc8c5e8bf9"
+    },
+    {
+      "id": "bodyweight-squat",
+      "name": "Agachamento com peso corporal",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-10.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 110,
+          "y": 448,
+          "width": 273,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 553,
+          "y": 448,
+          "width": 273,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.372,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-10.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "8eadc84f35ea8de7dbc93f5e1efce6503c394a0d72bbaf7ad0a37dcc8c5e8bf9"
+    },
+    {
+      "id": "single-arm-dumbbell-overhead-tricep-extension",
+      "name": "Extensão de tríceps acima da cabeça unilateral com um halter",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-10.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 62,
+          "y": 891,
+          "width": 318,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 505,
+          "y": 891,
+          "width": 318,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.269,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-10.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "8eadc84f35ea8de7dbc93f5e1efce6503c394a0d72bbaf7ad0a37dcc8c5e8bf9"
+    },
+    {
+      "id": "close-grip-push-ups",
+      "name": "Flexão de braços com pegada fechada",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-10.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 9,
+          "y": 1404,
+          "width": 424,
+          "height": 297,
+          "phase": "start"
+        },
+        {
+          "x": 452,
+          "y": 1404,
+          "width": 424,
+          "height": 297,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.336,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-10.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "8eadc84f35ea8de7dbc93f5e1efce6503c394a0d72bbaf7ad0a37dcc8c5e8bf9"
+    },
+    {
+      "id": "foco-rope-triceps-pushdown",
+      "name": "Tríceps pulley com corda",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-11.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 104,
+          "y": 4,
+          "width": 311,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 547,
+          "y": 4,
+          "width": 311,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.285,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-11.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "bb6facf491a4265083a626524f425680a2d9a813cd9bb5286739d2476983d14d"
+    },
+    {
+      "id": "foco-dumbbell-stiff-leg-deadlift",
+      "name": "Stiff com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-11.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 112,
+          "y": 448,
+          "width": 229,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 555,
+          "y": 448,
+          "width": 229,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.474,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-11.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "bb6facf491a4265083a626524f425680a2d9a813cd9bb5286739d2476983d14d"
+    },
+    {
+      "id": "squat",
+      "name": "Agachamento livre com barra nas costas",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-12.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 85,
+          "y": 4,
+          "width": 270,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 528,
+          "y": 4,
+          "width": 270,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.379,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-12.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "cd7c935b01f04b51227fe44824c728c575038c84bcb713acc4f0a1d1be2c1abe"
+    },
+    {
+      "id": "cable-curl",
+      "name": "Rosca direta na polia",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-12.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 80,
+          "y": 448,
+          "width": 347,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 523,
+          "y": 448,
+          "width": 347,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.202,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-12.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "cd7c935b01f04b51227fe44824c728c575038c84bcb713acc4f0a1d1be2c1abe"
+    },
+    {
+      "id": "bird-dog",
+      "name": "Extensão alternada em quatro apoios",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-12.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 935,
+          "width": 435,
+          "height": 361,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 935,
+          "width": 436,
+          "height": 361,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.17,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-12.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "cd7c935b01f04b51227fe44824c728c575038c84bcb713acc4f0a1d1be2c1abe"
+    },
+    {
+      "id": "dips",
+      "name": "Mergulho nas paralelas com foco no peitoral",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-14.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 61,
+          "y": 448,
+          "width": 305,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 504,
+          "y": 448,
+          "width": 305,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.299,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-14.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "eaa39952900d6751c13bb13eda43de8250ddee0263cdb1fb970a9ee210dffef5"
+    },
+    {
+      "id": "pull-up",
+      "name": "Barra fixa",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-15.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 72,
+          "y": 4,
+          "width": 307,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 515,
+          "y": 4,
+          "width": 307,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.294,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-15.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "012843df4c755e3b146fae973861ff2270e82e9d2036d46cea824a21cea84d19"
+    },
+    {
+      "id": "v-bar-lat-pulldown",
+      "name": "Puxada frontal com pegada neutra e triângulo",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-16.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 82,
+          "y": 4,
+          "width": 313,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 525,
+          "y": 4,
+          "width": 313,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.28,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-16.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "b64e218f9bdc992c3bdfdaf4c22b648a2a40beef73ad032c46b60c200e150af7"
+    },
+    {
+      "id": "pendlay-row",
+      "name": "Remada Pendlay com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-16.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 16,
+          "y": 1385,
+          "width": 411,
+          "height": 356,
+          "phase": "start"
+        },
+        {
+          "x": 459,
+          "y": 1385,
+          "width": 411,
+          "height": 356,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.229,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-16.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "b64e218f9bdc992c3bdfdaf4c22b648a2a40beef73ad032c46b60c200e150af7"
+    },
+    {
+      "id": "reverse-grip-lat-pulldown",
+      "name": "Puxada frontal com pegada supinada na polia",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-17.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 63,
+          "y": 4,
+          "width": 348,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 506,
+          "y": 4,
+          "width": 348,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.2,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-17.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "4bc842d122a6cc4c827d3e50b01087ca37d7268374c090963c6ceb45e81f8fdc"
+    },
+    {
+      "id": "ohp",
+      "name": "Desenvolvimento em pé com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-17.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 74,
+          "y": 448,
+          "width": 296,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 517,
+          "y": 448,
+          "width": 296,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.32,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-17.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "4bc842d122a6cc4c827d3e50b01087ca37d7268374c090963c6ceb45e81f8fdc"
+    },
+    {
+      "id": "dumbbell-front-raise",
+      "name": "Elevação frontal com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-17.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 135,
+          "y": 891,
+          "width": 244,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 578,
+          "y": 891,
+          "width": 244,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.439,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-17.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "4bc842d122a6cc4c827d3e50b01087ca37d7268374c090963c6ceb45e81f8fdc"
+    },
+    {
+      "id": "cable-upright-row",
+      "name": "Remada alta na polia",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-18.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 50,
+          "y": 1334,
+          "width": 363,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 493,
+          "y": 1334,
+          "width": 363,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.166,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-18.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "b3243d43715256e6d56dbf5d704b8feb08344be6fb7008535047a15e33122d08"
+    },
+    {
+      "id": "cable-external-rotation",
+      "name": "Rotação externa do ombro na polia",
+      "asset": "media/foco-human/2026-11-17-corrected/cable-external-rotation.webp",
+      "width": 1774,
+      "height": 887,
+      "frames": [
+        {
+          "x": 74,
+          "y": 4,
+          "width": 809,
+          "height": 879,
+          "phase": "start"
+        },
+        {
+          "x": 961,
+          "y": 4,
+          "width": 809,
+          "height": 879,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": true,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.08,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 879,
+          "height": 879,
+          "phase": "start"
+        },
+        {
+          "x": 891,
+          "y": 4,
+          "width": 879,
+          "height": 879,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-19.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "reference"
+          }
+        ]
+      },
+      "assetSha256": "ccba712515779bfcc8f0f48ce54817fe64a550528f471cbd6b3699a1f3ba4d6a"
+    },
+    {
+      "id": "arnold-press",
+      "name": "Desenvolvimento Arnold com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-19.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 121,
+          "y": 891,
+          "width": 204,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 564,
+          "y": 891,
+          "width": 204,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.531,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-19.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "e2fd15eccecb4afa2875331ee1df756a004312139b8c724453dca41acd6d71f8"
+    },
+    {
+      "id": "ez-bar-curl",
+      "name": "Rosca direta com barra EZ",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-19.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 94,
+          "y": 1334,
+          "width": 273,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 537,
+          "y": 1334,
+          "width": 273,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.372,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-19.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "e2fd15eccecb4afa2875331ee1df756a004312139b8c724453dca41acd6d71f8"
+    },
+    {
+      "id": "cable-hammer-curl",
+      "name": "Rosca martelo na polia",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-20.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 95,
+          "y": 4,
+          "width": 311,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 538,
+          "y": 4,
+          "width": 311,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.285,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-20.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "3d0618b5f8023245c4a2d78b53fb07ed6e8e5abc907963708226d094ab667454"
+    },
+    {
+      "id": "preacher-curl",
+      "name": "Rosca Scott com barra EZ",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-20.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 48,
+          "y": 448,
+          "width": 345,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 491,
+          "y": 448,
+          "width": 345,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.207,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-20.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "3d0618b5f8023245c4a2d78b53fb07ed6e8e5abc907963708226d094ab667454"
+    },
+    {
+      "id": "db-preacher-curl",
+      "name": "Rosca Scott com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-20.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 48,
+          "y": 891,
+          "width": 335,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 491,
+          "y": 891,
+          "width": 335,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.23,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-20.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "3d0618b5f8023245c4a2d78b53fb07ed6e8e5abc907963708226d094ab667454"
+    },
+    {
+      "id": "machine-bicep-curl",
+      "name": "Rosca de bíceps na máquina",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-21.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 52,
+          "y": 891,
+          "width": 337,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 495,
+          "y": 891,
+          "width": 337,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.225,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-21.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "43ec27d2d74d4cd752184f762d9925396e91457a049d9955bc8b2cb4cb51c1c3"
+    },
+    {
+      "id": "drag-curl",
+      "name": "Rosca com cotovelos recuando (drag) com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-22.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 72,
+          "y": 4,
+          "width": 313,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 515,
+          "y": 4,
+          "width": 313,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.28,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-22.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "7e9213be07b2a17a2c33183a440379885ac853a4fba04608485731bff8dc98b5"
+    },
+    {
+      "id": "v-bar-tricep-pushdown",
+      "name": "Extensão de tríceps na polia com barra V",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-22.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 101,
+          "y": 448,
+          "width": 297,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 544,
+          "y": 448,
+          "width": 297,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.317,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-22.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "7e9213be07b2a17a2c33183a440379885ac853a4fba04608485731bff8dc98b5"
+    },
+    {
+      "id": "tricep-kickback",
+      "name": "Tríceps coice com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-23.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 48,
+          "y": 4,
+          "width": 355,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 491,
+          "y": 4,
+          "width": 355,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.184,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-23.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "457f98f1ffab464ba3d62ca60a3f37e5e7fc6563c6443fed0a03a9107bef783a"
+    },
+    {
+      "id": "assisted-dips",
+      "name": "Mergulho assistido nas paralelas na máquina",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-23.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 31,
+          "y": 1334,
+          "width": 314,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 474,
+          "y": 1334,
+          "width": 314,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.278,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-23.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "457f98f1ffab464ba3d62ca60a3f37e5e7fc6563c6443fed0a03a9107bef783a"
+    },
+    {
+      "id": "close-grip-db-bench-press",
+      "name": "Supino com pegada fechada com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-24.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 55,
+          "y": 465,
+          "width": 384,
+          "height": 409,
+          "phase": "start"
+        },
+        {
+          "x": 498,
+          "y": 465,
+          "width": 385,
+          "height": 409,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.17,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-24.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "78cacf826c2b977c350b277453866d58f2a7465e33ca6a8f2c69efb5f655545f"
+    },
+    {
+      "id": "single-arm-tricep-pushdown",
+      "name": "Extensão de tríceps na polia unilateral",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-24.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 121,
+          "y": 1334,
+          "width": 273,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 564,
+          "y": 1334,
+          "width": 273,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.372,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-24.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "78cacf826c2b977c350b277453866d58f2a7465e33ca6a8f2c69efb5f655545f"
+    },
+    {
+      "id": "db-reverse-wrist-curl",
+      "name": "Extensão de punhos com halteres",
+      "asset": "media/foco-human/2026-11-17-corrected/db-reverse-wrist-curl.webp",
+      "width": 1774,
+      "height": 887,
+      "frames": [
+        {
+          "x": 10,
+          "y": 4,
+          "width": 793,
+          "height": 879,
+          "phase": "start"
+        },
+        {
+          "x": 897,
+          "y": 4,
+          "width": 793,
+          "height": 879,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": true,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.098,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 879,
+          "height": 879,
+          "phase": "start"
+        },
+        {
+          "x": 891,
+          "y": 4,
+          "width": 879,
+          "height": 879,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-25.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "reference"
+          }
+        ]
+      },
+      "assetSha256": "ebbe8ef676a1c039eae45c51eb4131ba0a92721022dd4cee95bee7009f85dd80"
+    },
+    {
+      "id": "db-reverse-curl",
+      "name": "Rosca com pegada pronada com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-25.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 121,
+          "y": 1334,
+          "width": 214,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 564,
+          "y": 1334,
+          "width": 214,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.508,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-25.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "e96e60ba5693c2d7355953d7c2ad7d712eee4cb00e3c9c0799e8fe455d793820"
+    },
+    {
+      "id": "dumbbell-farmers-walk",
+      "name": "Caminhada do fazendeiro com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-26.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 117,
+          "y": 4,
+          "width": 236,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 560,
+          "y": 4,
+          "width": 236,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.457,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-26.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "fd42b9bfcb4ba0ea17ef0985ff85ff1a776a8329ca379c9e968a6e3a59422ea0"
+    },
+    {
+      "id": "suitcase-carry",
+      "name": "Caminhada com carga de um lado com kettlebell",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-26.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 104,
+          "y": 448,
+          "width": 245,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 547,
+          "y": 448,
+          "width": 245,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.437,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-26.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "fd42b9bfcb4ba0ea17ef0985ff85ff1a776a8329ca379c9e968a6e3a59422ea0"
+    },
+    {
+      "id": "dead-hang",
+      "name": "Suspensão na barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-26.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 60,
+          "y": 891,
+          "width": 328,
+          "height": 435,
+          "phase": "reference"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.246,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "reference"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-26.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "reference"
+          }
+        ]
+      },
+      "assetSha256": "fd42b9bfcb4ba0ea17ef0985ff85ff1a776a8329ca379c9e968a6e3a59422ea0"
+    },
+    {
+      "id": "front-squat",
+      "name": "Agachamento frontal com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-27.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 60,
+          "y": 4,
+          "width": 318,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 503,
+          "y": 4,
+          "width": 318,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.269,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-27.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "5507dbc6ec85764b6a324d86430634c35f62c05e0fb5bd1508b13b45bf4aeec8"
+    },
+    {
+      "id": "lunge",
+      "name": "Afundo",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-27.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 52,
+          "y": 1334,
+          "width": 339,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 495,
+          "y": 1334,
+          "width": 339,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.221,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-27.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "5507dbc6ec85764b6a324d86430634c35f62c05e0fb5bd1508b13b45bf4aeec8"
+    },
+    {
+      "id": "reverse-lunge",
+      "name": "Afundo reverso com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-28.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 82,
+          "y": 4,
+          "width": 267,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 525,
+          "y": 4,
+          "width": 267,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.386,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-28.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "71ef65b2ec33b0552f0ae3e68d515f82f45da5d63fad58d0dbcc5a720749db0d"
+    },
+    {
+      "id": "step-ups",
+      "name": "Subida no banco",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-28.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 111,
+          "y": 891,
+          "width": 266,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 554,
+          "y": 891,
+          "width": 266,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.389,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-28.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "71ef65b2ec33b0552f0ae3e68d515f82f45da5d63fad58d0dbcc5a720749db0d"
+    },
+    {
+      "id": "db-squat",
+      "name": "Agachamento com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-29.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 119,
+          "y": 4,
+          "width": 216,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 562,
+          "y": 4,
+          "width": 216,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.503,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-29.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "3faa11c51fec9b6e7dcedeb3072bdedbba93201b945abc4e9c9720e66570cf0a"
+    },
+    {
+      "id": "stiff-leg-deadlift",
+      "name": "Stiff com pernas quase estendidas com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-30.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 72,
+          "y": 448,
+          "width": 306,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 515,
+          "y": 448,
+          "width": 306,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.297,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-30.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "aea04268d27f94d90db111c723388058c0545b1481c14f50e1b60297c68e2697"
+    },
+    {
+      "id": "deadlift",
+      "name": "Levantamento terra com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-30.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 45,
+          "y": 891,
+          "width": 357,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 488,
+          "y": 891,
+          "width": 357,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.179,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-30.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "aea04268d27f94d90db111c723388058c0545b1481c14f50e1b60297c68e2697"
+    },
+    {
+      "id": "hex-bar-deadlift",
+      "name": "Levantamento terra com barra hexagonal",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-30.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 57,
+          "y": 1334,
+          "width": 336,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 500,
+          "y": 1334,
+          "width": 336,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.228,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-30.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "aea04268d27f94d90db111c723388058c0545b1481c14f50e1b60297c68e2697"
+    },
+    {
+      "id": "good-morning",
+      "name": "Inclinação do tronco (bom dia) com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-31.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 68,
+          "y": 891,
+          "width": 325,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 511,
+          "y": 891,
+          "width": 325,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.253,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-31.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "64e1aa38204d78654116208ba735a0b74d0051851bf80b8447d90382ac42c8de"
+    },
+    {
+      "id": "single-leg-glute-bridge",
+      "name": "Ponte de glúteos com uma perna",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-31.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 1488,
+          "width": 435,
+          "height": 211,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1488,
+          "width": 436,
+          "height": 211,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.516,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-31.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "64e1aa38204d78654116208ba735a0b74d0051851bf80b8447d90382ac42c8de"
+    },
+    {
+      "id": "single-leg-hip-thrust",
+      "name": "Elevação de quadril com costas apoiadas com uma perna",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-32.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 102,
+          "width": 435,
+          "height": 326,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 102,
+          "width": 436,
+          "height": 326,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.252,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-32.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "04a8dc9f3ae5050525b3669eeaec51b6422fadc4907b4dc8ebe52c69d7d33e87"
+    },
+    {
+      "id": "glute-kickback",
+      "name": "Extensão de quadril para trás",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-32.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 23,
+          "y": 970,
+          "width": 399,
+          "height": 282,
+          "phase": "start"
+        },
+        {
+          "x": 466,
+          "y": 970,
+          "width": 399,
+          "height": 282,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.405,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-32.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "04a8dc9f3ae5050525b3669eeaec51b6422fadc4907b4dc8ebe52c69d7d33e87"
+    },
+    {
+      "id": "bicycle-crunch",
+      "name": "Abdominal bicicleta",
+      "asset": "media/foco-human/2026-11-17-corrected/bicycle-crunch.webp",
+      "width": 2172,
+      "height": 724,
+      "frames": [
+        {
+          "x": 4,
+          "y": 86,
+          "width": 1078,
+          "height": 576,
+          "phase": "start"
+        },
+        {
+          "x": 1090,
+          "y": 86,
+          "width": 1078,
+          "height": 576,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": true,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.196,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 1078,
+          "height": 716,
+          "phase": "start"
+        },
+        {
+          "x": 1090,
+          "y": 4,
+          "width": 1078,
+          "height": 716,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-33.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "89037942f3d934a2e44af39c7dd8700bd5574a1880ef9012a5775b361cb0c8e3"
+    },
+    {
+      "id": "side-plank",
+      "name": "Prancha lateral",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-34.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 23,
+          "y": 160,
+          "width": 416,
+          "height": 240,
+          "phase": "reference"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.474,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "reference"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-34.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "reference"
+          }
+        ]
+      },
+      "assetSha256": "52b87dfe3e555958aa5b37140781a547991b99d816fbd9d3a9dd92141f05c2db"
+    },
+    {
+      "id": "lying-leg-raise",
+      "name": "Elevação de pernas deitado",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-34.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 938,
+          "width": 435,
+          "height": 330,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 938,
+          "width": 435,
+          "height": 330,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.241,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-34.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "52b87dfe3e555958aa5b37140781a547991b99d816fbd9d3a9dd92141f05c2db"
+    },
+    {
+      "id": "captains-chair-knee-raise",
+      "name": "Elevação de joelhos na cadeira romana",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-34.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 72,
+          "y": 1334,
+          "width": 299,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 515,
+          "y": 1334,
+          "width": 299,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.313,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-34.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "52b87dfe3e555958aa5b37140781a547991b99d816fbd9d3a9dd92141f05c2db"
+    },
+    {
+      "id": "v-ups",
+      "name": "Abdominal em V",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-35.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 981,
+          "width": 435,
+          "height": 312,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 981,
+          "width": 436,
+          "height": 312,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.22,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 943,
+          "width": 435,
+          "height": 400,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 943,
+          "width": 436,
+          "height": 400,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-35.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 943,
+            "width": 435,
+            "height": 400,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 943,
+            "width": 436,
+            "height": 400,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "018bc93084c3b0ebf3970debd6e6c966cb127e0cf9db62008cd33a8934e8016d"
+    },
+    {
+      "id": "mountain-climbers",
+      "name": "Escalador em prancha",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-35.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 1411,
+          "width": 435,
+          "height": 294,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1411,
+          "width": 436,
+          "height": 294,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.298,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1351,
+          "width": 435,
+          "height": 419,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1351,
+          "width": 436,
+          "height": 419,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-35.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1351,
+            "width": 435,
+            "height": 419,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1351,
+            "width": 436,
+            "height": 419,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "018bc93084c3b0ebf3970debd6e6c966cb127e0cf9db62008cd33a8934e8016d"
+    },
+    {
+      "id": "russian-twist",
+      "name": "Rotação russa",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-36.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 27,
+          "y": 522,
+          "width": 398,
+          "height": 341,
+          "phase": "start"
+        },
+        {
+          "x": 470,
+          "y": 522,
+          "width": 398,
+          "height": 341,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.283,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-36.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "2a1c4ff8540b51034a18bdd65c98131ca4f6e374ca7acbf7daf356837ca2add0"
+    },
+    {
+      "id": "superman",
+      "name": "Extensão de tronco e membros deitado",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-36.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 1058,
+          "width": 435,
+          "height": 163,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1058,
+          "width": 436,
+          "height": 163,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.625,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-36.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "2a1c4ff8540b51034a18bdd65c98131ca4f6e374ca7acbf7daf356837ca2add0"
+    },
+    {
+      "id": "dumbbell-upright-row",
+      "name": "Remada alta com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-37.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 112,
+          "y": 448,
+          "width": 226,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 555,
+          "y": 448,
+          "width": 226,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.48,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-37.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "5e0ab30471ca2f8e8b1763fc15529388a455aaad1bd8792eceb41bad0fc58195"
+    },
+    {
+      "id": "behind-the-back-barbell-shrug",
+      "name": "Encolhimento de ombros com carga atrás do corpo com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-37.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 50,
+          "y": 891,
+          "width": 350,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 493,
+          "y": 891,
+          "width": 350,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.195,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-37.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "5e0ab30471ca2f8e8b1763fc15529388a455aaad1bd8792eceb41bad0fc58195"
+    },
+    {
+      "id": "upright-row",
+      "name": "Remada alta com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-37.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 65,
+          "y": 1334,
+          "width": 328,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 508,
+          "y": 1334,
+          "width": 328,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.246,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-37.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "5e0ab30471ca2f8e8b1763fc15529388a455aaad1bd8792eceb41bad0fc58195"
+    },
+    {
+      "id": "kettlebell-shrug",
+      "name": "Encolhimento de ombros com kettlebell",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-38.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 134,
+          "y": 4,
+          "width": 186,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 577,
+          "y": 4,
+          "width": 186,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.572,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-38.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "bd24c80f08e8c6c3ee9eea9292fa50cd87cbcdb70a6a4e065360cc7a8b42c6bd"
+    },
+    {
+      "id": "banded-lateral-walk",
+      "name": "Caminhada lateral com elástico",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-38.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 72,
+          "y": 448,
+          "width": 309,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 515,
+          "y": 448,
+          "width": 309,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.29,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-38.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "bd24c80f08e8c6c3ee9eea9292fa50cd87cbcdb70a6a4e065360cc7a8b42c6bd"
+    },
+    {
+      "id": "clamshells",
+      "name": "Abdução de quadril em concha",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-38.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 1032,
+          "width": 435,
+          "height": 209,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1032,
+          "width": 436,
+          "height": 209,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.52,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-38.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "bd24c80f08e8c6c3ee9eea9292fa50cd87cbcdb70a6a4e065360cc7a8b42c6bd"
+    },
+    {
+      "id": "db-sumo-squat",
+      "name": "Agachamento sumô com halteres",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-38.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 91,
+          "y": 1334,
+          "width": 286,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 534,
+          "y": 1334,
+          "width": 286,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.343,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-38.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "bd24c80f08e8c6c3ee9eea9292fa50cd87cbcdb70a6a4e065360cc7a8b42c6bd"
+    },
+    {
+      "id": "stationary-bike",
+      "name": "Bicicleta ergométrica",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-39.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 83,
+          "y": 891,
+          "width": 305,
+          "height": 431,
+          "phase": "start"
+        },
+        {
+          "x": 526,
+          "y": 891,
+          "width": 305,
+          "height": 431,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.305,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-39.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "64e9c592978668845699bb8d32c5b52a4a267dd821d335d5407525511b13ab36"
+    },
+    {
+      "id": "rowing-machine",
+      "name": "Remo ergométrico",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-40.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 4,
+          "y": 69,
+          "width": 435,
+          "height": 347,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 69,
+          "width": 436,
+          "height": 347,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.204,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 4,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-40.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 4,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "db6821b85920f56de558bd7bff007b702d8f67672b6b633111253834ee9bfd7b"
+    },
+    {
+      "id": "jump-rope",
+      "name": "Pular corda",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-40.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 91,
+          "y": 448,
+          "width": 264,
+          "height": 434,
+          "phase": "start"
+        },
+        {
+          "x": 534,
+          "y": 448,
+          "width": 264,
+          "height": 434,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.394,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-40.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "db6821b85920f56de558bd7bff007b702d8f67672b6b633111253834ee9bfd7b"
+    },
+    {
+      "id": "jumping-jacks",
+      "name": "Polichinelo",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-40.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 109,
+          "y": 891,
+          "width": 227,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 552,
+          "y": 891,
+          "width": 227,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.478,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-40.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "db6821b85920f56de558bd7bff007b702d8f67672b6b633111253834ee9bfd7b"
+    },
+    {
+      "id": "walking-lunge",
+      "name": "Afundo com deslocamento",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-40.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 87,
+          "y": 1334,
+          "width": 262,
+          "height": 434,
+          "phase": "start"
+        },
+        {
+          "x": 530,
+          "y": 1334,
+          "width": 262,
+          "height": 434,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.4,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-40.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "db6821b85920f56de558bd7bff007b702d8f67672b6b633111253834ee9bfd7b"
+    },
+    {
+      "id": "kettlebell-swing",
+      "name": "Balanço de carga entre as pernas com kettlebell",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-41.webp",
+      "width": 1254,
+      "height": 1254,
+      "frames": [
+        {
+          "x": 155,
+          "y": 631,
+          "width": 372,
+          "height": 614,
+          "phase": "start"
+        },
+        {
+          "x": 782,
+          "y": 631,
+          "width": 372,
+          "height": 614,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.404,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 631,
+          "width": 619,
+          "height": 619,
+          "phase": "start"
+        },
+        {
+          "x": 631,
+          "y": 631,
+          "width": 619,
+          "height": 619,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-41.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 631,
+            "width": 619,
+            "height": 619,
+            "phase": "start"
+          },
+          {
+            "x": 631,
+            "y": 631,
+            "width": 619,
+            "height": 619,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "4c77cf6eccd82d3e69ef87c3378b81396fd062c9fc4250812be6b70d1e9315ee"
+    },
+    {
+      "id": "ez-bar-reverse-curl",
+      "name": "Rosca com pegada pronada com barra EZ",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-42.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 90,
+          "y": 891,
+          "width": 288,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 533,
+          "y": 891,
+          "width": 288,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.338,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-42.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "8df1389c723fd108f1f3852cd3a88e2a537bab272a1cb7da88636655baa68d63"
+    },
+    {
+      "id": "cable-wrist-curl",
+      "name": "Flexão de punhos na polia",
+      "asset": "media/foco-human/2026-11-17-corrected/cable-wrist-curl.webp",
+      "width": 1774,
+      "height": 887,
+      "frames": [
+        {
+          "x": 11,
+          "y": 4,
+          "width": 852,
+          "height": 868,
+          "phase": "start"
+        },
+        {
+          "x": 898,
+          "y": 4,
+          "width": 852,
+          "height": 868,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": true,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.043,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 879,
+          "height": 879,
+          "phase": "start"
+        },
+        {
+          "x": 891,
+          "y": 4,
+          "width": 879,
+          "height": 879,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-42.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "reference"
+          }
+        ]
+      },
+      "assetSha256": "115999bbafc61cf7e83ad8e6c94b941c966e1052b049fb1a23e5155cb3c60aa9"
+    },
+    {
+      "id": "plate-pinch",
+      "name": "Sustentação de anilhas em pinça",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-43.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 138,
+          "y": 4,
+          "width": 174,
+          "height": 436,
+          "phase": "reference"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.6,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 4,
+          "width": 435,
+          "height": 436,
+          "phase": "reference"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-43.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 4,
+            "width": 435,
+            "height": 436,
+            "phase": "reference"
+          }
+        ]
+      },
+      "assetSha256": "cff5a7886c8c8f85b337bee395a8c5af6ae2628033c853a4425e60b041b760a1"
+    },
+    {
+      "id": "heel-elevated-squat",
+      "name": "Agachamento com calcanhares elevados com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-43.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 45,
+          "y": 448,
+          "width": 364,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 488,
+          "y": 448,
+          "width": 364,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.163,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 448,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 448,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-43.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 448,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 448,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "cff5a7886c8c8f85b337bee395a8c5af6ae2628033c853a4425e60b041b760a1"
+    },
+    {
+      "id": "nordic-hamstring-curl",
+      "name": "Flexão nórdica de joelhos",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-43.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 43,
+          "y": 891,
+          "width": 351,
+          "height": 422,
+          "phase": "start"
+        },
+        {
+          "x": 486,
+          "y": 891,
+          "width": 351,
+          "height": 422,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.217,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 891,
+          "width": 435,
+          "height": 435,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 891,
+          "width": 436,
+          "height": 435,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-43.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 891,
+            "width": 435,
+            "height": 435,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 891,
+            "width": 436,
+            "height": 435,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "cff5a7886c8c8f85b337bee395a8c5af6ae2628033c853a4425e60b041b760a1"
+    },
+    {
+      "id": "sumo-squat",
+      "name": "Agachamento sumô com barra",
+      "asset": "media/foco-human/2026-11-17-expanded/sheet-43.webp",
+      "width": 887,
+      "height": 1774,
+      "frames": [
+        {
+          "x": 39,
+          "y": 1334,
+          "width": 367,
+          "height": 430,
+          "phase": "start"
+        },
+        {
+          "x": 482,
+          "y": 1334,
+          "width": 367,
+          "height": 430,
+          "phase": "peak"
+        }
+      ],
+      "regenerated": false,
+      "review": "rendered-framing-screening-complete",
+      "areaReduction": 0.168,
+      "protectedSourceFrames": [
+        {
+          "x": 4,
+          "y": 1334,
+          "width": 435,
+          "height": 436,
+          "phase": "start"
+        },
+        {
+          "x": 447,
+          "y": 1334,
+          "width": 436,
+          "height": 436,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "asset": "media/foco-human/2026-11-17-expanded/sheet-43.webp",
+        "frames": [
+          {
+            "x": 4,
+            "y": 1334,
+            "width": 435,
+            "height": 436,
+            "phase": "start"
+          },
+          {
+            "x": 447,
+            "y": 1334,
+            "width": 436,
+            "height": 436,
+            "phase": "peak"
+          }
+        ]
+      },
+      "assetSha256": "cff5a7886c8c8f85b337bee395a8c5af6ae2628033c853a4425e60b041b760a1"
+    }
+  ],
+  "status": "assistant-visual-screening-complete",
+  "reviewedCollectionCount": 167,
+  "framingChangedCount": 98,
+  "remainingReferenceOnlyIds": [
+    "plank",
+    "side-plank",
+    "dead-hang",
+    "plate-pinch"
+  ],
+  "heldAttempts": [
+    {
+      "id": "barbell-wrist-curl",
+      "reason": "Refazer: quadros iguais na bicicleta; contato dos antebraços com coxas insuficiente nos punhos.",
+      "generatedFileSha256": "5174beb77ec0a5b1c9412124614091d1a514f28b91fb28d2d94aa4f08b736105"
+    },
+    {
+      "id": "bicycle-crunch",
+      "reason": "Refazer: quadros iguais na bicicleta; contato dos antebraços com coxas insuficiente nos punhos.",
+      "generatedFileSha256": "60c0982caf3349cc7004142f439001424b4a115fa957990708497e3ccc9acac9"
+    },
+    {
+      "id": "cable-wrist-curl",
+      "reason": "Refazer: quadros iguais na bicicleta; contato dos antebraços com coxas insuficiente nos punhos.",
+      "generatedFileSha256": "20fc37bc6befd96b8152da2bf3d65369e79571cd9b84ea1102c7e76231758ff5"
+    }
+  ]
+}

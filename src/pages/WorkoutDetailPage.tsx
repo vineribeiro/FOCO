@@ -34,7 +34,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
     <section className="foco-v6-muscle-hero" aria-labelledby="foco-detail-title">
       {today[0]&&<div className="foco-detail-hero-art">
         <ExerciseIllustration exerciseName={today[0].exercise_name} exerciseId={today[0].repdb_id}
-          muscleGroup={today[0].muscle_group} className="foco-detail-hero-illustration h-full w-full !rounded-none" presentation="editorial"/>
+          muscleGroup={today[0].muscle_group} compact className="foco-detail-hero-illustration h-full w-full !rounded-none" presentation="editorial"/>
       </div>}
       <div className="foco-v6-muscle-hero-content">
         <h1 id="foco-detail-title">{loading?'Carregando...':title}</h1>

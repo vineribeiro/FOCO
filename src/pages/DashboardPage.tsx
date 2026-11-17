@@ -106,8 +106,10 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
               return <button type="button" key={day.day||'general'} className="foco-plan-card" data-tone={index%2?'rose':'lilac'} onClick={()=>day.day?handleDetail(day.day):setActiveTab('treinos')} aria-label={'Abrir '+day.label+': '+groups.join(', ')}>
                 <h3>{conciseWorkoutName(groups,plan?.name||'Meu treino')}</h3>
                 <span className="foco-plan-duration" aria-label={'Duração estimada de '+estimate+' minutos'}><strong>~{estimate}</strong><small>min</small></span>
-                <span className="foco-plan-card-art"><ExerciseIllustration exerciseName={day.exercises[0].exercise_name} exerciseId={day.exercises[0].repdb_id} muscleGroup={day.exercises[0].muscle_group} className="h-full w-full"/></span>
-                <span className="foco-plan-card-meta"><span>{day.label}</span><strong>{day.exercises.length} exercícios</strong><small>{groups.slice(0,3).join(' / ')}{groups.length>3?' +'+(groups.length-3):''}</small></span>
+                <span className="foco-plan-card-body">
+                  <span className="foco-plan-card-art"><ExerciseIllustration exerciseName={day.exercises[0].exercise_name} exerciseId={day.exercises[0].repdb_id} muscleGroup={day.exercises[0].muscle_group} compact className="h-full w-full"/></span>
+                  <span className="foco-plan-card-meta"><span>{day.label}</span><strong>{day.exercises.length} exercícios</strong><small>{groups.slice(0,3).join(' / ')}{groups.length>3?' +'+(groups.length-3):''}</small></span>
+                </span>
                 <ArrowUpRight size={18} className="foco-plan-open" aria-hidden="true"/>
               </button>;
             })}
