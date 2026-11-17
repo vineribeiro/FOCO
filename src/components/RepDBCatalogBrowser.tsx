@@ -4,6 +4,7 @@ import {AccessibleDialog} from './AccessibleDialog';
 import {ExerciseIllustration} from './ExerciseIllustration';
 import {repdbLabel as label,repdbEquipmentLabel} from '../data/repdbLocale';
 import {repdbMediaReview} from '../data/repdbMediaReview';
+import {FOCO_HUMAN_MEDIA} from '../data/focoHumanMedia';
 import type {RepDBPortugueseCopy} from '../data/repdbInstructionsPtBR';
 import {
   loadRepDBCatalog,repdbDisplayName,repdbImagePoses,normalizeRepDBName,repdbSearchTerms,loadRepDBPortugueseCopy,
@@ -20,6 +21,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
  const [term,setTerm]=useState('');
  const [group,setGroup]=useState('all');
  const [page,setPage]=useState(1);
+ const [humanOnly,setHumanOnly]=useState(()=>new URLSearchParams(window.location.search).get('media')==='foco');
  const [detail,setDetail]=useState<RepDBExercise|null>(null);
  const [copy,setCopy]=useState<RepDBPortugueseCopy|null>(null);
  const [copyStatus,setCopyStatus]=useState<'loading'|'ready'|'error'>('loading');
@@ -43,11 +45,12 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
  const matches=useMemo(()=>{
   const q=normalizeRepDBName(term.trim());
   return catalog.filter(item=>{
+    if(humanOnly&&!FOCO_HUMAN_MEDIA[item.id])return false;
     if(group!=='all'&&item.body_part!==group)return false;
     if(!q)return true;
     return repdbSearchTerms(item).some(value=>normalizeRepDBName(value).includes(q));
   }).sort((a,b)=>repdbDisplayName(a).localeCompare(repdbDisplayName(b),'pt-BR'));
- },[catalog,term,group]);
+ },[catalog,term,group,humanOnly]);
  const totalPages=Math.max(1,Math.ceil(matches.length/PER_PAGE));
  const visible=matches.slice((page-1)*PER_PAGE,page*PER_PAGE);
  const changeSearch=(value:string)=>{setTerm(value);setPage(1)};
@@ -56,9 +59,9 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
   <div className="foco-atlas-external-top foco-repdb-library-head">
     <div><span className="foco-atlas-kicker">FOCO ATLAS / MOVIMENTOS</span>
       <h2>Movimento.<br/><span>Com precisão.</span></h2>
-      <p>Ilustrações uniformes, posição inicial e final. Encontra o movimento certo sem depender de GIFs ou consultas por exercício.</p>
+      <p>Movimentos em português, com posições para conferir. Explore as ilustrações humanas do FOCO e a coleção RepDB.</p>
     </div>
-    <span className="foco-atlas-beta-pill">RE P DB / FREE</span>
+    <span className="foco-atlas-beta-pill">FOCO / MOVIMENTOS</span>
   </div>
   <div className="foco-repdb-search-row">
     <label className="foco-atlas-search">
@@ -78,7 +81,8 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
     <div className="foco-atlas-results-heading">
       <div><strong>{matches.length.toLocaleString('pt-BR')} movimentos</strong>
         <span>{catalog.length.toLocaleString('pt-BR')} exercícios na coleção • 24 por página</span></div>
-      <span className="foco-atlas-remote-label">IMAGENS WEBP</span>
+      <button type="button" className="foco-human-filter" aria-pressed={humanOnly}
+        onClick={()=>{setHumanOnly(value=>!value);setPage(1);}}>Imagens FOCO · {Object.keys(FOCO_HUMAN_MEDIA).length}</button>
     </div>
     <div className="foco-atlas-filters" role="group" aria-label="Filtrar grupo muscular">
       <button type="button" onClick={()=>changeGroup('all')} aria-pressed={group==='all'}>Todos</button>
@@ -94,7 +98,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
           <button type="button" className="foco-atlas-card-open"
             onClick={()=>setDetail(item)} aria-label={'Ver '+repdbDisplayName(item)}>
             <span className="foco-atlas-media-placeholder foco-repdb-card-image">
-              {pose?<img loading="lazy" decoding="async" src={pose.url}
+              {FOCO_HUMAN_MEDIA[item.id]?<ExerciseIllustration exerciseName={repdbDisplayName(item)} exerciseId={item.id} compact className="foco-human-library-thumb h-full w-full"/>:pose?<img loading="lazy" decoding="async" src={pose.url}
                 alt={(pose.phase==='reference'?'Posição de referência':pose.phase==='peak'?'Posição final':'Posição inicial')+' de '+repdbDisplayName(item)}
                 onError={event=>{event.currentTarget.style.display='none';}}/>:
                 <Dumbbell size={30} strokeWidth={1.25}/>}
@@ -117,7 +121,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
         Próxima <ArrowRight size={16}/></button>
     </nav>
   </>}
-  <p className="foco-atlas-credit">Imagens e dados: <a href={REPDB_CREDIT_URL} target="_blank"
+  <p className="foco-atlas-credit">Ilustrações FOCO criadas com IA, identificadas por exercício. Dados e demais imagens: <a href={REPDB_CREDIT_URL} target="_blank"
     rel="noopener noreferrer">{REPDB_CREDIT_TEXT}</a>. Biblioteca gratuita, com atribuição. As duas poses são estáticas e não substituem orientação profissional.</p>
   {detail&&<AccessibleDialog size="lg" title={'Exercício: '+repdbDisplayName(detail)} onClose={()=>setDetail(null)}>
     <div className="foco-atlas-modal foco-repdb-detail">

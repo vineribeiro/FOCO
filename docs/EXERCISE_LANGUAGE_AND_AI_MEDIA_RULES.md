@@ -1,5 +1,10 @@
 # FOCO — regras de idioma e futuras ilustrações próprias
 
+Atualização de 17/11/2026: o pacote PT-BR foi integrado na revisão 3.3. O proprietário
+solicitou depois um piloto em dez exercícios e sua integração à tela de treino.
+Ver `FOCO_HUMAN_MEDIA_2026_11_17.md` para a entrega 3.4 e a origem das imagens próprias.
+As falhas de idioma descritas abaixo são o diagnóstico histórico de 16/11.
+
 Direção solicitada pelo proprietário em 16/11/2026: corrigir nomes e explicações em inglês primeiro; depois avaliar novas imagens de IA para tornar os exercícios mais bonitos. Este documento define a próxima etapa. Não declara que o catálogo já foi traduzido nem autoriza trocar toda a mídia sem revisão.
 
 ## 1. Português brasileiro na interface

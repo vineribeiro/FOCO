@@ -48,9 +48,9 @@ try{for(const width of [320,390,768,1440]){
  await dialog.getByRole('button',{name:'Fechar',exact:true}).click();
  await search.fill('Bench Press');await page.getByRole('button',{name:'Ver Supino reto com barra',exact:true}).waitFor();
  await search.fill('posteriores da coxa');await page.getByRole('button',{name:'Ver Levantamento terra romeno com halteres',exact:true}).waitFor();
- await search.fill('prancha');await page.getByRole('button',{name:'Ver Prancha',exact:true}).locator('img[alt="Posição de referência de Prancha"]').waitFor();
+ await search.fill('prancha');await page.getByRole('button',{name:'Ver Prancha',exact:true}).getByRole('img',{name:'Prancha — posição de referência',exact:true}).waitFor();
  await page.getByRole('button',{name:'Ver Prancha',exact:true}).click();
- await page.getByRole('dialog').locator('img[alt$="posição de referência"]').waitFor();await page.getByRole('dialog').getByRole('button',{name:'Fechar',exact:true}).click();
+ await page.getByRole('dialog').getByRole('img',{name:'Prancha — posição de referência',exact:true}).waitFor();await page.getByRole('dialog').getByRole('button',{name:'Fechar',exact:true}).click();
  await search.fill('Abdução de quadril em quatro apoios com elástico');
  await page.getByRole('button',{name:'Ver Abdução de quadril em quatro apoios com elástico',exact:true}).click();
  await page.getByRole('dialog').getByText('A imagem final mostra o joelho estendido',{exact:false}).waitFor();

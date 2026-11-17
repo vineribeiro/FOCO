@@ -648,7 +648,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <div className="foco-21-art-surface" aria-hidden="true"/>
         <div className="foco-21-exercise-media">
         <ExerciseIllustration key={v6CurrentExercise.exercise_name} exerciseName={v6CurrentExercise.exercise_name} exerciseId={v6CurrentExercise.repdb_id}
-          muscleGroup={v6CurrentExercise.muscle_group} presentation="editorial" className="foco-v7-stage-illustration h-full w-full" />
+          muscleGroup={v6CurrentExercise.muscle_group} interactive presentation="editorial" className="foco-v7-stage-illustration h-full w-full" />
         </div>
         <span className="foco-v7-stage-tag">EXERCÍCIO {String(v6ExIndex+1).padStart(2,'0')} / {String(exerciseLogs.length).padStart(2,'0')}</span>
         <div className="foco-v7-stage-footer">
@@ -728,7 +728,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           disabled={v6ExIndex>=exerciseLogs.length-1}>Próximo exercício <ChevronRight size={17}/></button>
       </>}
       {v6CurrentExercise&&v6SessionMode==='execution'&&<section className="foco-v7-guide-panel">
-        <div className="foco-v7-guide-heading"><span>EXECUÇÃO CORRETA</span><button type="button" onClick={()=>setV6SessionMode('register')}>Voltar ao registro</button></div>
+        <div className="foco-v7-guide-heading"><span>GUIA DO MOVIMENTO</span><button type="button" onClick={()=>setV6SessionMode('register')}>Voltar ao registro</button></div>
         <ExerciseExecutionGuide exerciseName={v6CurrentExercise.exercise_name} exerciseId={v6CurrentExercise.repdb_id} muscleGroup={v6CurrentExercise.muscle_group}/>
       </section>}
       {v6CurrentExercise&&v6SessionMode==='tips'&&<section className="foco-v7-guide-panel p-5">

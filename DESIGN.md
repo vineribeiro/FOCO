@@ -20,7 +20,7 @@ Tokens: `src/foco-pro-tokens.css`. Único proprietário visual: `src/foco-ui.css
 4. Evolução: períodos, tendência e indicadores pastel com fontes e datas dos registros. Valores ausentes ficam ausentes.
 5. Perfil e formulários: mesmos tokens e hierarquia. Navegação desktop equivalente à móvel.
 
-Calorias, passos, notificações e percentuais dos mockups não são inventados. Fotografias decorativas de marca não representam exercícios nem atletas do usuário. Mídia técnica permanece exclusivamente RepDB Free com atribuição.
+Calorias, passos, notificações e percentuais dos mockups não são inventados. Fotografias decorativas de marca não representam exercícios nem atletas do usuário. Mídia de movimentos usa o piloto humano autoral FOCO por ID e RepDB Free para os demais exercícios/fallback, com origem identificada. Na sessão, o movimento ocupa o destaque principal e os controles permanecem no fluxo, sem encobrir a imagem.
 
 ## Validação
 

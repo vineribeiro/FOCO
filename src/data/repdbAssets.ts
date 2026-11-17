@@ -164,8 +164,11 @@ export function loadRepDBCatalog():Promise<RepDBExercise[]> {
    .catch(error=>{catalogPromise=null;throw error;});
  return catalogPromise;
 }
-export async function resolveRepDBExercise(name:string, id?:string|null):Promise<RepDBExercise|null> {
- if(id==='barbell-preacher-curl'&&normalize(name)===normalize('Rosca Scott com barra EZ'))return null;
+export function repdbBindingBlocked(name:string,id?:string|null):boolean {
+ // Historic automatic templates used a dumbbell for this unspecific name;
+ // the RepDB ID is the kettlebell variation. Only an explicit ID disambiguates it.
+ if(!id&&normalize(name)===normalize('Agachamento goblet'))return true;
+ if(id==='barbell-preacher-curl'&&normalize(name)===normalize('Rosca Scott com barra EZ'))return true;
  // Known old aliases bound different variations. Never repair them by showing
  // a nearby exercise; preserved records keep their name/history unchanged.
  const blocked:Record<string,string>={
@@ -174,7 +177,10 @@ export async function resolveRepDBExercise(name:string, id?:string|null):Promise
   [normalize('Panturrilha unilateral com halter')]:'single-leg-calf-raise',
   [normalize('Elevação de ponta dos pés')]:'bodyweight-calf-raise',
  };
- if(blocked[normalize(name)]&&(!id||blocked[normalize(name)]===id))return null;
+ return Boolean(blocked[normalize(name)]&&(!id||blocked[normalize(name)]===id));
+}
+export async function resolveRepDBExercise(name:string, id?:string|null):Promise<RepDBExercise|null> {
+ if(repdbBindingBlocked(name,id))return null;
  const catalog=await loadRepDBCatalog();
  // An explicitly stored ID is authoritative; never fuzzy-match a different variant.
  if (id) return catalog.find(item=>item.id===id)||null;
