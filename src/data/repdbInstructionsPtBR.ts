@@ -1884,7 +1884,7 @@ export const REPDB_PTBR_INSTRUCTIONS:Record<string,RepDBPortugueseCopy>= {
   ]
  },
  "cable-front-raise": {
-  "description": "Exercício de força para ombros. Elevação frontal na polia.",
+  "description": "Exercício de força para ombros. Elevação frontal unilateral na polia.",
   "instructions": [
    "Fique de costas para uma polia de cabo baixa com uma alça fixada.",
    "Segure a alça com o braço estendido na altura da coxa.",
@@ -2866,7 +2866,7 @@ export const REPDB_PTBR_INSTRUCTIONS:Record<string,RepDBPortugueseCopy>= {
   ]
  },
  "db-pullover": {
-  "description": "Exercício de força para peitoral. Extensão de ombros deitado (pullover) com halteres.",
+  "description": "Exercício de força para peitoral. Extensão de ombros deitado (pullover) com um halter.",
   "instructions": [
    "Deite-se em um banco plano com um haltere acima do peito e os braços estendidos.",
    "Abaixe o haltere atrás da cabeça em um arco, mantendo uma leve flexão nos cotovelos.",

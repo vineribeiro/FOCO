@@ -1,15 +1,13 @@
 import assert from 'node:assert/strict';
-import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {mkdirSync,writeFileSync} from 'node:fs';
 import {chromium} from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 import {auditCredentials,createAuditFixtures} from './fixtures/audit-browser.mjs';
 const base=process.env.FOCO_E2E_BASE_URL||'http://127.0.0.1:4173/FOCO/';
 const out='work/human-media-browser';mkdirSync(out,{recursive:true});
-const manifest=JSON.parse(readFileSync(new URL('../docs/media/FOCO_HUMAN_PILOT_2026_11_17.json',import.meta.url),'utf8'));
-const examples=manifest.exercises;
-const muscleGroups=['Peitoral','Quadríceps','Costas','Panturrilhas','Core','Posteriores','Ombros','Bíceps','Glúteos','Costas'];
-const bodyParts=['chest','upper_legs','back','lower_legs','core','upper_legs','shoulders','upper_arms','upper_legs','back'];
-const equipment=['dumbbell','kettlebell','dumbbell','dumbbell',undefined,'dumbbell','dumbbell','dumbbell',undefined,'cable'];
+import {humanExamples} from './fixtures/human-media.mjs';
+const sessionIds=['db-bench-press','goblet-squat','lat-pulldown','hammer-curl','plank','leg-press','bench-press','leg-extension','cable-reverse-fly','db-goblet-squat','foco-rope-triceps-pushdown','foco-dumbbell-stiff-leg-deadlift'];
+const examples=sessionIds.map(id=>humanExamples.find(e=>e.id===id));
 const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/L5sAAAAASUVORK5CYII=','base64');
 const results=[];let externalWrites=0;
 const browser=await chromium.launch({headless:true,...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{})});
@@ -17,8 +15,8 @@ async function setup(width,{breakOwn=false}={}){
  const context=await browser.newContext({viewport:{width,height:width===320?720:900},serviceWorkers:'block',reducedMotion:'reduce'});
  const fixtures=createAuditFixtures(),plan=fixtures['/api/workouts/active'];
  plan.exercises=examples.map((e,i)=>({id:'human-synthetic-'+i,plan_id:plan.id,exercise_name:i===0?'Supino personalizado do piloto':e.name,
-  repdb_id:e.id,muscle_group:muscleGroups[i],training_day:'segunda',sets:3,reps_min:8,reps_max:12,rest_seconds:90,suggested_load_kg:20,notes:''}));
- const catalog=[...examples.map((e,i)=>({id:e.id,name_en:e.name,body_part:bodyParts[i],equipment:equipment[i],is_bodyweight:!equipment[i],images:{flat:{start:'images/flat/'+e.id+'-start.webp',peak:'images/flat/'+e.id+'-peak.webp'}}})),
+  repdb_id:e.id,muscle_group:({chest:'Peitoral',upper_legs:'Pernas',back:'Costas',lower_legs:'Panturrilhas',core:'Abdômen e core',shoulders:'Ombros',upper_arms:'Braços'})[e.bodyPart]||'Corpo',training_day:'segunda',sets:3,reps_min:8,reps_max:12,rest_seconds:90,suggested_load_kg:20,notes:''}));
+ const catalog=[...humanExamples.map(e=>({id:e.id,name_en:e.sourceName,body_part:e.bodyPart,equipment:e.equipment,is_bodyweight:e.isBodyweight,primary_muscles:e.primaryMuscles||[],images:{flat:{start:'images/flat/'+e.id+'-start.webp',peak:'images/flat/'+e.id+'-peak.webp'}}})),
   ...Array.from({length:100},(_,i)=>({id:'future-pilot-'+i,name_en:'Future movement '+i,images:{flat:{main:'images/flat/future-pilot-'+i+'.webp'}}}))];
  await context.route('**/*',async route=>{
   const req=route.request(),u=new URL(req.url());
@@ -48,14 +46,14 @@ try{
    const e=examples[i];await page.getByRole('button',{name:new RegExp('^Ver exercício '+(i+1)+':')}).click();
    const art=stage.locator('[data-foco-media-source="foco-ai"]');await art.locator('svg.foco-human-pose').waitFor();
    await art.locator('svg image[href$="/'+e.asset+'"]').waitFor();
-   const phase=e.id==='plank'?'reference':'start';await page.waitForFunction(p=>document.querySelector('.foco-21-exercise-media [data-foco-media-phase]')?.getAttribute('data-foco-media-phase')===p,phase);
+   const phase=e.frames[0].phase;await page.waitForFunction(p=>document.querySelector('.foco-21-exercise-media [data-foco-media-phase]')?.getAttribute('data-foco-media-phase')===p,phase);
    const href=await art.locator('svg image').getAttribute('href');assert.ok(href.endsWith('/'+e.asset));
    await page.evaluate(async url=>{const im=new Image();im.src=url;await im.decode();},href);
    const controls=art.getByRole('group',{name:'Posições do exercício'});
-   if(e.id==='plank'){assert.equal(await controls.count(),0);assert.match(await art.getByRole('img').getAttribute('aria-label'),/posição de referência/);}
+   if(e.frames.length===1){assert.equal(await controls.count(),0);assert.match(await art.getByRole('img').getAttribute('aria-label'),/posição de referência/);}
    else{
     await controls.getByRole('button',{name:'02 FINAL',exact:true}).click();assert.equal(await art.getAttribute('data-foco-media-phase'),'peak');
-    assert.equal(Number(await art.locator('svg image').getAttribute('x')),-e.frames[1].x,'Changing pose must show the correct panel of this exercise');
+    assert.equal(Number(await art.locator('svg image').getAttribute('x')),0-e.frames[1].x,'Changing pose must show the correct panel of this exercise');
     await controls.getByRole('button',{name:'01 INÍCIO',exact:true}).click();
    }
    if(width===390)await stage.screenshot({path:out+'/'+e.id+'-390.png'});
@@ -70,17 +68,40 @@ try{
   assert.equal(await page.getByRole('spinbutton',{name:'Repetições da série atual'}).inputValue(),'11');
   if(width===390){const a=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();writeFileSync(out+'/axe.json',JSON.stringify(a.violations,null,2));assert.deepEqual(a.violations,[]);}
   await page.screenshot({path:out+'/session-'+width+'.png',fullPage:true});
-  await page.goto(base+'?view=biblioteca&media=foco');await page.getByText('10 movimentos',{exact:true}).waitFor();
-  assert.equal(await page.locator('.foco-repdb-exercise-card').count(),10);
-  for(const card of await page.locator('.foco-repdb-exercise-card').all()){
-   await card.scrollIntoViewIfNeeded();await card.locator('[data-foco-media-source="foco-ai"] svg').waitFor();
-  }
+  await page.goto(base+'?view=biblioteca&media=foco');await page.getByText(humanExamples.length+' movimentos',{exact:true}).waitFor();
+  let checked=0;
+  do{
+   const cards=page.locator('.foco-repdb-exercise-card');assert.ok(await cards.count()<=24);
+   for(const card of await cards.all()){
+    await card.scrollIntoViewIfNeeded();await card.locator('[data-foco-media-source="foco-ai"] svg').waitFor();
+    if(width===390){
+     const name=await card.locator('strong').innerText(),e=humanExamples.find(x=>x.name===name);assert.ok(e,name);
+     await card.getByRole('button').click();const dialog=page.getByRole('dialog'),art=dialog.locator('[data-foco-media-source="foco-ai"]');
+     await art.locator('svg image[href$="/'+e.asset+'"]').waitFor();
+     assert.equal(await art.getAttribute('data-foco-media-phase'),e.frames[0].phase);
+     assert.equal(Number(await art.locator('svg image').getAttribute('x')),0-e.frames[0].x);
+     assert.equal(Number(await art.locator('svg image').getAttribute('y')),0-e.frames[0].y);
+     const href=await art.locator('svg image').getAttribute('href');await page.evaluate(async url=>{const im=new Image();im.src=url;await im.decode();},href);
+     await dialog.getByRole('heading',{name:'Como executar',exact:true}).waitFor();
+     if(e.frames.length===2){
+      await art.getByRole('button',{name:'02 FINAL',exact:true}).click();assert.equal(await art.getAttribute('data-foco-media-phase'),'peak');
+      assert.equal(Number(await art.locator('svg image').getAttribute('x')),0-e.frames[1].x);
+      assert.equal(Number(await art.locator('svg image').getAttribute('y')),0-e.frames[1].y);
+     }else assert.equal(await art.getByRole('group',{name:'Posições do exercício'}).count(),0);
+     await page.keyboard.press('Escape');await dialog.waitFor({state:'hidden'});checked++;
+    }
+   }
+   if(width!==390)break;
+   const next=page.getByRole('navigation',{name:'Páginas da biblioteca'}).getByRole('button',{name:'Próxima',exact:true});
+   if(await next.isDisabled())break;await next.click();
+  }while(true);
+  if(width===390)assert.equal(checked,humanExamples.length,'Every published variant must open the correct static frames and PT-BR copy');
   await page.evaluate(()=>window.scrollTo(0,0));
   await page.screenshot({path:out+'/library-'+width+'.png',fullPage:true});
-  assert.deepEqual(errors,[]);results.push({width,status:'PASS',exercises:10,externalWrites:0});console.log('PASS '+width+': 10 exact human variants, 19 poses, personalized ID, gallery and preserved live draft');await context.close();
+  assert.deepEqual(errors,[]);results.push({width,status:'PASS',exercises:examples.length,libraryVariants:humanExamples.length,externalWrites:0});console.log('PASS '+width+': '+examples.length+' session variants, '+humanExamples.length+' library variants, exact static frames and preserved live draft');await context.close();
  }
  const {context,page}=await setup(390,{breakOwn:true});await page.goto(base+'?view=sessao');
- await page.getByRole('button',{name:/^Ver exercício 8:/}).click();
+ await page.getByRole('button',{name:new RegExp('^Ver exercício '+(sessionIds.indexOf('hammer-curl')+1)+':')}).click();
  const fallback=page.locator('.foco-21-exercise-media [data-foco-media-source="repdb"] img');await fallback.waitFor();
  assert.match(await fallback.getAttribute('src'),/hammer-curl-start\.webp$/,'Failed own media must use the same RepDB ID');
  assert.equal(await page.locator('.foco-21-exercise-media svg.foco-human-pose').count(),0);

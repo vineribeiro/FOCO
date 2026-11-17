@@ -193,10 +193,10 @@ try{
       }
     }
     if(view==='sessao'){
-      await page.locator('.foco-21-exercise-media [data-foco-media-source="repdb"]').waitFor({timeout:7000});
-      await page.locator('.foco-21-exercise-media .foco-repdb-pose').waitFor({timeout:10000});
-      assert.equal(await page.locator('.foco-21-exercise-media img').count(),1,
-        'Active workout must show exactly one RepDB WebP instead of an icon');
+      await page.locator('.foco-21-exercise-media [data-foco-media-source="foco-ai"]').waitFor({timeout:7000});
+      await page.locator('.foco-21-exercise-media svg.foco-human-pose').waitFor({timeout:10000});
+      assert.equal(await page.locator('.foco-21-exercise-media svg.foco-human-pose').count(),1,
+        'Active workout must show exactly one own human illustration');
       assert.equal(await page.locator('.foco-session-console').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(250, 250, 247)','The recording console must use the light reference panel');
       await page.locator('.foco-21-exercise-media').waitFor({timeout:4000});
       const sessionLayout=await page.evaluate(()=>{
@@ -249,21 +249,21 @@ try{
           &&placement.ctaBottom<=placement.navTop+1,
           'Start CTA must remain in flow, visible after the exercise and before secondary rest controls');
       }
-      // Switching exercises should display the matching RepDB pose, never an old SVG.
+      // Switching exercises should display the matching own pose.
       await page.waitForTimeout(1600); // Respect rate limit between distinct exercise requests.
       await page.getByRole('button',{name:/Ver exercício 3:/}).click();
       assert.match(await page.locator('.foco-v7-stage-footer h2').innerText(),/Leg press 45 graus/i);
-      await page.locator('.foco-21-exercise-media .foco-repdb-pose').waitFor({timeout:10000});
-      assert.equal(await page.locator('.foco-21-exercise-media img').count(),1,'Leg press must display a RepDB pose');
-      assert.equal(await page.locator('.foco-21-exercise-media [data-foco-media-source="repdb"]').count(),1);
+      await page.locator('.foco-21-exercise-media svg.foco-human-pose').waitFor({timeout:10000});
+      assert.equal(await page.locator('.foco-21-exercise-media svg.foco-human-pose').count(),1,'Leg press must display the exact own pose');
+      assert.equal(await page.locator('.foco-21-exercise-media [data-foco-media-source="foco-ai"]').count(),1);
       await page.screenshot({path:out+'/legpress-'+size.name+'.png',fullPage:false,animations:'disabled'});
       if(size.name==='mobile-390'){
         await page.getByRole('button',{name:'Execução',exact:true}).click();
         const guide=page.locator('.foco-repdb-guide-visual');
-        await guide.locator('.foco-repdb-pose').waitFor({timeout:10000});
+        await guide.locator('svg.foco-human-pose').waitFor({timeout:10000});
         await guide.getByRole('button',{name:'02 FINAL'}).click();
         await page.waitForFunction(()=>
-          document.querySelector('.foco-repdb-guide-visual .foco-repdb-pose')?.getAttribute('src')?.includes('-peak.webp'),
+          document.querySelector('.foco-repdb-guide-visual')?.getAttribute('data-foco-media-phase')==='peak',
           {timeout:9000});
         assert.equal(await guide.getByRole('button',{name:'02 FINAL'}).getAttribute('aria-pressed'),'true');
         await guide.getByRole('button',{name:'01 INÍCIO'}).click();
@@ -323,7 +323,7 @@ try{
         assert.equal(await page.locator('.foco-atlas-curated-grid').count(),0,'No old parallel gallery');
         await card.click();
         const dialog=page.getByRole('dialog');
-        await dialog.locator('.foco-repdb-dialog-art .foco-repdb-pose').waitFor({timeout:9000});
+        await dialog.locator('.foco-repdb-dialog-art svg.foco-human-pose').waitFor({timeout:9000});
         await dialog.getByRole('button',{name:'02 FINAL'}).click();
         assert.equal(await dialog.getByRole('button',{name:'02 FINAL'}).getAttribute('aria-pressed'),'true');
         await dialog.getByRole('button',{name:'Adicionar à minha ficha'}).click();

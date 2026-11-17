@@ -2,7 +2,7 @@
  * Credit/license: https://github.com/RepDB/exercise-dataset/blob/main/LICENSE-DATA.md
  * See docs/EXERCISE_CATALOG_REVIEW_2026_11_17.md for scope and review limits. */
 export const REPDB_PTBR_META = {
-  "version": "foco-ptbr-2026.1",
+  "version": "foco-ptbr-2026.2",
   "sourceRevision": "4b1358a63c9f78f982867726f2a73c0f6cb21475",
   "sourceSha256": "ad7c602fcc6bd4322b6228673c0fff5ad60b87f219352d44f9b92a763835948f",
   "count": 708,
@@ -516,7 +516,7 @@ export const REPDB_PTBR_NAMES:Record<string,{name:string;sourceName:string}>= {
   "sourceName": "Cable Fly"
  },
  "cable-front-raise": {
-  "name": "Elevação frontal na polia",
+  "name": "Elevação frontal unilateral na polia",
   "sourceName": "Cable Front Raise"
  },
  "cable-hammer-curl": {
@@ -784,7 +784,7 @@ export const REPDB_PTBR_NAMES:Record<string,{name:string;sourceName:string}>= {
   "sourceName": "Dumbbell Preacher Curl"
  },
  "db-pullover": {
-  "name": "Extensão de ombros deitado (pullover) com halteres",
+  "name": "Extensão de ombros deitado (pullover) com um halter",
   "sourceName": "Dumbbell Pullover"
  },
  "db-reverse-curl": {

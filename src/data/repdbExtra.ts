@@ -13,7 +13,7 @@ Agachamento livre com barra|squat
 Agachamento frontal|front-squat
 Leg press 45 graus|leg-press
 Cadeira extensora|leg-extension
-Agachamento goblet|goblet-squat
+Agachamento goblet|db-goblet-squat
 Agachamento no Smith|smith-machine-squat
 Afundo|lunge
 Afundo reverso|reverse-lunge

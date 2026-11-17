@@ -1,10 +1,12 @@
 import {repdbIdForExercise,repdbBindingBlocked} from './repdbAssets';
 import {REPDB_PTBR_NAMES} from './repdbPtBR';
+import {FOCO_HUMAN_MEDIA_EXPANSION} from './focoHumanMediaExpansion';
+import {FOCO_LOCAL_EXERCISES} from './focoLocalExercises';
 
 export interface HumanPoseFrame {x:number;y:number;width:number;height:number;phase:'start'|'peak'|'reference'}
 export interface FocoHumanMedia {asset:string;width:number;height:number;poses:HumanPoseFrame[]}
 /** Own AI illustrations, visually screened per variant. Full provenance and scope:
- * docs/media/FOCO_HUMAN_PILOT_2026_11_17.json. No RepDB images used as inputs.
+ * docs/media/FOCO_HUMAN_{PILOT,EXPANSION}_2026_11_17.json. No RepDB images used as inputs.
  * Static frames preserve the original drawing; no interpolation or inferred variants. */
 export const FOCO_HUMAN_MEDIA:Record<string,FocoHumanMedia> = {
   "db-bench-press": {
@@ -209,12 +211,17 @@ export const FOCO_HUMAN_MEDIA:Record<string,FocoHumanMedia> = {
         "phase": "peak"
       }
     ]
-  }
+  },
+  ...FOCO_HUMAN_MEDIA_EXPANSION
 };
+const normalizeHumanName=(name:string)=>name.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+const originalNames=new Map<string,string>(Object.keys(FOCO_HUMAN_MEDIA).flatMap(id=>{
+ const name=REPDB_PTBR_NAMES[id]?.sourceName||FOCO_LOCAL_EXERCISES.find(e=>e.id===id)?.name_en;
+ return name?[[normalizeHumanName(name),id] as const]:[];
+}));
 export function humanMediaForExercise(name:string,id?:string|null):FocoHumanMedia|null {
  if(repdbBindingBlocked(name,id))return null;
- const normalized=name.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
- const originalNameId=Object.keys(FOCO_HUMAN_MEDIA).find(key=>REPDB_PTBR_NAMES[key].sourceName.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'')===normalized);
- const exactId=id||repdbIdForExercise(name)||originalNameId;
+ if(id)return FOCO_HUMAN_MEDIA[id]||null;
+ const exactId=repdbIdForExercise(name)||originalNames.get(normalizeHumanName(name));
  return exactId?FOCO_HUMAN_MEDIA[exactId]||null:null;
 }

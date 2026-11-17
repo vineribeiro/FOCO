@@ -2,32 +2,67 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {FOCO_HUMAN_MEDIA,humanMediaForExercise} from '../src/data/focoHumanMedia';
-const manifest=JSON.parse(readFileSync(new URL('../docs/media/FOCO_HUMAN_PILOT_2026_11_17.json',import.meta.url),'utf8'));
-assert.equal(Object.keys(FOCO_HUMAN_MEDIA).length,10);
-assert.equal(manifest.repdbImagesUsedAsInput,false);
-assert.equal(manifest.professionalBiomechanicalReview,false);
-let bytes=0,poses=0;
-for(const e of manifest.exercises){
- const media=FOCO_HUMAN_MEDIA[e.id];assert.ok(media);
- assert.match(media.asset,/^media\/foco-human\/2026-11-17\/[a-z0-9-]+\.webp$/);
- const data=readFileSync(new URL('../public/'+media.asset,import.meta.url));
- assert.equal(data.toString('ascii',0,4),'RIFF');assert.equal(data.toString('ascii',8,12),'WEBP');
- assert.equal(createHash('sha256').update(data).digest('hex'),e.assetSha256);
- assert.ok(data.length<120000,'Individual pictures must stay light enough for the gym');bytes+=data.length;
- assert.equal(humanMediaForExercise('Meu nome personalizado',e.id),media,'Stable IDs survive custom names');
- for(const p of media.poses){
-  assert.ok(p.x>=0&&p.y>=0&&p.width>0&&p.height>0&&p.x+p.width<=media.width&&p.y+p.height<=media.height);
-  poses++;
- }
- assert.equal(media.poses.length,e.id==='plank'?1:2);
- if(media.poses.length===2){assert.equal(media.poses[0].phase,'start');assert.equal(media.poses[1].phase,'peak');assert.notDeepEqual(media.poses[0],media.poses[1]);}
+import {REPDB_PTBR_NAMES} from '../src/data/repdbPtBR';
+import {FOCO_LOCAL_EXERCISES,FOCO_LOCAL_NAMES} from '../src/data/focoLocalExercises';
+import {loadRepDBCatalog,loadRepDBPortugueseCopy,repdbDisplayName,repdbBindingBlocked} from '../src/data/repdbAssets';
+import {pilot,expansion,humanExamples,humanAssets} from './fixtures/human-media.mjs';
+assert.equal(pilot.exercises.length,10);
+assert.equal(expansion.newExercises,157);
+assert.equal(Object.keys(FOCO_HUMAN_MEDIA).length,167);
+assert.equal(humanExamples.length,new Set(humanExamples.map(e=>e.id)).size);
+for(const manifest of [pilot,expansion]){
+ assert.equal(manifest.repdbImagesUsedAsInput,false);
+ assert.equal(manifest.professionalBiomechanicalReview,false);
+ assert.equal(manifest.modelVersion,'not-exposed-by-tool');
 }
-assert.equal(poses,19);assert.ok(bytes<500000);
-assert.equal(humanMediaForExercise('Supino inclinado com halteres'),null,'No illustration of a nearby variant');
-assert.equal(humanMediaForExercise('Supino reto com halteres','unknown-variant'),null,'An unknown explicit ID cannot fall back by name');
-assert.equal(humanMediaForExercise('Stiff com halteres','dumbbell-romanian-deadlift'),null);
-assert.equal(humanMediaForExercise('Agachamento goblet'),null,'The old dumbbell template cannot acquire a kettlebell picture');
+let bytes=0,poses=0;
+for(const [asset,entry] of humanAssets){
+ assert.match(asset,/^media\/foco-human\/[a-z0-9-]+\/[a-z0-9-]+\.webp$/);
+ const data=readFileSync(new URL('../public/'+asset,import.meta.url));
+ assert.equal(data.toString('ascii',0,4),'RIFF');assert.equal(data.toString('ascii',8,12),'WEBP');
+ assert.equal(createHash('sha256').update(data).digest('hex'),entry.assetSha256);
+ assert.equal(data.length,entry.bytes);assert.ok(data.length<120000,'Media must stay light enough for the gym');bytes+=data.length;
+}
+for(const e of humanExamples){
+ const media=FOCO_HUMAN_MEDIA[e.id];assert.ok(media);assert.equal(media.asset,e.asset);
+ assert.deepEqual(media.poses,e.frames,'Use only the frames screened for this exact variant');
+ assert.equal(humanMediaForExercise('Meu nome personalizado',e.id),media);
+ assert.equal(humanMediaForExercise(e.name),media,'PT-BR aliases must retain the correct equipment');
+ if(REPDB_PTBR_NAMES[e.id])assert.equal(humanMediaForExercise(REPDB_PTBR_NAMES[e.id].sourceName),media,'Exact legacy English names remain supported');
+ for(const p of media.poses){
+  assert.ok(p.x>=0&&p.y>=0&&p.width>0&&p.height>0&&p.x+p.width<=media.width&&p.y+p.height<=media.height);poses++;
+ }
+ assert.ok(media.poses.length===1||media.poses.length===2);
+ if(media.poses.length===1)assert.equal(media.poses[0].phase,'reference');
+ else{assert.equal(media.poses[0].phase,'start');assert.equal(media.poses[1].phase,'peak');assert.notDeepEqual(media.poses[0],media.poses[1]);}
+}
+assert.equal(poses,326);assert.ok(bytes<3500000);
+assert.equal(humanMediaForExercise('Supino inclinado com halteres'),FOCO_HUMAN_MEDIA['incline-db-press']);
+assert.equal(humanMediaForExercise('Supino reto com halteres','unknown-variant'),null);
+assert.equal(humanMediaForExercise('Stiff com halteres','dumbbell-romanian-deadlift'),null,'Do not rewrite a mismatched historical binding');
+assert.equal(humanMediaForExercise('Stiff com halteres'),FOCO_HUMAN_MEDIA['foco-dumbbell-stiff-leg-deadlift']);
+assert.equal(humanMediaForExercise('Agachamento goblet'),FOCO_HUMAN_MEDIA['db-goblet-squat']);
 assert.equal(humanMediaForExercise('Agachamento goblet','goblet-squat'),FOCO_HUMAN_MEDIA['goblet-squat']);
-assert.equal(humanMediaForExercise('Supino reto com halteres'),FOCO_HUMAN_MEDIA['db-bench-press']);
-assert.equal(humanMediaForExercise('Dumbbell Bench Press'),FOCO_HUMAN_MEDIA['db-bench-press'],'Exact source names work for older records without rewriting them');
-console.log(`FOCO HUMAN MEDIA: 10 exact variants, ${poses} static poses, ${bytes} bytes, provenance, safe frames and stable IDs verified.`);
+assert.notEqual(FOCO_HUMAN_MEDIA['goblet-squat'],FOCO_HUMAN_MEDIA['db-goblet-squat']);
+for(const [sheet,s] of Object.entries(expansion.assets as Record<string,{prompt:string;references:{origin:string;sha256:string}[];generatedFileSha256:string}>)){
+ assert.ok(s.prompt.length>100);assert.equal(s.references.length,1);
+ for(const r of s.references){assert.equal(r.origin,'own-generated-image');assert.match(r.sha256,/^[a-f0-9]{64}$/);}
+ assert.match(s.generatedFileSha256,/^[a-f0-9]{64}$/);
+ assert.ok(expansion.exercises.some((e:{sheet:string})=>e.sheet===sheet));
+}
+// A source-supplied collision cannot impersonate an owned exercise. Keep all
+// source records while adding the two explicit, namespaced FOCO variants.
+const previousFetch=globalThis.fetch;
+globalThis.fetch=async()=>new Response(JSON.stringify({exercises:[...Array.from({length:100},(_,i)=>({id:'synthetic-'+i,name_en:'Synthetic '+i,images:{flat:{}}})),{...FOCO_LOCAL_EXERCISES[0],name_en:'Impersonated variant',source:'repdb'}]}));
+try{
+ const catalog=await loadRepDBCatalog();assert.equal(catalog.length,102);
+ for(const e of FOCO_LOCAL_EXERCISES){
+  assert.equal(catalog.filter(item=>item.id===e.id).length,1);
+  assert.equal(catalog.find(item=>item.id===e.id)?.source,'foco');
+  assert.equal(repdbDisplayName(e),FOCO_LOCAL_NAMES[e.id]);
+  assert.ok((await loadRepDBPortugueseCopy(e.id))!.instructions.length>=4);
+  assert.deepEqual(e.images?.flat,{},'No stock image substitution for an authored variant');
+  assert.equal(repdbBindingBlocked(FOCO_LOCAL_NAMES[e.id]),false);
+ }
+}finally{globalThis.fetch=previousFetch;}
+console.log(`FOCO HUMAN MEDIA: ${humanExamples.length} exact variants, ${poses} static poses, ${humanAssets.size} WebPs, ${bytes} bytes; hashes, safe frames, provenance, exact legacy aliases and owned catalog variants passed.`);

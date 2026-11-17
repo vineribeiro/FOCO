@@ -1,8 +1,8 @@
-/* FOCO offline worker — release 2026-11-17-v34-human-media.
+/* FOCO offline worker — release 2026-11-17-v35-expanded-human-media.
  * Network-first navigation with a strict revalidation of the application shell.
  * Old caches are removed on activation; user data/local auth is never altered.
  */
-const CACHE_NAME = 'foco-shell-20261117-v34-human-media';
+const CACHE_NAME = 'foco-shell-20261117-v35-expanded-human-media';
 const APP_ROOT = '/FOCO/';
 const APP_ASSETS = [
   APP_ROOT,

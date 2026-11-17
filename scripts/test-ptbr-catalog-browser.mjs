@@ -3,6 +3,8 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {chromium} from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 import {auditCredentials,createAuditFixtures} from './fixtures/audit-browser.mjs';
+import {humanExamples} from './fixtures/human-media.mjs';
+const benchOwnAsset=humanExamples.find(e=>e.id==='bench-press').asset;
 const base=process.env.FOCO_E2E_BASE_URL||'http://127.0.0.1:4173/FOCO/';
 const output='work/ptbr-catalog-browser';mkdirSync(output,{recursive:true});const results=[];
 const source=[
@@ -34,6 +36,7 @@ try{for(const width of [320,390,768,1440]){
    if(u.pathname.endsWith('/bench-press-start.webp')){brokenBenchStart=true;return route.fulfill({status:404});}
    return route.fulfill({status:200,contentType:'image/png',body:png});
   }
+  if(u.pathname.endsWith('/'+benchOwnAsset))return route.fulfill({status:404});
   if(u.origin===new URL(base).origin)return route.continue();return route.abort();
  });
  await context.addInitScript(c=>{localStorage.setItem('foco_auth_token',c.access);localStorage.setItem('foco_auth_refresh_token',c.refresh);},auditCredentials);
@@ -62,6 +65,20 @@ try{for(const width of [320,390,768,1440]){
  await own.fill('Supino personalizado da revisão');await page.locator('.foco-atlas-plan-list button').first().click();
  await page.getByText('Supino personalizado da revisão foi adicionado',{exact:false}).waitFor();
  assert.equal(writes.length,1);assert.equal(writes[0].repdb_id,'bench-press');assert.equal(writes[0].exercise_name,'Supino personalizado da revisão');
+ await page.goto(base+'?view=biblioteca');
+ const localSearch=page.getByRole('textbox',{name:'Pesquisar exercícios',exact:true});
+ for(const [id,name] of [['foco-rope-triceps-pushdown','Tríceps pulley com corda'],['foco-dumbbell-stiff-leg-deadlift','Stiff com halteres']]){
+  await localSearch.fill(name);await page.getByRole('button',{name:'Ver '+name,exact:true}).click();
+  const owned=page.getByRole('dialog');await owned.getByRole('heading',{name:'Como executar',exact:true}).waitFor();
+  await owned.getByText('Exercício e ilustração de autoria FOCO.',{exact:false}).waitFor();
+  await owned.getByRole('button',{name:'Adicionar à minha ficha',exact:true}).click();
+  const custom=page.getByRole('textbox',{name:'Nome personalizado do exercício',exact:true});await custom.waitFor();await custom.fill(name+' personalizado');
+  await page.locator('.foco-atlas-plan-list button').first().click();
+  await page.getByText(name+' personalizado foi adicionado',{exact:false}).waitFor();
+  assert.equal(writes.at(-1).repdb_id,id);assert.equal(writes.at(-1).exercise_name,name+' personalizado');
+ }
+ assert.equal(writes.length,3);
+
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);assert.deepEqual(errors,[]);
  results.push({width,status:'PASS',externalWrites:0});console.log('PASS '+width+'px: PT-BR, source search, localized muscles, reference/final poses, review hold and persistent media ID');await context.close();
 }}finally{await browser.close();writeFileSync(output+'/results.json',JSON.stringify(results,null,2));}
