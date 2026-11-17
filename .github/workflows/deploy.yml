@@ -30,7 +30,9 @@ jobs:
       - name: Typecheck
         run: npm run lint
       - name: RepDB licensed imagery contract
-        run: npm run test:repdb
+        run: |
+          npm run test:repdb
+          npm run test:human-media
       - name: RepDB atlas tests
         run: npm run test:atlas
       - name: Training science tests

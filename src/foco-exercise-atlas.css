@@ -174,8 +174,8 @@
 .foco-repdb-fallback-glyph{display:grid;place-items:center;color:#E5F88A}
 .foco-repdb-fallback strong{max-width:100%;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:clamp(13px,2.4vw,19px);line-height:1.2;font-weight:850}
 .foco-repdb-fallback small{font-size:10px;letter-spacing:.08em;color:#B1C0AA;text-transform:uppercase}
-.foco-repdb-pose-switch{position:absolute;right:12px;top:12px;z-index:3;display:flex;gap:5px;padding:4px;background:rgba(8,15,8,.85);border:1px solid rgba(213,255,64,.28);border-radius:12px;backdrop-filter:blur(15px)}
-.foco-repdb-pose-switch button{min-height:39px;padding:8px 12px;border:0;border-radius:9px;font-size:10px;font-weight:900;letter-spacing:.03em;color:#D0DEC6}
+.foco-repdb-pose-switch{position:absolute;right:12px;left:12px;bottom:10px;z-index:3;display:flex;gap:5px;padding:4px;background:#222222;border:1px solid #66665F;border-radius:12px}
+.foco-repdb-pose-switch button{flex:1;min-height:44px;padding:8px 12px;border:0;border-radius:9px;font-size:10px;font-weight:700;letter-spacing:.03em;color:#F7F7F3}
 .foco-repdb-pose-switch button[aria-pressed="true"]{background:#E5F88A;color:#10200B}
 .foco-repdb-pose-switch button:focus-visible{outline:2px solid #E5F88A;outline-offset:2px}
 .foco-repdb-guide-visual{height:clamp(260px,48dvh,410px);border-radius:20px}
@@ -184,19 +184,10 @@
 .foco-repdb-guide-heading h3{font-size:20px;font-weight:850;line-height:1.2;margin-top:7px}
 .foco-repdb-guide-heading span{display:block;color:#E5F88A;font-size:11px;margin-top:7px}
 .foco-repdb-guide-heading p,.foco-repdb-guide-note{font-size:12px;line-height:1.6;color:#CBD9C6;margin-top:12px}
-.foco-v6-shell .foco-21-session .foco-v7-stage-illustration[data-foco-media-status="image"]{border:0;background:transparent}
-.foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-repdb-pose{
-  position:absolute;top:3%;left:50%;transform:translateX(-50%);
-  width:min(74%,320px);height:77%;object-fit:contain;object-position:center top;
-  border-radius:16px;box-shadow:0 14px 36px rgba(0,0,0,.3)
-}
-.foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-repdb-image-shade{background:linear-gradient(0deg,rgba(7,12,7,.55),transparent 25%)}
-.foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-repdb-source{left:auto;right:12px;top:12px}
-.foco-v6-shell .foco-21-session .foco-v7-stage-illustration .foco-repdb-two-poses{display:none}
 .foco-v6-week-thumb .foco-repdb-source,.foco-v8-exercise-thumb .foco-repdb-source{display:none}
 .foco-v6-week-thumb .foco-repdb-image-shade,.foco-v8-exercise-thumb .foco-repdb-image-shade{display:none}
 .foco-v6-shell .foco-atlas-external button:focus-visible,.foco-v6-shell .foco-atlas-library-page button:focus-visible{outline:2px solid #E5F88A;outline-offset:3px}
 @media(min-width:850px){.foco-v6-shell .foco-repdb-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(min-width:540px) and (max-width:849px){.foco-v6-shell .foco-repdb-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:420px){.foco-v6-shell .foco-repdb-library-head{flex-wrap:wrap}.foco-v6-shell .foco-repdb-library-head h2{font-size:clamp(30px,9vw,46px)}.foco-repdb-source{font-size:8px;padding:5px 6px}.foco-repdb-pose-switch{right:8px;top:8px}.foco-repdb-pose-switch button{padding:7px 9px;font-size:9px}}
+@media(max-width:420px){.foco-v6-shell .foco-repdb-library-head{flex-wrap:wrap}.foco-v6-shell .foco-repdb-library-head h2{font-size:clamp(30px,9vw,46px)}.foco-repdb-source{font-size:8px;padding:5px 6px}.foco-repdb-pose-switch{right:8px;left:8px}.foco-repdb-pose-switch button{padding:7px 9px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){.foco-v6-shell .foco-repdb-exercise-card,.foco-v6-shell .foco-repdb-card-image>img{transition:none}}

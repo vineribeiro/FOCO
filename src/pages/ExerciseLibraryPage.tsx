@@ -57,7 +57,7 @@ export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
   return <div className="foco-v4-page foco-atlas-library-page">
     <header className="foco-atlas-library-header">
       <div><p className="foco-v4-eyebrow">FOCO / BIBLIOTECA</p><h1>Exercícios</h1>
-        <p>Explore movimentos ilustrados pela RepDB. Uma fonte visual, poses precisas e fichas preservadas.</p></div>
+        <p>Encontre seu movimento em português. Ilustrações humanas FOCO e coleção RepDB, com cada variação identificada.</p></div>
       <span className="foco-atlas-library-source"><Dumbbell size={16}/> REPDB</span>
     </header>
     {notice&&<div role="status" className="foco-atlas-alert">

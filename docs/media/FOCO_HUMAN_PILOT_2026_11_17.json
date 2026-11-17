@@ -1,0 +1,502 @@
+{
+  "version": "foco-human-media-2026.1",
+  "date": "2026-11-17",
+  "origin": "ai",
+  "tool": "image_gen.imagegen",
+  "modelVersion": "not-exposed-by-tool",
+  "visualReviewer": "Codex (assistant visual screening)",
+  "professionalBiomechanicalReview": false,
+  "repdbImagesUsedAsInput": false,
+  "status": "visually-screened-pilot",
+  "notes": "Original text-authored human illustrations. Only own generated images used as references. Frames select static poses without inventing an animation. Existing workouts and source IDs are preserved.",
+  "exercises": [
+    {
+      "key": "01-supino-halteres",
+      "name": "Supino reto com halteres",
+      "id": "db-bench-press",
+      "prompt": "Refine this original independently AI-generated FOCO exercise prototype. Preserve the same human identity, clothing palette, realistic semi-realistic illustration finish, equipment, equal camera and both poses except for the explicit correction below. REPLACE all transparency with a completely OPAQUE flat matte graphite background #222222. Remove ALL stray RED, YELLOW, MAGENTA or WHITE edge halos, mask artifacts, color spill, floating dots and ragged contour pixels. Clean natural silhouettes against graphite; no glow or rim outlines. Only tiny soft contact shadows. Keep the complete body, feet, head and apparatus visible with at least 4% canvas padding all around. No text, titles, arrows, logo or numbers. Keep two separate equal-scale scenes left and right with generous gutter. Corrections: Preserve both flat-bench dumbbell press scenes with exactly two dumbbells in each, flat supported head/back/hips and both feet grounded. Left is arms extended and right lowered beside chest. Keep the existing specific person, bench and camera.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "32664ba22caaae8acf6c83fed1ad6e2192c1418aa60096ab4a7e31858d30dc71"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 1003,
+          "y": 0,
+          "width": 940,
+          "height": 803,
+          "phase": "start"
+        },
+        {
+          "x": 32,
+          "y": 0,
+          "width": 940,
+          "height": 803,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "key": "01-supino-halteres",
+        "name": "Supino reto com halteres",
+        "id": "db-bench-press",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nPERSON: An adult woman around 32 with medium-brown skin, curly dark hair tied in a low bun, natural face, regular athletic build, graphite short-sleeved top and full-length leggings.\nEXERCISE: Create one wide horizontal diptych with two separate non-overlapping full scenes, left the starting upper position, right the lower position, ample transparent gutter. A flat horizontal weight bench, four feet on the ground, no incline. The woman lies supine with head, upper back and hips supported by the pad, her two feet planted on the ground, head not lifted. Exactly two matching dumbbells, one firmly held in each hand, palms toward her feet (pronated grip). Left: arms extended above mid-chest with soft elbows, dumbbells centered over shoulders/chest, no hyperextension. Right: same position lying on same bench, both elbows flexed roughly 90 degrees, dumbbells beside the mid-chest, upper arms about 45 degrees from torso, forearms approximately vertical. No extra dumbbells, no change of bench or camera. Fixed elevated three-quarter SIDE camera that shows both dumbbells, the horizontal bench, head support and planted feet in each scene.",
+        "references": [],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "32664ba22caaae8acf6c83fed1ad6e2192c1418aa60096ab4a7e31858d30dc71"
+      },
+      "width": 1958,
+      "height": 803,
+      "asset": "media/foco-human/2026-11-17/db-bench-press.webp",
+      "bytes": 47612,
+      "generatedFileSha256": "cde36a5cb74a1130ba845a8cd6e94c06c92f693f31348a9492b443d752868d2c",
+      "assetSha256": "3c06642bef14d24f43a9362962b251c3ee0b973bade8608d539cc5a4921116e5"
+    },
+    {
+      "key": "02-agachamento-goblet",
+      "name": "Agachamento goblet com kettlebell",
+      "id": "goblet-squat",
+      "prompt": "Refine this original independently AI-generated FOCO exercise prototype. Preserve the same human identity, clothing palette, realistic semi-realistic illustration finish, equipment, equal camera and both poses except for the explicit correction below. REPLACE all transparency with a completely OPAQUE flat matte graphite background #222222. Remove ALL stray RED, YELLOW, MAGENTA or WHITE edge halos, mask artifacts, color spill, floating dots and ragged contour pixels. Clean natural silhouettes against graphite; no glow or rim outlines. Only tiny soft contact shadows. Keep the complete body, feet, head and apparatus visible with at least 4% canvas padding all around. No text, titles, arrows, logo or numbers. Keep two separate equal-scale scenes left and right with generous gutter. Corrections: Preserve standing and squat poses with one kettlebell held in both hands near chest. Keep grounded heels, knees following toes, same person and camera. Do not convert the kettlebell to a dumbbell.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "da7fc7e844fbdb5e5c6286701b4864bab10ea6c649deeb14d69a50149c1e6065"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 160,
+          "y": 0,
+          "width": 600,
+          "height": 887,
+          "phase": "start"
+        },
+        {
+          "x": 1020,
+          "y": 0,
+          "width": 600,
+          "height": 887,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "key": "02-agachamento-goblet",
+        "name": "Agachamento goblet com kettlebell",
+        "id": "goblet-squat",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nREFERENCE USE: The supplied reference is our own independently generated FOCO artwork. Use only its human rendering style, material finish, graphite/lime/lilac wardrobe and light; replace the exercise and apparatus completely as specified below. Do not copy the bench-press pose. Within this new diptych maintain the same person and fixed camera.\nPERSON: An adult woman around 32 with medium-brown skin, curly dark hair tied back, natural face, regular athletic build, graphite short-sleeved top and full-length leggings. Match the original FOCO woman from the supplied generated reference.\nEXERCISE: One wide horizontal diptych, two separate full-body scenes side by side with a large transparent gutter; left preparation, right contracted or lowered position as specified. Equal camera, scale and equipment. Keep every head, hand, foot and equipment part inside the frame. Goblet squat with EXACTLY ONE KETTLEBELL, NOT a dumbbell. Both hands firmly grip the two sides/horns of its handle in front of the upper chest, bell mass hanging below the handle, elbows below the hands. Left: standing upright, feet about shoulder-width, toes slightly out, both heels grounded, knees soft. Right: same person squats until thighs roughly parallel to the floor, hips between feet, knees tracking toes, heels still fully grounded, controlled slight torso inclination with neutral back, kettlebell kept close to chest. No bench, box, heel wedges or extra weights. Fixed three-quarter FRONT view shows both knee/foot alignments and face.",
+        "references": [
+          {
+            "origin": "own-generated-image",
+            "sha256": "32664ba22caaae8acf6c83fed1ad6e2192c1418aa60096ab4a7e31858d30dc71"
+          }
+        ],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "da7fc7e844fbdb5e5c6286701b4864bab10ea6c649deeb14d69a50149c1e6065"
+      },
+      "width": 1774,
+      "height": 887,
+      "asset": "media/foco-human/2026-11-17/goblet-squat.webp",
+      "bytes": 34272,
+      "generatedFileSha256": "1e549042892e983dbc7c352d877f5c05bbe668ed1280225dc2500b7fbecd65f7",
+      "assetSha256": "812ff5f545b4d2416739a17ea46b39100c7593d160e1980da196e5df649fca9c"
+    },
+    {
+      "key": "03-remada-unilateral",
+      "name": "Remada unilateral com halter",
+      "id": "single-arm-db-row",
+      "prompt": "Refine this original independently AI-generated FOCO exercise prototype. Preserve the same human identity, clothing palette, realistic semi-realistic illustration finish, equipment, equal camera and both poses except for the explicit correction below. REPLACE all transparency with a completely OPAQUE flat matte graphite background #222222. Remove ALL stray RED, YELLOW, MAGENTA or WHITE edge halos, mask artifacts, color spill, floating dots and ragged contour pixels. Clean natural silhouettes against graphite; no glow or rim outlines. Only tiny soft contact shadows. Keep the complete body, feet, head and apparatus visible with at least 4% canvas padding all around. No text, titles, arrows, logo or numbers. Keep two separate equal-scale scenes left and right with generous gutter. Corrections: Correct the neck in BOTH scenes: lower her chin and direct eyes toward the ground ahead of the bench so her cervical spine continues the neutral line of her nearly horizontal upper back. No raised chin or forward/upward gaze. Preserve working right arm, supporting LEFT palm and LEFT knee on bench, RIGHT foot on ground, and only one dumbbell per scene. Preserve full extent of the working arm in left and pull toward right hip in right.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "a049200718a8d5368473a434b13bc75588c06f56829bd20704714d8a1ec85b44"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 20,
+          "y": 0,
+          "width": 900,
+          "height": 804,
+          "phase": "start"
+        },
+        {
+          "x": 1000,
+          "y": 0,
+          "width": 900,
+          "height": 804,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "key": "03-remada-unilateral",
+        "name": "Remada unilateral com halter",
+        "id": "single-arm-db-row",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nREFERENCE USE: The supplied reference is our own independently generated FOCO artwork. Use only its human rendering style, material finish, graphite/lime/lilac wardrobe and light; replace the exercise and apparatus completely as specified below. Do not copy the bench-press pose. Within this new diptych maintain the same person and fixed camera.\nPERSON: An adult woman around 32 with medium-brown skin, curly dark hair tied back, natural face, regular athletic build, graphite short-sleeved top and full-length leggings. Match the original FOCO woman from the supplied generated reference.\nEXERCISE: One wide horizontal diptych, two separate full-body scenes side by side with a large transparent gutter; left preparation, right contracted or lowered position as specified. Equal camera, scale and equipment. Keep every head, hand, foot and equipment part inside the frame. Supported single-arm RIGHT dumbbell row using a flat horizontal bench. Her LEFT palm and LEFT knee rest firmly on the bench, RIGHT foot planted on the ground beside the bench; RIGHT hand holds the only dumbbell. Neutral back, torso nearly horizontal, hips and shoulders square to floor, left supporting arm stable, neck neutral. Left scene: right arm hangs extended below right shoulder, dumbbell suspended near the ground without touching it. Right scene: right elbow bends close to the torso, pulling the dumbbell toward the right hip/lower ribs; working shoulder does not rotate open; the supporting hand and knee and grounded foot remain in precisely the same locations. Show the RIGHT working side from an elevated three-quarter side camera so no limb is hidden. One dumbbell per scene, not two; no load in the supporting hand.",
+        "references": [
+          {
+            "origin": "own-generated-image",
+            "sha256": "32664ba22caaae8acf6c83fed1ad6e2192c1418aa60096ab4a7e31858d30dc71"
+          }
+        ],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "a049200718a8d5368473a434b13bc75588c06f56829bd20704714d8a1ec85b44"
+      },
+      "width": 1956,
+      "height": 804,
+      "asset": "media/foco-human/2026-11-17/single-arm-db-row.webp",
+      "bytes": 51840,
+      "generatedFileSha256": "95fb427598882b672ca18b45ff660306190d47043c95ddf902ac7c2c7d2f4f74",
+      "assetSha256": "f7ec7bc759984bf542cb7dc4b95c1055dc3910591519adf7cfe7f51573fd052e"
+    },
+    {
+      "key": "04-panturrilha-halteres",
+      "name": "Panturrilha em pé com halteres",
+      "id": "dumbbell-calf-raise",
+      "prompt": "Refine this original AI-generated FOCO exercise artwork. Keep the same adult identity and clothing, the same realistic illustration finish, the specified exercise, camera and equipment, making the corrections below. Use an OPAQUE clean graphite studio background #222222 with soft subtle ground contact shadow. Remove ALL colored fringe/matte artifacts, red/yellow/magenta halos, stray dots or ragged edges; no glow. Keep the whole body, all equipment and feet within the canvas with clear 4% margin. No text, labels, logos or overlays. Keep exactly two separate scenes, one pose on left and the other on right, same camera and scale. Corrections: Preserve the standing calf raise: left feet flat, right heels clearly lifted while forefeet grounded; arms remain down with exactly two matching dumbbells. Head level, chin neutral and gaze forward rather than upward.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "069e32d5466031bb5bb116cd8caf30e4fc9b105757025d6dc0b491f89a4c6deb"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 350,
+          "y": 0,
+          "width": 500,
+          "height": 803,
+          "phase": "start"
+        },
+        {
+          "x": 1150,
+          "y": 0,
+          "width": 500,
+          "height": 803,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "key": "04-panturrilha-halteres",
+        "name": "Panturrilha em pé com halteres",
+        "id": "dumbbell-calf-raise",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nREFERENCE USE: The supplied reference is our own independently generated FOCO artwork. Use only its human rendering style, material finish, graphite/lime/lilac wardrobe and light; replace the exercise and apparatus completely as specified below. Do not copy the bench-press pose. Within this new diptych maintain the same person and fixed camera.\nPERSON: An adult man around 45, dark-brown skin, close-cropped hair and short natural beard, solid ordinary athletic build without exaggerated definition, graphite short-sleeved training T-shirt and graphite training trousers. Natural human face.\nEXERCISE: One wide horizontal diptych, two separate full-body scenes side by side with a large transparent gutter; left preparation, right contracted or lowered position as specified. Equal camera, scale and equipment. Keep every head, hand, foot and equipment part inside the frame. Bilateral standing dumbbell calf raise on a flat floor, no step, block, bench or machine. Exactly two moderate matching dumbbells held down naturally at the sides in both scenes, elbows straight and arms still. Feet hip-width, legs long with knees soft, upright torso. Left: both soles flat on the ground, heels down. Right: press through the balls of BOTH feet so both heels visibly rise about five centimeters, toes/forefeet still in physical contact with the floor, ankles plantarflexed, knees and hips remain straight, dumbbells remain at sides. Fixed three-quarter SIDE view low enough to clearly see the lifted heels, keeping the entire head and dumbbells visible; do not crop the shoes. Do not invent a floating platform.",
+        "references": [
+          {
+            "origin": "own-generated-image",
+            "sha256": "32664ba22caaae8acf6c83fed1ad6e2192c1418aa60096ab4a7e31858d30dc71"
+          }
+        ],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "069e32d5466031bb5bb116cd8caf30e4fc9b105757025d6dc0b491f89a4c6deb"
+      },
+      "width": 1958,
+      "height": 803,
+      "asset": "media/foco-human/2026-11-17/dumbbell-calf-raise.webp",
+      "bytes": 31408,
+      "generatedFileSha256": "016ed79808d285447386959f0c3878f8da5ab27588c77c91f13337b123202dab",
+      "assetSha256": "912dffd18d1f67d782579366fb741dda17651c8fa5337cffc0ed022434129b6c"
+    },
+    {
+      "key": "05-prancha",
+      "name": "Prancha",
+      "id": "plank",
+      "prompt": "Refine this original AI-generated FOCO exercise artwork. Keep the same adult identity and clothing, the same realistic illustration finish, the specified exercise, camera and equipment, making the corrections below. Use an OPAQUE clean graphite studio background #222222 with soft subtle ground contact shadow. Remove ALL colored fringe/matte artifacts, red/yellow/magenta halos, stray dots or ragged edges; no glow. Keep the whole body, all equipment and feet within the canvas with clear 4% margin. No text, labels, logos or overlays. Keep exactly ONE person in ONE reference pose. Corrections: Correct her head and neck: tuck the chin slightly and lower her gaze toward the mat just ahead of her hands so head and neck align naturally with upper back. No craned forward/upward neck. Elbows directly under shoulders, forearms and forefeet supporting body. Keep neutral trunk and hips, legs straight, knees off mat. One single person/scene only, no diptych.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "d3bf8854c5c2ddebb6ebe47e19a59b466bab909a103c605a86562ba8243b8b0c"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 0,
+          "y": 0,
+          "width": 1958,
+          "height": 803,
+          "phase": "reference"
+        }
+      ],
+      "previous": {
+        "key": "05-prancha",
+        "name": "Prancha",
+        "id": "plank",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nREFERENCE USE: This is our own original generated FOCO artwork, only for consistent illustration style, wardrobe materials and lighting. Completely replace its exercise, pose and any apparatus. The adult described below must have the specified age, appearance and natural face, matching between poses in this new image.\nPERSON: An adult woman around 50, light skin with natural freckles, short brown hair with a few grey strands, realistic mature face and regular healthy build with natural soft contours, graphite short-sleeved athletic top and full-length leggings.\nEXERCISE: ONE SINGLE full-body reference scene, not a diptych and no duplicate person. Forearm plank on a thin plain lilac exercise mat. Both forearms rest on the mat, parallel and shoulder-width, palms down. Elbows placed directly underneath shoulders, upper arms vertical. Legs extended, feet hip-width, only toes/forefeet contacting mat, heels lifted. Head, neck, shoulders, hips and ankles align in one long neutral line with a natural spine, no sagging lower back and no high pike. She looks slightly ahead at the mat, natural calm concentration and free breathing. The body is supported only by two forearms and two forefeet; knees and abdomen do not contact the mat. Side three-quarter camera, entire body including all hands and toes visible. No weights, bench, equipment or room background.",
+        "references": [
+          {
+            "origin": "own-generated-image",
+            "sha256": "32664ba22caaae8acf6c83fed1ad6e2192c1418aa60096ab4a7e31858d30dc71"
+          }
+        ],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "d3bf8854c5c2ddebb6ebe47e19a59b466bab909a103c605a86562ba8243b8b0c"
+      },
+      "width": 1958,
+      "height": 803,
+      "asset": "media/foco-human/2026-11-17/plank.webp",
+      "bytes": 74932,
+      "generatedFileSha256": "4ce9382425c21c881485f3a62f4af16a59fea6c822bf89fd4236278d50882259",
+      "assetSha256": "3fd1c31157bf398e574e94b87b1a54e88f2c7c225051893181d03d55513c75fb"
+    },
+    {
+      "key": "06-terra-romeno-halteres",
+      "name": "Levantamento terra romeno com halteres",
+      "id": "dumbbell-romanian-deadlift",
+      "prompt": "Refine this original AI-generated FOCO exercise artwork. Keep the same adult identity and clothing, the same realistic illustration finish, the specified exercise, camera and equipment, making the corrections below. Use an OPAQUE clean graphite studio background #222222 with soft subtle ground contact shadow. Remove ALL colored fringe/matte artifacts, red/yellow/magenta halos, stray dots or ragged edges; no glow. Keep the whole body, all equipment and feet within the canvas with clear 4% margin. No text, labels, logos or overlays. Keep exactly two separate scenes, one pose on left and the other on right, same camera and scale. Corrections: Correct the bent hip-hinge pose on the RIGHT: lower the chin and angle the head in the same direction as the straight upper back, eyes toward the ground about one meter ahead of the feet. No looking upward or neck extension. Keep hips hinged back with only a small knee bend; show two distinctly separate dumbbells with a clear gap, each following its own shin, arms straight. LEFT standing pose: natural horizontal gaze and neutral neck. Do not turn it into a squat.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "476a4bdd90b760de832567eac589df0b6963e839162cee9d5c915f4412c74f7b"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 350,
+          "y": 0,
+          "width": 500,
+          "height": 803,
+          "phase": "start"
+        },
+        {
+          "x": 1150,
+          "y": 0,
+          "width": 500,
+          "height": 803,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "key": "06-terra-romeno-halteres",
+        "name": "Levantamento terra romeno com halteres",
+        "id": "dumbbell-romanian-deadlift",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nREFERENCE USE: This is our own original generated FOCO artwork, only for consistent illustration style, wardrobe materials and lighting. Completely replace its exercise, pose and any apparatus. The adult described below must have the specified age, appearance and natural face, matching between poses in this new image.\nPERSON: An adult man around 45, dark-brown skin, close-cropped hair and short natural beard, solid ordinary athletic build without exaggerated definition, graphite short-sleeved training T-shirt and graphite training trousers. Natural human face.\nEXERCISE: One wide horizontal diptych, two separate full-body scenes side by side with a large transparent gutter; left preparation, right contracted or lowered position as specified. Equal camera, scale and equipment. Keep every head, hand, foot and equipment part inside the frame. Dumbbell Romanian deadlift (hip hinge), EXACTLY TWO matching dumbbells in both scenes. Left: standing tall with a soft 15-degree knee bend, two dumbbells held close in front of the thighs, neutral spine, shoulders relaxed. Right: hips travel backward into a clear hip hinge, knees retain almost the same small bend and shins remain almost vertical, torso inclines forward with neutral lumbar spine and neck, dumbbells descend close along the legs to around mid-shin, arms hanging straight down, feet flat. The motion comes from hips, not a deep knee squat. Do not bend the elbows, do not round the back, do not lift or drop the head, do not place weights on the ground. Fixed true three-quarter SIDE view to show hip displacement, nearly vertical shins and back alignment. No bench, barbell or step.",
+        "references": [
+          {
+            "origin": "own-generated-image",
+            "sha256": "069e32d5466031bb5bb116cd8caf30e4fc9b105757025d6dc0b491f89a4c6deb"
+          }
+        ],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "476a4bdd90b760de832567eac589df0b6963e839162cee9d5c915f4412c74f7b"
+      },
+      "width": 1958,
+      "height": 803,
+      "asset": "media/foco-human/2026-11-17/dumbbell-romanian-deadlift.webp",
+      "bytes": 31350,
+      "generatedFileSha256": "1ebdcf7b806d4125623e17ecdc232bc0fcba7336f25336131c47911bcfe5b7ff",
+      "assetSha256": "79123fe12210c49448e38ca8e771824b4f6b73b0bfbe617047b975032fcaf65e"
+    },
+    {
+      "key": "07-elevacao-lateral",
+      "name": "Elevação lateral com halteres",
+      "id": "lateral-raise",
+      "prompt": "Refine our own originally AI-generated FOCO exercise artwork for integration into the training app. Preserve the specific adult identity, graphite/lime/lilac outfit, realistic illustration finish, exercise variation, camera and apparatus except for the explicit corrections. OPAQUE graphite studio background #222222, smooth and clean; no alpha transparency. Fully eliminate all red/yellow/magenta mask artifacts, colored glow, noisy contour dots and white edge halos, including every gap between limbs and equipment. Keep two separate equal-scale scenes left/right, body and complete apparatus visible with generous margin and gutter. No text, titles, logos, numbers or overlays. Corrections: Preserve two standing lateral raise poses, left arms at sides and right arms near shoulder height; two small matching dumbbells per scene. Shoulders relaxed, slight elbow bend and neutral wrists. Head level with natural forward gaze.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "cf97642efffc1af1a0f68b04057478f75f7d38cfa4e4c874d1e2b233e68ccd0f"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 40,
+          "y": 0,
+          "width": 800,
+          "height": 887,
+          "phase": "start"
+        },
+        {
+          "x": 920,
+          "y": 0,
+          "width": 800,
+          "height": 887,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "key": "07-elevacao-lateral",
+        "name": "Elevação lateral com halteres",
+        "id": "lateral-raise",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nREFERENCE USE: This is our own original generated FOCO artwork, only for consistent illustration style, wardrobe materials and lighting. Completely replace its exercise, pose and any apparatus. The adult described below must have the specified age, appearance and natural face, matching between poses in this new image.\nPERSON: An adult woman around 50, light skin with natural freckles, short brown hair with a few grey strands, realistic mature face and regular healthy build with natural soft contours, graphite short-sleeved athletic top and full-length leggings.\nEXERCISE: One wide horizontal diptych, two separate full-body scenes side by side with a large transparent gutter; left preparation, right contracted or lowered position as specified. Equal camera, scale and equipment. Keep every head, hand, foot and equipment part inside the frame. Standing bilateral lateral dumbbell raise, EXACTLY TWO small matching dumbbells. Left: upright stable torso, feet hip-width, arms hanging at sides with slight soft elbow bend, palms inward. Right: raise BOTH upper arms out to the sides and slightly forward in the scapular plane until approximately shoulder height, elbows softly bent, hands no higher than shoulders, dumbbells held securely with neutral wrists. Shoulders stay relaxed, no shrug, no back arch and no swinging. Elbows lead slightly; no pouring gesture and no wrist collapse. Same foot placement, same torso and same head position. Fixed three-quarter FRONT view shows natural face, both arms and both weights without overlap. No bench or machine.",
+        "references": [
+          {
+            "origin": "own-generated-image",
+            "sha256": "32664ba22caaae8acf6c83fed1ad6e2192c1418aa60096ab4a7e31858d30dc71"
+          }
+        ],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "cf97642efffc1af1a0f68b04057478f75f7d38cfa4e4c874d1e2b233e68ccd0f"
+      },
+      "width": 1774,
+      "height": 887,
+      "asset": "media/foco-human/2026-11-17/lateral-raise.webp",
+      "bytes": 35610,
+      "generatedFileSha256": "12cbe40a7403fca56a4a1776dcb1c7b53e8d860d6d3208afb4f6ab9e045ad931",
+      "assetSha256": "21bd16fcd916214060109e75178915520142b551eaa8ae59763d660b1e634ab8"
+    },
+    {
+      "key": "08-rosca-martelo",
+      "name": "Rosca martelo com halteres",
+      "id": "hammer-curl",
+      "prompt": "Refine our own originally AI-generated FOCO exercise artwork for integration into the training app. Preserve the specific adult identity, graphite/lime/lilac outfit, realistic illustration finish, exercise variation, camera and apparatus except for the explicit corrections. OPAQUE graphite studio background #222222, smooth and clean; no alpha transparency. Fully eliminate all red/yellow/magenta mask artifacts, colored glow, noisy contour dots and white edge halos, including every gap between limbs and equipment. Keep two separate equal-scale scenes left/right, body and complete apparatus visible with generous margin and gutter. No text, titles, logos, numbers or overlays. Corrections: IMPORTANT BIOMECHANICAL CORRECTION TO THE LEFT LOWERED POSE: with both arms hanging vertically at the sides and palms facing inward to the thighs, keep each wrist straight in line with its forearm, thumbs pointing FORWARD. The long head-to-head AXIS of each dumbbell must be HORIZONTAL front-to-back at the lowered position, matching this neutral wrist; NOT a vertical stack at the lowered position and NOT a bent wrist. In the RIGHT curled pose, elbows flexed around 100 degrees, wrists still straight, palms still inward, thumbs now point UP and the dumbbells' long head-to-head axis is near VERTICAL. This is a neutral-grip hammer curl with axes changing as the elbows flex. Do not rotate palms up. Keep elbows close to torso and no swinging. Natural level head and forward gaze.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "12da47e3708960cdb80f89cefaa45c43f3c89e6481d94e2216ff9aab80a94e01"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 300,
+          "y": 0,
+          "width": 600,
+          "height": 803,
+          "phase": "start"
+        },
+        {
+          "x": 1100,
+          "y": 0,
+          "width": 600,
+          "height": 803,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "key": "08-rosca-martelo",
+        "name": "Rosca martelo com halteres",
+        "id": "hammer-curl",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nREFERENCE USE: Use our own independently generated artwork only for rendering style, material finishes, wardrobe colors and soft lighting. Completely replace its exercise, poses and apparatus as instructed. Use the specific adult described below, with exactly the same face, outfit and equipment in both new poses.\nPERSON: An adult man around 45, dark-brown skin, close-cropped hair and short natural beard, solid ordinary athletic build without exaggerated definition, graphite short-sleeved training T-shirt and graphite training trousers. Natural human face.\nEXERCISE: One wide horizontal diptych, two separate full-body scenes side by side with a large transparent gutter; left preparation, right contracted or lowered position as specified. Equal camera, scale and equipment. Keep every head, hand, foot and equipment part inside the frame. Standing bilateral simultaneous dumbbell hammer curl, EXACTLY TWO matching dumbbells. Left: both arms down at sides, elbows close to torso, palms facing inward toward each other with neutral grip and thumbs pointing forward/up as appropriate. Right: flex BOTH elbows to approximately 100 degrees, lifting both dumbbells in front of the shoulders while forearms stay in NEUTRAL hammer orientation, palms still face inward rather than turning upward. Upper arms remain near vertical and close to the torso, shoulders and torso stay still, wrists straight, feet planted. In raised position the long head-to-head axis of each dumbbell is almost vertical, not a supinated biceps curl. Fixed three-quarter FRONT camera, all dumbbell heads, hands and shoes visible. No bench or other equipment.",
+        "references": [
+          {
+            "origin": "own-generated-image",
+            "sha256": "069e32d5466031bb5bb116cd8caf30e4fc9b105757025d6dc0b491f89a4c6deb"
+          }
+        ],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "12da47e3708960cdb80f89cefaa45c43f3c89e6481d94e2216ff9aab80a94e01"
+      },
+      "width": 1958,
+      "height": 803,
+      "asset": "media/foco-human/2026-11-17/hammer-curl.webp",
+      "bytes": 31884,
+      "generatedFileSha256": "25df0282ef860c5f0b328a0d6f5ec46f434341423984c7da75b4f3baba843ed2",
+      "assetSha256": "7f57f180d8a7f44c24839d1cd0c72e031a3e1fe2ec5e36d4abf98e30941c9d2d"
+    },
+    {
+      "key": "09-ponte-gluteos",
+      "name": "Ponte de glúteos no chão",
+      "id": "glute-bridge",
+      "prompt": "Refine our own originally AI-generated FOCO exercise artwork for integration into the training app. Preserve the specific adult identity, graphite/lime/lilac outfit, realistic illustration finish, exercise variation, camera and apparatus except for the explicit corrections. OPAQUE graphite studio background #222222, smooth and clean; no alpha transparency. Fully eliminate all red/yellow/magenta mask artifacts, colored glow, noisy contour dots and white edge halos, including every gap between limbs and equipment. Keep two separate equal-scale scenes left/right, body and complete apparatus visible with generous margin and gutter. No text, titles, logos, numbers or overlays. Corrections: Preserve both bodyweight floor glute bridge scenes, left pelvis down, right hips extended with a neutral lumbar line between knees and shoulders, both soles and shoulder/head contact on lilac mat. No bench or weights. Keep both arms and realistic hands visible.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "1b09c400096d8364dd9d1918db526c9d4e6080b81293beada61ba833bdec3ba7"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 0,
+          "y": 130,
+          "width": 1050,
+          "height": 540,
+          "phase": "start"
+        },
+        {
+          "x": 1100,
+          "y": 130,
+          "width": 1050,
+          "height": 540,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "key": "09-ponte-gluteos",
+        "name": "Ponte de glúteos no chão",
+        "id": "glute-bridge",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nREFERENCE USE: Use our own independently generated artwork only for rendering style, material finishes, wardrobe colors and soft lighting. Completely replace its exercise, poses and apparatus as instructed. Use the specific adult described below, with exactly the same face, outfit and equipment in both new poses.\nPERSON: An adult woman around 32 with medium-brown skin, curly dark hair tied back, natural face, regular athletic build, graphite short-sleeved top and full-length leggings. Match the original FOCO woman from the supplied generated reference.\nEXERCISE: One wide horizontal diptych, two separate full-body scenes side by side with a large transparent gutter; left preparation, right contracted or lowered position as specified. Equal camera, scale and equipment. Keep every head, hand, foot and equipment part inside the frame. Floor glute bridge with body weight only on a thin plain lilac mat. Lie supine, head and shoulders supported on floor/mat, arms alongside torso with palms down. Knees bent, feet hip-width and fully flat on the mat in both scenes. Left: pelvis rests low on mat, knees point upward, heels positioned to allow shins nearly vertical at the raised pose. Right: lift pelvis so shoulders, hips and knees form a straight inclined line, knees approximately 90 degrees, both feet and shoulders/head continue firmly contacting the mat, neutral lumbar spine with ribs controlled, no excessive arch and no neck lift. Knees remain aligned with feet, not collapsing inward. Fixed elevated three-quarter SIDE view, camera and mat identical, face in natural profile, full body and both feet visible. No bench, barbell, resistance band or dumbbells.",
+        "references": [
+          {
+            "origin": "own-generated-image",
+            "sha256": "32664ba22caaae8acf6c83fed1ad6e2192c1418aa60096ab4a7e31858d30dc71"
+          }
+        ],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "1b09c400096d8364dd9d1918db526c9d4e6080b81293beada61ba833bdec3ba7"
+      },
+      "width": 2169,
+      "height": 725,
+      "asset": "media/foco-human/2026-11-17/glute-bridge.webp",
+      "bytes": 53440,
+      "generatedFileSha256": "f378a70547f44128118d06501f09431cd23b4665d6b7826c67d2fd335c44150a",
+      "assetSha256": "e49efd742e87f625a8eaa4a1e47653ae107537db5f9c96a183e827a8b65720af"
+    },
+    {
+      "key": "10-puxada-frontal",
+      "name": "Puxada frontal na polia",
+      "id": "lat-pulldown",
+      "prompt": "Refine our own originally AI-generated FOCO exercise artwork for integration into the training app. Preserve the specific adult identity, graphite/lime/lilac outfit, realistic illustration finish, exercise variation, camera and apparatus except for the explicit corrections. OPAQUE graphite studio background #222222, smooth and clean; no alpha transparency. Fully eliminate all red/yellow/magenta mask artifacts, colored glow, noisy contour dots and white edge halos, including every gap between limbs and equipment. Keep two separate equal-scale scenes left/right, body and complete apparatus visible with generous margin and gutter. No text, titles, logos, numbers or overlays. Corrections: Preserve both seated front lat-pulldown scenes with the same man and mechanically coherent machine. Left bar overhead, right single bar to FRONT of upper chest, thighs secured under pads and feet planted. No bar behind neck. One taut cable from center of bar to top pulley, no invented extra cables. Fully remove every red/yellow shape in the empty areas between arms, torso, bar and machine; these areas must be clean flat graphite background, no colored silhouettes, glow or paint.",
+      "references": [
+        {
+          "origin": "own-generated-image",
+          "sha256": "4ba0e4c26c02ba7532b52f8e0065a382a78c41b0aa8c991ae275a2d4ec2bdf66"
+        }
+      ],
+      "review": "visual-screening-complete",
+      "version": 2,
+      "frames": [
+        {
+          "x": 225,
+          "y": 0,
+          "width": 650,
+          "height": 803,
+          "phase": "start"
+        },
+        {
+          "x": 1125,
+          "y": 0,
+          "width": 650,
+          "height": 803,
+          "phase": "peak"
+        }
+      ],
+      "previous": {
+        "key": "10-puxada-frontal",
+        "name": "Puxada frontal na polia",
+        "id": "lat-pulldown",
+        "prompt": "Create original exercise illustration assets for FOCO, a Brazilian fitness app. This is an independently authored concept with no supplied source images. Style: refined human semi-realistic 3D editorial illustration, natural visible face and realistic adult proportions, approachable ordinary athletic body, believable skin and fabric, not a mannequin, not a plastic toy, not extreme bodybuilding. Graphite sportswear (#2D2D2D), small pastel lime (#E5F88A) and lilac (#B6A1F3) details, plain unbranded trainers. Soft broad studio illumination with subtle contact shadows. Full-body and all equipment completely visible, generous clear margin, uncluttered cutout composition on a fully transparent background. No room scenery, no titles, no text, no arrows, no anatomy overlays, no numbers, no logos or watermarks. Both poses must use exactly the same person, clothing, equipment, camera angle, lighting and scale. No ghosted/interpolated limbs. Clear physical contacts, sensible hands, feet and joints.\nREFERENCE USE: Use our own independently generated artwork only for rendering style, material finishes, wardrobe colors and soft lighting. Completely replace its exercise, poses and apparatus as instructed. Use the specific adult described below, with exactly the same face, outfit and equipment in both new poses.\nPERSON: An adult man around 30 of East Asian appearance, medium-light skin, short black hair, average natural athletic build, natural calm face, graphite short-sleeved T-shirt and graphite training trousers.\nEXERCISE: One wide horizontal diptych, two separate full-body scenes side by side with a large transparent gutter; left preparation, right contracted or lowered position as specified. Equal camera, scale and equipment. Keep every head, hand, foot and equipment part inside the frame. Seated wide-overhand-grip LAT PULLDOWN to the FRONT of the upper chest using the same simple functional cable machine in both scenes. The complete machine has a stable base, a low seat and padded thigh restraint firmly over the thighs, and a high overhead pulley above the midpoint of a single long lat bar. One visible taut cable attaches the CENTER of that bar to the overhead pulley, not the hands. Feet firmly flat on ground, seated knees about 90 degrees, thighs under the pads, upright neutral torso with only a small 10-degree recline. Both hands grip the SAME bar slightly wider than shoulders, palms forward, secure thumbs. Left: bar overhead, arms reaching upward with soft elbows, thighs and feet still secured. Right: elbows draw down toward sides as the bar comes just in FRONT of the upper chest near clavicles, shoulder blades move down/back; same torso angle and same seating position, head not pushed forward. Bar NEVER behind the neck. Do not create duplicate bars/cables, unattached weights or floating seat. Fixed three-quarter FRONT camera, entire athlete and overhead pulley and machine base visible, both scenes equal scale.",
+        "references": [
+          {
+            "origin": "own-generated-image",
+            "sha256": "069e32d5466031bb5bb116cd8caf30e4fc9b105757025d6dc0b491f89a4c6deb"
+          }
+        ],
+        "review": "pending-visual-screening",
+        "generatedFileSha256": "4ba0e4c26c02ba7532b52f8e0065a382a78c41b0aa8c991ae275a2d4ec2bdf66"
+      },
+      "width": 1958,
+      "height": 803,
+      "asset": "media/foco-human/2026-11-17/lat-pulldown.webp",
+      "bytes": 46574,
+      "generatedFileSha256": "ed8af037d8a81712707549c8438768a16f75a96de0d389b409ab1e9b15c7eee2",
+      "assetSha256": "e10160aff4d67b93f1cc9218405bdd33053b2bc10efe002614b85072325a3271"
+    }
+  ]
+}

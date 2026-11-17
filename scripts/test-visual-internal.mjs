@@ -225,9 +225,9 @@ try{
       assert.ok(sessionLayout.inputFont===null||(sessionLayout.inputFont>=16&&sessionLayout.inputFont<=30),'Workout input font must be ergonomic without triggering browser auto-zoom');
       assert.ok(sessionLayout.visualScale<=1.01,'No accidental browser viewport magnification');
       assert.ok(size.width<768
-        ? sessionLayout.stageHeight>=210&&sessionLayout.stageHeight<=305
-        : sessionLayout.stageHeight>=275&&sessionLayout.stageHeight<=390,
-        'Workout hero must stay proportional at '+size.name+': '+JSON.stringify(sessionLayout));
+        ? sessionLayout.stageHeight>=310&&sessionLayout.stageHeight<=540
+        : sessionLayout.stageHeight>=420&&sessionLayout.stageHeight<=600,
+        'Movement must lead the training screen while the start action stays reachable at '+size.name+': '+JSON.stringify(sessionLayout));
       if(size.width<768){
         const placement=await page.evaluate(()=>{
           const rest=document.querySelector('.foco-21-rest');
@@ -269,7 +269,11 @@ try{
         await guide.getByRole('button',{name:'01 INÍCIO'}).click();
         await page.getByRole('button',{name:'Registro',exact:true}).click();
       }
-            assert.equal(await page.locator('.foco-21-exercise-media button').count(),0,'Exercise hero must not contain nested media controls');
+      const media=page.locator('.foco-21-exercise-media');
+      assert.equal(await media.getByRole('group',{name:'Posições do exercício'}).getByRole('button').count(),2,'Training must expose the two static poses directly');
+      const artBounds=await media.locator('.foco-exercise-visual').boundingBox();
+      const poseBounds=await media.getByRole('group',{name:'Posições do exercício'}).boundingBox();
+      assert.ok(artBounds.y+artBounds.height<=poseBounds.y+2,'Pose controls must not cover the body or equipment');
       assert.equal(await page.locator('.foco-21-exercise-media [class*="bg-white"]').count(),0,'No white gallery overlays in stage');
       await page.getByRole('button',{name:/Ver exercício 1:/}).click();
     }

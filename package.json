@@ -37,7 +37,9 @@
     "test:automatic-planner": "node scripts/test-automatic-planner.mjs",
     "test:personal-cache": "tsx scripts/test-personal-conversation.ts",
     "test:rules-personal-browser": "node scripts/test-rules-personal-browser.mjs",
-    "test:ptbr-browser": "node scripts/test-ptbr-catalog-browser.mjs"
+    "test:ptbr-browser": "node scripts/test-ptbr-catalog-browser.mjs",
+    "test:human-media": "tsx scripts/test-human-media.ts",
+    "test:human-media-browser": "node scripts/test-human-media-browser.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

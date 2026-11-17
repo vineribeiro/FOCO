@@ -47,7 +47,9 @@ jobs:
       - name: FOCO 2.2 training scale and PWA freshness guardrails
         run: npm run test:session-contract
       - name: RepDB licensed imagery and stable exercise IDs
-        run: npm run test:repdb
+        run: |
+          npm run test:repdb
+          npm run test:human-media
       - name: RepDB Exercise Atlas pagination and gallery regression
         run: npm run test:atlas
       - name: Exercise image catalog audit
@@ -106,6 +108,7 @@ jobs:
         run: |
           npm run test:rules-personal-browser
           npm run test:ptbr-browser
+          npm run test:human-media-browser
       - name: Lost response, reload and storage-quota session regression
         run: npm run test:session-retry-browser
       - name: Responsive layout, full notes and navigation regression

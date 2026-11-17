@@ -31,7 +31,7 @@ const browser=read('src/components/RepDBCatalogBrowser.tsx');
 const page=read('src/pages/ExerciseLibraryPage.tsx');
 const server=read('supabase/functions/foco-api/index.ts');
 const css=read('src/foco-exercise-atlas.css');
-assert.match(component,/data-foco-media-source="repdb"/);
+assert.match(component,/data-foco-media-source=\{source\}/,'Own images and licensed fallback need distinct provenance');
 assert.match(component,/IntersectionObserver/,'Exercise images should load on entering viewport');
 assert.match(component,/onError=\{\(\)=>markBroken\(activeUrl\)\}/,'Broken WebP needs fallback');
 assert.match(component,/aria-pressed=\{pose===0\}/,'Pose controls must expose current state');
