@@ -5,12 +5,12 @@ import {FOCO_HUMAN_MEDIA,humanMediaForExercise} from '../src/data/focoHumanMedia
 import {REPDB_PTBR_NAMES} from '../src/data/repdbPtBR';
 import {FOCO_LOCAL_EXERCISES,FOCO_LOCAL_NAMES} from '../src/data/focoLocalExercises';
 import {loadRepDBCatalog,loadRepDBPortugueseCopy,repdbDisplayName,repdbBindingBlocked} from '../src/data/repdbAssets';
-import {pilot,expansion,humanExamples,humanAssets} from './fixtures/human-media.mjs';
+import {pilot,expansion,corrections,humanExamples,humanAssets} from './fixtures/human-media.mjs';
 assert.equal(pilot.exercises.length,10);
 assert.equal(expansion.newExercises,157);
 assert.equal(Object.keys(FOCO_HUMAN_MEDIA).length,167);
 assert.equal(humanExamples.length,new Set(humanExamples.map(e=>e.id)).size);
-for(const manifest of [pilot,expansion]){
+for(const manifest of [pilot,expansion,corrections]){
  assert.equal(manifest.repdbImagesUsedAsInput,false);
  assert.equal(manifest.professionalBiomechanicalReview,false);
  assert.equal(manifest.modelVersion,'not-exposed-by-tool');
@@ -36,7 +36,14 @@ for(const e of humanExamples){
  if(media.poses.length===1)assert.equal(media.poses[0].phase,'reference');
  else{assert.equal(media.poses[0].phase,'start');assert.equal(media.poses[1].phase,'peak');assert.notDeepEqual(media.poses[0],media.poses[1]);}
 }
-assert.equal(poses,326);assert.ok(bytes<3500000);
+assert.equal(poses,330);assert.ok(bytes<3500000);
+assert.equal(corrections.framingChangedCount,98);assert.equal(Object.keys(corrections.assets).length,5);
+assert.deepEqual(humanExamples.filter(e=>e.frames.length===1).map(e=>e.id).sort(),['dead-hang','plank','plate-pinch','side-plank']);
+for(const e of corrections.exercises){
+ assert.equal(e.review,'rendered-framing-screening-complete');
+ for(let i=0;i<e.frames.length;i++){const p=e.frames[i],safe=e.protectedSourceFrames[i];assert.ok(p.x>=safe.x&&p.y>=safe.y&&p.x+p.width<=safe.x+safe.width&&p.y+p.height<=safe.y+safe.height,'A crop may never include an adjacent cell');}
+}
+
 assert.equal(humanMediaForExercise('Supino inclinado com halteres'),FOCO_HUMAN_MEDIA['incline-db-press']);
 assert.equal(humanMediaForExercise('Supino reto com halteres','unknown-variant'),null);
 assert.equal(humanMediaForExercise('Stiff com halteres','dumbbell-romanian-deadlift'),null,'Do not rewrite a mismatched historical binding');

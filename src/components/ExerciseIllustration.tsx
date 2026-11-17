@@ -69,9 +69,11 @@ export const ExerciseIllustration:React.FC<Props>=({
   data-foco-media-status={activeUrl?'image':loading?'loading':'unavailable'}
   data-foco-media-phase={activePose?.phase}
   data-foco-media-layout={activePose?.frame&&activePose.frame.width/activePose.frame.height>1.6?'landscape':undefined}
+  style={activePose?.frame?{'--foco-pose-aspect':activePose.frame.width/activePose.frame.height} as React.CSSProperties:undefined}
   role="group" aria-label={'Ilustração do exercício '+exerciseName}
   className={'foco-repdb-media relative isolate overflow-hidden rounded-2xl '+(compact?'foco-repdb-media-compact ':'')+(interactive&&hasPair?'has-pose-controls ':'')+className}>
   {activeUrl?<>
+   {!compact&&<div className="foco-media-heading"><span className="foco-repdb-source">{source==='foco-ai'?'FOCO · IMAGEM DE IA':'RE P DB · ILUSTRAÇÃO'}</span></div>}
    <div className="foco-exercise-visual">
     {activePose?.frame&&activePose.media?<svg className="foco-human-pose" role="img"
       aria-label={exerciseName+' — '+phaseLabel}
@@ -84,7 +86,6 @@ export const ExerciseIllustration:React.FC<Props>=({
       className="foco-repdb-pose" loading={compact?'lazy':'eager'} decoding="async"
       onError={()=>markBroken(activeUrl)}/>}
    </div>
-   {!compact&&<span className="foco-repdb-source">{source==='foco-ai'?'FOCO · IMAGEM DE IA':'RE P DB · ILUSTRAÇÃO'}</span>}
    {interactive&&hasPair&&<div className="foco-repdb-pose-switch" role="group" aria-label="Posições do exercício">
     <button type="button" aria-pressed={pose===0} onClick={()=>setPose(0)}>01 INÍCIO</button>
     <button type="button" aria-pressed={pose===1} onClick={()=>setPose(1)}>02 FINAL</button>
