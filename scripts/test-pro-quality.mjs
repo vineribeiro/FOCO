@@ -47,5 +47,5 @@ assert.match(hudCss,/foco-session-console/);
 assert.ok(!read('src/pages/ActiveSessionPage.tsx').includes('legpress-45-foco.svg'));
 assert.ok(!read('src/pages/ActiveSessionPage.tsx').includes('supino-reto-foco.svg'));
 assert.ok(!read('src/components/ExerciseExecutionGuide.tsx').includes('ExercisePhaseGallery'));
-assert.match(read('public/sw.js'),/foco-shell-20261117-v34-human-media/);
+assert.match(read('public/sw.js'),/foco-shell-20261117-v35-expanded-human-media/);
 console.log('FOCO PRO: product contract, skill hierarchy, 3.0 reference redesign sync and beta QA verified.');

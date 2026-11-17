@@ -2,6 +2,7 @@ import { extraRows } from './repdbExtra';
 import { REPDB_PTBR_META,REPDB_PTBR_NAMES } from './repdbPtBR';
 import { repdbLabel,repdbEquipmentLabel } from './repdbLocale';
 import { repdbMediaReview } from './repdbMediaReview';
+import { FOCO_LOCAL_EXERCISES,FOCO_LOCAL_NAMES,FOCO_LOCAL_COPY } from './focoLocalExercises';
 /** Curated FOCO-to-RepDB exact variants. In-app use with visible credit required.
  * https://github.com/RepDB/exercise-dataset/blob/main/LICENSE-DATA.md */
 const rows = `
@@ -82,6 +83,7 @@ export const REPD_B_MAPPING = new Map((rows + '\n' + extraRows).split('\n').map(
  const [name, id] = line.split('|'); return [normalize(name),id] as const;
 }));
 for(const [id,copy] of Object.entries(REPDB_PTBR_NAMES))REPD_B_MAPPING.set(normalize(copy.name),id);
+for(const [id,name] of Object.entries(FOCO_LOCAL_NAMES))REPD_B_MAPPING.set(normalize(name),id);
 export const repdbIdForExercise = (name: string): string | null => REPD_B_MAPPING.get(normalize(name)) || null;
 
 /** RepDB Free: imagens WebP licenciadas para uso DENTRO do aplicativo com crédito.
@@ -96,6 +98,7 @@ const BACKUP_DATASET = 'https://exercise-dataset.com/';
 
 export interface RepDBExercise {
  id:string;
+ source?:'repdb'|'foco';
  name_en:string;
  body_part?:string;
  equipment?:string;
@@ -115,8 +118,9 @@ for (const [line] of (rows + '\n' + extraRows).split('\n').filter(Boolean).map(l
  if (name && id && !reverse.has(id)) reverse.set(id,name);
 }
 export const repdbDisplayName = (item:RepDBExercise):string =>
- REPDB_PTBR_NAMES[item.id]?.name || reverse.get(item.id) || 'Movimento com tradução em revisão';
+ FOCO_LOCAL_NAMES[item.id] || REPDB_PTBR_NAMES[item.id]?.name || reverse.get(item.id) || 'Movimento com tradução em revisão';
 export function loadRepDBPortugueseCopy(id:string){
+ if(FOCO_LOCAL_COPY[id])return Promise.resolve(FOCO_LOCAL_COPY[id]);
  return import('./repdbInstructionsPtBR').then(module=>module.REPDB_PTBR_INSTRUCTIONS[id]||null);
 }
 export function repdbSearchTerms(item:RepDBExercise):string[]{
@@ -161,13 +165,14 @@ async function fetchCatalog(base:string):Promise<RepDBExercise[]> {
 export function loadRepDBCatalog():Promise<RepDBExercise[]> {
  if (!catalogPromise) catalogPromise=fetchCatalog(PUBLIC_DATASET)
    .catch(()=>fetchCatalog(BACKUP_DATASET))
+   .then(items=>[...items.filter(item=>!FOCO_LOCAL_NAMES[item.id]),...FOCO_LOCAL_EXERCISES])
    .catch(error=>{catalogPromise=null;throw error;});
  return catalogPromise;
 }
 export function repdbBindingBlocked(name:string,id?:string|null):boolean {
- // Historic automatic templates used a dumbbell for this unspecific name;
- // the RepDB ID is the kettlebell variation. Only an explicit ID disambiguates it.
- if(!id&&normalize(name)===normalize('Agachamento goblet'))return true;
+ // Exact FOCO variants supply media for old templates without inventing a
+ // RepDB counterpart. Explicit historic mismatches remain blocked below.
+ if(!id&&Object.values(FOCO_LOCAL_NAMES).some(value=>normalize(value)===normalize(name)))return false;
  if(id==='barbell-preacher-curl'&&normalize(name)===normalize('Rosca Scott com barra EZ'))return true;
  // Known old aliases bound different variations. Never repair them by showing
  // a nearby exercise; preserved records keep their name/history unchanged.

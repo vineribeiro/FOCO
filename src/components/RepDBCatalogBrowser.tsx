@@ -122,7 +122,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
     </nav>
   </>}
   <p className="foco-atlas-credit">Ilustrações FOCO criadas com IA, identificadas por exercício. Dados e demais imagens: <a href={REPDB_CREDIT_URL} target="_blank"
-    rel="noopener noreferrer">{REPDB_CREDIT_TEXT}</a>. Biblioteca gratuita, com atribuição. As duas poses são estáticas e não substituem orientação profissional.</p>
+    rel="noopener noreferrer">{REPDB_CREDIT_TEXT}</a>. Biblioteca gratuita, com atribuição. As posições disponíveis são estáticas e não substituem orientação profissional.</p>
   {detail&&<AccessibleDialog size="lg" title={'Exercício: '+repdbDisplayName(detail)} onClose={()=>setDetail(null)}>
     <div className="foco-atlas-modal foco-repdb-detail">
       <div className="foco-atlas-modal-head">
@@ -137,7 +137,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
         <div><span>Equipamento</span><strong>{repdbEquipmentLabel(detail)}</strong></div>
         <div><span>Músculos</span><strong>{(detail.primary_muscles||[]).map(label).join(', ')||'Não informado'}</strong></div>
       </div>
-      {repdbMediaReview(detail.id)&&<p className="foco-atlas-alert" role="status">{repdbMediaReview(detail.id)}</p>}
+      {!FOCO_HUMAN_MEDIA[detail.id]&&repdbMediaReview(detail.id)&&<p className="foco-atlas-alert" role="status">{repdbMediaReview(detail.id)}</p>}
       {copyStatus==='loading'&&<p role="status">Carregando orientações em português...</p>}
       {copyStatus==='error'&&<div className="foco-atlas-alert" role="alert">Não foi possível abrir as orientações. <button type="button" onClick={()=>setCopyRetry(n=>n+1)}>Tentar novamente</button></div>}
       {copy&&<>
@@ -153,7 +153,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
       <button type="button" className="foco-atlas-open-foco" onClick={()=>{onUseExercise(detail);setDetail(null);}}>
         <Plus size={17}/> Adicionar à minha ficha
       </button>
-      <p className="foco-atlas-credit"><a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer">{REPDB_CREDIT_TEXT}</a>. Poses estáticas sem animações artificiais.</p>
+      <p className="foco-atlas-credit">{detail.source==='foco'?'Exercício e ilustração de autoria FOCO.':<a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer">{REPDB_CREDIT_TEXT}</a>} Posições estáticas.</p>
     </div>
   </AccessibleDialog>}
  </section>;

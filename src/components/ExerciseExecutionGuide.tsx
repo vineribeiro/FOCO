@@ -9,7 +9,7 @@ export const ExerciseExecutionGuide:React.FC<Props>=({exerciseName,muscleGroup,e
    <p className="foco-atlas-kicker">FOCO / GUIA DE MOVIMENTO</p>
    <h3>{exerciseName}</h3>
    <span>{muscleGroup||'Exercício da ficha'}</span>
-   <p>Veja o início e o final do movimento. As duas poses são ilustrações estáticas, não uma animação de execução.</p>
+   <p>Confira as posições disponíveis para o movimento. As imagens são estáticas e não representam uma animação de execução.</p>
   </div>
   <ExerciseIllustration exerciseName={exerciseName} exerciseId={exerciseId} muscleGroup={muscleGroup}
     presentation="editorial" interactive className="foco-repdb-guide-visual w-full"/>
