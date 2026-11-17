@@ -1,4 +1,7 @@
 import { extraRows } from './repdbExtra';
+import { REPDB_PTBR_META,REPDB_PTBR_NAMES } from './repdbPtBR';
+import { repdbLabel,repdbEquipmentLabel } from './repdbLocale';
+import { repdbMediaReview } from './repdbMediaReview';
 /** Curated FOCO-to-RepDB exact variants. In-app use with visible credit required.
  * https://github.com/RepDB/exercise-dataset/blob/main/LICENSE-DATA.md */
 const rows = `
@@ -48,7 +51,7 @@ Rosca direta com barra EZ|ez-bar-curl
 Rosca direta com halteres|bicep-curl
 Rosca martelo com halteres|hammer-curl
 Rosca martelo na polia com corda|cable-hammer-curl
-Rosca Scott com barra EZ|barbell-preacher-curl
+Rosca Scott com barra EZ|preacher-curl
 Rosca Scott com halter|db-preacher-curl
 Rosca concentrada com halter|concentration-curl
 Rosca direta na polia com barra reta|cable-curl
@@ -78,6 +81,7 @@ const normalize = (s: string): string => s.normalize('NFD').replace(/[\u0300-\u0
 export const REPD_B_MAPPING = new Map((rows + '\n' + extraRows).split('\n').map(line => {
  const [name, id] = line.split('|'); return [normalize(name),id] as const;
 }));
+for(const [id,copy] of Object.entries(REPDB_PTBR_NAMES))REPD_B_MAPPING.set(normalize(copy.name),id);
 export const repdbIdForExercise = (name: string): string | null => REPD_B_MAPPING.get(normalize(name)) || null;
 
 /** RepDB Free: imagens WebP licenciadas para uso DENTRO do aplicativo com crédito.
@@ -86,7 +90,8 @@ export const repdbIdForExercise = (name: string): string | null => REPD_B_MAPPIN
  */
 export const REPDB_CREDIT_URL = 'https://repdb.co';
 export const REPDB_CREDIT_TEXT = 'Exercise data by RepDB (repdb.co)';
-const PUBLIC_DATASET = 'https://raw.githubusercontent.com/RepDB/exercise-dataset/main/';
+export const REPDB_SOURCE_REVISION=REPDB_PTBR_META.sourceRevision;
+const PUBLIC_DATASET = 'https://raw.githubusercontent.com/RepDB/exercise-dataset/'+REPDB_SOURCE_REVISION+'/';
 const BACKUP_DATASET = 'https://exercise-dataset.com/';
 
 export interface RepDBExercise {
@@ -98,6 +103,10 @@ export interface RepDBExercise {
  secondary_muscles?:string[];
  instructions_en?:string[];
  tips_en?:string[];
+ description_en?:string;
+ category?:string;
+ difficulty?:string;
+ is_bodyweight?:boolean;
  images?: {flat?: {start?:string;peak?:string;main?:string}};
 }
 const reverse = new Map<string,string>();
@@ -106,7 +115,15 @@ for (const [line] of (rows + '\n' + extraRows).split('\n').filter(Boolean).map(l
  if (name && id && !reverse.has(id)) reverse.set(id,name);
 }
 export const repdbDisplayName = (item:RepDBExercise):string =>
- reverse.get(item.id) || item.name_en;
+ REPDB_PTBR_NAMES[item.id]?.name || reverse.get(item.id) || 'Movimento com tradução em revisão';
+export function loadRepDBPortugueseCopy(id:string){
+ return import('./repdbInstructionsPtBR').then(module=>module.REPDB_PTBR_INSTRUCTIONS[id]||null);
+}
+export function repdbSearchTerms(item:RepDBExercise):string[]{
+ return [repdbDisplayName(item),item.name_en,REPDB_PTBR_NAMES[item.id]?.sourceName||'',item.id,
+   reverse.get(item.id)||'',item.body_part||'',repdbLabel(item.body_part),item.equipment||'',repdbEquipmentLabel(item),
+   ...(item.primary_muscles||[]).flatMap(m=>[m,repdbLabel(m)])];
+}
 export const normalizeRepDBName = (name:string):string =>
  name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
 
@@ -118,11 +135,14 @@ export function repdbImageUrl(path:unknown):string|null {
  const safe = safeRepDBImagePath(path);
  return safe ? PUBLIC_DATASET + safe : null;
 }
-export function repdbImageUrls(item:RepDBExercise):string[] {
+export function repdbImagePoses(item:RepDBExercise):{url:string;phase:'start'|'peak'|'reference'}[] {
+ if(repdbMediaReview(item.id))return [];
  const flat=item.images?.flat;
  if (!flat) return [];
- return [flat.start || flat.main, flat.peak].map(repdbImageUrl).filter((url):url is string=>Boolean(url));
+ const candidates:[unknown,'start'|'peak'|'reference'][]=flat.main?[[flat.main,'reference']]:[[flat.start,'start'],[flat.peak,'peak']];
+ return candidates.flatMap(([path,phase])=>{const url=repdbImageUrl(path);return url?[{url,phase}]:[];});
 }
+export const repdbImageUrls=(item:RepDBExercise):string[]=>repdbImagePoses(item).map(p=>p.url);
 
 let catalogPromise:Promise<RepDBExercise[]>|null=null;
 async function fetchCatalog(base:string):Promise<RepDBExercise[]> {
@@ -145,6 +165,16 @@ export function loadRepDBCatalog():Promise<RepDBExercise[]> {
  return catalogPromise;
 }
 export async function resolveRepDBExercise(name:string, id?:string|null):Promise<RepDBExercise|null> {
+ if(id==='barbell-preacher-curl'&&normalize(name)===normalize('Rosca Scott com barra EZ'))return null;
+ // Known old aliases bound different variations. Never repair them by showing
+ // a nearby exercise; preserved records keep their name/history unchanged.
+ const blocked:Record<string,string>={
+  [normalize('Stiff com halteres')]:'dumbbell-romanian-deadlift',
+  [normalize('Abdução de quadril com mini band')]:'banded-lateral-walk',
+  [normalize('Panturrilha unilateral com halter')]:'single-leg-calf-raise',
+  [normalize('Elevação de ponta dos pés')]:'bodyweight-calf-raise',
+ };
+ if(blocked[normalize(name)]&&(!id||blocked[normalize(name)]===id))return null;
  const catalog=await loadRepDBCatalog();
  // An explicitly stored ID is authoritative; never fuzzy-match a different variant.
  if (id) return catalog.find(item=>item.id===id)||null;

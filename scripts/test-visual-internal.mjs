@@ -125,7 +125,7 @@ try{
         images:{flat:{start:'images/flat/'+id+'-start.webp'}}};
     })
   ];
-  for(const url of ['https://raw.githubusercontent.com/RepDB/exercise-dataset/main/exercises.json',
+  for(const url of [/^https:\/\/raw\.githubusercontent\.com\/RepDB\/exercise-dataset\/(?:main|[a-f0-9]{40})\/exercises\.json$/,
                      'https://exercise-dataset.com/exercises.json']){
     await context.route(url,route=>{
       repdbCatalogRequests++;
@@ -134,7 +134,7 @@ try{
     });
   }
   const tinyPng=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/L5sAAAAASUVORK5CYII=','base64');
-  await context.route('https://raw.githubusercontent.com/RepDB/exercise-dataset/main/images/flat/**',route=>
+  await context.route('https://raw.githubusercontent.com/RepDB/exercise-dataset/**/images/flat/**',route=>
     route.fulfill({status:200,contentType:'image/png',body:tinyPng}));
     const page=await context.newPage();
   for(const view of views){
@@ -310,6 +310,8 @@ try{
         assert.equal(await page.getByRole('button',{name:'Programa',exact:true}).getAttribute('aria-pressed'),'true');
         await page.getByRole('button',{name:'Semana',exact:true}).click();
       }else if(view==='biblioteca'){
+        const search=page.getByRole('textbox',{name:'Pesquisar exercícios',exact:true});
+        await search.fill('Supino reto com barra');
         const card=page.getByRole('button',{name:'Ver Supino reto com barra'});
         await card.waitFor({timeout:9000});
         assert.ok(repdbCatalogRequests>=1,'RepDB must load one shared catalog');
@@ -327,9 +329,13 @@ try{
         await personal.fill('Meu supino de hoje');
         assert.equal(await personal.inputValue(),'Meu supino de hoje');
         await page.getByRole('button',{name:'Fechar',exact:true}).last().click();
+        await search.fill('');
         await page.getByRole('button',{name:/Próxima/}).click();
-        await page.getByRole('button',{name:'Ver ZZ movement 022'}).waitFor({timeout:9000});
+        await page.locator('.foco-atlas-pagination').getByText('2 / 30',{exact:true}).waitFor({timeout:9000});
+        assert.equal(await page.locator('.foco-repdb-card-index').first().innerText(),'025');
+        assert.equal(await page.getByRole('button',{name:'Ver Movimento com tradução em revisão',exact:true}).count(),24);
         await page.getByRole('button',{name:/Anterior/}).click();
+        await search.fill('Supino reto com barra');
         await page.getByRole('button',{name:'Ver Supino reto com barra'}).waitFor({timeout:9000});
 
       }

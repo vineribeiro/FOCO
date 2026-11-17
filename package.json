@@ -25,7 +25,7 @@
     "test:v2": "tsx scripts/test-foco-v2.ts",
     "test:atlas": "tsx scripts/test-exercise-atlas.ts",
     "test:session-contract": "node scripts/test-session-contract.mjs",
-    "test:repdb": "tsx scripts/test-repdb-integration.ts",
+    "test:repdb": "tsx scripts/test-repdb-integration.ts && tsx scripts/test-repdb-ptbr.ts",
     "test:auth-reliability": "tsx scripts/test-auth-reliability.ts",
     "test:password-security": "tsx scripts/test-password-security.ts",
     "test:session-replay": "tsx scripts/test-session-replay.ts",
@@ -36,7 +36,8 @@
     "test:layout-regression": "node scripts/test-layout-regression.mjs",
     "test:automatic-planner": "node scripts/test-automatic-planner.mjs",
     "test:personal-cache": "tsx scripts/test-personal-conversation.ts",
-    "test:rules-personal-browser": "node scripts/test-rules-personal-browser.mjs"
+    "test:rules-personal-browser": "node scripts/test-rules-personal-browser.mjs",
+    "test:ptbr-browser": "node scripts/test-ptbr-catalog-browser.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

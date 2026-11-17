@@ -13,13 +13,14 @@ for(const experience of ['iniciante','intermediario','avancado'])for(let frequen
   assert.deepEqual(plan,buildAutomaticWorkout(input),'Same context must produce exactly the same proposal');
   assert.equal(plan.generation.ai_calls,0);assert.equal(plan.generation.method,'rules');assert.equal(plan.ai_generation,undefined);
   for(const day of plan.planning.strength_days){const daily=plan.exercises.filter(ex=>ex.training_day===day);
-   assert.ok(daily.length>0);assert.ok(daily.length<=sessionExerciseRange(sessionMinutes).max);
+   assert.ok(daily.length>=2,'Every chosen day must contain a useful resistance session');assert.ok(daily.length<=sessionExerciseRange(sessionMinutes).max);
    assert.ok(estimateTrainingSessionMinutes(daily)<=sessionMinutes,'Time is a hard cap, not an estimate allowed to overflow');
    assert.equal(new Set(daily.map(e=>e.exercise_name)).size,daily.length);
   }
   for(const ex of plan.exercises){assert.ok(catalogExercise(ex.exercise_name)?.primary.includes(ex.muscle_group));assert.equal(ex.suggested_load_kg,0);}
   for(const role of priorityMuscles)assert.ok(plan.training_science.estimated_effective_sets_by_group[role]>0,'Every selection must be covered, including all-groups balance');
   assert.ok(auditAutomaticRecovery(plan.exercises).ok,'No adjacent-day overlap, including compound synergists and week wrap');
+  assert.equal(plan.weekly_frequency,input.days.length,'Never reduce the chosen frequency');
   assert.equal(plan.weekly_frequency,plan.planning.strength_days.length);
   assert.ok(plan.planning.strength_days.every(day=>input.days.includes(day)));
   assert.equal(plan.planning.recovery_days.length+plan.weekly_frequency,7);
@@ -47,8 +48,8 @@ console.log(`AUTOMATIC PLANNER: ${passed} validated contexts, ${conflicts} expli
 
 const allDays={days:weekdays,sessionMinutes:40,experience:'iniciante',equipmentAvailable:'Academia completa',priorityMuscles:priorities};
 const health=buildAutomaticWorkout({...allDays,goal:'Saúde e qualidade de vida'});
-assert.deepEqual(health.planning.strength_days,['segunda','quarta','sexta']);
-assert.equal(health.weekly_frequency,3);assert.equal(health.planning.priority_mode,'balanced');
+assert.deepEqual(health.planning.strength_days,weekdays);
+assert.equal(health.weekly_frequency,7);assert.equal(health.planning.priority_mode,'balanced');
 assert.ok(health.exercises.every(e=>e.muscle_group!=='Cardio'),'Recovery must not become a fictitious resistance exercise');
 const signature=p=>JSON.stringify(p.exercises.map(({notes,...ex})=>ex));
 const goals=['Saúde e qualidade de vida','Hipertrofia Máxima','Força Pura & Cargas','Definição & Emagrecimento','Recomposição corporal','Condicionamento & Resistência'];
@@ -72,7 +73,7 @@ for(let mask=1;mask<128;mask++){
  const days=weekdays.filter((_,i)=>mask&(1<<i));if(days.length<2)continue;
  for(const experience of ['iniciante','intermediario','avancado']){
   const p=buildAutomaticWorkout({days,experience,sessionMinutes:45,equipmentAvailable:'Academia completa'});
-  assert.ok(auditAutomaticRecovery(p.exercises).ok);assert.ok(p.exercises.every(e=>days.includes(e.training_day)));
+  assert.equal(p.weekly_frequency,days.length);assert.ok(auditAutomaticRecovery(p.exercises).ok);assert.ok(p.exercises.every(e=>days.includes(e.training_day)));
  }
 }
 console.log('PASS: screenshot reproduction, six distinct goal prescriptions, focus dose, duration, every calendar subset, direct/indirect recovery and Sunday/Monday.');

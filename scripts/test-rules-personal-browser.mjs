@@ -56,9 +56,9 @@ try{for(const width of [320,390,768,1440]){
   await page.getByText('Todos selecionados: distribuição equilibrada.',{exact:false}).waitFor();
  }
  await page.getByRole('button',{name:'Montar ficha automática',exact:true}).click();
- await page.getByText('7 dias disponíveis · 3 sessões de força',{exact:true}).waitFor();
+ await page.getByText('7 treinos por semana · frequência respeitada',{exact:true}).waitFor();
  assert.equal(previews,2);assert.equal(questions,0);assert.equal(previewPayloads[1].available_days.length,7);
- assert.deepEqual(previewResults[1].planning.strength_days,['segunda','quarta','sexta']);
+ assert.deepEqual(previewResults[1].planning.strength_days,['segunda','terca','quarta','quinta','sexta','sabado','domingo']);
  assert.notDeepEqual(previewResults[0].exercises,previewResults[1].exercises);
  if(width===390){
   const audit=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();

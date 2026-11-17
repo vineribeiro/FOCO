@@ -568,7 +568,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
   if (method === "OPTIONS") return new Response(null, { status: 204, headers: { ...CORS, ...(ORIGINS.includes(origin) ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" } : {}) } });
   if (method === "GET" && path === "/api/system/status") return response({
-    app: "FOCO", version: "3.2.0", build: "2026-11-16-rules-recovery", science_engine: SCIENCE_ENGINE_VERSION,
+    app: "FOCO", version: "3.3.0", build: "2026-11-17-ptbr-frequency", science_engine: SCIENCE_ENGINE_VERSION,
     automatic_planner: AUTOMATIC_PLANNER_VERSION, personal_coach: PERSONAL_COACH_VERSION,
     ai_status: GROQ_KEY || GEMINI_KEY ? "configured" : "missing_key",
     ai_provider: aiRouter.status().primary,
@@ -858,7 +858,7 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
     if (b.available_days !== undefined && (!Array.isArray(b.available_days)
       || b.available_days.length !== frequency || new Set(b.available_days.map(normalizedDay)).size !== frequency
       || b.available_days.some((day: unknown) => !normalizedDay(day))))
-      throw new ApiError(400, "Confira os dias disponíveis: selecione de 2 a 7 dias distintos, de acordo com a frequência.");
+      throw new ApiError(400, "Confira os dias de treino: selecione de 2 a 7 dias distintos, de acordo com a frequência.");
     const days = scheduleDays(b.available_days ?? a.preferred_days, frequency);
     const activePlans = await plans(db, user.id);
     const previous = activePlans.find((plan: any) => plan.status === "ativo");

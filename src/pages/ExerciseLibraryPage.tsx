@@ -4,6 +4,7 @@ import {api} from '../services/api';
 import {AccessibleDialog} from '../components/AccessibleDialog';
 import {RepDBCatalogBrowser} from '../components/RepDBCatalogBrowser';
 import {repdbDisplayName,REPDB_CREDIT_TEXT,REPDB_CREDIT_URL,type RepDBExercise} from '../data/repdbAssets';
+import {repdbWorkoutGroup} from '../data/repdbLocale';
 import {getPreferredTrainingDay,getTrainingDayLabel,savePreferredTrainingDay,TRAINING_DAYS} from '../data/exerciseLibrary';
 import type {WorkoutExercise,WorkoutPlan} from '../types';
 
@@ -28,9 +29,8 @@ export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
   },[]);
   const startAdd=(remote:RepDBExercise)=>{
     // The canonical ID survives user-controlled display-name changes.
-    const groupNames:Record<string,string>={chest:'Peito',back:'Costas',shoulders:'Ombros',biceps:'Bíceps',triceps:'Tríceps',legs:'Pernas',quadriceps:'Quadríceps',glutes:'Glúteos',calves:'Panturrilhas',abdominals:'Abdômen'};
     setSelected(remote);setOwnName(repdbDisplayName(remote));
-    setOwnGroup(groupNames[remote.body_part||'']||'Geral');setNotice(null);
+    setOwnGroup(repdbWorkoutGroup(remote));setNotice(null);
   };
   const addToPlan=async(plan:WorkoutPlan)=>{
     const typed=ownName.trim().replace(/\s+/g,' ');
@@ -77,7 +77,7 @@ export const ExerciseLibraryPage:React.FC<Props>=({setActiveTab})=>{
         </label>
         <label className="foco-atlas-form-field">Grupo muscular da tua ficha
           <select value={ownGroup} onChange={e=>setOwnGroup(e.target.value)} aria-label="Grupo muscular">
-            {['Geral','Peito','Costas','Ombros','Bíceps','Tríceps','Pernas','Quadríceps','Posteriores','Glúteos','Panturrilhas','Abdômen','Cardio'].map(group=><option key={group} value={group}>{group}</option>)}
+            {['Geral','Peito','Costas','Ombros','Braços','Bíceps','Tríceps','Antebraços','Pernas','Quadríceps','Posteriores','Glúteos','Panturrilhas','Abdômen','Cardio'].map(group=><option key={group} value={group}>{group}</option>)}
           </select>
         </label>
         <fieldset className="foco-atlas-days"><legend>Dia do treino</legend>

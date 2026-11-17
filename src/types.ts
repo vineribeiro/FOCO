@@ -102,6 +102,7 @@ export interface GeneratedWorkoutProposal {
     priority_mode: 'balanced' | 'focused';
     priorities: string[];
     recovery_policy: 'full-calendar-day';
+    session_focus?: Record<string,string>;
     reason: string;
   };
 }

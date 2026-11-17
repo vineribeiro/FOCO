@@ -1,0 +1,38 @@
+import assert from 'node:assert/strict';
+import {REPDB_PTBR_META,REPDB_PTBR_NAMES} from '../src/data/repdbPtBR';
+import {REPDB_PTBR_INSTRUCTIONS} from '../src/data/repdbInstructionsPtBR';
+import {repdbLabel} from '../src/data/repdbLocale';
+import {repdbDisplayName,repdbSearchTerms,repdbIdForExercise,repdbImagePoses,resolveRepDBExercise,loadRepDBPortugueseCopy} from '../src/data/repdbAssets';
+assert.equal(REPDB_PTBR_META.count,708);
+assert.equal(Object.keys(REPDB_PTBR_NAMES).length,708,'Every source ID remains available');
+assert.deepEqual(Object.keys(REPDB_PTBR_NAMES),Object.keys(REPDB_PTBR_INSTRUCTIONS));
+assert.match(REPDB_PTBR_META.sourceRevision,/^[a-f0-9]{40}$/);
+const normalize=(name:string)=>name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+assert.equal(new Set(Object.values(REPDB_PTBR_NAMES).map(n=>normalize(n.name))).size,708,'Names must distinguish source variations without ambiguous ID lookup');
+let instructions=0,tips=0;
+for(const [id,n] of Object.entries(REPDB_PTBR_NAMES)){
+ assert.match(id,/^[a-z0-9-]+$/);assert.ok(n.name.length>=3&&n.name.length<=100);
+ const c=REPDB_PTBR_INSTRUCTIONS[id];assert.ok(c.description&&c.instructions.length>=2);
+ for(const text of [...c.instructions,...c.tips])assert.doesNotMatch(text,/\b(with|your|keep|through|until|while|the|squeeze|unrack|núcleo|desembale|armadilhas|fileira|mosca)\b/i,id+': untranslated/incorrect terminology');
+ instructions+=c.instructions.length;tips+=c.tips.length;
+ assert.equal(repdbDisplayName({id,name_en:n.sourceName}),n.name);
+}
+assert.ok(instructions>3500&&tips>1900);
+for(const code of ['upper_arms','lower_arms','upper_legs','lower_legs','hamstrings','rectus_abdominis','transverse_abdominis','biceps_brachii','dumbbell','barbell','loop_band','ez_bar','bosu_ball'])assert.notEqual(repdbLabel(code),'Outro');
+assert.match(REPDB_PTBR_NAMES['incline-db-press'].name,/Supino/);
+assert.match(REPDB_PTBR_NAMES['single-leg-press'].name,/Leg press/);
+assert.match(REPDB_PTBR_NAMES['preacher-curl'].name,/EZ/);
+assert.doesNotMatch(REPDB_PTBR_NAMES['banded-kneeling-hip-thrust'].name,/banco|costas apoiadas/);
+assert.equal(repdbIdForExercise('Rosca Scott com barra EZ'),'preacher-curl');
+assert.equal(repdbIdForExercise('Tríceps testa com halteres'),'db-skull-crusher');
+assert.equal(repdbIdForExercise('Extensão de tríceps deitado com um halter nas duas mãos'),'lying-tricep-extension');
+const previousFetch=globalThis.fetch;globalThis.fetch=async()=>{throw Error('No external call expected');};
+for(const [name,id] of [['Stiff com halteres','dumbbell-romanian-deadlift'],['Panturrilha unilateral com halter','single-leg-calf-raise'],['Abdução de quadril com mini band','banded-lateral-walk'],['Elevação de ponta dos pés','bodyweight-calf-raise'],['Rosca Scott com barra EZ','barbell-preacher-curl']])assert.equal(await resolveRepDBExercise(name,id),null,'Never show another variation under a historic alias');
+globalThis.fetch=previousFetch;
+const single=repdbImagePoses({id:'plank',name_en:'Plank',images:{flat:{main:'images/flat/plank-main.webp'}}});assert.equal(single[0].phase,'reference');
+const peakOnly=repdbImagePoses({id:'bench-press',name_en:'Bench Press',images:{flat:{peak:'images/flat/bench-press-peak.webp'}}});assert.equal(peakOnly[0].phase,'peak');
+assert.deepEqual(repdbImagePoses({id:'banded-fire-hydrant',name_en:'Banded Fire Hydrant',images:{flat:{start:'images/flat/banded-fire-hydrant-start.webp'}}}),[]);
+assert.equal(repdbDisplayName({id:'future-id',name_en:'Future untranslated name'}),'Movimento com tradução em revisão','Unknown revisions cannot silently fall back to English');
+assert.match((await loadRepDBPortugueseCopy('bench-press'))!.instructions.join(' '),/Retire a barra dos suportes/);
+assert.match(repdbSearchTerms({id:'bench-press',name_en:'Barbell Bench Press',equipment:'barbell',body_part:'chest'}).join(' '),/Supino.*Bench Press.*Barra reta/);
+console.log(`REPDB PT-BR: 708 IDs, ${instructions} instructions, ${tips} tips; terminology, exact variants, stale aliases and pose semantics passed.`);
