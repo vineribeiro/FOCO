@@ -7,6 +7,9 @@ const base=process.env.FOCO_E2E_BASE_URL||'http://127.0.0.1:4173/FOCO/';
 const out='work/human-media-browser';mkdirSync(out,{recursive:true});
 const manifest=JSON.parse(readFileSync(new URL('../docs/media/FOCO_HUMAN_PILOT_2026_11_17.json',import.meta.url),'utf8'));
 const examples=manifest.exercises;
+const muscleGroups=['Peitoral','Quadríceps','Costas','Panturrilhas','Core','Posteriores','Ombros','Bíceps','Glúteos','Costas'];
+const bodyParts=['chest','upper_legs','back','lower_legs','core','upper_legs','shoulders','upper_arms','upper_legs','back'];
+const equipment=['dumbbell','kettlebell','dumbbell','dumbbell',undefined,'dumbbell','dumbbell','dumbbell',undefined,'cable'];
 const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/L5sAAAAASUVORK5CYII=','base64');
 const results=[];let externalWrites=0;
 const browser=await chromium.launch({headless:true,...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{})});
@@ -14,8 +17,8 @@ async function setup(width,{breakOwn=false}={}){
  const context=await browser.newContext({viewport:{width,height:width===320?720:900},serviceWorkers:'block',reducedMotion:'reduce'});
  const fixtures=createAuditFixtures(),plan=fixtures['/api/workouts/active'];
  plan.exercises=examples.map((e,i)=>({id:'human-synthetic-'+i,plan_id:plan.id,exercise_name:i===0?'Supino personalizado do piloto':e.name,
-  repdb_id:e.id,muscle_group:i===4?'Core':'Peitoral',training_day:'segunda',sets:3,reps_min:8,reps_max:12,rest_seconds:90,suggested_load_kg:20,notes:''}));
- const catalog=[...examples.map(e=>({id:e.id,name_en:e.name,body_part:'full_body',equipment:'dumbbell',images:{flat:{start:'images/flat/'+e.id+'-start.webp',peak:'images/flat/'+e.id+'-peak.webp'}}})),
+  repdb_id:e.id,muscle_group:muscleGroups[i],training_day:'segunda',sets:3,reps_min:8,reps_max:12,rest_seconds:90,suggested_load_kg:20,notes:''}));
+ const catalog=[...examples.map((e,i)=>({id:e.id,name_en:e.name,body_part:bodyParts[i],equipment:equipment[i],is_bodyweight:!equipment[i],images:{flat:{start:'images/flat/'+e.id+'-start.webp',peak:'images/flat/'+e.id+'-peak.webp'}}})),
   ...Array.from({length:100},(_,i)=>({id:'future-pilot-'+i,name_en:'Future movement '+i,images:{flat:{main:'images/flat/future-pilot-'+i+'.webp'}}}))];
  await context.route('**/*',async route=>{
   const req=route.request(),u=new URL(req.url());
@@ -69,6 +72,10 @@ try{
   await page.screenshot({path:out+'/session-'+width+'.png',fullPage:true});
   await page.goto(base+'?view=biblioteca&media=foco');await page.getByText('10 movimentos',{exact:true}).waitFor();
   assert.equal(await page.locator('.foco-repdb-exercise-card').count(),10);
+  for(const card of await page.locator('.foco-repdb-exercise-card').all()){
+   await card.scrollIntoViewIfNeeded();await card.locator('[data-foco-media-source="foco-ai"] svg').waitFor();
+  }
+  await page.evaluate(()=>window.scrollTo(0,0));
   await page.screenshot({path:out+'/library-'+width+'.png',fullPage:true});
   assert.deepEqual(errors,[]);results.push({width,status:'PASS',exercises:10,externalWrites:0});console.log('PASS '+width+': 10 exact human variants, 19 poses, personalized ID, gallery and preserved live draft');await context.close();
  }

@@ -68,6 +68,7 @@ export const ExerciseIllustration:React.FC<Props>=({
  return <div ref={rootRef} data-foco-media-source={source}
   data-foco-media-status={activeUrl?'image':loading?'loading':'unavailable'}
   data-foco-media-phase={activePose?.phase}
+  data-foco-media-layout={activePose?.frame&&activePose.frame.width/activePose.frame.height>1.6?'landscape':undefined}
   role="group" aria-label={'Ilustração do exercício '+exerciseName}
   className={'foco-repdb-media relative isolate overflow-hidden rounded-2xl '+(compact?'foco-repdb-media-compact ':'')+(interactive&&hasPair?'has-pose-controls ':'')+className}>
   {activeUrl?<>
