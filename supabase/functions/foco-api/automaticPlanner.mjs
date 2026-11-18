@@ -2,7 +2,9 @@ import { catalogExercise } from './trainingCatalog.mjs';
 import { assessTrainingSafety, normalizeScienceExercises, auditScientificWorkout, sciencePlanSummary,
   sessionExerciseRange, estimateTrainingSessionMinutes } from './trainingScience.mjs';
 
-export const AUTOMATIC_PLANNER_VERSION = 'foco-rules-2026.3';
+export const AUTOMATIC_PLANNER_VERSION = 'foco-rules-2026.4';
+// Explicit product requirement; not a universal clinical dose recommendation.
+export const MIN_AUTOMATIC_EXERCISES_PER_DAY = 4;
 export class PlannerError extends Error {
   constructor(code, message) { super(message); this.name='PlannerError'; this.status=409; this.code=code; }
 }
@@ -16,9 +18,9 @@ const key = value => {
 // Each entry is an exact catalogue movement plus its actual equipment. These
 // are versioned product templates derived from the supplied dossier, not claims
 // of individual clinical assessment or professional certification of each plan.
-const choice = (name, equipment, cue) => ({ name, equipment:equipment.split(','), cue });
+const choice = (name, equipment, cue, pattern = name) => ({ name, equipment:equipment.split(','), cue, pattern });
 const ROLES = {
-  Peitoral:[choice('Supino reto com barra','bar,banco','Mantenha punhos alinhados e amplitude confortável.'),choice('Supino reto com halteres','halter,banco','Controle a descida e mantenha apoio estável.'),choice('Supino na máquina','maquina','Ajuste o banco e controle a amplitude.'),choice('Flexão de braços','corpo','Mantenha o tronco estável e amplitude tolerada.')],
+  Peitoral:[choice('Supino reto com barra','bar,banco','Mantenha punhos alinhados e amplitude confortável.','horizontal'),choice('Supino reto com halteres','halter,banco','Controle a descida e mantenha apoio estável.','horizontal'),choice('Supino na máquina','maquina','Ajuste o banco e controle a amplitude.','horizontal'),choice('Flexão de braços','corpo','Mantenha o tronco estável e amplitude tolerada.','horizontal'),choice('Supino inclinado com halteres','halter,banco','Use apoio estável e controle a descida.','inclinado'),choice('Crucifixo com halteres','halter,banco','Mantenha leve flexão dos cotovelos e amplitude confortável.','aducao'),choice('Peck deck','maquina','Ajuste os apoios e aproxime os braços sem embalar o tronco.','aducao'),choice('Crossover nas polias','polia','Mantenha o tronco estável e controle a abertura dos braços.','aducao')],
   Costas:[choice('Remada curvada com barra','bar','Mantenha o tronco estável e puxe de forma controlada.'),choice('Puxada frontal na polia','polia','Puxe sem embalar o tronco.'),choice('Remada unilateral com halter','halter,banco','Use apoio estável e controle a descida.'),choice('Remada baixa no cabo','polia','Puxe sem compensar com a lombar.'),choice('Remada invertida','bar','Mantenha alinhamento do tronco e apoio estável.')],
   Quadríceps:[choice('Agachamento livre com barra','bar','Mantenha os pés estáveis e amplitude confortável.'),choice('Agachamento goblet','halter','Mantenha apoio estável e controle a descida.'),choice('Leg press 45 graus','maquina','Mantenha a pelve apoiada e amplitude tolerada.'),choice('Agachamento com peso corporal','corpo','Controle a descida com apoio estável.')],
   Posteriores:[choice('Levantamento terra romeno','bar','Faça a dobradiça do quadril com a coluna estável.'),choice('Stiff com halteres','halter','Recue o quadril e controle a amplitude.'),choice('Mesa flexora','maquina','Ajuste os apoios e evite compensações.'),choice('Ponte de glúteos com pés no chão','corpo','Eleve o quadril com controle e tronco estável.')],
@@ -28,7 +30,7 @@ const ROLES = {
   Tríceps:[choice('Tríceps pulley com corda','polia','Mantenha os cotovelos estáveis.'),choice('Tríceps francês unilateral com halter','halter','Use amplitude confortável e evite compensações.'),choice('Flexão de braços com pegada fechada','corpo','Mantenha o tronco alinhado e amplitude tolerada.')],
   Panturrilhas:[choice('Panturrilha em pé na máquina','maquina','Use apoio estável e controle a subida e a descida.'),choice('Panturrilha em pé com halteres','halter','Mantenha equilíbrio e amplitude confortável.'),choice('Panturrilha em pé unilateral','corpo','Use apoio estável e controle o movimento.')],
   Trapézio:[choice('Encolhimento com halteres','halter','Eleve os ombros com controle, sem projetar a cabeça.'),choice('Encolhimento com barra','bar','Mantenha os braços estáveis e controle o movimento.')],
-  Antebraços:[choice('Flexão de punho com halteres','halter','Apoie os antebraços e controle a amplitude.'),choice('Flexão de punho com barra','bar','Use apoio estável e amplitude confortável.')],
+  Antebraços:[choice('Flexão de punho com halteres','halter','Apoie os antebraços e controle a amplitude.','flexao'),choice('Flexão de punho com barra','bar','Use apoio estável e amplitude confortável.','flexao'),choice('Flexão de punho na polia','polia','Apoie os antebraços e mantenha os cotovelos estáveis.','flexao'),choice('Extensão de punho com halteres','halter','Apoie os antebraços e eleve o dorso das mãos com controle.','extensao'),choice('Extensão de punho com barra','bar','Apoie os antebraços e use amplitude confortável.','extensao'),choice('Extensão de punho na polia','polia','Mantenha o apoio dos antebraços e controle o retorno.','extensao')],
   Lombar:[choice('Bird dog','corpo','Estenda membros alternados com o tronco estável e respiração livre.')],
   Adutores:[choice('Adução de quadril na máquina','maquina','Controle o retorno com amplitude confortável.'),choice('Adução de quadril deitado de lado','corpo','Mantenha o tronco estável e controle o movimento.')],
   Abdutores:[choice('Abdução de quadril na máquina','maquina','Use amplitude confortável e controle o retorno.'),choice('Abdução de quadril deitado de lado','corpo','Mantenha a pelve estável e controle a amplitude.')],
@@ -135,16 +137,20 @@ export function buildAutomaticWorkout({ days=/** @type {string[]} */([]), experi
   const equipment=plannerEquipment(equipmentAvailable), excluded=new Set(excludedExercises.map(normalize));
   const profile=goalProfile(goal,experience);
   const history=new Set(goalProfile(previousGoal,experience).id===profile.id?previousExercises.map(ex=>normalize(typeof ex==='string'?ex:ex.exercise_name)):[]);
-  const available=WEEKDAYS.filter(d=>days.includes(d)),max=sessionExerciseRange(sessionMinutes).max;
+  const available=WEEKDAYS.filter(d=>days.includes(d)),max=Math.max(MIN_AUTOMATIC_EXERCISES_PER_DAY,sessionExerciseRange(sessionMinutes).max);
   // Frequency is an explicit user choice. Distribute the weekly dose across
   // every selected day; reject a conflict instead of silently dropping sessions.
   let lastIssue='Tempo insuficiente para cobrir os padrões e prioridades.';
   for(const schedule of scheduleCandidates(available)){
     const trainingDays=schedule.days,kinds=schedule.kinds,entries=[];
+    let reservingMinimum=true;
     const auditOptions={days:trainingDays,experience,sessionMinutes,enforceExerciseRange:false,countCatalogPrimary:true};
     const fits=items=>trainingDays.every(day=>{
       const daily=items.filter(ex=>ex.training_day===day);
-      return daily.length<=max&&estimateTrainingSessionMinutes(daily)<=sessionMinutes;
+      // Reserve the minimum time for missing movements before adding sets.
+      // One set + transition costs at least 2.5 minutes in the shared estimate.
+      const reservedMinutes=Math.max(0,MIN_AUTOMATIC_EXERCISES_PER_DAY-daily.length)*2.5;
+      return daily.length<=max&&estimateTrainingSessionMinutes(daily)+reservedMinutes<=sessionMinutes;
     })&&auditAutomaticRecovery(items).ok&&auditScientificWorkout(items,auditOptions).ok;
     const eligible=(role,di)=>ROLES[role].filter(c=>c.equipment.every(tag=>equipment.has(tag))&&!excluded.has(normalize(c.name)))
       .map((c,i)=>{
@@ -161,15 +167,19 @@ export function buildAutomaticWorkout({ days=/** @type {string[]} */([]), experi
         reps_min:reps[0],reps_max:reps[1],rest_seconds:role==='Core'?60:compound?profile.rest:profile.accessoryRest,
         rir_target:profile.rir,suggested_load_kg:0,notes:choice.cue}],{experience})[0];
     };
-    const place=(role,onlyDay=-1)=>{
+    const place=(role,onlyDay=-1,allowAdditional=false)=>{
       const ranked=trainingDays.map((day,di)=>({di,count:entries.filter(e=>e.training_day===day).length}))
         .filter(({di})=>(onlyDay<0||di===onlyDay)&&TEMPLATES[kinds[di]].includes(role))
         .sort((a,b)=>a.count-b.count||a.di-b.di);
       for(const {di} of ranked){
-        if(entries.some(e=>e.training_day===trainingDays[di]&&e.muscle_group===role))continue;
-        for(const c of eligible(role,di)){
+        const sameRole=entries.filter(e=>e.training_day===trainingDays[di]&&e.muscle_group===role);
+        if(sameRole.length&&(!allowAdditional||sameRole.length>=2))continue;
+        const usedPatterns=new Set(sameRole.map(e=>ROLES[role].find(c=>c.name===e.exercise_name)?.pattern));
+        const choices=eligible(role,di).sort((a,b)=>Number(usedPatterns.has(a.pattern))-Number(usedPatterns.has(b.pattern))||a.rank-b.rank);
+        for(const c of choices){
+          if(entries.some(e=>e.training_day===trainingDays[di]&&normalize(e.exercise_name)===normalize(c.name)))continue;
           if(!catalogExercise(c.name)?.primary.includes(role))continue;
-          for(const count of [...new Set([role==='Core'?2:profile.sets,2,1])]){
+          for(const count of reservingMinimum?[1]:[...new Set([role==='Core'?2:profile.sets,2,1])]){
             const ex=make(c,role,di,count);
             if(fits([...entries,ex])){entries.push(ex);return true;}
           }
@@ -189,16 +199,40 @@ export function buildAutomaticWorkout({ days=/** @type {string[]} */([]), experi
     if(failed)continue;
     // Dedicated calves and core are not covered by a squat/row stabilizer label.
     for(const role of ['Panturrilhas','Core'])if(!entries.some(e=>exposure(e).direct.has(role)))place(role);
-    // Keep every chosen strength day useful; short days may contain two patterns.
-    for(let di=0;di<trainingDays.length;di++){
+    // Complete the most constrained sessions first (notably the seventh day),
+    // before neighboring days spend their recovery slots on optional core work.
+    const minimumOrder=trainingDays.map((_,di)=>di).sort((a,b)=>TEMPLATES[kinds[a]].length-TEMPLATES[kinds[b]].length||a-b);
+    for(const di of minimumOrder){
       const daily=()=>entries.filter(e=>e.training_day===trainingDays[di]);
       for(const role of TEMPLATES[kinds[di]]){
-        if(daily().length>=2)break;
+        if(daily().length>=MIN_AUTOMATIC_EXERCISES_PER_DAY)break;
         place(role,di);
       }
-      if(daily().length<2){failed=true;break;}
+      // Distinct movements may share a muscle group. This fills a push day
+      // without inventing a fourth muscle or using a duplicate exercise.
+      for(const role of TEMPLATES[kinds[di]]){
+        if(daily().length>=MIN_AUTOMATIC_EXERCISES_PER_DAY)break;
+        place(role,di,true);
+      }
+      if(daily().length<MIN_AUTOMATIC_EXERCISES_PER_DAY){
+        lastIssue='Não foi possível montar pelo menos quatro exercícios distintos em '+trainingDays[di]+' respeitando tempo, equipamentos, volume e recuperação.';
+        failed=true;break;
+      }
     }
     if(failed)continue;
+    reservingMinimum=false;
+    // Start with one set per reserved movement, then grow toward the goal/level
+    // dose. Earlier greedy three-set choices must not starve a fourth movement.
+    let raised=true;
+    while(raised){
+      raised=false;
+      const indices=entries.map((e,i)=>({e,i})).sort((a,b)=>Number(!priorities.includes(a.e.muscle_group))-Number(!priorities.includes(b.e.muscle_group))||a.e.sets-b.e.sets||a.i-b.i);
+      for(const {i} of indices){
+        if(entries[i].sets>=(entries[i].muscle_group==='Core'?2:profile.sets))continue;
+        const candidate=entries.map((e,j)=>j===i?{...e,sets:e.sets+1}:e);
+        if(fits(candidate)){entries[i]=candidate[i];raised=true;}
+      }
+    }
     // Allocate focus dose BEFORE generic filling. Round-robin avoids starving a
     // later priority; caps and time can still limit the requested emphasis.
     let improved=true;
@@ -224,7 +258,7 @@ export function buildAutomaticWorkout({ days=/** @type {string[]} */([]), experi
       for(const role of TEMPLATES[kinds[di]].filter(r=>['Panturrilhas','Core','Ombros','Bíceps','Tríceps'].includes(r)))place(role,di);
     }
     const audit=auditScientificWorkout(entries,{...auditOptions,priorityMuscles:balanced?BALANCED:priorities,requireBalancedCoverage:true});
-    if(!audit.ok||!fits(entries)){lastIssue=audit.issue||'A combinação não respeita a recuperação.';continue;}
+    if(!audit.ok||!fits(entries)||trainingDays.some(day=>entries.filter(ex=>ex.training_day===day).length<MIN_AUTOMATIC_EXERCISES_PER_DAY)){lastIssue=audit.issue||'A combinação não respeita o mínimo de quatro exercícios e a recuperação.';continue;}
     const report=sciencePlanSummary({frequency:trainingDays.length,experience},audit);
     report.recovery='Um dia completo sem trabalho direcionado do mesmo grupo entre sessões, incluindo sinergistas relevantes e domingo/segunda. É uma regra conservadora de calendário: horários reais e recuperação individual precisam ser acompanhados.';
     report.split_rationale=profile.label+': '+trainingDays.length+' sessões nos '+available.length+' dias escolhidos. '+(kinds[0]==='full'?'Corpo inteiro em dias intercalados.':kinds[0]==='push'?'Empurrar, puxar e pernas, com sinergias conferidas.':'Divisão de superiores/inferiores e padrões de movimento.');
@@ -233,7 +267,7 @@ export function buildAutomaticWorkout({ days=/** @type {string[]} */([]), experi
     if(profile.id==='fat-loss')report.alerts.unshift('A musculação preserva força e massa; repetições altas não garantem emagrecimento. Cardio pode ser registrado separadamente conforme tolerância.');
     const ordered=entries.map((ex,i)=>({ex,i})).sort((a,b)=>trainingDays.indexOf(a.ex.training_day)-trainingDays.indexOf(b.ex.training_day)||Number(!priorities.includes(a.ex.muscle_group))-Number(!priorities.includes(b.ex.muscle_group))||a.i-b.i).map(x=>x.ex);
     return {name:'FOCO · '+profile.label+' · '+trainingDays.length+' dias',goal,weekly_frequency:trainingDays.length,
-      explanation:report.split_rationale+' Objetivo e nível definem repetições, séries, pausas e escolhas. A ficha ativa só muda após sua aprovação.',
+      explanation:report.split_rationale+' Cada sessão tem pelo menos quatro exercícios distintos. Objetivo e nível definem repetições, séries, pausas e escolhas. A ficha ativa só muda após sua aprovação.',
       exercises:ordered,training_science:report,generation:{method:'rules',version:AUTOMATIC_PLANNER_VERSION,ai_calls:0},
       planning:{available_days:available,strength_days:trainingDays,recovery_days:WEEKDAYS.filter(d=>!trainingDays.includes(d)),
         goal_profile:profile.id,priority_mode:balanced?'balanced':'focused',priorities,

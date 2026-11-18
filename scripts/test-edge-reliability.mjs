@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { stripTypeScriptTypes } from 'node:module';
 import { createAiRouter } from '../supabase/functions/foco-api/aiRouter.mjs';
+import { buildAutomaticWorkout, PlannerError } from '../supabase/functions/foco-api/automaticPlanner.mjs';
 
 // Run the actual Edge route/helper implementations with isolated service seams.
 // Storage/Auth/RPC are in memory: no production accounts, emails or AI calls.
@@ -10,9 +11,9 @@ const compiled = stripTypeScriptTypes(source.slice(source.indexOf('const SUPABAS
 let currentDb, currentAdmin, handler;
 globalThis.Deno = { env: { get: key => key === 'SUPABASE_SERVICE_ROLE_KEY' ? 'synthetic-admin' : '' }, serve: value => { handler = value; } };
 class PasswordSecurityError extends Error { constructor(message, status) { super(message); this.status = status; } }
-const api = new Function('createClient', 'PasswordSecurityError', 'assertPasswordNotLeaked', 'createAiRouter', compiled + '\nreturn {auth,dispatch,deleteOwnAccount,legacySessionRequestId,sessions};')(
+const api = new Function('createClient', 'PasswordSecurityError', 'assertPasswordNotLeaked', 'createAiRouter', 'buildAutomaticWorkout', 'PlannerError', compiled + '\nreturn {auth,dispatch,deleteOwnAccount,legacySessionRequestId,sessions};')(
   (_url,key) => key === 'synthetic-admin' ? currentAdmin : currentDb,
-  PasswordSecurityError, async () => {}, createAiRouter,
+  PasswordSecurityError, async () => {}, createAiRouter, buildAutomaticWorkout, PlannerError,
 );
 const user = { id: '11111111-1111-4111-8111-111111111111' };
 const other = '22222222-2222-4222-8222-222222222222';
@@ -153,5 +154,36 @@ await check('registration never invents body measurements when optional fields a
   assert.equal(measurements.length, 1); assert.equal(measurements[0].value, 76.5);
   assert.equal((await handler(req('auth/register', 'POST', { ...body, current_weight_kg: -1 }))).status, 400);
   assert.equal(measurements.length, 1);
+});
+await check('preview, legacy generation and progression review enforce four exercises per selected day without rewriting the active plan', async () => {
+  const weekdays=['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
+  const seed=buildAutomaticWorkout({days:weekdays,goal:'Saúde e qualidade de vida',sessionMinutes:40,equipmentAvailable:'Academia completa'});
+  const oldExercises=weekdays.flatMap(day=>seed.exercises.filter(ex=>ex.training_day===day).slice(0,2)).map((ex,i)=>({...ex,plan_id:'synthetic-active',position:i}));
+  const active={id:'synthetic-active',user_id:user.id,status:'ativo',name:'Ficha anterior',goal:seed.goal,weekly_frequency:7};
+  const rows={profiles:{id:user.id,experience_level:'iniciante'},anamneses:{weekly_frequency:7,preferred_days:weekdays,session_minutes:40,equipment_available:['Academia completa'],priority_muscles:[]},
+    workout_plans:[active],workout_exercises:oldExercises,workout_sessions:[]};
+  const before=structuredClone(rows),recommendations=[];
+  const query=data=>{
+    const q={select:()=>q,eq:()=>q,in:()=>q,order:()=>q,
+      maybeSingle:async()=>({data:Array.isArray(data)?data[0]??null:data,error:null}),single:async()=>({data,error:null}),
+      then:(resolve,reject)=>Promise.resolve({data,error:null}).then(resolve,reject)};
+    return q;
+  };
+  currentDb={auth:{getUser:async()=>({data:{user},error:null})},from:table=>{
+    if(table==='ai_recommendations')return {insert:row=>{assert.equal(row.status,'pending');recommendations.push(row);return query({...row,id:'synthetic-recommendation'});}};
+    assert.ok(Object.hasOwn(rows,table),'Unexpected table '+table);return query(rows[table]);
+  }};
+  const originalFetch=globalThis.fetch;globalThis.fetch=()=>{throw new Error('Automatic planning must not call a provider or network');};
+  try{
+    for(const path of ['workouts/preview','ai/generate-workout','ai/review-progression']){
+      const response=await handler(req(path,'POST',path.endsWith('review-progression')?{review_interval_days:15}:{weekly_frequency:7,available_days:weekdays,session_minutes:40}));
+      const result=await response.json();assert.equal(response.status,200,JSON.stringify(result));
+      assert.equal(result.generation.version,'foco-rules-2026.4');assert.equal(result.generation.ai_calls,0);
+      const plan=result.proposed_plan||result;assert.equal(plan.weekly_frequency,7);
+      for(const day of weekdays)assert.ok(plan.exercises.filter(ex=>ex.training_day===day).length>=4);
+    }
+  }finally{globalThis.fetch=originalFetch;}
+  assert.deepEqual(rows,before,'Existing plans and history must remain unchanged');
+  assert.equal(recommendations.length,1,'Review only stores a pending recommendation for explicit approval');
 });
 console.log(`EDGE RELIABILITY: ${checks} groups passed; no network or production data used.`);

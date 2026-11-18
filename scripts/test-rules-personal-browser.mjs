@@ -9,7 +9,7 @@ const output='work/rules-personal-browser';mkdirSync(output,{recursive:true});co
 const browser=await chromium.launch({headless:true,...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE}:{})});
 try{for(const width of [320,390,768,1440]){
  const context=await browser.newContext({viewport:{width,height:900},serviceWorkers:'block',reducedMotion:'reduce'});
- const fixtures=createAuditFixtures();let previews=0,questions=0,saves=0;const questionPayloads=[],previewPayloads=[],previewResults=[];let replyFails=false,holdPreview=false,releasePreview;const savedPlans=[];
+ const fixtures=createAuditFixtures();let previews=0,questions=0,saves=0;const questionPayloads=[],previewPayloads=[],previewResults=[];let replyFails=false,holdPreview=false,releasePreview,shortPreview=false,oldVersionPreview=false;const savedPlans=[];
  await context.route('**/*',async route=>{
   const request=route.request(),url=new URL(request.url());
   if(url.pathname.startsWith('/functions/v1/foco-api')){
@@ -18,8 +18,10 @@ try{for(const width of [320,390,768,1440]){
    if(request.method()==='OPTIONS')return route.fulfill({status:204,headers});
    if(path==='/api/workouts/preview'&&request.method()==='POST'){
     previews++;const b=request.postDataJSON();previewPayloads.push(b);
-    const plan=buildAutomaticWorkout({days:b.available_days,experience:b.experience_level,
+    let plan=buildAutomaticWorkout({days:b.available_days,experience:b.experience_level,
       goal:b.goal,sessionMinutes:b.session_minutes,equipmentAvailable:b.equipment_available,priorityMuscles:b.focus_muscles.split(',')});
+    if(shortPreview){shortPreview=false;const firstDay=plan.planning.strength_days[0];plan={...plan,exercises:plan.exercises.filter(ex=>ex.training_day!==firstDay).concat(plan.exercises.filter(ex=>ex.training_day===firstDay).slice(0,2))};}
+    if(oldVersionPreview){oldVersionPreview=false;plan={...plan,generation:{...plan.generation,version:'foco-rules-2026.3'}};}
     previewResults.push(plan);if(holdPreview){holdPreview=false;await new Promise(resolve=>{releasePreview=resolve;});}return json(200,plan);
    }
    if(path==='/api/ai/personal'&&request.method()==='POST'){
@@ -59,6 +61,15 @@ try{for(const width of [320,390,768,1440]){
  await page.getByText('7 treinos por semana · frequência respeitada',{exact:true}).waitFor();
  assert.equal(previews,2);assert.equal(questions,0);assert.equal(previewPayloads[1].available_days.length,7);
  assert.deepEqual(previewResults[1].planning.strength_days,['segunda','terca','quarta','quinta','sexta','sabado','domingo']);
+ for(const day of previewResults[1].planning.strength_days)assert.ok(previewResults[1].exercises.filter(ex=>ex.training_day===day).length>=4);
+ await page.getByText('Mínimo de quatro exercícios por sessão.',{exact:true}).waitFor();
+ const dayCards=page.getByRole('region',{name:'Dias da proposta semanal',exact:true}).locator('.foco-v4-day');
+ assert.equal(await dayCards.count(),7);
+ for(let index=0;index<7;index++){
+  const day=previewResults[1].planning.strength_days[index],count=previewResults[1].exercises.filter(ex=>ex.training_day===day).length;
+  await dayCards.nth(index).getByText(`${count} exercícios`,{exact:true}).waitFor();
+ }
+ await page.locator('section[aria-labelledby="foco-generated-week"]').screenshot({path:`${output}/weekly-counts-${width}.png`});
  assert.notDeepEqual(previewResults[0].exercises,previewResults[1].exercises);
  if(width===390){
   const audit=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
@@ -77,6 +88,15 @@ try{for(const width of [320,390,768,1440]){
   await page.getByRole('button',{name:'Montar ficha automática',exact:true}).click();
   await page.getByRole('button',{name:'Aprovar e ativar ficha',exact:true}).waitFor();
   assert.equal(previews,4);assert.equal(previewResults[3].goal,'Força Pura & Cargas');
+  for(const invalid of ['short','old-version']){
+   shortPreview=invalid==='short';oldVersionPreview=invalid==='old-version';
+   await page.getByRole('button',{name:invalid==='short'?'Recalcular ficha':'Montar ficha automática',exact:true}).click();
+   await page.getByRole('alert').filter({hasText:'pelo menos quatro exercícios distintos'}).waitFor();
+   assert.equal(await page.getByRole('button',{name:'Aprovar e ativar ficha',exact:true}).count(),0,'An invalid server response cannot be approved');
+   assert.equal(saves,0);
+  }
+  await page.getByRole('button',{name:'Montar ficha automática',exact:true}).click();
+  await page.getByRole('button',{name:'Aprovar e ativar ficha',exact:true}).waitFor();
  }
  await page.getByRole('button',{name:'Aprovar e ativar ficha',exact:true}).click();await page.waitForURL(/view=treinos/);assert.equal(saves,1);assert.equal(savedPlans[0].goal,previewResults.at(-1).goal);assert.deepEqual(savedPlans[0].exercises,previewResults.at(-1).exercises);
  await page.goto(base+'?view=personal');await page.getByRole('heading',{name:'Personal FOCO',exact:true}).waitFor();assert.equal(questions,0);
@@ -99,6 +119,6 @@ try{for(const width of [320,390,768,1440]){
  await page.goto(base+'?view=configuracoes');await page.getByRole('button',{name:'Sair da conta',exact:true}).click();
  await page.getByRole('heading',{name:'Entre na sua conta.',exact:true}).waitFor();
  assert.equal(await page.evaluate(()=>Object.keys(sessionStorage).some(key=>key.startsWith('foco:personal:'))),false,'Logout must clear conversation data');
- assert.deepEqual(errors,[]);results.push({width,status:'PASS',previews,questions,saves,external_writes:0});console.log(`PASS ${width}px: changed preferences, recoverable calendar, retained proposal, approval, Personal, citations, reload and quota recovery`);
+ assert.deepEqual(errors,[]);results.push({width,status:'PASS',previews,questions,saves,minimum_exercises_per_day:Math.min(...previewResults[1].planning.strength_days.map(day=>previewResults[1].exercises.filter(ex=>ex.training_day===day).length)),external_writes:0});console.log(`PASS ${width}px: four-exercise minimum in all seven day cards, changed preferences, calendar, retained proposal, approval, Personal and error recovery`);
  await context.close();
 }}finally{await browser.close();writeFileSync(`${output}/results.json`,JSON.stringify(results,null,2));}

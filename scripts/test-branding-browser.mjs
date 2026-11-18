@@ -116,7 +116,7 @@ try{
  });
  await run('update-notice',{notice:true},async({page})=>{await page.goto(base);const notice=page.locator('[data-foco-update-notice]');await notice.waitFor();assert.equal(await notice.evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(45, 45, 45)');assert.match(await notice.evaluate(e=>getComputedStyle(e).fontFamily),/Space Grotesk/);await axe(page,'update-notice');});
  await run('boot-and-metadata',{auth:false,boot:true},async({page})=>{await page.goto(base);await page.evaluate(()=>document.fonts.ready);assert.equal(await page.title(),'FOCO — Treino e evolução');assert.equal(await page.locator('.boot-logo').getAttribute('alt'),'FOCO');assert.doesNotMatch(await page.locator('meta[name=description]').getAttribute('content'),/por inteligência artificial/);await screenshot(page,'boot');});
- await run('updater-current-brand',{auth:false},async({page})=>{await page.goto(new URL('atualizar.html',base).href);await page.evaluate(()=>document.fonts.ready);assert.equal(await page.locator('[data-foco-release]').innerText(),'3.7');assert.match(await page.locator('main').evaluate(e=>getComputedStyle(e).fontFamily),/Space Grotesk/);await axe(page,'updater');await screenshot(page,'updater');});
+ await run('updater-current-brand',{auth:false},async({page})=>{await page.goto(new URL('atualizar.html',base).href);await page.evaluate(()=>document.fonts.ready);assert.equal(await page.locator('[data-foco-release]').innerText(),'3.8');assert.match(await page.locator('main').evaluate(e=>getComputedStyle(e).fontFamily),/Space Grotesk/);await axe(page,'updater');await screenshot(page,'updater');});
  await run('ptbr-complementary-and-share',{},async({page})=>{
   await open(page,'complementares');assert.equal(await page.getByRole('heading',{name:'Dead Bug',exact:true}).count(),0);assert.equal(await page.getByRole('heading',{name:'Bird Dog',exact:true}).count(),0);
   await open(page,'em-casa');await page.getByRole('button',{name:'Iniciar',exact:true}).click();await page.waitForTimeout(1100);await page.getByRole('button',{name:'Pausar',exact:true}).click();
@@ -124,4 +124,4 @@ try{
  });
 }finally{await browser.close();writeFileSync(out+'/results.json',JSON.stringify({results,safety},null,2));}
 assert.equal(safety.realWrites,0);assert.equal(results.filter(r=>!r.passed).length,0,'Brand regression failures: '+results.filter(r=>!r.passed).map(r=>r.label).join(', '));
-console.log('FOCO 3.7 brand regression: '+results.length+' scenarios passed; no external data mutation.');
+console.log('FOCO brand regression: '+results.length+' scenarios passed; no external data mutation.');

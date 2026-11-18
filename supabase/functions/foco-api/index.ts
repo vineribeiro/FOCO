@@ -2,7 +2,7 @@ import "jsr:@supabase/functions-js@2.119.0/edge-runtime.d.ts";
 import { createClient, type SupabaseClient, type User } from "npm:@supabase/supabase-js@2.119.0";
 import { assertPasswordNotLeaked, PasswordSecurityError } from "./password-security.ts";
 import { createAiRouter, AiError } from "./aiRouter.mjs";
-import { buildAutomaticWorkout, PlannerError, AUTOMATIC_PLANNER_VERSION } from "./automaticPlanner.mjs";
+import { buildAutomaticWorkout, PlannerError, AUTOMATIC_PLANNER_VERSION, MIN_AUTOMATIC_EXERCISES_PER_DAY } from "./automaticPlanner.mjs";
 import { preparePersonalQuestion, validatePersonalAnswer, personalSources, PERSONAL_SCHEMA, PERSONAL_COACH_VERSION } from "./personalCoach.mjs";
 import { catalogExercise } from "./trainingCatalog.mjs";
 import {
@@ -568,8 +568,8 @@ async function dispatch(req: Request, path: string, origin: string): Promise<Res
 
   if (method === "OPTIONS") return new Response(null, { status: 204, headers: { ...CORS, ...(ORIGINS.includes(origin) ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" } : {}) } });
   if (method === "GET" && path === "/api/system/status") return response({
-    app: "FOCO", version: "3.3.0", build: "2026-11-17-ptbr-frequency", science_engine: SCIENCE_ENGINE_VERSION,
-    automatic_planner: AUTOMATIC_PLANNER_VERSION, personal_coach: PERSONAL_COACH_VERSION,
+    app: "FOCO", version: "3.4.0", build: "2026-11-18-minimum-four", science_engine: SCIENCE_ENGINE_VERSION,
+    automatic_planner: AUTOMATIC_PLANNER_VERSION, automatic_planner_min_exercises: MIN_AUTOMATIC_EXERCISES_PER_DAY, personal_coach: PERSONAL_COACH_VERSION,
     ai_status: GROQ_KEY || GEMINI_KEY ? "configured" : "missing_key",
     ai_provider: aiRouter.status().primary,
     ai_primary_provider: aiRouter.status().primary, ai_fallback_provider: aiRouter.status().fallback,

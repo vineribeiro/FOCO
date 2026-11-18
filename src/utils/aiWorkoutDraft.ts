@@ -2,8 +2,23 @@ import type { GeneratedWorkoutProposal } from '../types';
 
 const prefix = 'foco:workout-draft:rules-v1:';
 const ttl = 10 * 60_000;
-export const AUTOMATIC_PLANNER_VERSION = 'foco-rules-2026.3';
+export const AUTOMATIC_PLANNER_VERSION = 'foco-rules-2026.4';
+export const MIN_AUTOMATIC_EXERCISES_PER_DAY = 4;
 export const AVAILABLE_WEEKDAYS = ['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
+export function isCurrentAutomaticProposal(plan: GeneratedWorkoutProposal | null | undefined): boolean {
+  if (!plan || plan.generation?.method !== 'rules' || plan.generation.version !== AUTOMATIC_PLANNER_VERSION
+    || !Array.isArray(plan.exercises) || !Number.isInteger(plan.weekly_frequency)
+    || plan.weekly_frequency < 2 || plan.weekly_frequency > 7) return false;
+  const days: string[] = plan.planning?.strength_days ?? [...new Set(plan.exercises.flatMap(ex => typeof ex.training_day === 'string' ? [ex.training_day] : []))];
+  return days.length === plan.weekly_frequency && new Set(days).size === days.length
+    && days.every(day => AVAILABLE_WEEKDAYS.includes(day))
+    && plan.exercises.every(ex => typeof ex.training_day === 'string' && days.includes(ex.training_day) && typeof ex.exercise_name === 'string' && ex.exercise_name.trim().length > 0)
+    && days.every(day => {
+      const daily = plan.exercises.filter(ex => ex.training_day === day);
+      return daily.length >= MIN_AUTOMATIC_EXERCISES_PER_DAY
+        && new Set(daily.map(ex => ex.exercise_name.trim().toLocaleLowerCase('pt-BR'))).size === daily.length;
+    });
+}
 export function defaultAvailableDays(count: number): string[] {
   return ({2:['segunda','quinta'],3:['segunda','quarta','sexta'],4:['segunda','terca','quinta','sexta'],
     5:AVAILABLE_WEEKDAYS.slice(0,5),6:AVAILABLE_WEEKDAYS.slice(0,6),7:AVAILABLE_WEEKDAYS}[count] || []).slice();
@@ -46,8 +61,7 @@ export function readAiWorkoutDraft(userId: string, fingerprint: string): Generat
       clearAiWorkoutDraft(userId); return null;
     }
     if (draft.fingerprint !== fingerprint || typeof draft.plan?.name !== 'string'
-      || !Array.isArray(draft.plan?.exercises) || !draft.plan.exercises.length
-      || draft.plan.generation?.version !== AUTOMATIC_PLANNER_VERSION) return null;
+      || !isCurrentAutomaticProposal(draft.plan)) return null;
     return draft.plan;
   } catch { return null; }
 }
