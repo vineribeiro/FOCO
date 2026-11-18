@@ -290,7 +290,7 @@ async function manualAndProfile(page, view, viewport) {
   if (view === 'novo-treino') {
     const goal = page.getByLabel('Objetivo Principal', { exact: true });
     await goal.selectOption('Força Pura & Cargas');
-    await page.getByRole('button', { name: 'Montador Manual', exact: true }).click();
+    await page.getByRole('button', { name: 'Montagem manual', exact: true }).click();
     const name = page.getByLabel('Nome da Ficha', { exact: true });
     await name.waitFor();
     assert.equal(await page.locator('#foco-ai-intro').count(), 0, 'AI hero must be absent in manual mode');
@@ -302,7 +302,7 @@ async function manualAndProfile(page, view, viewport) {
     await page.getByLabel('Nome', { exact: true }).first().fill('Exercício manual preservado');
     await page.getByRole('button', { name: 'Montagem automática', exact: true }).click();
     assert.equal(await goal.inputValue(), 'Força Pura & Cargas', 'Switching modes must preserve the AI fields');
-    await page.getByRole('button', { name: 'Montador Manual', exact: true }).click();
+    await page.getByRole('button', { name: 'Montagem manual', exact: true }).click();
     assert.equal(await name.inputValue(), 'Rascunho manual preservado', 'Switching modes must preserve the manual plan name');
     assert.equal(await page.getByLabel('Nome', { exact: true }).first().inputValue(), 'Exercício manual preservado');
     await noGlobalOverflow(page, 'manual mode ' + viewport.width);
@@ -541,9 +541,9 @@ try {
 
   await check('sidebar-one-current-exact-destination', viewports[3], async ({ page }) => {
     const routes = [['dashboard', 'Início'], ['sessao', 'Treinar'], ['progresso', 'Minha evolução'],
-      ['biblioteca', 'Biblioteca'], ['perfil', 'Perfil'], ['treinos', 'Minhas fichas'],
+      ['biblioteca', 'Biblioteca'], ['perfil', 'Perfil'], ['treinos', 'Meus treinos'],
       ['novo-treino', 'Nova ficha'], ['arquivos', 'Avaliação OKOK'], ['anamnese', 'Anamnese'],
-      ['objetivos', 'Meus objetivos'], ['cardio', 'Cardio livre'], ['configuracoes', 'Configurações']];
+      ['objetivos', 'Metas e objetivos'], ['cardio', 'Cardio livre'], ['configuracoes', 'Configurações']];
     for (const [view, label] of routes) {
       await openView(page, view);
       const sidebar = page.getByRole('complementary', { name: 'Navegação do FOCO', exact: true });

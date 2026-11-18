@@ -63,7 +63,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
             </span><ChevronRight size={17}/>
           </button>
         </div>
-      ):<p className="foco-v6-glass rounded-xl p-4 text-sm">Dia sem exercícios programados. Escolhe outro treino na semana ou faz cardio livre.</p>}
+      ):<p className="foco-v6-glass rounded-xl p-4 text-sm">Dia sem exercícios programados. Escolha outro treino na semana ou faz cardio livre.</p>}
       {chosen&&<section className="foco-v6-glass mt-1 rounded-2xl p-4">
         <h3 className="font-bold">{chosen.exercise_name}</h3>
         <p className="mt-2 text-xs text-[#BDC3B9]">{chosen.muscle_group} · {chosen.sets} séries · descanso {chosen.rest_seconds||60}s</p>

@@ -1,12 +1,15 @@
-/* FOCO offline worker — release 2026-11-17-v36-corrected-exercise-images.
+/* FOCO offline worker — release 2026-11-18-v37-brand-consistency.
  * Network-first navigation with a strict revalidation of the application shell.
  * Old caches are removed on activation; user data/local auth is never altered.
  */
-const CACHE_NAME = 'foco-shell-20261117-v36-corrected-exercise-images';
+const CACHE_NAME = 'foco-shell-20261118-v37-brand-consistency';
 const APP_ROOT = '/FOCO/';
 const APP_ASSETS = [
   APP_ROOT,
   APP_ROOT + 'manifest.webmanifest',
+  APP_ROOT + 'foco-brand.css',
+  APP_ROOT + 'fonts/Michroma-Regular.ttf',
+  APP_ROOT + 'fonts/SpaceGrotesk-Variable.ttf',
   APP_ROOT + 'icons/foco.svg',
   APP_ROOT + 'assets/brand/foco-v6-reference-vector.svg',
   APP_ROOT + 'icons/foco-192.png',

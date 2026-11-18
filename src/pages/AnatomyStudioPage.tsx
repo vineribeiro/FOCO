@@ -147,7 +147,7 @@ export const AnatomyStudioPage: React.FC<AtlasPageProps> = ({ setActiveTab }) =>
         </button>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="foco-eyebrow">FOCO · Anatomy Engine v3</p>
+            <p className="foco-eyebrow">FOCO · Atlas em desenvolvimento</p>
             <h1 className="foco-page-title mt-2">Atlas de exercícios</h1>
             <p className="foco-muted mt-3 max-w-2xl">
               Acompanhe a produção das pranchas 3D e confira estudos visuais separadamente das imagens usadas durante o treino.
@@ -254,7 +254,7 @@ export const AnatomyStudioPage: React.FC<AtlasPageProps> = ({ setActiveTab }) =>
             <p className="foco-eyebrow">Importação local · sem servidor</p>
             <h2 id="foco-review-samples-heading" className="foco-section-title mt-2">Artes do pacote de revisão</h2>
             <p className="mt-2 max-w-2xl text-sm text-neutral-400">
-              Abra as três imagens originais em resolução integral no teu navegador.
+              Abra as três imagens originais em resolução integral no seu navegador.
               Essa importação é local e não altera o acervo público nem aprova os exercícios.
             </p>
           </div>
@@ -346,7 +346,7 @@ export const AnatomyStudioPage: React.FC<AtlasPageProps> = ({ setActiveTab }) =>
                     <p className="mt-2 line-clamp-2 text-xs leading-5 text-neutral-400">{(item.primary_muscles || []).join(' · ') || 'Músculos não especificados'}</p>
                   </div>
                   <div className="flex items-center justify-between gap-3 border-t border-white/10 pt-3">
-                    <span className="truncate font-mono text-[10px] text-neutral-500">{item.id}</span>
+                    <span className="truncate foco-numeric text-[10px] text-neutral-500">{item.id}</span>
                     <span className="shrink-0 text-xs text-neutral-400">{item.status === 'approved' ? 'Liberado' : 'Não publicado'}</span>
                   </div>
                 </article>

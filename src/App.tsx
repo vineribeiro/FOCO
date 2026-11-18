@@ -36,9 +36,9 @@ import { AnatomyStudioPage } from './pages/AnatomyStudioPage';
 
 const VIEW_TITLES: Record<string, string> = {
   dashboard: 'Início', detalhes: 'Treino do dia', biblioteca: 'Biblioteca de exercícios',
-  musculos: 'Biblioteca de exercícios', sessao: 'Sessão de treino', 'ia-lab': 'Laboratório de treino',
+  musculos: 'Biblioteca de exercícios', sessao: 'Sessão de treino', 'ia-lab': 'Ferramentas de treino',
   progresso: 'Minha evolução', perfil: 'Meu perfil', configuracoes: 'Configurações',
-  historico: 'Histórico de treinos', treinos: 'Minhas fichas', 'novo-treino': 'Nova ficha',
+  historico: 'Histórico de treinos', treinos: 'Meus treinos', 'novo-treino': 'Nova ficha',
   anamnese: 'Anamnese', revisao: 'Revisão de progressão', arquivos: 'Fichas e avaliações',
   objetivos: 'Metas e objetivos', atlas: 'Atlas muscular', cardio: 'Cardio livre',
   personal: 'Personal FOCO', complementares: 'Exercícios complementares', 'em-casa': 'FOCO em Casa',
@@ -108,22 +108,22 @@ function MainApp() {
 
   if (!isAuthenticated && authLoadError) {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center p-6">
-        <section className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111111] p-6 text-center">
-          <FocoV6Mark size={46} className="mx-auto mb-4" />
-          <h1 className="text-xl font-black tracking-wide">O servidor está demorando</h1>
+      <main className="foco-brand-state">
+        <section className="foco-shell-card">
+          <FocoV6Lockup />
+          <h1 className="text-xl font-bold tracking-wide">O servidor está demorando</h1>
           <p className="mt-3 text-sm leading-6 text-neutral-400">
             O FOCO não conseguiu validar sua sessão a tempo. Isso não significa que sua conta foi perdida.
           </p>
           <button
             onClick={() => void retrySession()}
-            className="mt-6 w-full rounded-xl bg-white px-4 py-3 font-bold text-black"
+            className="foco-shell-action"
           >
             Tentar novamente
           </button>
           <p className="mt-3 text-xs text-neutral-500">{authLoadError}</p>
         </section>
-      </div>
+      </main>
     );
   }
 
@@ -215,7 +215,7 @@ function MainApp() {
               <Settings className="h-[19px] w-[19px]" />
             </button>
             <button type="button" onClick={() => setActiveTab('perfil')} aria-label="Meu perfil"
-              className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-white/30 bg-gradient-to-br from-[#373737] to-[#101010] text-sm font-black tracking-wide text-white shadow-lg"
+              className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-white/30 bg-gradient-to-br from-[#373737] to-[#101010] text-sm font-bold tracking-wide text-white shadow-lg"
               title="Meu perfil">
               {avatarInitials}
             </button>

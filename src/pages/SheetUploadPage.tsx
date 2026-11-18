@@ -285,10 +285,10 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
 
       <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-[#141414] p-1">
         <button type="button" onClick={() => { setUploadMode('workout'); setBodyReport(null); setErrorMsg(null); }} className={`rounded-xl px-3 py-3 text-left transition-colors ${uploadMode === 'workout' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}>
-          <span className="block text-xs font-extrabold">Ficha de treino</span><span className="block text-[10px] mt-1 opacity-75">Importar exercícios</span>
+          <span className="block text-xs font-bold">Ficha de treino</span><span className="block text-[10px] mt-1 opacity-75">Importar exercícios</span>
         </button>
         <button type="button" onClick={() => { setUploadMode('body'); setExtractedResult(null); setErrorMsg(null); }} className={`rounded-xl px-3 py-3 text-left transition-colors ${uploadMode === 'body' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}>
-          <span className="block text-xs font-extrabold">Avaliação OKOK</span><span className="block text-[10px] mt-1 opacity-75">Bioimpedância e metabolismo</span>
+          <span className="block text-xs font-bold">Avaliação OKOK</span><span className="block text-[10px] mt-1 opacity-75">Bioimpedância e metabolismo</span>
         </button>
       </div>
       {/* Alerts */}
@@ -296,7 +296,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       {isLoading && <p role="status" className="py-4 text-xs text-neutral-400">Carregando documentos e avaliações...</p>}
       {loadError && <div role="alert" className="rounded-xl border border-white/20 p-4 text-sm text-neutral-300">
         <p>Não foi possível consultar seus documentos e avaliações. Seus registros não foram alterados. Confira a conexão e tente novamente.</p>
-        <button type="button" onClick={() => void loadFiles()} className="mt-3 min-h-11 rounded-xl bg-white px-4 font-bold text-black">Tentar novamente</button>
+        <button type="button" onClick={() => void loadFiles()} className="foco-v6-primary mt-3 min-h-11 rounded-xl bg-white px-4 font-bold text-black">Tentar novamente</button>
       </div>}
       {errorMsg && (
         <div role="alert" className="p-3.5 rounded-xl bg-white/5 border border-white/20 text-neutral-200 text-xs flex items-center gap-2.5">
@@ -355,7 +355,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
           </p>
 
           {selectedFile && (
-            <div className="mt-3 inline-flex items-center gap-2 text-xs text-white font-mono">
+            <div className="mt-3 inline-flex items-center gap-2 text-xs text-white foco-numeric">
               <CheckCircle2 className="w-3.5 h-3.5 text-white" />
               <span>Arquivo: {(selectedFile.size / 1024).toFixed(1)} KB</span>
             </div>
@@ -437,7 +437,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
             <p className="mt-2 text-sm leading-relaxed text-neutral-300">{displayedBodyReport.summary}</p>
           </section>
           {([['Pontos positivos', displayedBodyReport.strengths], ['Pontos de atenção', displayedBodyReport.attention_points], ['Orientações para o treino', displayedBodyReport.training_recommendations], ['Temas para discutir com nutricionista', displayedBodyReport.nutrition_discussion], ['Perguntas para o profissional', displayedBodyReport.questions_for_professional]] as [string, string[]][]).map(([title, items]) => <section key={title} className="rounded-2xl border border-white/10 bg-[#141414] p-5">
-            <h4 className="text-xs font-black uppercase tracking-wider">{title}</h4><ul className="mt-3 space-y-2">{items.map((item, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-neutral-500">•</span><span>{item}</span></li>)}</ul>
+            <h4 className="text-xs font-bold uppercase tracking-wider">{title}</h4><ul className="mt-3 space-y-2">{items.map((item, index) => <li key={index} className="flex gap-2 text-xs leading-relaxed text-neutral-300"><span className="text-neutral-500">•</span><span>{item}</span></li>)}</ul>
           </section>)}
           <p className="rounded-xl border border-white/10 p-4 text-[11px] leading-relaxed text-neutral-400">Limitações: {displayedBodyReport.limitations} A bioimpedância é uma estimativa, não um diagnóstico; confirme interpretações com profissional de saúde.</p>
         </div>
@@ -447,7 +447,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
           <div className="foco-v4-panel flex items-center gap-3 p-4">
             <CalendarDays className="h-6 w-6 shrink-0 text-neutral-300" />
             <div className="flex-1">
-              <h3 className="text-sm font-extrabold">Última avaliação</h3>
+              <h3 className="text-sm font-bold">Última avaliação</h3>
               <p className="mt-1 text-xs text-neutral-400">{lastBodyDate ? lastBodyDate.toLocaleDateString('pt-BR') : 'Analisada agora'}{daysSinceBody !== null ? ' · há ' + daysSinceBody + ' dias' : ''}. Recomendamos atualizar a cada 15 dias.</p>
             </div>
           </div>
@@ -463,12 +463,12 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
         <section className="foco-extracted-review min-w-0 p-4 sm:p-6 rounded-2xl bg-[#141414] border border-white/30 space-y-5 animate-in fade-in" aria-labelledby="foco-extracted-plan-title">
           <div className="space-y-3 pb-3 border-b border-white/10">
             <div className="min-w-0">
-              <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-widest">
+              <div className="flex items-center gap-2 text-[10px] foco-numeric font-bold text-neutral-400 uppercase tracking-widest">
                 <span>Leitura Concluída</span>
                 <span>·</span>
                 <span>{extractedResult.extracted_exercises.length} Exercícios</span>
               </div>
-              <h3 id="foco-extracted-plan-title" className="text-lg font-black text-white uppercase mt-0.5 [overflow-wrap:anywhere]">
+              <h3 id="foco-extracted-plan-title" className="text-lg font-bold text-white uppercase mt-0.5 [overflow-wrap:anywhere]">
                 {extractedResult.plan_name}
               </h3>
               <p className="text-xs leading-relaxed text-neutral-400 mt-0.5 whitespace-pre-wrap [overflow-wrap:anywhere]">
@@ -487,10 +487,10 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
                   <p className="mt-1 text-xs text-neutral-400 [overflow-wrap:anywhere]">{ex.muscle_group}</p>
                 </div>
                 <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
-                  <div className="min-w-0"><dt className="text-neutral-400">Séries</dt><dd className="mt-1 font-mono font-bold text-white [overflow-wrap:anywhere]">{ex.sets}</dd></div>
-                  <div className="min-w-0"><dt className="text-neutral-400">Repetições</dt><dd className="mt-1 font-mono font-bold text-white [overflow-wrap:anywhere]">{ex.reps_min}-{ex.reps_max}</dd></div>
-                  <div className="min-w-0"><dt className="text-neutral-400">Carga (kg)</dt><dd className="mt-1 font-mono font-bold text-white [overflow-wrap:anywhere]">{ex.suggested_load_kg ?? '—'}</dd></div>
-                  <div className="min-w-0"><dt className="text-neutral-400">Descanso</dt><dd className="mt-1 font-mono font-bold text-white [overflow-wrap:anywhere]">{ex.rest_seconds}s</dd></div>
+                  <div className="min-w-0"><dt className="text-neutral-400">Séries</dt><dd className="mt-1 foco-numeric font-bold text-white [overflow-wrap:anywhere]">{ex.sets}</dd></div>
+                  <div className="min-w-0"><dt className="text-neutral-400">Repetições</dt><dd className="mt-1 foco-numeric font-bold text-white [overflow-wrap:anywhere]">{ex.reps_min}-{ex.reps_max}</dd></div>
+                  <div className="min-w-0"><dt className="text-neutral-400">Carga (kg)</dt><dd className="mt-1 foco-numeric font-bold text-white [overflow-wrap:anywhere]">{ex.suggested_load_kg ?? '—'}</dd></div>
+                  <div className="min-w-0"><dt className="text-neutral-400">Descanso</dt><dd className="mt-1 foco-numeric font-bold text-white [overflow-wrap:anywhere]">{ex.rest_seconds}s</dd></div>
                 </dl>
                 <div className="min-w-0 border-t border-white/10 pt-3">
                   <p className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Observações</p>
@@ -518,7 +518,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
                   <th scope="col" className="py-2 px-2 [overflow-wrap:anywhere]">OBSERVAÇÕES</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-mono">
+              <tbody className="divide-y divide-white/5 foco-numeric">
                 {extractedResult.extracted_exercises.map((ex, idx) => (
                   <tr key={idx} className="align-top hover:bg-white/5">
                     <th scope="row" className="py-2.5 px-2 font-sans font-bold text-white [overflow-wrap:anywhere]">
@@ -527,7 +527,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
                     <td className="py-2.5 px-2 font-sans text-neutral-400 [overflow-wrap:anywhere]">
                       {ex.muscle_group}
                     </td>
-                    <td className="py-2.5 px-2 text-white font-black">
+                    <td className="py-2.5 px-2 text-white font-bold">
                       {ex.sets}
                     </td>
                     <td className="py-2.5 px-2 text-neutral-300">
@@ -552,7 +552,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
               type="button"
               onClick={handleConfirmAndSavePlan}
               disabled={isProcessing}
-              className="w-full sm:w-auto min-h-11 px-5 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
+              className="foco-v6-primary w-full sm:w-auto min-h-11 px-5 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
             >
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>Aprovar e Salvar Ficha</span>
@@ -563,12 +563,12 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
 
       {/* Uploaded History List */}
       <div className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/10 space-y-4">
-        <h3 className="text-xs font-black text-white uppercase tracking-wider">
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider">
           Fichas e Documentos Enviados{!isLoading && !loadError ? ` (${files.length})` : ''}
         </h3>
 
         {!isLoading && !loadError && files.length === 0 && (
-          <p className="text-xs text-neutral-500 py-4 text-center font-mono">
+          <p className="text-xs text-neutral-500 py-4 text-center foco-numeric">
             Nenhum arquivo enviado até o momento.
           </p>
         )}
@@ -586,7 +586,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
                   </div>
                   <div>
                     <p className="font-bold text-white">{file.filename}</p>
-                    <p className="text-[10px] text-neutral-500 font-mono">
+                    <p className="text-[10px] text-neutral-500 foco-numeric">
                       {new Date(file.created_at).toLocaleDateString('pt-BR')} · {file.processing_status === 'processed' ? 'Original salvo · Processado' : file.processing_status === 'failed' ? 'Original salvo · Análise falhou' : file.processing_status === 'processing' ? 'Processando arquivo' : 'Arquivo salvo · Aguardando análise'}
                     </p>
                   </div>

@@ -90,7 +90,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
         aria-pressed={group===g}>{label(g)}</button>)}
     </div>
     {!visible.length?<div className="foco-atlas-empty" role="status">
-      Nenhum movimento corresponde à pesquisa. Tenta outro nome ou grupo muscular.
+      Nenhum movimento corresponde à pesquisa. Tente outro nome ou grupo muscular.
     </div>:<div className="foco-atlas-external-grid foco-repdb-grid">
       {visible.map((item,index)=>{
         const pose=repdbImagePoses(item)[0];

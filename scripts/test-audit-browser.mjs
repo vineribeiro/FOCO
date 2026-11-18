@@ -138,7 +138,7 @@ try {
     assert.equal(await page.getByLabel('Nome Completo', { exact: true }).inputValue(), 'Atleta de Teste');
     await page.getByLabel('Data de Nascimento', { exact: true }).waitFor();
     await auditAxe(page, 'profile');
-    const trigger = page.getByRole('button', { name: 'Excluir Minha Conta Definitivamente', exact: true });
+    const trigger = page.getByRole('button', { name: 'Excluir minha conta', exact: true }).first();
     await trigger.click();
     const dialog = page.getByRole('dialog', { name: 'Confirmar exclusão da conta', exact: true });
     await dialog.waitFor();
@@ -180,9 +180,9 @@ try {
     await openView(page, 'novo-treino');
     await page.getByLabel('Objetivo Principal', { exact: true }).waitFor();
     await auditAxe(page, 'new-workout-ai');
-    await page.getByRole('button', { name: 'Montador Manual', exact: true }).click();
+    await page.getByRole('button', { name: 'Montagem manual', exact: true }).click();
     const initialRows = await page.getByLabel('Nome', { exact: true }).count();
-    await page.getByRole('button', { name: 'Adicionar Exercício', exact: true }).click();
+    await page.getByRole('button', { name: 'Adicionar exercício', exact: true }).click();
     assert.equal(await page.getByLabel('Nome', { exact: true }).count(), initialRows + 1, 'Every repeated exercise row must have its own label');
     assert.equal(await page.getByRole('button', { name: /^Remover exercício / }).count(), initialRows + 1);
     const ids = await page.locator('input[id],select[id],textarea[id]').evaluateAll(nodes => nodes.map(node => node.id));
@@ -194,7 +194,7 @@ try {
   await check('goals-fields-wcag', async () => {
     const { page, context } = await fixturePage();
     await openView(page, 'objetivos');
-    await page.getByLabel('Tipo de Meta', { exact: true }).waitFor();
+    await page.getByLabel('Tipo de objetivo', { exact: true }).waitFor();
     await page.getByText('Meta sintética recuperada', { exact: true }).waitFor();
     await auditAxe(page, 'goals');
     await context.close();

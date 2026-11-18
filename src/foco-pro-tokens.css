@@ -10,4 +10,10 @@
   --foco-pro-font-body:'Space Grotesk',system-ui,sans-serif;
   --foco-pro-font-display:'Michroma','Space Grotesk',sans-serif;
   --foco-pro-font-metric:'Michroma','Space Grotesk',sans-serif;
+  --foco-pro-danger:#FFB4BA; --foco-pro-danger-surface:#48272D; --foco-pro-danger-ink:#341318;
+  --foco-pro-control-border:#62625D;
+  --foco-pro-card-padding:20px; --foco-pro-section-gap:24px;
+}
+html[data-foco-density="compact"] {
+  --foco-pro-card-padding:14px; --foco-pro-section-gap:16px;
 }

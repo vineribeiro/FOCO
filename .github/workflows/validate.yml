@@ -26,6 +26,8 @@ jobs:
         run: npm run lint
       - name: Production frontend build
         run: npm run build
+      - name: Verify canonical brand assets and updater synchronization
+        run: npm run test:brand-assets
       - name: Scientific workout generation rules and safety regression
         run: npm run test:training-science
       - name: Deterministic training and isolated Personal conversation

@@ -182,8 +182,8 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
         <button type="button" onClick={()=>setIntroStep('form')} className="min-h-11 px-3 text-xs text-[#C2C9BB]">Pular</button>
       </div>
       {introStep==='goal'?<>
-        <h1>Qual é o teu <em>objetivo?</em></h1>
-        <p className="foco-v6-onboard-subtitle">Vamos personalizar o FOCO pra tua realidade.</p>
+        <h1>Qual é o seu <em>objetivo?</em></h1>
+        <p className="foco-v6-onboard-subtitle">Vamos personalizar o FOCO pra sua realidade.</p>
         <div className="foco-v6-goal-list">
           {goals.map(goal=><button type="button" className={'foco-v6-goal '+(form.primary_goal===goal.value?'is-selected':'')} key={goal.value}
             aria-pressed={form.primary_goal===goal.value} onClick={()=>updateField('primary_goal',goal.value)}>
@@ -193,8 +193,8 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
         </div>
         <div className="foco-v6-onboarding-footer"><button type="button" className="foco-v6-primary" onClick={()=>setIntroStep('height')}>Avançar <ArrowRight size={18}/></button></div>
       </>:<>
-        <h1>Qual é a tua <em>altura?</em></h1>
-        <p className="foco-v6-onboard-subtitle">Esta informação nos ajuda a contextualizar tuas metas e treinos.</p>
+        <h1>Qual é a sua <em>altura?</em></h1>
+        <p className="foco-v6-onboard-subtitle">Esta informação nos ajuda a contextualizar suas metas e treinos.</p>
         <div className="foco-v6-height-ui">
           <div className="foco-height-control">
             <output htmlFor="foco-onboarding-height" className="foco-height-output"><strong>{heightCm}</strong> <span>cm</span></output>
@@ -215,11 +215,11 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
         <div>
           <div className="mb-2 flex items-center gap-2 text-neutral-400">
             <ClipboardList className="h-4 w-4" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Perfil inteligente FOCO</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Método FOCO</span>
           </div>
-          <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Seu treino. <span className="text-[#E5F88A]">Sua rotina.</span></h1>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Seu treino. <span className="text-[#E5F88A]">Sua rotina.</span></h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-400">
-            Responda para a IA considerar sua rotina, objetivos, prioridades musculares, equipamentos e limites individuais.
+            Responda para o método FOCO considerar sua rotina, objetivos, prioridades musculares, equipamentos e limites individuais.
           </p>
         </div>
         <button
@@ -227,7 +227,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
           onClick={() => setActiveTab('novo-treino')}
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-xs font-bold transition hover:bg-white/10"
         >
-          <Dumbbell className="h-4 w-4" /> Voltar ao criador de treinos
+          <Dumbbell className="h-4 w-4" /> Voltar à montagem da ficha
         </button>
       </div>
 
@@ -240,7 +240,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
             className={`rounded-xl border px-3 py-3 text-left transition ${step === index ? 'border-[#E5F88A] bg-[#E5F88A] text-[#13170D]' : index < step ? 'border-white/30 bg-white/10 text-white' : 'border-white/10 bg-[#111] text-neutral-500'}`}
             aria-current={step === index ? 'step' : undefined}
           >
-            <span className="mb-1 block text-[10px] font-black uppercase tracking-widest">Etapa 0{index + 1}</span>
+            <span className="mb-1 block text-[10px] font-bold uppercase tracking-widest">Etapa 0{index + 1}</span>
             <span className="block text-xs font-bold">{title}</span>
           </button>
         ))}
@@ -255,8 +255,8 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
       {successMsg && (
         <div className="flex flex-col gap-3 rounded-xl border border-emerald-400/25 bg-emerald-950/20 p-4 text-sm text-emerald-100 sm:flex-row sm:items-center sm:justify-between">
           <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 shrink-0" /> {successMsg}</span>
-          <button type="button" onClick={() => setActiveTab('novo-treino')} className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2 text-xs font-black text-black">
-            Gerar treino <ArrowRight className="h-3.5 w-3.5" />
+          <button type="button" onClick={() => setActiveTab('novo-treino')} className="foco-v6-primary inline-flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2 text-xs font-bold text-black">
+            Montar ficha <ArrowRight className="h-3.5 w-3.5" />
           </button>
         </div>
       )}
@@ -272,7 +272,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
             <section className={`${panelClass} space-y-5`}>
               <div className="flex items-center gap-3 border-b border-white/10 pb-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E5F88A] text-[#13170D]"><Target className="h-5 w-5" /></div>
-                <div><h2 className="font-black">Seu objetivo e seu histórico</h2><p className="mt-0.5 text-xs text-neutral-400">A base para dimensionar o treino.</p></div>
+                <div><h2 className="font-bold">Seu objetivo e seu histórico</h2><p className="mt-0.5 text-xs text-neutral-400">A base para dimensionar o treino.</p></div>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
@@ -321,7 +321,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
             <section className={`${panelClass} space-y-5`}>
               <div className="flex items-center gap-3 border-b border-white/10 pb-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E5F88A] text-[#13170D]"><Dumbbell className="h-5 w-5" /></div>
-                <div><h2 className="font-black">Treino que cabe na sua vida</h2><p className="mt-0.5 text-xs text-neutral-400">A ordem em que você escolhe músculos define a prioridade.</p></div>
+                <div><h2 className="font-bold">Treino que cabe na sua vida</h2><p className="mt-0.5 text-xs text-neutral-400">A ordem em que você escolhe músculos define a prioridade.</p></div>
               </div>
 
               <div>
@@ -336,12 +336,12 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
                     return (
                       <button key={muscle} type="button" aria-pressed={selected} onClick={() => toggleList('priority_muscles', muscle)} className={`flex min-h-[58px] items-center justify-between gap-2 rounded-xl border p-3 text-left transition ${selected ? 'border-[#E5F88A] bg-[#E5F88A] text-[#13170D]' : 'border-white/10 bg-[#090909] text-neutral-300 hover:border-white/35'}`}>
                         <span className="text-xs font-bold">{muscle}</span>
-                        {selected ? <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-black text-white">{index + 1}</span> : <span className="h-4 w-4 rounded-full border border-white/20" />}
+                        {selected ? <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white">{index + 1}</span> : <span className="h-4 w-4 rounded-full border border-white/20" />}
                       </button>
                     );
                   })}
                 </div>
-                <p className="mt-2 text-[11px] text-neutral-500">Você pode escolher vários grupos, inclusive glúteos, quadríceps e posteriores. Toque novamente para remover. A IA manterá equilíbrio e recuperação.</p>
+                <p className="mt-2 text-[11px] text-neutral-500">Você pode escolher vários grupos, inclusive glúteos, quadríceps e posteriores. Toque novamente para remover. O método FOCO distribui os estímulos para respeitar o equilíbrio e a recuperação.</p>
               </div>
 
               <div>
@@ -375,7 +375,7 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
             <section className={`${panelClass} space-y-5`}>
               <div className="flex items-center gap-3 border-b border-white/10 pb-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E5F88A] text-[#13170D]"><ShieldCheck className="h-5 w-5" /></div>
-                <div><h2 className="font-black">Limites e recuperação</h2><p className="mt-0.5 text-xs text-neutral-400">Responda apenas o que se sentir confortável em compartilhar.</p></div>
+                <div><h2 className="font-bold">Limites e recuperação</h2><p className="mt-0.5 text-xs text-neutral-400">Responda apenas o que se sentir confortável em compartilhar.</p></div>
               </div>
 
               <div>
@@ -420,11 +420,11 @@ export const AnamnesisPage: React.FC<AnamnesisPageProps> = ({ setActiveTab }) =>
               <ArrowLeft className="h-4 w-4" /> Etapa anterior
             </button>
             {step < 2 ? (
-              <button type="button" onClick={() => { setErrorMsg(null); setStep((current) => Math.min(2, current + 1)); }} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#E5F88A] px-5 py-3 text-xs font-black text-[#13170D] transition hover:bg-[#E2FF77]">
+              <button type="button" onClick={() => { setErrorMsg(null); setStep((current) => Math.min(2, current + 1)); }} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#E5F88A] px-5 py-3 text-xs font-bold text-[#13170D] transition hover:bg-[#E2FF77]">
                 Continuar <ArrowRight className="h-4 w-4" />
               </button>
             ) : (
-              <button type="button" disabled={isSaving} onClick={handleSave} className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-xs font-black text-black transition hover:bg-neutral-200 disabled:opacity-50">
+              <button type="button" disabled={isSaving} onClick={handleSave} className="foco-v6-primary inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-xs font-bold text-black transition hover:bg-neutral-200 disabled:opacity-50">
                 {isSaving ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" /> : <Sparkles className="h-4 w-4" />}
                 {isSaving ? 'Salvando perfil...' : 'Salvar anamnese'}
               </button>

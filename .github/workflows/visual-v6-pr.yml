@@ -49,6 +49,10 @@ jobs:
         env:
           FOCO_VISUAL_BASE: http://127.0.0.1:4173/FOCO/
         run: node scripts/test-visual-internal.mjs
+      - name: Verify branding, error recovery, controls and share artwork
+        env:
+          FOCO_BRAND_OUTPUT: visual-qa/brand-regression
+        run: npm run test:branding-browser
       - name: Export tiny synthetic-screen previews for design review
         if: always()
         run: |

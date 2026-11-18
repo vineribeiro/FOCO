@@ -12,7 +12,7 @@ export const BottomNavBar:React.FC<BottomNavBarProps>=({activeTab,setActiveTab})
     {id:'dashboard',label:'Início',icon:House},
     {id:'sessao',label:'Treinar',icon:Dumbbell},
     {id:'progresso',label:'Evolução',icon:ChartNoAxesColumnIncreasing},
-    {id:'treinos',label:'Agenda',icon:CalendarDays},
+    {id:'treinos',label:'Meus treinos',icon:CalendarDays},
     {id:'perfil',label:'Perfil',icon:UserRound},
   ] as const;
   const route=(tab:string)=>setActiveTab(tab);

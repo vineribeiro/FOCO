@@ -1,3 +1,4 @@
+import { createFocoStory } from '../utils/focoStory';
 import { FOCO_VISUAL_RELEASE } from '../utils/release';
 import React, { useState, useEffect, useRef } from 'react';
 import { FocoV6Status, FocoV6Segment } from '../components/FocoV6UI';
@@ -251,111 +252,19 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   const createStoryImage = async (): Promise<Blob | null> => {
     const completed = sessionCompletedModal;
     if (!completed) return null;
-    const canvas = document.createElement('canvas');
-    canvas.width = 1080;
-    canvas.height = 1920;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
-    const W = 1080, H = 1920;
-    const lime = '#E5F88A', white = '#F6F7F3', muted = '#A6ADA5';
-    const minutes = Math.max(0, Math.round(Number(completed.duration || 0) / 60));
-    const date = new Date(completed.finishedAt || Date.now());
-    const dateLabel = date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '').toUpperCase();
-    const timeLabel = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    const workoutName = String(completed.planName || 'TREINO LIVRE').trim().toLocaleUpperCase('pt-BR') || 'TREINO LIVRE';
-    const setsDone = Math.max(0, Number(completed.setsDone) || 0);
-    const exercisesDone = Math.max(0, Number(completed.exercisesDone) || 0);
     const kcal = Number(completed.caloriesEstimate);
     const hasKcal = completed.caloriesEstimate !== null && completed.caloriesEstimate !== undefined && Number.isFinite(kcal) && kcal >= 0;
-
-    // Background com profundidade controlada, sem efeitos externos ou imagens pixeladas.
-    ctx.fillStyle = '#080B09'; ctx.fillRect(0, 0, W, H);
-    const glow = ctx.createRadialGradient(760, 610, 80, 760, 610, 890);
-    glow.addColorStop(0, 'rgba(114,160,40,.19)');
-    glow.addColorStop(.48, 'rgba(38,65,26,.09)');
-    glow.addColorStop(1, 'rgba(8,11,9,0)');
-    ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
-    // Linhas de movimento originais, em vez de uma ilustração genérica de halteres.
-    ctx.save(); ctx.translate(640, 780); ctx.rotate(-.27);
-    for (let i = 0; i < 9; i++) {
-      const x = (i - 4) * 118;
-      ctx.strokeStyle = i === 4 ? 'rgba(213,255,64,.35)' : 'rgba(213,255,64,.075)';
-      ctx.lineWidth = i === 4 ? 4 : 2;
-      ctx.beginPath(); ctx.moveTo(x, -380); ctx.lineTo(x + 175, 380); ctx.stroke();
-    }
-    ctx.restore();
-    ctx.strokeStyle = 'rgba(213,255,64,.22)';
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(775, 730, 350, -2.25, .65); ctx.stroke();
-    ctx.beginPath(); ctx.arc(775, 730, 415, -2.1, .3); ctx.stroke();
-    // Marca vetorial compartilhada com o app.
-    ctx.save(); ctx.translate(78, 104); ctx.scale(.95, .95);
-    ctx.fillStyle = lime;
-    ctx.fill(new Path2D('M7 47L19 17H35L22 47H7Z'));
-    ctx.fill(new Path2D('M28 69L53 6H69L44 69H28Z'));
-    ctx.fill(new Path2D('M57 43L65 23H78L70 43H57Z'));
-    ctx.restore();
-    const text = (value: string, x: number, y: number, font: string, color = white) => {
-      ctx.fillStyle = color; ctx.font = font; ctx.textAlign = 'left'; ctx.fillText(value, x, y);
-    };
-    const line = (y: number) => { ctx.fillStyle = 'rgba(246,247,243,.16)'; ctx.fillRect(78, y, 924, 2); };
-    text('FOCO', 174, 153, '900 74px Arial, sans-serif');
-    ctx.textAlign = 'right'; ctx.fillStyle = muted; ctx.font = '700 25px Arial, sans-serif';
-    ctx.fillText('TRAINING SYSTEM', 1000, 139); ctx.textAlign = 'left';
-    line(210);
-    text('SESSÃO FINALIZADA', 80, 292, '700 29px Arial, sans-serif', lime);
-    text('FEITO.', 67, 490, '900 202px Arial, sans-serif');
-    text('MAIS UM DIA', 79, 570, '800 55px Arial, sans-serif');
-    text('DE EVOLUÇÃO.', 79, 638, '800 55px Arial, sans-serif');
-    // Área central com nome do treino, quebrado por largura e não por caracteres.
-    ctx.fillStyle = 'rgba(9,14,9,.83)';
-    ctx.fillRect(77, 825, 926, 280);
-    ctx.strokeStyle = 'rgba(213,255,64,.34)'; ctx.lineWidth = 2;
-    ctx.strokeRect(77, 825, 926, 280);
-    ctx.fillStyle = lime; ctx.fillRect(77, 825, 10, 280);
-    text('TREINO CONCLUÍDO', 113, 885, '700 25px Arial, sans-serif', lime);
-    const maxWidth = 838;
-    const fontSize = workoutName.length > 38 ? 57 : workoutName.length > 22 ? 67 : 83;
-    ctx.font = '900 ' + fontSize + 'px Arial, sans-serif';
-    const words = workoutName.split(/\s+/);
-    const lines: string[] = [];
-    let current = '';
-    for (const word of words) {
-      const next = current ? current + ' ' + word : word;
-      if (current && ctx.measureText(next).width > maxWidth) { lines.push(current); current = word; }
-      else current = next;
-    }
-    if (current) lines.push(current);
-    const visibleLines = lines.slice(0, 2);
-    if (lines.length > 2) {
-      let last = visibleLines[1];
-      while (last && ctx.measureText(last + '…').width > maxWidth) last = last.slice(0, -1);
-      visibleLines[1] = last + '…';
-    }
-    ctx.fillStyle = white;
-    visibleLines.forEach((value, index) => ctx.fillText(value, 111, 974 + index * 88, maxWidth));
-    // Números de maior interesse, com hierarquia forte e espaçamento generoso.
-    line(1170);
-    text('DURAÇÃO', 81, 1243, '700 26px Arial, sans-serif', muted);
-    text('SÉRIES', 574, 1243, '700 26px Arial, sans-serif', muted);
-    text(String(minutes), 73, 1384, '900 144px Arial, sans-serif');
-    text('MIN', 317, 1381, '700 36px Arial, sans-serif', lime);
-    text(String(setsDone), 567, 1384, '900 144px Arial, sans-serif');
-    line(1434);
-    text('EXERCÍCIOS', 81, 1510, '700 26px Arial, sans-serif', muted);
-    text('GASTO ESTIMADO', 574, 1510, '700 26px Arial, sans-serif', muted);
-    text(String(exercisesDone), 76, 1616, '900 91px Arial, sans-serif');
-    text(hasKcal ? '~' + Math.round(kcal) + ' KCAL' : 'NÃO DISP.', 570, 1612,
-      hasKcal ? '900 67px Arial, sans-serif' : '700 47px Arial, sans-serif', white);
-    if (hasKcal) text('VALOR APROXIMADO', 574, 1661, '600 22px Arial, sans-serif', muted);
-    line(1720);
-    text(dateLabel + '  /  ' + timeLabel, 81, 1792, '700 28px Arial, sans-serif', muted);
-    ctx.textAlign = 'right'; ctx.fillStyle = lime; ctx.font = '800 30px Arial, sans-serif';
-    ctx.fillText('CONTINUA.', 998, 1792);
-    ctx.textAlign = 'left';
-    text('SEU PROGRESSO. SEU RITMO.', 81, 1852, '700 24px Arial, sans-serif', white);
-    return new Promise<Blob | null>(resolve => {
-      try { canvas.toBlob(resolve, 'image/png'); } catch { resolve(null); }
+    return createFocoStory({
+      title: completed.planName || 'Treino concluído',
+      subtitle: 'Sessão registrada no FOCO',
+      stats: [
+        { label:'Duração', value:Math.max(0, Math.round(Number(completed.duration || 0) / 60)) + ' min' },
+        { label:'Séries concluídas', value:String(Math.max(0, Number(completed.setsDone) || 0)) },
+        { label:'Exercícios concluídos', value:String(Math.max(0, Number(completed.exercisesDone) || 0)) },
+        { label:'Gasto estimado', value:hasKcal ? '~' + Math.round(kcal) + ' kcal' : 'Sem estimativa' },
+      ],
+      footnote: hasKcal ? 'O gasto de energia é uma estimativa aproximada.' : 'Resultado calculado dos registros desta sessão.',
+      recordedAt: new Date(completed.finishedAt || Date.now()),
     });
   };
 
@@ -379,7 +288,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
   }, [sessionCompletedModal]);
 
   const shareStory = async (download = false) => {
-    const blob = await createStoryImage(); if (!blob) { setErrorAlert('Não foi possível gerar o card.'); return; }
+    const blob = await createStoryImage(); if (!blob) { setErrorAlert('Não foi possível preparar a imagem. Confira a conexão e tente novamente.'); return; }
     const file = new File([blob], 'foco-treino-story.png', { type: 'image/png' });
     if (!download && navigator.share && navigator.canShare?.({ files: [file] })) {
       try { await navigator.share({ files: [file], title: 'Meu treino FOCO' }); return; }
@@ -603,7 +512,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
     return (
       <div className="py-20 text-center text-neutral-400">
         <Clock className="w-8 h-8 animate-spin mx-auto text-white mb-3" />
-        <p className="text-xs font-mono">Carregando sessão...</p>
+        <p className="text-xs foco-numeric">Carregando sessão...</p>
       </div>
     );
   }
@@ -779,11 +688,11 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${sessionStarted ? 'bg-[#E5F88A] animate-ping' : 'bg-neutral-600'}`} />
-              <span className="text-xs uppercase font-extrabold tracking-wider text-white">
+              <span className="text-xs uppercase font-bold tracking-wider text-white">
                 {sessionStarted ? 'Treino em Andamento' : 'Sessão Pronta'}
               </span>
             </div>
-            <h2 className="mt-1 line-clamp-2 text-lg font-extrabold leading-tight text-white sm:max-w-[420px]">
+            <h2 className="mt-1 line-clamp-2 text-lg font-bold leading-tight text-white sm:max-w-[420px]">
               {currentWorkoutTitle}
             </h2>
           </div>
@@ -812,14 +721,14 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
 
         <div className="grid grid-cols-[1fr_auto] gap-4 rounded-2xl border border-white/10 bg-white/[.035] p-3 sm:p-4">
           <div className="min-w-0">
-            <p className="text-xs text-neutral-300">Séries concluídas: {currentTotalSetsDone} de {currentTotalSets} <span className="float-right font-mono">{completionRate}%</span></p>
+            <p className="text-xs text-neutral-300">Séries concluídas: {currentTotalSetsDone} de {currentTotalSets} <span className="float-right foco-numeric">{completionRate}%</span></p>
             <div className="foco-v4-progress-track mt-3" role="progressbar" aria-label="Progresso de séries concluídas" aria-valuemin={0} aria-valuemax={Math.max(1, currentTotalSets)} aria-valuenow={currentTotalSetsDone}><div className="foco-v4-progress-fill"
               style={{ width: completionRate + '%' }} /></div>
           </div>
           <div className="flex items-center gap-3 border-l border-white/10 pl-3">
             <Timer className="h-5 w-5 text-neutral-400" />
             <div><span className="block text-xs text-neutral-300">Descanso</span>
-              <strong className="font-mono text-base tabular-nums">{restTimerActive ? formatTime(restSecondsRemaining) : '—'}</strong></div>
+              <strong className="foco-numeric text-base tabular-nums">{restTimerActive ? formatTime(restSecondsRemaining) : '—'}</strong></div>
             {restTimerActive && <button type="button" onClick={restIsPaused ? resumeTimer : pauseTimer}
               className="foco-v4-secondary !min-h-11 !min-w-11 !rounded-xl !px-3" aria-label={restIsPaused ? 'Retomar descanso' : 'Pausar descanso'}>
               {restIsPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
@@ -847,25 +756,25 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
         <div className="grid grid-cols-3 gap-1.5 border-t border-white/10 pt-3 sm:gap-2">
           <div className="flex min-w-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-[#141414] px-1.5 py-3 sm:justify-start sm:px-3">
             <Clock className="hidden h-4 w-4 shrink-0 text-neutral-300 sm:block" />
-            <div className="font-mono tabular-nums leading-tight min-w-0">
+            <div className="foco-numeric tabular-nums leading-tight min-w-0">
               <span className="block text-[11px] font-bold uppercase text-neutral-300">Tempo</span>
-              <span className="text-sm font-black text-white">{formatTime(elapsedSeconds)}</span>
+              <span className="text-sm font-bold text-white">{formatTime(elapsedSeconds)}</span>
             </div>
           </div>
 
           <div className="flex min-w-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-[#141414] px-1.5 py-3 sm:justify-start sm:px-3">
             <Flame className="hidden h-4 w-4 shrink-0 text-neutral-300 sm:block" />
-            <div className="font-mono tabular-nums leading-tight min-w-0">
+            <div className="foco-numeric tabular-nums leading-tight min-w-0">
               <span className="block text-[11px] font-bold uppercase text-neutral-300">Volume</span>
-              <span className="block max-w-full truncate text-sm font-black text-white">{Math.round(currentTotalTonnage)} kg</span>
+              <span className="block max-w-full truncate text-sm font-bold text-white">{Math.round(currentTotalTonnage)} kg</span>
             </div>
           </div>
 
           <div className="flex min-w-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-[#141414] px-1.5 py-3 sm:justify-start sm:px-3">
             <Zap className="hidden h-4 w-4 shrink-0 text-neutral-300 sm:block" />
-            <div className="font-mono tabular-nums leading-tight min-w-0">
+            <div className="foco-numeric tabular-nums leading-tight min-w-0">
               <span className="block text-[11px] font-bold uppercase text-neutral-300">Séries</span>
-              <span className="text-sm font-black text-white">{currentTotalSetsDone}/{currentTotalSets}</span>
+              <span className="text-sm font-bold text-white">{currentTotalSetsDone}/{currentTotalSets}</span>
             </div>
           </div>
         </div>
@@ -934,9 +843,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       {exerciseLogs.length === 0 && activePlan && (
         <div className="rounded-2xl border border-dashed border-white/15 bg-[#141414] p-6 text-center">
           <Dumbbell className="mx-auto h-8 w-8 text-neutral-500" />
-          <h3 className="mt-3 text-sm font-black">Nenhum exercício para {getTrainingDayLabel(selectedTrainingDay).toLowerCase()}</h3>
+          <h3 className="mt-3 text-sm font-bold">Nenhum exercício para {getTrainingDayLabel(selectedTrainingDay).toLowerCase()}</h3>
           <p className="mt-1 text-xs leading-relaxed text-neutral-500">Abra a biblioteca e adicione exercícios a este dia para montar a sessão.</p>
-          <button type="button" onClick={() => setActiveTab('biblioteca')} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-black uppercase tracking-wide text-black">
+          <button type="button" onClick={() => setActiveTab('biblioteca')} className="foco-v6-primary mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-xs font-bold uppercase tracking-wide text-black">
             <Plus className="h-4 w-4" /> Adicionar exercícios
           </button>
         </div>
@@ -959,9 +868,9 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                   <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-300">
                     <span>{exIdx === focusedExerciseIndex ? 'Exercício atual' : exercise.muscle_group}</span>
                     <span>·</span>
-                    <span className="font-mono">{completedCount}/{exercise.sets.length} séries feitas</span>
+                    <span className="foco-numeric">{completedCount}/{exercise.sets.length} séries feitas</span>
                   </div>
-                  <h3 className="mt-1 text-[clamp(21px,5vw,27px)] font-extrabold leading-tight tracking-[-.04em] text-white">
+                  <h3 className="mt-1 text-[clamp(21px,5vw,27px)] font-bold leading-tight tracking-[-.04em] text-white">
                     {exercise.exercise_name}
                   </h3>
                 </div>
@@ -1015,7 +924,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                           className={`transition-colors ${set.completed ? 'bg-white/5' : ''}`}
                         >
                           {/* Set number */}
-                          <td className="py-2.5 px-1 font-mono font-bold text-neutral-400">
+                          <td className="py-2.5 px-1 foco-numeric font-bold text-neutral-400">
                             #{set.set_number}
                           </td>
 
@@ -1024,7 +933,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                               aria-label={'Carga da série ' + set.set_number + ' de ' + exercise.exercise_name + ' em quilogramas'}
                               value={set.load_kg === 0 ? '' : set.load_kg} placeholder="0"
                               onChange={(e) => handleUpdateSet(exIdx, setIdx, 'load_kg', Math.max(0, parseFloat(e.target.value) || 0))}
-                              className="foco-field !w-[84px] !min-h-12 !px-2 text-center font-mono text-base tabular-nums" />
+                              className="foco-field !w-[84px] !min-h-12 !px-2 text-center foco-numeric text-base tabular-nums" />
                           </td>}
 
                           {/* Repetitions */}
@@ -1037,7 +946,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                               onChange={(e) =>
                                 handleUpdateSet(exIdx, setIdx, 'repetitions', parseInt(e.target.value) || 0)
                               }
-                              className="foco-field !w-[70px] !min-h-12 !px-2 text-center font-mono text-base tabular-nums"
+                              className="foco-field !w-[70px] !min-h-12 !px-2 text-center foco-numeric text-base tabular-nums"
                             />
                           </td>
 
@@ -1050,7 +959,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
                                 aria-pressed={set.completed}
                                 className={`foco-touch rounded-xl flex items-center justify-center transition-all cursor-pointer active:scale-95 ${
                                   set.completed
-                                    ? 'bg-white text-black font-black shadow-lg ring-2 ring-white/50'
+                                    ? 'bg-white text-black font-bold shadow-lg ring-2 ring-white/50'
                                     : 'bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white border border-white/15'
                                 }`}
                                 title={set.completed ? 'Série concluída! (Clique para desmarcar)' : 'Marcar série e disparar descanso'}
@@ -1123,8 +1032,8 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       {sessionStarted && (
         <section className="foco-v4-panel space-y-3 p-4 sm:p-5" aria-labelledby="foco-perception-title">
           <div>
-            <h2 id="foco-perception-title" className="text-sm font-extrabold">Como foi o treino?</h2>
-            <p className="mt-1 text-xs leading-relaxed text-neutral-400">Opcional. Seu feedback ajuda a IA a interpretar o histórico e ajustar a próxima ficha.</p>
+            <h2 id="foco-perception-title" className="text-sm font-bold">Como foi o treino?</h2>
+            <p className="mt-1 text-xs leading-relaxed text-neutral-400">Opcional. Seu feedback fica no histórico para apoiar a revisão do treino e suas perguntas ao Personal FOCO.</p>
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <label className="text-xs font-bold text-neutral-300">Esforço percebido
@@ -1151,7 +1060,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
       )}
       {/* Session Notes */}
       <div className="p-4 rounded-2xl bg-[#141414] border border-white/10 space-y-2">
-        <label htmlFor="workout-session-notes" className="block text-xs font-black text-white uppercase tracking-wider">
+        <label htmlFor="workout-session-notes" className="block text-xs font-bold text-white uppercase tracking-wider">
           Anotações do Treino de Hoje
         </label>
         <textarea
@@ -1170,10 +1079,10 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
           <button
             onClick={handleFinishWorkout}
             disabled={isSaving}
-            className="w-full py-4 rounded-2xl bg-white hover:bg-neutral-200 text-black font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-2xl active:scale-95 transition-all"
+            className="foco-v6-primary w-full py-4 rounded-2xl bg-white hover:bg-neutral-200 text-black font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-2xl active:scale-95 transition-all"
           >
             <CheckCircle2 className="w-5 h-5 text-black" />
-            <span>{isSaving ? 'Gravando no Banco...' : 'Concluir e Salvar Treino'}</span>
+            <span>{isSaving ? 'Salvando treino...' : 'Finalizar e salvar treino'}</span>
           </button>
         </div>
       )}
@@ -1190,31 +1099,31 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             </div>
 
             <div>
-              <span className="text-xs font-black uppercase tracking-widest text-neutral-400">
+              <span className="text-xs font-bold uppercase tracking-widest text-neutral-400">
                 Treino Concluído
               </span>
-              <h3 className="text-2xl font-black text-white mt-1">Sessão Registrada!</h3>
+              <h3 className="text-2xl font-bold text-white mt-1">Sessão Registrada!</h3>
               <p className="text-xs text-neutral-400 mt-1">
                 Suas séries e cargas foram salvas no banco de dados e adicionadas ao ciclo de sobrecarga progressiva.
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 p-3.5 rounded-xl bg-[#0A0A0A] border border-white/10 font-mono">
+            <div className="grid grid-cols-3 gap-2 p-3.5 rounded-xl bg-[#0A0A0A] border border-white/10 foco-numeric">
               <div>
                 <p className="text-[9px] text-neutral-500 uppercase font-bold">DURAÇÃO</p>
-                <p className="text-xs font-black text-white mt-0.5">
+                <p className="text-xs font-bold text-white mt-0.5">
                   {Math.round(sessionCompletedModal.duration / 60)} min
                 </p>
               </div>
               <div>
                 <p className="text-[9px] text-neutral-500 uppercase font-bold">SÉRIES</p>
-                <p className="text-xs font-black text-white mt-0.5">
+                <p className="text-xs font-bold text-white mt-0.5">
                   {sessionCompletedModal.setsDone}
                 </p>
               </div>
               <div>
                 <p className="text-[9px] text-neutral-500 uppercase font-bold">VOLUME</p>
-                <p className="text-xs font-black text-white mt-0.5 tabular-nums">
+                <p className="text-xs font-bold text-white mt-0.5 tabular-nums">
                   {Math.round(sessionCompletedModal.tonnage)} kg
                 </p>
               </div>
@@ -1227,16 +1136,16 @@ export const ActiveSessionPage: React.FC<ActiveSessionProps> = ({ setActiveTab }
             )}
             {errorAlert && <p role="alert" className="text-sm text-white">{errorAlert}</p>}
             <div className="flex flex-col gap-2">
-              <button type="button" onClick={() => shareStory(false)} className="w-full py-3 rounded-xl bg-white text-black font-bold flex items-center justify-center gap-2"><Share2 className="w-4 h-4" /> Compartilhar Story</button>
+              <button type="button" onClick={() => shareStory(false)} className="foco-v6-primary w-full py-3 rounded-xl bg-white text-black font-bold flex items-center justify-center gap-2"><Share2 className="w-4 h-4" /> Compartilhar resultado</button>
               <button type="button" onClick={() => shareStory(true)} className="w-full py-3 rounded-xl border border-white/20 text-white font-bold flex items-center justify-center gap-2"><Download className="w-4 h-4" /> Salvar imagem 1080 × 1920</button>
               <button
                 onClick={() => {
                   setSessionCompletedModal(null);
                   setActiveTab('dashboard');
                 }}
-                className="w-full py-3.5 rounded-xl bg-white text-black font-black text-xs uppercase tracking-wider cursor-pointer hover:bg-neutral-200 transition-colors shadow-lg active:scale-95"
+                className="foco-v6-primary w-full py-3.5 rounded-xl bg-white text-black font-bold text-xs uppercase tracking-wider cursor-pointer hover:bg-neutral-200 transition-colors shadow-lg active:scale-95"
               >
-                Voltar ao Painel Principal
+                Voltar ao início
               </button>
             </div>
           </div>

@@ -324,7 +324,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
           type="button"
           aria-pressed={tab === 'automatic'}
           onClick={() => { setTab('automatic'); setPendingAiField(null); setErrorMsg(null); }}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+          className={`foco-choice flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
             tab === 'automatic'
               ? 'bg-white text-black shadow-sm'
               : 'text-neutral-400 hover:text-white'
@@ -338,14 +338,14 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
           type="button"
           aria-pressed={tab === 'manual'}
           onClick={() => { setTab('manual'); setPendingAiField(null); setErrorMsg(null); }}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+          className={`foco-choice flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
             tab === 'manual'
               ? 'bg-white text-black shadow-sm'
               : 'text-neutral-400 hover:text-white'
           }`}
         >
           <Sliders className="w-3.5 h-3.5" />
-          <span>Montador Manual</span>
+          <span>Montagem manual</span>
         </button>
       </div>
 
@@ -355,7 +355,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         <div className="relative z-10 max-w-[460px] space-y-3">
           <div className="flex items-center gap-2 text-[10px] font-bold tracking-[.2em] text-neutral-300"><Sparkles className="h-4 w-4" /> MÉTODO FOCO</div>
           <h2 id="foco-ai-intro" className="text-[25px] font-semibold leading-tight tracking-[-.04em] sm:text-[32px]">
-            Treino recomendado para <strong className="font-extrabold">{aiGoal.toLowerCase()}</strong>
+            Treino recomendado para <strong className="font-bold">{aiGoal.toLowerCase()}</strong>
             .
           </h2>
           <p className="max-w-sm text-[12px] leading-relaxed text-neutral-300">Modelos e regras do seu estudo montam a semana com dias, duração, equipamentos e prioridades. Você revisa antes de salvar.</p>
@@ -373,7 +373,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
           <item.icon className="h-5 w-5 shrink-0 text-neutral-400" />
           <span className="min-w-0 flex-1">
             <span className="block text-[11px] text-neutral-400">{item.label}</span>
-            <span className="mt-1 block line-clamp-2 text-xs font-extrabold capitalize">{item.value}</span>
+            <span className="mt-1 block line-clamp-2 text-xs font-bold capitalize">{item.value}</span>
           </span>
           <ChevronRight className="h-4 w-4 shrink-0 text-neutral-500" />
         </button>)}
@@ -404,7 +404,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               </div>
               <Sliders className="h-5 w-5 text-neutral-400" />
             </div>
-            <p className="text-xs leading-relaxed text-neutral-300">Os ajustes montam uma nova prévia. Sua ficha ativa muda quando você escolher <strong>Aprovar e Ativar Ficha</strong>.</p>
+            <p className="text-xs leading-relaxed text-neutral-300">Os ajustes montam uma nova prévia. Sua ficha ativa muda quando você escolher <strong>Aprovar e ativar ficha</strong>.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
               <div>
@@ -416,10 +416,10 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                   onChange={(e) => setAiGoal(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs focus:outline-none focus:border-white"
                 >
-                  <option value="Hipertrofia Máxima">Hipertrofia Máxima & Volume Muscular</option>
-                  <option value="Força Pura & Cargas">Força Bruta & Cargas Elevadas (Powerbuilding)</option>
-                  <option value="Definição & Emagrecimento">Emagrecimento com Preservação de Massa</option>
-                  <option value="Condicionamento & Resistência">Condicionamento Metabólico & Saúde</option>
+                  <option value="Hipertrofia Máxima">Hipertrofia e ganho de massa muscular</option>
+                  <option value="Força Pura & Cargas">Força e aumento de carga</option>
+                  <option value="Definição & Emagrecimento">Emagrecimento com preservação de massa</option>
+                  <option value="Condicionamento & Resistência">Condicionamento e saúde</option>
                   <option value="Recomposição corporal">Recomposição corporal</option>
                   <option value="Saúde e qualidade de vida">Saúde e qualidade de vida</option>
                 </select>
@@ -466,14 +466,14 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
               <div className="sm:col-span-2">
                 <div className="flex items-end justify-between gap-3 mb-3">
-                  <div><label className="block text-xs font-black text-white uppercase tracking-wide">Priorize grupos musculares</label><p className="text-[11px] text-neutral-400 mt-1">Toque para selecionar um ou mais grupos.</p></div>
-                  <span className="text-[10px] font-mono text-neutral-400 shrink-0">{aiFocus.length} selecionados</span>
+                  <div><label className="block text-xs font-bold text-white uppercase tracking-wide">Priorize grupos musculares</label><p className="text-[11px] text-neutral-400 mt-1">Toque para selecionar um ou mais grupos.</p></div>
+                  <span className="text-[10px] foco-numeric text-neutral-400 shrink-0">{aiFocus.length} selecionados</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {muscleOptions.map((muscle) => { const selected = aiFocus.includes(muscle.name); return (
                     <button key={muscle.name} type="button" aria-pressed={selected} onClick={() => toggleMuscleFocus(muscle.name)}
                       className={`min-h-[70px] rounded-xl border p-3 text-left transition-all ${selected ? 'bg-white text-black border-white' : 'bg-[#0A0A0A] text-white border-white/10 hover:border-white/40'}`}>
-                      <span className="flex items-center justify-between gap-2"><span className="text-xs font-black">{muscle.name}</span>{selected && <CheckCircle2 className="w-4 h-4 shrink-0" />}</span>
+                      <span className="flex items-center justify-between gap-2"><span className="text-xs font-bold">{muscle.name}</span>{selected && <CheckCircle2 className="w-4 h-4 shrink-0" />}</span>
                       <span className={`block text-[10px] mt-1 ${selected ? 'text-neutral-700' : 'text-neutral-500'}`}>{muscle.detail}</span>
                     </button>); })}
                 </div>
@@ -527,12 +527,12 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
             <div className="foco-v4-panel space-y-5 p-4 animate-in fade-in sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
                 <div>
-                  <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-widest">
+                  <div className="flex items-center gap-2 text-[10px] foco-numeric font-bold text-neutral-400 uppercase tracking-widest">
                     <span>{generatedPlan.generation?.method === 'rules' ? 'Montada por regras · sem IA' : 'Proposta de treino'}</span>
                     <span>·</span>
                     <span>{generatedPlan.weekly_frequency}x por semana</span>
                   </div>
-                  <h3 className="text-xl font-black text-white uppercase mt-1">
+                  <h3 className="text-xl font-bold text-white uppercase mt-1">
                     {generatedPlan.name}
                   </h3>
                   <p className="mt-1 text-xs leading-relaxed text-neutral-400">{generatedPlan.explanation}</p>
@@ -542,10 +542,10 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                   type="button"
                   onClick={handleSaveGeneratedPlan}
                   disabled={isSaving}
-                  className="px-5 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shrink-0 shadow-md disabled:opacity-50"
+                  className="foco-v6-primary px-5 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shrink-0 shadow-md disabled:opacity-50"
                 >
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>{isSaving ? 'Salvando...' : 'Aprovar e Ativar Ficha'}</span>
+                  <span>{isSaving ? 'Salvando...' : 'Aprovar e ativar ficha'}</span>
                 </button>
               </div>
 
@@ -659,7 +659,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                       <th className="py-2 px-2">NOTAS BIOMECÂNICAS</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5 font-mono">
+                  <tbody className="divide-y divide-white/5 foco-numeric">
                     {generatedPlan.exercises.map((ex, idx) => (
                       <tr key={idx} className="hover:bg-white/5">
                         <td className="py-2.5 px-2 font-sans font-bold text-white">
@@ -672,7 +672,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                         <td className="py-2.5 px-2 font-sans text-neutral-400">
                           {ex.muscle_group}
                         </td>
-                        <td className="py-2.5 px-2 text-white font-black">
+                        <td className="py-2.5 px-2 text-white font-bold">
                           {ex.sets}
                         </td>
                         <td className="py-2.5 px-2 text-neutral-300">
@@ -746,7 +746,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
           {/* Exercise Rows */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-black text-white uppercase tracking-wider">
+              <span className="text-xs font-bold text-white uppercase tracking-wider">
                 Exercícios ({manualExercises.length})
               </span>
               <button
@@ -755,7 +755,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                 className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>Adicionar Exercício</span>
+                <span>Adicionar exercício</span>
               </button>
             </div>
 
@@ -763,7 +763,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               {manualExercises.map((ex, idx) => (
                 <div key={idx} className="p-4 rounded-xl bg-[#0A0A0A] border border-white/10 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono text-neutral-400">Exercício #{idx + 1}</span>
+                    <span className="text-[11px] foco-numeric text-neutral-400">Exercício #{idx + 1}</span>
                     {manualExercises.length > 1 && (
                       <button
                         type="button"
@@ -804,7 +804,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                         type="number"
                         value={ex.sets}
                         onChange={(e) => handleUpdateManualExercise(idx, 'sets', parseInt(e.target.value) || 3)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-[#141414] border border-white/10 text-white text-xs font-mono tabular-nums focus:outline-none focus:border-white"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-[#141414] border border-white/10 text-white text-xs foco-numeric tabular-nums focus:outline-none focus:border-white"
                       />
                     </div>
                     <div>
@@ -814,7 +814,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                         step="0.5"
                         value={ex.suggested_load_kg}
                         onChange={(e) => handleUpdateManualExercise(idx, 'suggested_load_kg', parseFloat(e.target.value) || 0)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-[#141414] border border-white/10 text-white text-xs font-mono tabular-nums focus:outline-none focus:border-white"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-[#141414] border border-white/10 text-white text-xs foco-numeric tabular-nums focus:outline-none focus:border-white"
                       />
                     </div>
                     <div>
@@ -823,7 +823,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                         type="number"
                         value={ex.rest_seconds}
                         onChange={(e) => handleUpdateManualExercise(idx, 'rest_seconds', parseInt(e.target.value) || 60)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-[#141414] border border-white/10 text-white text-xs font-mono tabular-nums focus:outline-none focus:border-white"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-[#141414] border border-white/10 text-white text-xs foco-numeric tabular-nums focus:outline-none focus:border-white"
                       />
                     </div>
                   </div>
@@ -836,7 +836,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
             <button
               type="submit"
               disabled={isSaving}
-              className="px-6 py-3 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg disabled:opacity-50"
+              className="foco-v6-primary px-6 py-3 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-lg disabled:opacity-50"
             >
               <CheckCircle2 className="w-4 h-4" />
               <span>{isSaving ? 'Salvando...' : 'Salvar Ficha Manual'}</span>

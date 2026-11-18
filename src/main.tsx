@@ -3,12 +3,14 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import { applyUiPreferences, readUiPreferences } from './utils/uiPreferences';
 import { FOCO_BUILD_ID } from './utils/release';
+import { FocoV6Lockup } from './components/FocoV6UI';
 import './index.css';
 import './foco-pro-tokens.css';
+import './foco-brand.css';
 import './foco-v2-experience.css';
+import './foco-exercise-atlas.css';
 import './foco-ui.css';
 import './foco-motion.css';
-import './foco-exercise-atlas.css';
 
 class AppErrorBoundary extends React.Component<React.PropsWithChildren, { hasError: boolean }> {
   state = { hasError: false };
@@ -24,12 +26,12 @@ class AppErrorBoundary extends React.Component<React.PropsWithChildren, { hasErr
   render() {
     if (this.state.hasError) {
       return (
-        <main style={{ minHeight: '100vh', background: '#222222', color: '#F7F8F4', fontFamily: 'Arial, sans-serif', display: 'grid', placeItems: 'center', padding: '24px' }}>
-          <section style={{ maxWidth: '440px', textAlign: 'center' }}>
-            <div style={{ fontWeight: 900, letterSpacing: '0.28em', fontSize: '30px' }}>FOCO</div>
-            <h1 style={{ fontSize: '20px', marginTop: '24px' }}>Não foi possível carregar esta tela</h1>
-            <p style={{ color: '#A3A3A3', lineHeight: 1.6 }}>O aplicativo encontrou um erro ao renderizar. Recarregue a página; se continuar, abra o console do navegador e envie o erro para o suporte.</p>
-            <button onClick={() => window.location.reload()} style={{ marginTop: '16px', padding: '12px 18px', background: '#E5F88A', color: '#000000', border: 0, borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}>Recarregar FOCO</button>
+        <main className="foco-brand-state">
+          <section className="foco-shell-card">
+            <FocoV6Lockup />
+            <h1>Não foi possível carregar esta tela</h1>
+            <p>Recarregue o FOCO para tentar novamente. Se o problema continuar, confira a conexão e tente abrir o aplicativo mais tarde.</p>
+            <button type="button" className="foco-shell-action" onClick={() => window.location.reload()}>Recarregar FOCO</button>
           </section>
         </main>
       );
@@ -46,24 +48,13 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
     const notice = document.createElement('aside');
     notice.setAttribute('data-foco-update-notice', 'true');
     notice.setAttribute('role', 'status');
-    Object.assign(notice.style, {
-      position: 'fixed', bottom: 'max(96px, calc(env(safe-area-inset-bottom) + 96px))',
-      left: '50%', transform: 'translateX(-50%)', width: 'min(94vw, 420px)',
-      background: '#1A2117', color: '#F7F8F1', padding: '14px 16px',
-      border: '1px solid #62713A', borderRadius: '20px', zIndex: '99999',
-      boxShadow: '0 18px 45px #000A', font: '600 13px Poppins, sans-serif',
-      display: 'flex', alignItems: 'center', gap: '12px'
-    });
+    notice.className = 'foco-update-notice';
     const label = document.createElement('span');
     label.textContent = 'Nova versão do FOCO disponível.';
-    label.style.flex = '1';
     const button = document.createElement('button');
     button.textContent = 'Atualizar';
     button.type = 'button';
-    Object.assign(button.style, {
-      border: 0, borderRadius: '999px', padding: '12px 16px', minHeight: '43px',
-      background: '#E5F88A', color: '#10160D', fontWeight: '800', cursor: 'pointer'
-    });
+    button.className = 'foco-shell-action';
     button.addEventListener('click', () => {
       window.location.assign(import.meta.env.BASE_URL + 'atualizar.html');
     });
@@ -132,7 +123,8 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
 applyUiPreferences(readUiPreferences());
 const rootElement = document.getElementById('root');
 if (!rootElement) {
-  document.body.innerHTML = '<main style="background:#0A0A0A;color:white;min-height:100vh;padding:32px;font-family:Arial,sans-serif"><h1>FOCO</h1><p>Não foi encontrado o elemento principal do aplicativo. Atualize a página e tente novamente.</p></main>';
+  document.body.innerHTML = '<main class="foco-brand-state"><section class="foco-shell-card"><img class="foco-shell-logo" src="'+import.meta.env.BASE_URL+'assets/brand/foco-v6-reference-vector.svg" alt="FOCO" width="170" height="42"><h1>Não foi possível iniciar o FOCO</h1><p>Atualize a página para tentar novamente.</p><button type="button" class="foco-shell-action" id="foco-reload">Recarregar FOCO</button></section></main>';
+  document.getElementById('foco-reload')?.addEventListener('click', () => window.location.reload());
 } else {
   createRoot(rootElement).render(
     <React.StrictMode>

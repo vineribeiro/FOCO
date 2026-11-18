@@ -14,11 +14,9 @@ export const V6_IMAGES = {
 };
 
 export const FocoV6Mark: React.FC<{ size?: number; className?: string; light?: boolean }> = ({ size=48, className='',light=false }) => (
-  <svg aria-label="Símbolo FOCO" role="img" className={className} width={size} height={size} viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M7 47L19 17H35L22 47H7Z" fill={light ? '#F5F5F2' : '#E5F88A'}/>
-    <path d="M28 69L53 6H69L44 69H28Z" fill={light ? '#F5F5F2' : '#E5F88A'}/>
-    <path d="M57 43L65 23H78L70 43H57Z" fill={light ? '#F5F5F2' : '#E5F88A'}/>
-  </svg>
+  <img alt="Símbolo FOCO" className={className} width={size} height={size}
+    src={import.meta.env.BASE_URL+'assets/brand/foco-symbol.svg'}
+    style={light?{filter:'grayscale(1) brightness(2)'}:undefined}/>
 );
 
 export const FocoV6Lockup: React.FC<{ compact?: boolean; className?: string }> = ({ compact = false, className = '' }) => (

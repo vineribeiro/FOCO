@@ -15,12 +15,12 @@ const primary = [
 ];
 const tools = [
   { id: 'personal', label: 'Personal FOCO', icon: MessageCircle },
-  { id: 'treinos', label: 'Minhas fichas', icon: ClipboardList },
+  { id: 'treinos', label: 'Meus treinos', icon: ClipboardList },
   { id: 'cardio', label: 'Cardio livre', icon: Activity },
   { id: 'novo-treino', label: 'Nova ficha', icon: Sparkles },
   { id: 'arquivos', label: 'Avaliação OKOK', icon: ScanLine },
   { id: 'anamnese', label: 'Anamnese', icon: FileUp },
-  { id: 'objetivos', label: 'Meus objetivos', icon: Target },
+  { id: 'objetivos', label: 'Metas e objetivos', icon: Target },
 ];
 
 export const DesktopNav: React.FC<DesktopNavProps> = ({ activeTab, navigate }) => (

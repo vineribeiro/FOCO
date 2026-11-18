@@ -52,7 +52,7 @@ export const GoalsPage: React.FC = () => {
 
       setDescription('');
       setTargetDate('');
-      setMsg({ type: 'success', text: 'Meta salva com sucesso!' });
+      setMsg({ type: 'success', text: 'Objetivo salvo.' });
       loadGoals();
     } catch (err: any) {
       setMsg({ type: 'error', text: 'Falha ao salvar meta: ' + err.message });
@@ -77,7 +77,7 @@ export const GoalsPage: React.FC = () => {
       
       {/* Header */}
       <div>
-        <h2 className="text-xl font-black uppercase tracking-tight text-white">Metas & Foco Esportivo</h2>
+        <h2 className="text-xl font-bold uppercase tracking-tight text-white">Metas e objetivos</h2>
         <p className="text-xs text-neutral-400 mt-0.5">
           Defina alvos claros de força, ganho de massa ou emagrecimento para nortear os ciclos de progressão.
         </p>
@@ -99,14 +99,14 @@ export const GoalsPage: React.FC = () => {
 
       {/* Add Goal Form */}
       <form onSubmit={handleAddGoal} className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/10 space-y-4">
-        <div className="flex items-center gap-2 text-xs font-black text-white uppercase tracking-wider">
+        <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
           <Plus className="w-4 h-4 text-white" />
-          <span>Cadastrar Novo Alvo</span>
+          <span>Criar objetivo</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-goal-type">Tipo de Meta</label>
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-goal-type">Tipo de objetivo</label>
             <select id="foco-goals-goal-type"
               value={goalType}
               onChange={(e) => setGoalType(e.target.value)}
@@ -133,18 +133,18 @@ export const GoalsPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-target-date">Data Alvo</label>
+            <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-target-date">Data do objetivo</label>
             <input id="foco-goals-target-date"
               type="date"
               value={targetDate}
               onChange={(e) => setTargetDate(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-white"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs foco-numeric focus:outline-none focus:border-white"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-description">Descrição do Alvo</label>
+          <label className="block text-xs font-bold text-neutral-300 mb-1 uppercase tracking-wide" htmlFor="foco-goals-description">Descrição do objetivo</label>
           <input id="foco-goals-description"
             type="text"
             required
@@ -159,7 +159,7 @@ export const GoalsPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+            className="foco-v6-primary px-6 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
           >
             <span>{isSaving ? 'Salvando...' : 'Salvar Objetivo'}</span>
           </button>
@@ -168,17 +168,17 @@ export const GoalsPage: React.FC = () => {
 
       {/* Goals List */}
       <div className="space-y-3">
-        <h3 className="text-xs font-black text-white uppercase tracking-wider">
-          Metas Registradas{!isLoading && !loadError ? ` (${goals.length})` : ''}
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+          Objetivos registrados{!isLoading && !loadError ? ` (${goals.length})` : ''}
         </h3>
 
         {isLoading && <p role="status" className="py-4 text-xs text-neutral-400">Carregando metas...</p>}
         {loadError && <div role="alert" className="rounded-xl border border-white/20 p-4 text-sm text-neutral-300">
           <p>Não foi possível consultar suas metas. Seus registros não foram alterados. Confira a conexão e tente novamente.</p>
-          <button type="button" onClick={() => void loadGoals()} className="mt-3 min-h-11 rounded-xl bg-white px-4 font-bold text-black">Tentar novamente</button>
+          <button type="button" onClick={() => void loadGoals()} className="foco-v6-primary mt-3 min-h-11 rounded-xl bg-white px-4 font-bold text-black">Tentar novamente</button>
         </div>}
         {!isLoading && !loadError && goals.length === 0 && (
-          <p className="text-xs text-neutral-500 py-6 text-center font-mono">Nenhuma meta ativa cadastrada.</p>
+          <p className="text-xs text-neutral-500 py-6 text-center foco-numeric">Nenhuma meta ativa cadastrada.</p>
         )}
         {goals.length > 0 && (
           goals.map((g) => (
@@ -193,7 +193,7 @@ export const GoalsPage: React.FC = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-white">{g.description}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-white/10 text-white font-mono uppercase">
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-white/10 text-white foco-numeric uppercase">
                       Prioridade {g.priority}
                     </span>
                   </div>
@@ -202,7 +202,7 @@ export const GoalsPage: React.FC = () => {
                     {g.target_date && (
                       <>
                         <span>·</span>
-                        <span className="font-mono">
+                        <span className="foco-numeric">
                           Alvo: {new Date(g.target_date).toLocaleDateString('pt-BR')}
                         </span>
                       </>

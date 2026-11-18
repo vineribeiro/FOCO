@@ -57,7 +57,7 @@ export const InstallAppButton: React.FC = () => {
       <button
         type="button"
         onClick={handleInstall}
-        className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-2.5 text-[11px] font-bold text-white transition hover:bg-white/10 sm:px-3"
+        className="inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-2.5 text-[11px] font-bold text-white transition hover:bg-white/10 sm:px-3"
         aria-label="Instalar FOCO no celular"
         title="Instalar FOCO no celular"
       >
@@ -72,25 +72,25 @@ export const InstallAppButton: React.FC = () => {
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-black"><Smartphone className="h-5 w-5" /></div>
                 <div>
-                  <h2 id="foco-install-title" className="font-black">Adicionar FOCO à tela inicial</h2>
+                  <h2 id="foco-install-title" className="font-bold">Adicionar FOCO à tela inicial</h2>
                   <p className="mt-1 text-xs text-neutral-400">Abre como aplicativo, sem precisar procurar o link.</p>
                 </div>
               </div>
-              <button type="button" aria-label="Fechar instruções" onClick={() => setShowHelp(false)} className="rounded-lg p-1.5 text-neutral-400 hover:bg-white/10 hover:text-white"><X className="h-4 w-4" /></button>
+              <button type="button" aria-label="Fechar instruções" onClick={() => setShowHelp(false)} className="foco-icon-action"><X className="h-4 w-4" /></button>
             </div>
             {isIOS ? (
               <ol className="space-y-3 text-sm leading-relaxed text-neutral-300">
                 <li className="flex gap-3"><Share className="mt-0.5 h-4 w-4 shrink-0" /><span>Abra este site no <strong className="text-white">Safari</strong> e toque em Compartilhar.</span></li>
-                <li className="flex gap-3"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-black text-black">2</span><span>Escolha <strong className="text-white">Adicionar à Tela de Início</strong>.</span></li>
-                <li className="flex gap-3"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-black text-black">3</span><span>Toque em Adicionar para criar o ícone do FOCO.</span></li>
+                <li className="flex gap-3"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-black">2</span><span>Escolha <strong className="text-white">Adicionar à Tela de Início</strong>.</span></li>
+                <li className="flex gap-3"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-black">3</span><span>Toque em Adicionar para criar o ícone do FOCO.</span></li>
               </ol>
             ) : (
               <ol className="space-y-3 text-sm leading-relaxed text-neutral-300">
-                <li className="flex gap-3"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-black text-black">1</span><span>No menu do navegador (⋮), procure <strong className="text-white">Instalar app</strong> ou <strong className="text-white">Adicionar à tela inicial</strong>.</span></li>
-                <li className="flex gap-3"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-black text-black">2</span><span>Confirme a instalação. Se a opção não aparecer, abra o site no Chrome atualizado.</span></li>
+                <li className="flex gap-3"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-black">1</span><span>No menu do navegador (⋮), procure <strong className="text-white">Instalar app</strong> ou <strong className="text-white">Adicionar à tela inicial</strong>.</span></li>
+                <li className="flex gap-3"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-black">2</span><span>Confirme a instalação. Se a opção não aparecer, abra o site no Chrome atualizado.</span></li>
               </ol>
             )}
-            <button type="button" onClick={() => setShowHelp(false)} className="mt-5 w-full rounded-xl bg-white px-4 py-3 text-xs font-black uppercase tracking-wide text-black">Entendi</button>
+            <button type="button" onClick={() => setShowHelp(false)} className="foco-v6-primary mt-5 w-full rounded-xl bg-white px-4 py-3 text-xs font-bold uppercase tracking-wide text-black">Entendi</button>
           </div>
         </AccessibleDialog>
       )}
