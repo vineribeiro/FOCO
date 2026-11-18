@@ -1,0 +1,24 @@
+/* Shared by the app, the first HTML frame and the standalone updater.
+   The build publishes this file with foco-pro-tokens.css as foco-brand.css. */
+@font-face{font-family:'Michroma';src:url('/FOCO/fonts/Michroma-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Space Grotesk';src:url('/FOCO/fonts/SpaceGrotesk-Variable.ttf') format('truetype');font-weight:300 700;font-style:normal;font-display:swap}
+.foco-brand-state{box-sizing:border-box;min-height:100dvh;display:grid;place-items:center;padding:24px;background:var(--foco-pro-canvas);color:var(--foco-pro-ink);font-family:var(--foco-pro-font-body)}
+.foco-shell-card{box-sizing:border-box;width:100%;max-width:440px;padding:24px;border:1px solid var(--foco-pro-border);border-radius:var(--foco-pro-radius-card);background:var(--foco-pro-panel);overflow-wrap:anywhere}
+.foco-shell-card .foco-v6-brand,.foco-shell-logo{display:block;width:170px;max-width:100%;height:auto;margin:0 0 28px}
+.foco-brand-state h1{font-family:var(--foco-pro-font-display);font-size:clamp(21px,5vw,27px);font-weight:400;line-height:1.45;margin:16px 0}
+.foco-brand-state p,.foco-brand-state small{font-size:14px;line-height:1.65;color:var(--foco-pro-muted)}
+.foco-brand-state small{display:block;font-size:12px;margin-top:20px}
+.foco-brand-state .foco-shell-eyebrow{color:var(--foco-pro-lilac);font-size:11px;font-weight:600;letter-spacing:.04em}
+.foco-shell-action{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 20px;border:0;border-radius:var(--foco-pro-radius-control);background:var(--foco-pro-accent);color:var(--foco-pro-dark-ink);font:700 14px/1.5 var(--foco-pro-font-body);text-decoration:none;cursor:pointer}
+.foco-shell-action:disabled{opacity:.55;cursor:wait}
+.foco-shell-action:focus-visible{outline:2px solid var(--foco-pro-lilac);outline-offset:4px}
+.foco-shell-card .foco-shell-action{width:100%;margin-top:16px}
+.foco-update-notice{box-sizing:border-box;position:fixed;bottom:max(104px,calc(env(safe-area-inset-bottom) + 104px));left:50%;transform:translateX(-50%);width:min(94vw,420px);padding:16px;display:flex;align-items:center;gap:12px;border:1px solid var(--foco-pro-lilac);border-radius:var(--foco-pro-radius-card);background:var(--foco-pro-panel);color:var(--foco-pro-ink);font:500 14px/1.5 var(--foco-pro-font-body);z-index:99999}
+.foco-update-notice>span{flex:1;min-width:0}
+.foco-update-notice .foco-shell-action{flex:none}
+.boot-screen{display:flex;flex-direction:column;justify-content:center;gap:24px;text-align:center}
+.boot-logo{display:block;width:min(64vw,215px);height:auto}
+.boot-text{letter-spacing:.06em;font-size:12px}
+.boot-track{width:120px;height:4px;border-radius:999px;background:var(--foco-pro-lilac)}
+#status{min-height:25px;font-size:12px;margin-top:14px}
+@media(forced-colors:active){.foco-shell-action,.foco-shell-card,.foco-update-notice{border:1px solid ButtonText}}

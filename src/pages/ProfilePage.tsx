@@ -56,7 +56,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
       });
 
       await refreshProfile();
-      setMsg({ type: 'success', text: 'Perfil biométrico atualizado com sucesso no banco!' });
+      setMsg({ type: 'success', text: 'Dados pessoais salvos.' });
     } catch (err: any) {
       setMsg({ type: 'error', text: 'Falha ao atualizar perfil: ' + err.message });
     } finally {
@@ -86,8 +86,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
     {label:'Meus dados corporais',icon:ScanLine,tab:'arquivos'},
     {label:'Metas e objetivos',icon:Target,tab:'objetivos'},
     {label:'Preferências de treino',icon:SlidersHorizontal,tab:'anamnese'},
-    {label:'Integrações',icon:Activity,tab:'configuracoes'},
-    {label:'Notificações',icon:Bell,tab:'configuracoes'},
+    {label:'Configurações',icon:Settings,tab:'configuracoes'},
   ];
   return (
     <div className="foco-v6-profile foco-v4-page">
@@ -98,10 +97,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
       </header>
       <section className="foco-v6-profile-card foco-profile-identity" aria-labelledby="foco-profile-name">
         <div className="foco-v6-profile-avatar grid place-items-center" aria-hidden="true">
-          <span className="grid h-full w-full place-items-center rounded-full bg-gradient-to-br from-[#303B23] to-[#0C100B] text-2xl font-black text-[#E5F88A]">{initials}</span>
+          <span className="grid h-full w-full place-items-center rounded-full">{initials}</span>
         </div>
         <h2 id="foco-profile-name">{fullName||user?.full_name||'Atleta FOCO'}</h2>
-        <span className="mt-1 rounded-full bg-[#E5F88A]/10 px-3 py-1 text-[10px] font-bold text-[#E5F88A]">Plano pessoal</span>
+        <span className="foco-profile-plan-badge">Plano pessoal</span>
       </section>
       <section className="foco-v6-profile-kpis" aria-label="Resumo dos seus treinos">
         <div className="foco-v6-profile-kpi"><strong>{trainingSummary?.completed??'—'}</strong><p>Treinos</p></div>
@@ -109,7 +108,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
         <div className="foco-v6-profile-kpi"><strong>{trainingSummary?.weeks??'—'}</strong><p>Semanas ativas</p></div>
       </section>
       <nav className="foco-profile-preferences grid gap-2" aria-label="Preferências do perfil">
-        {routes.map(route=><button key={route.label} type="button" className="foco-v6-profile-item" onClick={()=>setActiveTab(route.tab)}>
+        {routes.map(route=><button key={route.label} type="button" className="foco-v6-profile-item" onClick={()=>{if(route.tab==='arquivos'){try{sessionStorage.setItem('foco_upload_mode','body');}catch{/* Navigation remains available. */}}setActiveTab(route.tab);}}>
           <route.icon size={17}/><span>{route.label}</span><ChevronRight size={16}/>
         </button>)}
       </nav>
@@ -154,7 +153,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
               autoComplete="email"
               disabled
               value={user?.email || ''}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A]/50 border border-white/5 text-neutral-500 text-xs cursor-not-allowed font-mono"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A]/50 border border-white/5 text-neutral-500 text-xs cursor-not-allowed foco-numeric"
             />
           </div>
 
@@ -165,7 +164,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
               autoComplete="bday"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-white"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white text-xs foco-numeric focus:outline-none focus:border-white"
             />
           </div>
 
@@ -189,7 +188,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
               step="0.1"
               value={weightKg}
               onChange={(e) => setWeightKg(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white font-mono tabular-nums text-xs focus:outline-none focus:border-white"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white foco-numeric tabular-nums text-xs focus:outline-none focus:border-white"
             />
           </div>
 
@@ -199,7 +198,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
               type="number"
               value={heightCm}
               onChange={(e) => setHeightCm(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white font-mono tabular-nums text-xs focus:outline-none focus:border-white"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0A0A0A] border border-white/15 text-white foco-numeric tabular-nums text-xs focus:outline-none focus:border-white"
             />
           </div>
         </div>
@@ -208,19 +207,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+            className="foco-v6-primary disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
-            <span>{isSaving ? 'Salvando...' : 'Salvar Alterações'}</span>
+            <span>{isSaving ? 'Salvando...' : 'Salvar alterações'}</span>
           </button>
         </div>
       </form>
 
       {/* Danger Zone: Account Deletion */}
       <div className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/10 space-y-3">
-        <div className="flex items-center gap-2 text-white font-black text-xs uppercase tracking-wider">
+        <div className="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-wider">
           <ShieldAlert className="w-4 h-4 text-white" />
-          <span>Zona de Segurança & Exclusão de Conta</span>
+          <span>Exclusão da conta</span>
         </div>
         <p className="text-xs text-neutral-400 leading-relaxed">
           A exclusão da conta é irreversível e remove permanentemente todos os seus treinos, planos, avaliações corporais e arquivos de ficha do banco de dados.
@@ -229,10 +228,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
         <button
           onClick={() => { setShowDeleteModal(true); setDeleteConfirmationText(''); }}
           disabled={isDeleting}
-          className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-2 transition-colors cursor-pointer border border-white/15"
+          className="foco-danger-action"
         >
           <Trash2 className="w-4 h-4" />
-          <span>Excluir Minha Conta Definitivamente</span>
+          <span>Excluir minha conta</span>
         </button>
       </div>
 
@@ -241,7 +240,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
         <AccessibleDialog title="Confirmar exclusão da conta" onClose={() => setShowDeleteModal(false)} initialFocus="#foco-delete-cancel" dismissible={!isDeleting}>
           <div className="w-full rounded-2xl bg-[#141414] p-6 space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-white/10">
-              <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-white" />
                 <span>Confirmar Exclusão</span>
               </h3>
@@ -257,11 +256,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
             </div>
 
             <p className="text-xs text-neutral-300 leading-relaxed">
-              Esta ação não pode ser desfeita. Todos os dados associados ao seu e-mail serão apagados do PostgreSQL.
+              Esta ação não pode ser desfeita. Todos os dados associados à sua conta serão apagados permanentemente.
             </p>
 
             <div>
-              <label className="block text-[11px] font-mono text-neutral-400 mb-1" htmlFor="foco-profile-delete-confirmation-text">
+              <label className="block text-[11px] foco-numeric text-neutral-400 mb-1" htmlFor="foco-profile-delete-confirmation-text">
                 Digite <strong className="text-white">EXCLUIR</strong> para prosseguir:
               </label>
               <input id="foco-profile-delete-confirmation-text"
@@ -269,7 +268,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
                 value={deleteConfirmationText}
                 onChange={(e) => setDeleteConfirmationText(e.target.value)}
                 placeholder="EXCLUIR"
-                className="w-full px-3 py-2 rounded-xl bg-[#0A0A0A] border border-white/20 text-white text-xs font-mono uppercase focus:outline-none focus:border-white"
+                className="w-full px-3 py-2 rounded-xl bg-[#0A0A0A] border border-white/20 text-white text-xs foco-numeric uppercase focus:outline-none focus:border-white"
               />
             </div>
 
@@ -279,7 +278,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
                 type="button"
                 disabled={isDeleting}
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 rounded-xl bg-white/10 text-neutral-300 text-xs font-bold hover:text-white"
+                className="foco-v6-secondary"
               >
                 Cancelar
               </button>
@@ -287,9 +286,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ setActiveTab }) => {
                 type="button"
                 onClick={handleConfirmDelete}
                 disabled={isDeleting || deleteConfirmationText.trim().toUpperCase() !== 'EXCLUIR'}
-                className="px-4 py-2 rounded-xl bg-white text-black text-xs font-black uppercase tracking-wider hover:bg-neutral-200 disabled:opacity-30"
+                className="foco-danger-action disabled:opacity-40"
               >
-                {isDeleting ? 'Excluindo...' : 'Confirmar Exclusão'}
+                {isDeleting ? 'Excluindo...' : 'Excluir minha conta'}
               </button>
             </div>
           </div>

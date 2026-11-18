@@ -45,7 +45,7 @@ try{for(const width of [320,390,768,1440]){
  await page.screenshot({path:`${output}/automatic-${width}.png`,fullPage:true});
  await page.locator('#foco-ai-goal').selectOption('Saúde e qualidade de vida');
  await page.getByRole('button',{name:'Montar ficha automática',exact:true}).waitFor();
- assert.equal(await page.getByRole('button',{name:'Aprovar e Ativar Ficha',exact:true}).count(),0,'Changing preferences invalidates the old preview');
+ assert.equal(await page.getByRole('button',{name:'Aprovar e ativar ficha',exact:true}).count(),0,'Changing preferences invalidates the old preview');
  await page.locator('#foco-ai-frequency').selectOption('7');await page.locator('#foco-automatic-minutes').fill('40');
  await page.locator('#foco-ai-experience').selectOption('iniciante');
  if(width===390){
@@ -69,16 +69,16 @@ try{for(const width of [320,390,768,1440]){
   holdPreview=true;await page.getByRole('button',{name:'Recalcular ficha',exact:true}).click();
   await page.waitForFunction(()=>document.querySelector('button[type=submit]')?.disabled);
   await page.locator('#foco-ai-goal').selectOption('Força Pura & Cargas');
-  assert.equal(await page.getByRole('button',{name:'Aprovar e Ativar Ficha',exact:true}).count(),0);
+  assert.equal(await page.getByRole('button',{name:'Aprovar e ativar ficha',exact:true}).count(),0);
   assert.equal(typeof releasePreview,'function');releasePreview();
   await page.getByRole('button',{name:'Montar ficha automática',exact:true}).waitFor({state:'visible'});
   await page.locator('button[type=submit]:not([disabled])').waitFor();
-  assert.equal(await page.getByRole('button',{name:'Aprovar e Ativar Ficha',exact:true}).count(),0,'A late response must not restore a stale proposal');
+  assert.equal(await page.getByRole('button',{name:'Aprovar e ativar ficha',exact:true}).count(),0,'A late response must not restore a stale proposal');
   await page.getByRole('button',{name:'Montar ficha automática',exact:true}).click();
-  await page.getByRole('button',{name:'Aprovar e Ativar Ficha',exact:true}).waitFor();
+  await page.getByRole('button',{name:'Aprovar e ativar ficha',exact:true}).waitFor();
   assert.equal(previews,4);assert.equal(previewResults[3].goal,'Força Pura & Cargas');
  }
- await page.getByRole('button',{name:'Aprovar e Ativar Ficha',exact:true}).click();await page.waitForURL(/view=treinos/);assert.equal(saves,1);assert.equal(savedPlans[0].goal,previewResults.at(-1).goal);assert.deepEqual(savedPlans[0].exercises,previewResults.at(-1).exercises);
+ await page.getByRole('button',{name:'Aprovar e ativar ficha',exact:true}).click();await page.waitForURL(/view=treinos/);assert.equal(saves,1);assert.equal(savedPlans[0].goal,previewResults.at(-1).goal);assert.deepEqual(savedPlans[0].exercises,previewResults.at(-1).exercises);
  await page.goto(base+'?view=personal');await page.getByRole('heading',{name:'Personal FOCO',exact:true}).waitFor();assert.equal(questions,0);
  await page.getByRole('button',{name:'O que significa RIR no meu treino?',exact:true}).click();assert.equal(questions,0);
  const sharing=page.getByRole('checkbox',{name:'Usar minha ficha ativa e os últimos treinos nesta pergunta'});

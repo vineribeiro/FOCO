@@ -82,7 +82,7 @@ export const RestTimerHUD: React.FC = () => {
                     : 'bg-[#141414] text-white border-white/20'
                 }`}
               >
-                <span className="font-mono font-black text-sm tabular-nums tracking-tight">
+                <span className="foco-timer-value foco-numeric text-sm tabular-nums tracking-tight">
                   {timeRemaining}s
                 </span>
               </div>
@@ -94,11 +94,11 @@ export const RestTimerHUD: React.FC = () => {
                       isPaused ? 'bg-neutral-500' : 'bg-white animate-ping'
                     }`}
                   />
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 font-bold block truncate">
+                  <span className="text-[10px] foco-numeric uppercase tracking-widest text-neutral-400 font-bold block truncate">
                     {isPaused ? 'Pausado' : 'Descanso Ativo'}
                   </span>
                 </div>
-                <h4 className="text-xs font-black text-white truncate max-w-[150px] sm:max-w-[190px]">
+                <h4 className="text-xs font-bold text-white truncate max-w-[150px] sm:max-w-[190px]">
                   {exerciseName ? `${exerciseName} · Série #${setNumber}` : 'Intervalo de Recuperação'}
                 </h4>
               </div>
@@ -109,14 +109,14 @@ export const RestTimerHUD: React.FC = () => {
               {/* Quick +/- 15s */}
               <button
                 onClick={() => addSeconds(-15)}
-                className="min-h-11 px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white text-[11px] font-mono font-bold border border-white/10 transition-colors cursor-pointer"
+                className="min-h-11 px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white text-[11px] foco-numeric font-bold border border-white/10 transition-colors cursor-pointer"
                 title="Reduzir 15s"
               >
                 -15s
               </button>
               <button
                 onClick={() => addSeconds(15)}
-                className="min-h-11 px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white text-[11px] font-mono font-bold border border-white/10 transition-colors cursor-pointer"
+                className="min-h-11 px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-neutral-300 hover:text-white text-[11px] foco-numeric font-bold border border-white/10 transition-colors cursor-pointer"
                 title="Aumentar 15s"
               >
                 +15s
@@ -134,10 +134,11 @@ export const RestTimerHUD: React.FC = () => {
               {/* Skip / Next Set Button */}
               <button
                 onClick={skipTimer}
-                className="min-h-11 px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all cursor-pointer"
-                title="Finalizar descanso e ir para a próxima série"
+                className="min-h-11 px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all cursor-pointer"
+                title="Pular descanso"
+                aria-label="Pular descanso"
               >
-                <span>GO!</span>
+                <span>Pular</span>
                 <SkipForward className="w-3.5 h-3.5 fill-current" />
               </button>
 
@@ -156,12 +157,12 @@ export const RestTimerHUD: React.FC = () => {
           {isExpanded && (
             <div className="mt-3 pt-3 border-t border-white/10 space-y-2.5 animate-in fade-in duration-150">
               <div className="flex items-center justify-between text-[11px]">
-                <span className="text-neutral-400 font-mono uppercase tracking-wider">
-                  Presets Rápidos de Intervalo:
+                <span className="text-neutral-400 foco-numeric uppercase tracking-wider">
+                  Intervalos rápidos
                 </span>
                 <button
                   onClick={toggleMute}
-                  className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[10px] font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                  className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[10px] foco-numeric uppercase tracking-wider transition-colors cursor-pointer ${
                     isMuted
                       ? 'bg-neutral-900 text-neutral-500 border-white/10'
                       : 'bg-white/10 text-white border-white/20'
@@ -169,7 +170,7 @@ export const RestTimerHUD: React.FC = () => {
                   title={isMuted ? 'Ativar alerta sonoro' : 'Silenciar áudio'}
                 >
                   {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
-                  <span>{isMuted ? 'Mudo' : 'Som On'}</span>
+                  <span>{isMuted ? 'Som desativado' : 'Som ativado'}</span>
                 </button>
               </div>
 
@@ -179,7 +180,7 @@ export const RestTimerHUD: React.FC = () => {
                   <button
                     key={presetSecs}
                     onClick={() => startTimer(presetSecs, exerciseName, setNumber)}
-                    className={`min-h-11 py-1.5 rounded-lg font-mono text-[11px] font-black border transition-colors cursor-pointer ${
+                    className={`min-h-11 py-1.5 rounded-lg foco-numeric text-[11px] font-bold border transition-colors cursor-pointer ${
                       totalDuration === presetSecs
                         ? 'bg-white text-black border-white'
                         : 'bg-[#141414] text-neutral-300 border-white/10 hover:border-white/30 hover:text-white'

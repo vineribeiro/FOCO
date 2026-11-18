@@ -43,15 +43,15 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
     { title: 'Avaliação OKOK', description: 'Envie seu relatório corporal e consulte a análise por IA.', icon: FileUp, tab: 'arquivos' },
     { title: 'Meus treinos', description: 'Consulte, ajuste ou altere sua ficha ativa.', icon: Dumbbell, tab: 'treinos' },
     { title: 'Biblioteca de exercícios', description: 'Pesquise movimentos e adicione-os às suas fichas.', icon: BookOpen, tab: 'biblioteca' },
-    { title: 'Metas pessoais', description: 'Acompanhe os objetivos que você definiu.', icon: Target, tab: 'objetivos' },
+    { title: 'Metas e objetivos', description: 'Acompanhe os objetivos que você definiu.', icon: Target, tab: 'objetivos' },
     { title: 'Evolução', description: 'Revise seus registros e seu histórico de treino.', icon: TrendingUp, tab: 'progresso' },
   ];
 
   return (
     <div className="foco-v4-page max-w-3xl space-y-5 text-white">
       <header>
-        <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">Sua conta FOCO</p>
-        <h1 className="foco-v4-heading">Preferências</h1>
+        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">Sua conta FOCO</p>
+        <h1 className="foco-v4-heading">Configurações</h1>
         <p className="mt-2 text-sm leading-relaxed text-neutral-400">Gerencie seu perfil, seus treinos e os dados usados para personalizar sua experiência.</p>
       </header>
 
@@ -68,26 +68,26 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
         })}
       </section>
 
-      <section className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-5">
-        <div><h2 className="text-sm font-extrabold">Instalar FOCO</h2><p className="mt-1 text-xs text-neutral-400">Acesse pela tela inicial do celular, como um aplicativo.</p></div>
+      <section className="foco-v4-panel foco-density-panel flex flex-wrap items-center justify-between gap-3 p-5">
+        <div><h2 className="text-sm font-bold">Instalar FOCO</h2><p className="mt-1 text-xs text-neutral-400">Acesse pela tela inicial do celular, como um aplicativo.</p></div>
         <InstallAppButton />
       </section>
 
-      <section className="foco-v4-panel flex flex-wrap items-center justify-between gap-3 p-5" aria-label="Atualizar FOCO">
+      <section className="foco-v4-panel foco-density-panel flex flex-wrap items-center justify-between gap-3 p-5" aria-label="Atualizar FOCO">
         <div>
-          <h2 className="text-sm font-extrabold">Atualizações do FOCO</h2>
+          <h2 className="text-sm font-bold">Atualizações do FOCO</h2>
           <p className="mt-1 text-xs text-neutral-400">FOCO Visual {FOCO_VISUAL_RELEASE} · {FOCO_VISUAL_DATE}. Se a interface anterior aparecer, atualize os arquivos sem excluir o histórico salvo.</p>
         </div>
         <a href={import.meta.env.BASE_URL + 'atualizar.html'}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#E5F88A] px-4 text-xs font-extrabold text-[#10160D]">
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#E5F88A] px-4 text-xs font-bold text-[#10160D]">
           <RefreshCcw className="h-4 w-4"/> Atualizar
         </a>
       </section>
 
-      <section className="foco-v4-panel space-y-4 p-5 sm:p-6" aria-labelledby="foco-ui-preferences-title">
+      <section className="foco-v4-panel foco-density-panel space-y-4 p-5 sm:p-6" aria-labelledby="foco-ui-preferences-title">
         <div>
-          <h2 id="foco-ui-preferences-title" className="text-base font-extrabold">Aparência do FOCO</h2>
-          <p className="mt-1 text-xs leading-relaxed text-neutral-400">Ajuste o espaço entre os elementos e a transparência das superfícies. Vale apenas neste dispositivo.</p>
+          <h2 id="foco-ui-preferences-title" className="text-base font-bold">Aparência do FOCO</h2>
+          <p className="mt-1 text-xs leading-relaxed text-neutral-400">Ajuste o espaço dos cartões e resumos. As áreas de toque continuam acessíveis. Vale apenas neste dispositivo.</p>
         </div>
         <div role="group" aria-label="Densidade da interface">
           <p className="mb-2 text-xs font-semibold text-neutral-300">Espaçamento</p>
@@ -95,18 +95,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
             {([['comfortable','Confortável'],['compact','Compacto']] as const).map(([value,label])=>
               <button key={value} type="button" aria-pressed={uiPreferences.density===value}
                 onClick={()=>changeUiPreferences({density:value})}
-                className={'min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E5F88A] '+(uiPreferences.density===value?'border-[#E5F88A] bg-[#E5F88A] text-[#10160D]':'border-white/20 bg-white/5 text-white')}>
-                {label}
-              </button>)}
-          </div>
-        </div>
-        <div role="group" aria-label="Transparência das superfícies">
-          <p className="mb-2 text-xs font-semibold text-neutral-300">Transparência</p>
-          <div className="grid grid-cols-2 gap-2">
-            {([['balanced','Equilibrada'],['reduced','Reduzida']] as const).map(([value,label])=>
-              <button key={value} type="button" aria-pressed={uiPreferences.glass===value}
-                onClick={()=>changeUiPreferences({glass:value})}
-                className={'min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E5F88A] '+(uiPreferences.glass===value?'border-[#E5F88A] bg-[#E5F88A] text-[#10160D]':'border-white/20 bg-white/5 text-white')}>
+                className={'foco-choice min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E5F88A] '+(uiPreferences.density===value?'border-[#E5F88A] bg-[#E5F88A] text-[#10160D]':'border-white/20 bg-white/5 text-white')}>
                 {label}
               </button>)}
           </div>
@@ -135,7 +124,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
         <div className="flex items-start gap-3">
           <div className="rounded-xl bg-white p-2 text-black"><ShieldCheck className="h-5 w-5" /></div>
           <div>
-            <h2 className="text-sm font-black">Privacidade dos seus dados</h2>
+            <h2 className="text-sm font-bold">Privacidade dos seus dados</h2>
             <p className="mt-1 text-xs leading-relaxed text-neutral-400">Compartilhe apenas as informações necessárias para personalizar seus treinos. Dores, lesões e outras informações de saúde só devem ser usadas com sua autorização.</p>
           </div>
         </div>
@@ -143,11 +132,11 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ setActiveTab }) => {
 
       <section className="rounded-2xl border border-white/10 bg-[#141414] p-5" aria-labelledby="foco-image-credit-title">
         <h2 id="foco-image-credit-title" className="text-sm font-bold text-white">Créditos das ilustrações</h2>
-        <p className="mt-2 text-xs leading-5 text-neutral-400">As posições dos exercícios são imagens estáticas do catálogo gratuito da RepDB. O crédito e a licença acompanham a biblioteca.</p>
+        <p className="mt-2 text-xs leading-5 text-neutral-400">O FOCO reúne ilustrações humanas próprias criadas com IA e imagens estáticas da RepDB. A origem aparece em cada exercício. Dados e demais imagens da coleção externa: RepDB, com atribuição e licença na biblioteca.</p>
         <a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-xs font-bold text-[#E5F88A] underline underline-offset-4">{REPDB_CREDIT_TEXT}</a>
       </section>
 
-      <button type="button" onClick={logout} className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-xs font-black uppercase tracking-wide text-white transition hover:border-white/35 hover:bg-white/10">
+      <button type="button" onClick={logout} className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-xs font-bold uppercase tracking-wide text-white transition hover:border-white/35 hover:bg-white/10">
         <LogOut className="h-4 w-4" /> Sair da conta
       </button>
     </div>

@@ -6,10 +6,15 @@ O proprietário pediu um redesign completo com base nas quatro imagens fornecida
 
 Tokens: `src/foco-pro-tokens.css`. Único proprietário visual: `src/foco-ui.css`. As folhas v6/v7/v8 e 2.1 permanecem como arquivos históricos, sem importação na aplicação.
 
+Na revisão 3.7, `src/foco-brand.css` compartilha as fontes e os estados de abertura/recuperação com o HTML inicial e o atualizador. O build gera `public/foco-brand.css` desses estilos e dos tokens. A folha de estrutura do atlas usa os mesmos tokens e é carregada antes de `foco-ui.css`.
+
 - Fundo #222222, superfície #2D2D2D, elevada #363636, texto #F7F7F3, secundário #BCBCB8.
 - Lima #E5F88A, lilás #B6A1F3, rosa #EDC3F7, papel #FAFAF7, texto sobre pastel #22231C.
 - Títulos e cronômetros: Michroma 400. Corpo e controles: Space Grotesk 400–700. Fontes locais, OFL em public/fonts/.
 - Cartões de 24px, controles em pílula, navegação branca com botões circulares. Cor nunca é o único indicador de estado.
+- Ações irreversíveis usam o papel semântico de perigo, com confirmação explícita. Botões de ícone têm nome de ação e área de 44px.
+- Densidade confortável/compacta altera espaçamento de cartões e resumos, sem reduzir áreas de toque. Superfícies são opacas; não oferecer um ajuste de transparência sem efeito.
+- Ícones PWA e símbolo isolado derivam da geometria do logotipo aprovado, com cores dos tokens. Cards exportáveis usam a mesma marca e as fontes locais, com valores registrados.
 - Escala estimada a partir de telas equivalentes a aproximadamente 390px. Não há arquivo Figma nem promessa de igualdade pixel a pixel.
 
 ## Composição

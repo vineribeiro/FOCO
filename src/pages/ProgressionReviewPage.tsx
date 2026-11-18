@@ -16,6 +16,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
   const [recommendations, setRecommendations] = useState<AIRecommendation[]>([]);
   const [activePlan, setActivePlan] = useState<WorkoutPlan | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
   const [intervalDays, setIntervalDays] = useState<15 | 30>(15);
@@ -23,6 +24,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
 
   const loadData = async () => {
     setIsLoading(true);
+    setLoadError(false);
     try {
       const [recs, plan] = await Promise.all([
         api.getRecommendations(),
@@ -31,7 +33,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
       setRecommendations(recs);
       setActivePlan(plan);
     } catch (e: any) {
-      console.error('Error loading review recommendations:', e);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
     }
@@ -129,15 +131,15 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
           }`}
         >
           <span>{actionMsg.text}</span>
-          <button onClick={() => setActionMsg(null)} className="font-bold ml-2 cursor-pointer">✕</button>
+          <button type="button" onClick={() => setActionMsg(null)} aria-label="Fechar aviso" className="foco-icon-action">✕</button>
         </div>
       )}
 
       {/* Trigger Form Card */}
       <form onSubmit={handleTriggerReview} className="p-5 sm:p-6 rounded-2xl bg-[#141414] border border-white/10 space-y-4">
-        <div className="flex items-center gap-2 text-xs font-black text-white uppercase tracking-wider">
+        <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
           <Sparkles className="w-4 h-4 text-white" />
-          <span>Solicitar Nova Análise de Sobrecarga Progressiva</span>
+          <span>Solicitar revisão do treino</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -148,28 +150,30 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
+                aria-pressed={intervalDays === 15}
                 onClick={() => setIntervalDays(15)}
-                className={`py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   intervalDays === 15
                     ? 'bg-white text-black'
                     : 'bg-[#0A0A0A] text-neutral-400 border border-white/10 hover:text-white'
                 }`}
               >
-                Ciclo 15 Dias
+                Ciclo de 15 dias
               </button>
               <button
                 type="button"
+                aria-pressed={intervalDays === 30}
                 onClick={() => setIntervalDays(30)}
-                className={`py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   intervalDays === 30
                     ? 'bg-white text-black'
                     : 'bg-[#0A0A0A] text-neutral-400 border border-white/10 hover:text-white'
                 }`}
               >
-                Ciclo 30 Dias
+                Ciclo de 30 dias
               </button>
             </div>
-            <p className="text-[10px] text-neutral-500 mt-1 font-mono">
+            <p className="text-[10px] text-neutral-500 mt-1 foco-numeric">
               {intervalDays === 15 ? 'Revisar registros dos últimos 15 dias' : 'Revisar registros dos últimos 30 dias'}
             </p>
           </div>
@@ -180,23 +184,28 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
         <div className="pt-2 flex justify-end">
           <button
             type="submit"
-            disabled={isRequesting || !activePlan}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg disabled:opacity-50 transition-all"
+            disabled={isRequesting || !activePlan || loadError}
+            className="foco-v6-primary w-full sm:w-auto disabled:opacity-50"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>{isRequesting ? 'Calculando Sobrecarga...' : 'Analisar e Propor Evolução'}</span>
+            <span>{isRequesting ? 'Revisando registros...' : 'Revisar treino por regras'}</span>
           </button>
         </div>
       </form>
 
       {/* Recommendations List with Side-by-Side Comparison */}
       <div className="space-y-4">
-        <h3 className="text-xs font-black text-white uppercase tracking-wider">
+        <h3 className="text-xs font-bold text-white uppercase tracking-wider">
           Propostas de Progressão ({recommendations.length})
         </h3>
 
-        {isLoading ? (
-          <div className="py-12 text-center text-xs text-neutral-500 font-mono">
+        {loadError ? (
+          <div role="alert" className="foco-feedback space-y-3">
+            <p>Não foi possível consultar suas revisões. Confira a conexão e tente novamente.</p>
+            <button type="button" className="foco-v6-secondary" onClick={() => void loadData()}>Tentar novamente</button>
+          </div>
+        ) : isLoading ? (
+          <div className="py-12 text-center text-xs text-neutral-500 foco-numeric">
             Carregando histórico de ciclos...
           </div>
         ) : recommendations.length === 0 ? (
@@ -219,14 +228,14 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/10 gap-3">
                   <div>
-                    <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-widest">
+                    <div className="flex items-center gap-2 text-[10px] foco-numeric font-bold text-neutral-400 uppercase tracking-widest">
                       <span>Ciclo de {rec.review_interval_days} Dias</span>
                       <span>·</span>
                       <span>
                         {new Date(rec.created_at).toLocaleDateString('pt-BR')}
                       </span>
                     </div>
-                    <h4 className="text-base font-black text-white uppercase mt-0.5">
+                    <h4 className="text-base font-bold text-white uppercase mt-0.5">
                       {rec.proposed_plan?.name || 'Nova Proposta de Sobrecarga'}
                     </h4>
                   </div>
@@ -236,10 +245,10 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
                       <>
                         <button
                           onClick={() => handleApprove(rec.id)}
-                          className="px-4 py-2 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer shadow-md"
+                          className="foco-v6-primary"
                         >
                           <CheckCircle2 className="w-4 h-4" />
-                          <span>Aprovar e Ativar</span>
+                          <span>Aprovar e ativar ficha</span>
                         </button>
                         <button
                           onClick={() => handleReject(rec.id)}
@@ -250,7 +259,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
                       </>
                     ) : (
                       <span
-                        className="px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider bg-white/10 text-white"
+                        className="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-white/10 text-white"
                       >
                         {rec.status === 'approved' ? 'Aprovado e Ativado' : 'Recusado'}
                       </span>
@@ -267,11 +276,11 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
                 {/* Side-by-Side Comparison if Proposed Plan exists */}
                 {rec.proposed_plan?.exercises && (
                   <div className="mt-5">
-                    <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-2.5">
+                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2.5">
                       Comparativo de Sobrecarga e Exercícios Propostos
                     </p>
 
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Comparação da proposta de treino">
                       <table className="w-full text-left text-xs">
                         <thead>
                           <tr className="text-neutral-500 border-b border-white/10 font-bold uppercase text-[10px]">
@@ -284,7 +293,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
                             <th className="py-2 px-2">OBJETIVO DO AJUSTE</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5 font-mono">
+                        <tbody className="divide-y divide-white/5 foco-numeric">
                           {rec.proposed_plan.exercises.map((ex, idx) => (
                             <tr key={idx} className="hover:bg-white/5">
                               <td className="py-2.5 px-2 font-sans font-bold text-white">
@@ -293,7 +302,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
                               <td className="py-2.5 px-2 font-sans text-neutral-400">
                                 {ex.muscle_group}
                               </td>
-                              <td className="py-2.5 px-2 text-white font-black">
+                              <td className="py-2.5 px-2 text-white font-bold">
                                 {ex.sets}
                               </td>
                               <td className="py-2.5 px-2 text-neutral-300">

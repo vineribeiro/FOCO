@@ -150,7 +150,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
         <p className="foco-v4-eyebrow">FOCO / ATIVIDADE LIVRE</p>
         <h1 className="foco-v4-heading mt-2">Meu cardio</h1>
         <p className="mt-2 text-sm leading-relaxed text-neutral-300">
-          Escolhe uma atividade para hoje, inclusive num dia de descanso. A ficha original não muda.
+          Escolha uma atividade para hoje, inclusive num dia de descanso. A ficha original não muda.
         </p>
       </header>
       <p className="sr-only" role="status">{saved ? 'Cardio registrado no histórico. Teus dados estão salvos no FOCO.' : isSaving ? 'Salvando cardio.' : ''}</p>
@@ -181,7 +181,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
         <div className="foco-motion-cardio-timer rounded-3xl border border-white/15 bg-[#080808] px-4 py-7 text-center" data-running={!!draft && draft.runningSince !== null && !draft.finalizing}>
           <Clock3 className="mx-auto mb-4 h-6 w-6 text-neutral-400" />
           <p className="foco-v4-eyebrow">Tempo de atividade</p>
-          <p role="timer" className="mt-2 font-mono text-5xl font-black tracking-tighter tabular-nums sm:text-6xl">{clock(elapsedSeconds)}</p>
+          <p role="timer" className="mt-2 foco-numeric text-5xl font-bold tracking-tighter tabular-nums sm:text-6xl">{clock(elapsedSeconds)}</p>
           <p className="mt-3 text-xs text-neutral-400">{draft ? draft.pendingSubmission ? 'Atividade encerrada · Registro preservado para reenvio' : draft.finalizing ? 'Atividade encerrada · Preencha os dados abaixo' : draft.runningSince !== null ? 'Cronômetro em andamento' : 'Cronômetro pausado' : 'Pronto para começar'}</p>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             {!draft ? (
@@ -248,7 +248,7 @@ export const CardioPage: React.FC<CardioPageProps> = ({ setActiveTab }) => {
                   if (draft) saveDraft({ ...draft, notes: event.target.value });
                 }}
                 className="w-full rounded-xl border border-white/20 bg-[#101010] p-3 text-sm text-white outline-none focus:border-white"
-                placeholder="Inclinação, velocidade média, como te sentiu..." />
+                placeholder="Inclinação, velocidade média, como você se sentiu..." />
             </div>
             <button type="button" disabled={isSaving} onClick={finish}
               className="foco-v4-action w-full justify-center disabled:opacity-50">

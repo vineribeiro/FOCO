@@ -237,7 +237,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
       </button>
       <section className="foco-v2-insights" aria-labelledby="foco-v2-insights-title">
         <div className="foco-v2-insights-head">
-          <div><p>FOCO Intelligence · seus registros</p><h2 id="foco-v2-insights-title">Últimos 30 dias</h2></div>
+          <div><p>Resumo FOCO · seus registros</p><h2 id="foco-v2-insights-title">Últimos 30 dias</h2></div>
           {!isLoading && !dataUnavailable && insights.workouts > 0 && <button type="button" onClick={()=>void shareTrainingSummary()} className="foco-v2-insights-share">Compartilhar</button>}
         </div>
         {isLoading ? <p role="status">Consultando sessões salvas...</p>
@@ -308,12 +308,12 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Weight className="w-4 h-4 text-white" />
-            <h3 className="text-xs font-black text-white uppercase tracking-wider">
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider">
               Peso manual (kg)
             </h3>
           </div>
           {visibleWeightData.length > 0 && (
-            <span className="text-xs font-mono font-bold text-white">
+            <span className="text-xs foco-numeric font-bold text-white">
               {visibleWeightData[visibleWeightData.length - 1].peso} kg
             </span>
           )}
@@ -370,11 +370,11 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-white" />
-            <h3 className="text-xs font-black text-white uppercase tracking-wider">
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider">
               Volume por Sessão (kg)
             </h3>
           </div>
-          <span className="text-xs font-mono font-bold text-neutral-400">
+          <span className="text-xs foco-numeric font-bold text-neutral-400">
             Tonelagem
           </span>
         </div>
@@ -417,7 +417,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
         onSubmit={handleAddMeasurement}
         className="foco-v4-panel space-y-3 p-4 sm:p-5"
       >
-        <div className="flex items-center gap-2 text-xs font-black text-white uppercase tracking-wider">
+        <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
           <Plus className="w-4 h-4 text-white" />
           <span>Registrar medida manual</span>
         </div>
@@ -458,7 +458,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                 min="0.1"
                 inputMode="decimal"
                 aria-label="Valor da medida"
-                className="foco-v4-field min-w-0 flex-1 font-mono tabular-nums !text-base"
+                className="foco-v4-field min-w-0 flex-1 foco-numeric tabular-nums !text-base"
               />
               <span className="px-2.5 py-2 rounded-xl bg-[#000000] border border-white/10 text-xs font-bold text-neutral-400 flex items-center">
                 {measurementUnit}
@@ -478,7 +478,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
 
       {/* History Table */}
       {!dataUnavailable && <div className="foco-v4-panel space-y-3 p-4 sm:p-5">
-        <h3 className="text-sm font-extrabold text-white">
+        <h3 className="text-sm font-bold text-white">
           Histórico de medidas manuais ({measurements.length})
         </h3>
 
@@ -491,11 +491,11 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                 <tr className="border-b border-white/10 text-xs font-semibold text-neutral-300">
                   <th className="py-2 px-1">DATA</th>
                   <th className="py-2 px-1">TIPO</th>
-                  <th className="py-2 px-1 font-mono">VALOR</th>
+                  <th className="py-2 px-1 foco-numeric">VALOR</th>
                   <th className="py-2 px-1 text-right">EXCLUIR</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-mono">
+              <tbody className="divide-y divide-white/5 foco-numeric">
                 {measurements.map((m) => (
                   <tr key={m.id}>
                     <td className="py-2 px-1 text-neutral-400">
@@ -504,7 +504,7 @@ export const ProgressPage: React.FC<{ setActiveTab: (tab: string) => void }> = (
                     <td className="py-2 px-1 font-sans font-bold text-white capitalize">
                       {m.measurement_type.replace('_', ' ')}
                     </td>
-                    <td className="py-2 px-1 text-white font-black">
+                    <td className="py-2 px-1 text-white font-bold">
                       {m.value} {m.unit}
                     </td>
                     <td className="py-2 px-1 text-right">

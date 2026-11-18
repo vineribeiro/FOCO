@@ -13,6 +13,6 @@ export const ExerciseExecutionGuide:React.FC<Props>=({exerciseName,muscleGroup,e
   </div>
   <ExerciseIllustration exerciseName={exerciseName} exerciseId={exerciseId} muscleGroup={muscleGroup}
     presentation="editorial" interactive className="foco-repdb-guide-visual w-full"/>
-  <p className="foco-repdb-guide-note">Confirma equipamento, postura, amplitude e carga com um profissional. O FOCO não substitui acompanhamento especializado.</p>
+  <p className="foco-repdb-guide-note">Confirme equipamento, postura, amplitude e carga com um profissional. O FOCO não substitui acompanhamento especializado.</p>
   <p className="foco-atlas-credit"><a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer">{REPDB_CREDIT_TEXT}</a></p>
  </div>;

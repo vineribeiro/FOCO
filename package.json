@@ -39,7 +39,9 @@
     "test:rules-personal-browser": "node scripts/test-rules-personal-browser.mjs",
     "test:ptbr-browser": "node scripts/test-ptbr-catalog-browser.mjs",
     "test:human-media": "tsx scripts/test-human-media.ts",
-    "test:human-media-browser": "node scripts/test-human-media-browser.mjs"
+    "test:human-media-browser": "node scripts/test-human-media-browser.mjs",
+    "test:brand-assets": "node scripts/test-brand-assets.mjs",
+    "test:branding-browser": "node scripts/test-branding-browser.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

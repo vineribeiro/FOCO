@@ -39,6 +39,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
   const [recoveryAccessToken, setRecoveryAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
+    const titles = { login:'Entrar', register:'Criar conta', forgot:'Recuperar acesso', reset:'Redefinir senha' };
+    document.title = titles[mode] + ' | FOCO';
+  }, [mode]);
+
+  useEffect(() => {
     const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : '';
     const params = new URLSearchParams(hash);
     const authError = params.get('error_description') || params.get('error') || params.get('error_code');
@@ -189,7 +194,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
           <div className="foco-v7-auth-card foco-v6-auth-card overflow-hidden rounded-[28px] border border-white/10 bg-[#111111]/95 shadow-[0_32px_100px_rgba(0,0,0,.5)] backdrop-blur-xl">
             <div className="foco-auth-card-header border-b border-white/[0.07] px-5 pb-5 pt-6 sm:px-8 sm:pt-8">
               <div className="mb-3 flex items-center justify-between gap-3">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
                   {isLogin ? 'Bem-vindo de volta' : isRegister ? 'Comece sua jornada' : isReset ? 'Definir nova senha' : 'Recuperar acesso'}
                 </span>
                 <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-neutral-600">
@@ -197,7 +202,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                   Acesso seguro
                 </div>
               </div>
-              <h1 className="text-2xl font-black tracking-tight sm:text-[28px]">
+              <h1 className="text-2xl font-bold tracking-tight sm:text-[28px]">
                 {isLogin ? 'Entre na sua conta.' : isRegister ? 'Crie seu perfil.' : isReset ? 'Defina sua nova senha.' : 'Vamos recuperar seu acesso.'}
               </h1>
               <p className="mt-2 max-w-md text-xs leading-6 text-neutral-400 sm:text-sm">
@@ -219,7 +224,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                     role="tab"
                     aria-selected={isLogin}
                     onClick={() => changeMode('login')}
-                    className={`rounded-lg px-3 py-2.5 text-[11px] font-black uppercase tracking-widest transition-all ${isLogin ? 'bg-white text-black shadow-lg' : 'text-neutral-500 hover:text-white'}`}
+                    className={`rounded-lg px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest transition-all ${isLogin ? 'bg-white text-black shadow-lg' : 'text-neutral-500 hover:text-white'}`}
                   >
                     Entrar
                   </button>
@@ -228,7 +233,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                     role="tab"
                     aria-selected={isRegister}
                     onClick={() => changeMode('register')}
-                    className={`rounded-lg px-3 py-2.5 text-[11px] font-black uppercase tracking-widest transition-all ${isRegister ? 'bg-white text-black shadow-lg' : 'text-neutral-500 hover:text-white'}`}
+                    className={`rounded-lg px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest transition-all ${isRegister ? 'bg-white text-black shadow-lg' : 'text-neutral-500 hover:text-white'}`}
                   >
                     Criar conta
                   </button>
@@ -311,9 +316,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
                         placeholder={isReset ? 'Digite sua nova senha' : isRegister ? 'Crie uma senha com 8+ caracteres' : 'Digite sua senha'}
-                        className="w-full rounded-xl border border-white/10 bg-black/40 py-3.5 pl-10 pr-11 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-white/40 focus:ring-2 focus:ring-white/[0.04]"
+                        className="foco-password-field w-full rounded-xl border border-white/10 bg-black/40 py-3.5 pl-10 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-white/40 focus:ring-2 focus:ring-white/[0.04]"
                       />
-                      <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-neutral-500 transition hover:text-white">
+                      <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'} className="foco-icon-action foco-password-toggle">
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
                     </div>
@@ -336,9 +341,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                           value={confirmPassword}
                           onChange={(event) => setConfirmPassword(event.target.value)}
                           placeholder={isReset ? 'Digite a nova senha novamente' : 'Digite a senha novamente'}
-                          className="w-full rounded-xl border border-white/10 bg-black/40 py-3.5 pl-10 pr-11 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-white/40 focus:ring-2 focus:ring-white/[0.04]"
+                          className="foco-password-field w-full rounded-xl border border-white/10 bg-black/40 py-3.5 pl-10 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-white/40 focus:ring-2 focus:ring-white/[0.04]"
                         />
-                        <button type="button" onClick={() => setShowConfirmPassword((value) => !value)} aria-label={showConfirmPassword ? 'Ocultar confirmação de senha' : 'Mostrar confirmação de senha'} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-neutral-500 transition hover:text-white">
+                        <button type="button" onClick={() => setShowConfirmPassword((value) => !value)} aria-label={showConfirmPassword ? 'Ocultar confirmação de senha' : 'Mostrar confirmação de senha'} className="foco-icon-action foco-password-toggle">
                           {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
@@ -375,7 +380,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
                 <button
                   type="submit"
                   disabled={busy}
-                  className="group mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-4 text-[11px] font-black uppercase tracking-[0.16em] text-black shadow-[0_8px_28px_rgba(255,255,255,.08)] transition hover:bg-neutral-200 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="foco-v6-primary group mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-4 text-[11px] font-bold uppercase tracking-[0.16em] text-black shadow-[0_8px_28px_rgba(255,255,255,.08)] transition hover:bg-neutral-200 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <span>{busy ? 'Aguarde um instante...' : isLogin ? 'Entrar no FOCO' : isRegister ? 'Criar minha conta' : isReset ? 'Atualizar senha' : 'Enviar instruções'}</span>
                   {!busy && <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />}
@@ -391,7 +396,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onRegistered }) => {
               {!isForgot && !isReset && (
                 <p className="mt-5 text-center text-[11px] text-neutral-500">
                   {isLogin ? 'Ainda não tem uma conta?' : 'Já tem uma conta?'}{' '}
-                  <button type="button" onClick={() => changeMode(isLogin ? 'register' : 'login')} className="font-black text-white underline decoration-white/30 underline-offset-4 transition hover:decoration-white">
+                  <button type="button" onClick={() => changeMode(isLogin ? 'register' : 'login')} className="font-bold text-white underline decoration-white/30 underline-offset-4 transition hover:decoration-white">
                     {isLogin ? 'Criar perfil grátis' : 'Entrar na conta'}
                   </button>
                 </p>

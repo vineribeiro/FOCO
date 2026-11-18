@@ -308,7 +308,7 @@ try{
         assert.equal(await page.getByRole('button',{name:'90 dias'}).getAttribute('aria-pressed'),'true');
       }else if(view==='perfil'){
         await page.getByRole('button',{name:'Metas e objetivos'}).click();
-        await page.getByRole('heading',{name:/Metas.*Foco Esportivo/i}).waitFor({timeout:5000});
+        await page.getByRole('heading',{name:'Metas e objetivos',exact:true}).waitFor({timeout:5000});
       }else if(view==='treinos'){
         await page.getByRole('button',{name:'Programa',exact:true}).click();
         assert.equal(await page.getByRole('button',{name:'Programa',exact:true}).getAttribute('aria-pressed'),'true');

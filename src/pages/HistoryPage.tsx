@@ -48,7 +48,7 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black uppercase tracking-tight text-white">Histórico de Treinos</h2>
+          <h2 className="text-xl font-bold uppercase tracking-tight text-white">Histórico de treinos</h2>
           <p className="text-xs text-neutral-400 mt-0.5">
             Registro de musculação e cardio, com tempo, distância, séries e cargas.
           </p>
@@ -56,14 +56,14 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
 
         <button
           onClick={() => setActiveTab('sessao')}
-          className="px-4 py-2 rounded-xl bg-white hover:bg-neutral-200 text-black font-black text-xs uppercase tracking-wider cursor-pointer shadow-md"
+          className="foco-v6-primary px-4 py-2 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider cursor-pointer shadow-md"
         >
-          Iniciar Novo Treino
+          Abrir treino
         </button>
       </div>
 
       {isLoading ? (
-        <div className="py-16 text-center text-xs text-neutral-500 font-mono">
+        <div className="py-16 text-center text-xs text-neutral-500 foco-numeric">
           Carregando histórico de sessões...
         </div>
       ) : loadError ? (
@@ -75,9 +75,9 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
       ) : sessions.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-[#141414] border border-dashed border-white/10 space-y-3">
           <History className="w-10 h-10 text-neutral-500 mx-auto" />
-          <h3 className="text-sm font-black uppercase text-white">Nenhum treino concluído ainda</h3>
+          <h3 className="text-sm font-bold uppercase text-white">Nenhum treino concluído ainda</h3>
           <p className="text-xs text-neutral-400 max-w-sm mx-auto">
-            Abra a aba "Sessão Ativa" e conclua seu primeiro treino para registrar o progresso no banco de dados.
+            Abra Treinar e conclua sua primeira sessão para acompanhar os registros no histórico.
           </p>
         </div>
       ) : (
@@ -109,10 +109,10 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                       {isCardio ? <Activity className="w-5 h-5" /> : <Dumbbell className="w-5 h-5" />}
                     </div>
                     <div>
-                      <h4 className="font-black text-sm text-white uppercase">
+                      <h4 className="font-bold text-sm text-white uppercase">
                         {sess.plan_name || 'Treino Realizado'}
                       </h4>
-                      <div className="flex items-center gap-2 text-xs text-neutral-400 mt-0.5 font-mono">
+                      <div className="flex items-center gap-2 text-xs text-neutral-400 mt-0.5 foco-numeric">
                         <span>{new Date(sess.started_at).toLocaleDateString('pt-BR')}</span>
                         <span>·</span>
                         <span>{Math.round(sess.duration_seconds / 60)} min</span>
@@ -123,9 +123,9 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <div className="text-right font-mono">
+                    <div className="text-right foco-numeric">
                       <span className="text-[10px] text-neutral-500 block uppercase">{isCardio ? 'Distância / Andares' : 'Tonelagem Total'}</span>
-                      <span className="text-xs font-black text-white tabular-nums">
+                      <span className="text-xs font-bold text-white tabular-nums">
                         {isCardio ? (cardio?.metric || '—') : Math.round(totalTonnage) + ' kg'}
                       </span>
                     </div>
@@ -156,7 +156,7 @@ export const HistoryPage: React.FC<HistoryProps> = ({ setActiveTab }) => {
                             <th className="py-2 px-2 text-right">STATUS</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5 font-mono">
+                        <tbody className="divide-y divide-white/5 foco-numeric">
                           {(sess.sets || []).map((s, idx) => (
                             <tr key={idx}>
                               <td className="py-2 px-2 font-sans font-medium text-white">
