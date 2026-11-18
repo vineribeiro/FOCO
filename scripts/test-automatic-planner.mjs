@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {buildAutomaticWorkout,PlannerError,plannerEquipment,auditAutomaticRecovery} from '../supabase/functions/foco-api/automaticPlanner.mjs';
+import {buildAutomaticWorkout,PlannerError,plannerEquipment,auditAutomaticRecovery,MIN_AUTOMATIC_EXERCISES_PER_DAY} from '../supabase/functions/foco-api/automaticPlanner.mjs';
 import {auditScientificWorkout,estimateTrainingSessionMinutes,sessionExerciseRange} from '../supabase/functions/foco-api/trainingScience.mjs';
 import {catalogExercise} from '../supabase/functions/foco-api/trainingCatalog.mjs';
 const weekdays=['segunda','terca','quarta','quinta','sexta','sabado','domingo'];
@@ -13,7 +13,7 @@ for(const experience of ['iniciante','intermediario','avancado'])for(let frequen
   assert.deepEqual(plan,buildAutomaticWorkout(input),'Same context must produce exactly the same proposal');
   assert.equal(plan.generation.ai_calls,0);assert.equal(plan.generation.method,'rules');assert.equal(plan.ai_generation,undefined);
   for(const day of plan.planning.strength_days){const daily=plan.exercises.filter(ex=>ex.training_day===day);
-   assert.ok(daily.length>=2,'Every chosen day must contain a useful resistance session');assert.ok(daily.length<=sessionExerciseRange(sessionMinutes).max);
+   assert.ok(daily.length>=4,'Every chosen day must contain at least four distinct exercises');assert.ok(daily.length<=Math.max(MIN_AUTOMATIC_EXERCISES_PER_DAY,sessionExerciseRange(sessionMinutes).max));
    assert.ok(estimateTrainingSessionMinutes(daily)<=sessionMinutes,'Time is a hard cap, not an estimate allowed to overflow');
    assert.equal(new Set(daily.map(e=>e.exercise_name)).size,daily.length);
   }
@@ -50,6 +50,7 @@ const allDays={days:weekdays,sessionMinutes:40,experience:'iniciante',equipmentA
 const health=buildAutomaticWorkout({...allDays,goal:'Saúde e qualidade de vida'});
 assert.deepEqual(health.planning.strength_days,weekdays);
 assert.equal(health.weekly_frequency,7);assert.equal(health.planning.priority_mode,'balanced');
+for(const day of weekdays)assert.ok(health.exercises.filter(ex=>ex.training_day===day).length>=4,'Screenshot context: all seven days must have at least four exercises, including Sunday');
 assert.ok(health.exercises.every(e=>e.muscle_group!=='Cardio'),'Recovery must not become a fictitious resistance exercise');
 const signature=p=>JSON.stringify(p.exercises.map(({notes,...ex})=>ex));
 const goals=['Saúde e qualidade de vida','Hipertrofia Máxima','Força Pura & Cargas','Definição & Emagrecimento','Recomposição corporal','Condicionamento & Resistência'];
@@ -74,6 +75,7 @@ for(let mask=1;mask<128;mask++){
  for(const experience of ['iniciante','intermediario','avancado']){
   const p=buildAutomaticWorkout({days,experience,sessionMinutes:45,equipmentAvailable:'Academia completa'});
   assert.equal(p.weekly_frequency,days.length);assert.ok(auditAutomaticRecovery(p.exercises).ok);assert.ok(p.exercises.every(e=>days.includes(e.training_day)));
+  for(const day of days)assert.ok(p.exercises.filter(ex=>ex.training_day===day).length>=4);
  }
 }
 console.log('PASS: screenshot reproduction, six distinct goal prescriptions, focus dose, duration, every calendar subset, direct/indirect recovery and Sunday/Monday.');
@@ -83,3 +85,26 @@ for(const equipmentAvailable of ['Máquinas e polias','Barras e banco','Academia
  assert.ok(auditAutomaticRecovery(p.exercises).ok);
  assert.ok(p.exercises.some(e=>e.muscle_group==='Panturrilhas'),'Hamstring-curl secondary recruitment must not replace dedicated calf work');
 }
+
+let goalContexts=0;
+for(const goal of goals)for(const experience of ['iniciante','intermediario','avancado'])for(let frequency=2;frequency<=7;frequency++)for(const sessionMinutes of [20,30,40,60]){
+ const p=buildAutomaticWorkout({goal,experience,days:weekdays.slice(0,frequency),sessionMinutes,equipmentAvailable:'Academia completa'});
+ for(const day of p.planning.strength_days){
+  const daily=p.exercises.filter(ex=>ex.training_day===day);
+  assert.ok(daily.length>=4);assert.equal(new Set(daily.map(ex=>ex.exercise_name)).size,daily.length);
+  assert.ok(estimateTrainingSessionMinutes(daily)<=sessionMinutes);
+ }
+ assert.ok(auditAutomaticRecovery(p.exercises).ok);goalContexts++;
+}
+for(const equipmentAvailable of ['Máquinas e polias','Halteres e banco','Academia completa sem halteres','Academia completa sem barras']){
+ const p=buildAutomaticWorkout({...allDays,equipmentAvailable});
+ for(const day of weekdays)assert.ok(p.exercises.filter(ex=>ex.training_day===day).length>=4,'Equipment changes must preserve the minimum, including the accessory day');
+ assert.ok(auditAutomaticRecovery(p.exercises).ok);
+}
+// Only one eligible chest, shoulder and triceps movement: a push day cannot
+// reach four. Reject explicitly rather than duplicate a name or drop the day.
+assert.throws(()=>buildAutomaticWorkout({days:weekdays.slice(0,3),sessionMinutes:45,equipmentAvailable:'Academia completa',excludedExercises:[
+ 'Supino reto com halteres','Supino na máquina','Flexão de braços','Supino inclinado com halteres','Crucifixo com halteres','Peck deck','Crossover nas polias',
+ 'Desenvolvimento na máquina','Elevação lateral com halteres','Elevação lateral no cabo','Tríceps francês unilateral com halter','Flexão de braços com pegada fechada',
+]}),error=>error instanceof PlannerError&&error.code==='COVERAGE_CONFLICT'&&/quatro exercícios distintos/.test(error.message)&&/Nenhuma ficha foi salva/.test(error.message));
+console.log(`PASS: four-exercise minimum across ${goalContexts} goal/level/frequency/duration contexts, alternative equipment and explicit unsatisfied-minimum conflict.`);

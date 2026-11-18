@@ -30,8 +30,9 @@ await check("Edge Function responde e anuncia o motor correto", async () => {
   const data = await response.json();
   assert.equal(data.app, "FOCO");
   assert.equal(data.science_engine, "foco-training-study-2026.6");
-  assert.equal(data.build, "2026-11-17-ptbr-frequency");
-  assert.equal(data.automatic_planner, "foco-rules-2026.3");
+  assert.equal(data.build, "2026-11-18-minimum-four");
+  assert.equal(data.automatic_planner, "foco-rules-2026.4");
+  assert.equal(data.automatic_planner_min_exercises, 4);
   assert.equal(data.personal_coach, "foco-personal-2026.1");
   assert.equal(data.database, "supabase-postgres");
   assert.equal(data.ai_status, "configured", "ao menos uma chave deve estar configurada");
@@ -77,7 +78,7 @@ await check("GitHub Pages entrega HTML do FOCO", async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") || "", /text\/html/);
   const html = await response.text();
-  assert.match(html, /<meta name="foco-release" content="2026-11-18-v37-brand-consistency"/, 'O site publicado precisa conter a versão 3.7, não apenas o workflow concluído');
+  assert.match(html, /<meta name="foco-release" content="2026-11-18-v38-minimum-four"/, 'O site publicado precisa conter a versão 3.8, não apenas o workflow concluído');
   assert.match(html, /<div[^>]+id=["']root["']/);
   const scripts = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/g)].map(match => match[1]);
   const asset = scripts.find(source => /(?:^|\/)assets\/[^/]+\.js(?:\?.*)?$/.test(source));

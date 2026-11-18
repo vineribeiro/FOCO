@@ -3,7 +3,7 @@ import { api } from '../services/api';
 import { ExerciseIllustration } from '../components/ExerciseIllustration';
 import { useAuth } from '../context/AuthContext';
 import { WorkoutExercise, GeneratedWorkoutProposal } from '../types';
-import { aiWorkoutFingerprint, readAiWorkoutDraft, readAiWorkoutFormDraft, saveAiWorkoutDraft, clearAiWorkoutDraft, AUTOMATIC_PLANNER_VERSION, defaultAvailableDays, AVAILABLE_WEEKDAYS } from '../utils/aiWorkoutDraft';
+import { aiWorkoutFingerprint, readAiWorkoutDraft, readAiWorkoutFormDraft, saveAiWorkoutDraft, clearAiWorkoutDraft, AUTOMATIC_PLANNER_VERSION, defaultAvailableDays, AVAILABLE_WEEKDAYS, isCurrentAutomaticProposal } from '../utils/aiWorkoutDraft';
 import { TRAINING_DAYS } from '../data/exerciseLibrary';
 import {
   Sparkles,
@@ -196,6 +196,10 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
     try {
       const result = await api.generateAutomaticWorkout({ ...aiPayload, force_refresh: !!generatedPlan });
       if (version !== requestVersion.current || context !== currentContext.current) return;
+      if (!isCurrentAutomaticProposal(result)) {
+        setGeneratedPlan(null);
+        throw new Error('Atualize o FOCO e monte uma nova prévia com pelo menos quatro exercícios distintos em cada dia escolhido.');
+      }
       generatedContext.current=context;
       setGeneratedPlan(result);
       setDraftRestored(false);
@@ -225,7 +229,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
   const handleSaveGeneratedPlan = async () => {
     if (!generatedPlan) return;
-    if(generatedContext.current!==currentContext.current || generatedPlan.generation?.version!==AUTOMATIC_PLANNER_VERSION){
+    if(generatedContext.current!==currentContext.current || !isCurrentAutomaticProposal(generatedPlan)){
       setGeneratedPlan(null);setErrorMsg('Os ajustes mudaram. Monte uma nova prévia antes de aprovar.');return;
     }
     setIsSaving(true);
@@ -445,7 +449,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
                     disabled={availableDays.length===2&&availableDays.includes(day.value)} onClick={()=>toggleAvailableDay(day.value)}
                     className={`foco-availability-day ${availableDays.includes(day.value)?'is-selected':''}`}>{day.shortLabel}</button>)}
                 </div>
-                <p id="foco-availability-hint" className="mt-2 text-xs leading-relaxed text-neutral-400">Selecione de dois a sete dias. Cada dia escolhido terá uma sessão. O motor distribui grupos e volume para respeitar a recuperação.</p>
+                <p id="foco-availability-hint" className="mt-2 text-xs leading-relaxed text-neutral-400">Selecione de dois a sete dias. Cada dia escolhido terá pelo menos quatro exercícios distintos, com séries distribuídas para respeitar tempo, volume e recuperação.</p>
               </fieldset>
 
               <div><label className="block text-xs font-bold text-neutral-300 mb-1.5" htmlFor="foco-automatic-minutes">Tempo por sessão (min)</label><input id="foco-automatic-minutes" type="number" min="20" max="180" step="5" value={sessionMinutes} onChange={e=>setSessionMinutes(Number(e.target.value))} className="w-full px-3.5 py-2.5 border" required/></div>
@@ -553,6 +557,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
               <p className="text-xs leading-relaxed text-neutral-400">Revise a divisão semanal e cada exercício antes de ativar. Cargas iniciais ficam em aberto até serem ajustadas individualmente.</p>
               {generatedPlan.planning&&<div className="foco-v4-panel-soft p-4 space-y-2" role="status">
                 <p className="text-sm font-bold">{generatedPlan.weekly_frequency} treinos por semana · frequência respeitada</p>
+                <p className="text-xs leading-relaxed text-neutral-300">Mínimo de quatro exercícios por sessão.</p>
                 <p className="text-xs leading-relaxed text-neutral-300">{generatedPlan.planning.reason}</p>
                 {generatedPlan.planning.recovery_days.length>0&&<p className="text-xs leading-relaxed text-neutral-300">Dias sem sessão: {generatedPlan.planning.recovery_days.map(day=>TRAINING_DAYS.find(d=>d.value===day)?.shortLabel).join(', ')}. Descanso ou atividade leve conforme sua recuperação.</p>}
                 <p className="text-xs leading-relaxed text-neutral-400">Um dia completo de intervalo entre estímulos direcionados do mesmo grupo, considerando os auxiliares dos exercícios compostos e a virada da semana. Horários reais também precisam ser respeitados.</p>

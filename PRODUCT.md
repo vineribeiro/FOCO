@@ -49,3 +49,5 @@ Contas isoladas; operações de salvar/recuperar verídicas; nenhuma perda de tr
 
 ## Montagem e Personal — decisão de 16/11/2026
 A ficha automática e sua revisão usam o motor de regras FOCO, sem inferência. A IA atua no Personal FOCO para perguntas e explicações baseadas no dossiê e, por escolha do usuário, em sua ficha e registros. O chat não executa alterações na conta. Propostas precisam de aprovação explícita; condições incompatíveis precisam de uma explicação acionável.
+
+Cada dia escolhido na montagem automática deve ter **no mínimo quatro exercícios distintos**, inclusive o sétimo dia de core/acessórios. Esta é uma exigência do produto, reafirmada pelo proprietário em 18/11/2026. Reservar os quatro movimentos antes de aumentar as séries; preservar duração, volume, equipamentos e recuperação. Se as condições não permitirem atender às regras, explicar o conflito em vez de entregar menos exercícios ou remover dias. A atualização do motor invalida prévias antigas e não reescreve fichas ativas/histórico.

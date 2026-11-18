@@ -1,13 +1,19 @@
 import assert from 'node:assert/strict';
-import { aiWorkoutFingerprint, readAiWorkoutDraft, saveAiWorkoutDraft, clearAiWorkoutDraft, AUTOMATIC_PLANNER_VERSION, readAiWorkoutFormDraft } from '../src/utils/aiWorkoutDraft';
+import { aiWorkoutFingerprint, readAiWorkoutDraft, saveAiWorkoutDraft, clearAiWorkoutDraft, AUTOMATIC_PLANNER_VERSION, readAiWorkoutFormDraft, isCurrentAutomaticProposal, MIN_AUTOMATIC_EXERCISES_PER_DAY } from '../src/utils/aiWorkoutDraft';
+import { AUTOMATIC_PLANNER_VERSION as BACKEND_VERSION, MIN_AUTOMATIC_EXERCISES_PER_DAY as BACKEND_MINIMUM, buildAutomaticWorkout } from '../supabase/functions/foco-api/automaticPlanner.mjs';
 import type { GeneratedWorkoutProposal } from '../src/types';
 
 const store = new Map<string,string>();
 Object.defineProperty(globalThis,'sessionStorage',{configurable:true,value:{
   getItem:(key:string)=>store.get(key)??null,setItem:(key:string,value:string)=>store.set(key,value),removeItem:(key:string)=>store.delete(key),
 }});
-const plan: GeneratedWorkoutProposal={name:'Proposta sintética',goal:'Hipertrofia',weekly_frequency:2,explanation:'Revisar antes de ativar.',generation:{method:'rules',version:AUTOMATIC_PLANNER_VERSION,ai_calls:0},
-  exercises:[{exercise_name:'Supino reto com barra',muscle_group:'Peitoral',sets:2,reps_min:8,reps_max:12,rest_seconds:120,suggested_load_kg:0}]};
+assert.equal(AUTOMATIC_PLANNER_VERSION,BACKEND_VERSION);
+assert.equal(MIN_AUTOMATIC_EXERCISES_PER_DAY,4);assert.equal(MIN_AUTOMATIC_EXERCISES_PER_DAY,BACKEND_MINIMUM);
+const plan=buildAutomaticWorkout({days:['segunda','quinta'],sessionMinutes:40,equipmentAvailable:'Academia completa'}) as GeneratedWorkoutProposal;
+assert.ok(isCurrentAutomaticProposal(plan));
+const tooShort={...plan,exercises:plan.exercises.filter(ex=>ex.training_day==='segunda').slice(0,2).concat(plan.exercises.filter(ex=>ex.training_day==='quinta'))};
+assert.equal(isCurrentAutomaticProposal(tooShort),false,'Never accept fewer than four movements in any day');
+assert.equal(isCurrentAutomaticProposal({...plan,exercises:[...plan.exercises.slice(1),plan.exercises[1]]}),false,'Duplicate names must not satisfy the minimum');
 const fingerprint=await aiWorkoutFingerprint('clinical-context-synthetic');
 assert.equal(fingerprint.length,64);
 saveAiWorkoutDraft('account-a',fingerprint,plan);
@@ -20,7 +26,9 @@ store.set(key,JSON.stringify({...draft,expiresAt:Date.now()-1}));
 assert.equal(readAiWorkoutDraft('account-a',fingerprint),null);
 saveAiWorkoutDraft('account-a',fingerprint,plan);clearAiWorkoutDraft('account-a');
 assert.equal(readAiWorkoutDraft('account-a',fingerprint),null);
-saveAiWorkoutDraft('account-a',fingerprint,{...plan,generation:{method:'rules',version:'foco-rules-2026.1',ai_calls:0}});
+saveAiWorkoutDraft('account-a',fingerprint,tooShort);
+assert.equal(readAiWorkoutDraft('account-a',fingerprint),null,'Reject a short cached proposal even if its version is current');
+saveAiWorkoutDraft('account-a',fingerprint,{...plan,generation:{method:'rules',version:'foco-rules-2026.3',ai_calls:0}});
 assert.equal(readAiWorkoutDraft('account-a',fingerprint),null,'Never restore an old unsafe generator proposal');
 const form={goal:'Saúde e qualidade de vida',frequency:2,experience:'iniciante' as const,focus:[],equipment:'Academia completa',includeBodyMetrics:false,medicalClearanceConfirmed:false,sessionMinutes:40,availableDays:['quarta','sabado']};
 saveAiWorkoutDraft('account-a',fingerprint,plan,{baseFingerprint:fingerprint,form});
