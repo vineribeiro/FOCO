@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { AIRecommendation, WorkoutPlan } from '../types';
+import { actionErrorMessage } from '../utils/actionErrorMessage';
 import {
   RotateCcw,
   Sparkles,
@@ -48,7 +49,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
     if (!activePlan) {
       setActionMsg({
         type: 'error',
-        text: 'Você precisa ter uma ficha ativa no FOCO antes de rodar o ciclo de revisão.',
+        text: 'Ative uma ficha em Meus treinos antes de solicitar a revisão.',
       });
       return;
     }
@@ -64,14 +65,14 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
 
       setActionMsg({
         type: 'success',
-        text: `Ciclo de ${intervalDays} dias processado! Uma proposta por regras foi montada para sua avaliação.`,
+        text: `A revisão dos últimos ${intervalDays} dias está pronta. Confira a proposta antes de aprovar.`,
       });
 
       loadData();
     } catch (err: any) {
       setActionMsg({
         type: 'error',
-        text: 'Falha ao revisar o ciclo: ' + err.message,
+        text: actionErrorMessage(err, 'Não foi possível confirmar a revisão. Atualize suas revisões antes de tentar novamente.'),
       });
     } finally {
       setIsRequesting(false);
@@ -83,13 +84,13 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
       await api.updateRecommendationStatus(id, 'approved');
       setActionMsg({
         type: 'success',
-        text: 'Novo plano aprovado e ativado como sua ficha principal!',
+        text: 'Ficha aprovada e ativada.',
       });
       loadData();
     } catch (err: any) {
       setActionMsg({
         type: 'error',
-        text: 'Erro ao aprovar proposta: ' + err.message,
+        text: actionErrorMessage(err, 'Não foi possível confirmar a ativação da ficha. Confira Meus treinos antes de tentar novamente.'),
       });
     }
   };
@@ -105,7 +106,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
     } catch (err: any) {
       setActionMsg({
         type: 'error',
-        text: 'Erro ao recusar proposta: ' + err.message,
+        text: actionErrorMessage(err, 'Não foi possível confirmar a recusa da proposta. Atualize suas revisões antes de tentar novamente.'),
       });
     }
   };
@@ -117,7 +118,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
       <div>
         <h1>Revisão do treino</h1>
         <p className="text-xs text-neutral-400 mt-0.5">
-          Confira a distribuição proposta por regras e os registros concluídos no período. A ficha atual só muda depois da sua aprovação.
+          Revise sua ficha a partir dos registros recentes. Confira a proposta antes de aprovar.
         </p>
       </div>
 
@@ -145,7 +146,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-bold text-neutral-300 mb-1.5 uppercase tracking-wide">
-              Janela de Ciclo de Treino
+              Período dos registros
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -178,7 +179,11 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
             </p>
           </div>
 
-          <div className="foco-v4-panel-soft p-4 text-sm"><p>A revisão usa regras e os registros do período, sem créditos de IA.</p><button type="button" className="foco-inline-link" onClick={()=>setActiveTab('personal')}>Conversar com o Personal sobre meu treino</button></div>
+          <details className="foco-v4-panel-soft p-4 text-sm">
+            <summary className="cursor-pointer font-semibold">Como funciona a revisão</summary>
+            <p className="mt-3 leading-relaxed">O Método FOCO usa as preferências da sua ficha e os registros do período. A revisão segue regras, sem chamadas à IA ou consumo de créditos. Sua ficha muda após a aprovação.</p>
+            <button type="button" className="foco-inline-link mt-3" onClick={()=>setActiveTab('personal')}>Tirar dúvidas com o Personal FOCO</button>
+          </details>
         </div>
 
         <div className="pt-2 flex justify-end">
@@ -188,7 +193,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
             className="foco-v6-primary w-full sm:w-auto disabled:opacity-50"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>{isRequesting ? 'Revisando registros...' : 'Revisar treino por regras'}</span>
+            <span>{isRequesting ? 'Revisando registros...' : 'Revisar treino'}</span>
           </button>
         </div>
       </form>
@@ -236,7 +241,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
                       </span>
                     </div>
                     <h4 className="text-base font-bold text-white uppercase mt-0.5">
-                      {rec.proposed_plan?.name || 'Nova Proposta de Sobrecarga'}
+                      {rec.proposed_plan?.name || 'Proposta de treino'}
                     </h4>
                   </div>
 
@@ -269,7 +274,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
 
                 {/* Explanation */}
                 <div className="mt-4 p-3.5 rounded-xl bg-[#0A0A0A] border border-white/10 text-xs text-neutral-300 leading-relaxed">
-                  <p className="font-bold text-white mb-1 uppercase tracking-wide text-[11px]">Fundamento Biomecânico:</p>
+                  <p className="font-bold text-white mb-1 uppercase tracking-wide text-[11px]">Sobre a proposta</p>
                   <p>{rec.explanation}</p>
                 </div>
 
@@ -277,7 +282,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
                 {rec.proposed_plan?.exercises && (
                   <div className="mt-5">
                     <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2.5">
-                      Comparativo de Sobrecarga e Exercícios Propostos
+                      Exercícios propostos
                     </p>
 
                     <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Comparação da proposta de treino">
@@ -315,7 +320,7 @@ export const ProgressionReviewPage: React.FC<ReviewProps> = ({ setActiveTab }) =
                                 {ex.rest_seconds}s
                               </td>
                               <td className="py-2.5 px-2 font-sans text-neutral-400 truncate max-w-[200px]">
-                                {ex.notes || 'Progressão de tensão'}
+                                {ex.notes || 'Confira execução e progressão'}
                               </td>
                             </tr>
                           ))}

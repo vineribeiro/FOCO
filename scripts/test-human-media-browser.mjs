@@ -6,7 +6,7 @@ import {auditCredentials,createAuditFixtures} from './fixtures/audit-browser.mjs
 const base=process.env.FOCO_E2E_BASE_URL||'http://127.0.0.1:4173/FOCO/';
 const out='work/human-media-corrections-browser';mkdirSync(out,{recursive:true});
 import {humanExamples} from './fixtures/human-media.mjs';
-const sessionIds=['db-bench-press','bench-press','barbell-row','leg-press','plank','hammer-curl','db-goblet-squat','bicycle-crunch','barbell-wrist-curl','cable-wrist-curl','db-reverse-wrist-curl','cable-external-rotation'];
+const sessionIds=['db-bench-press','bench-press','barbell-row','leg-press','plank','hammer-curl','db-goblet-squat','bicycle-crunch','barbell-wrist-curl','cable-wrist-curl','db-reverse-wrist-curl','cable-external-rotation','foco-barbell-wrist-extension','foco-cable-wrist-extension'];
 const examples=sessionIds.map(id=>humanExamples.find(e=>e.id===id));
 const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/L5sAAAAASUVORK5CYII=','base64');
 const results=[];let externalWrites=0;
@@ -133,7 +133,7 @@ try{
   await page.locator('.foco-home-plans').screenshot({path:out+'/plan-cards-'+width+'.png'});
   if(width===390){const a=await new AxeBuilder({page}).include('.foco-home-plans').withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();writeFileSync(out+'/cards-axe.json',JSON.stringify(a.violations,null,2));assert.deepEqual(a.violations,[]);}
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
-  await cards.first().focus();await page.keyboard.press('Enter');await page.getByRole('heading',{name:'Peito + Tríceps',exact:true}).waitFor();
+  await cards.first().focus();await page.keyboard.press('Enter');await page.getByRole('heading',{name:/^Treino de /}).waitFor();assert.match(await page.locator('.foco-detail-muscles').innerText(),/Tríceps/);
   assert.deepEqual(errors,[]);await context.close();console.log('PASS '+width+': integrated graphite card media, full figures, no text overlap and keyboard navigation');
  }
  const {context,page}=await setup(390,{breakOwn:true});await page.goto(base+'?view=sessao');

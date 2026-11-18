@@ -12,10 +12,10 @@ import {
 } from '../data/repdbAssets';
 
 const PER_PAGE=24;
-interface Props{onUseExercise:(exercise:RepDBExercise)=>void}
+interface Props{onUseExercise:(exercise:RepDBExercise)=>void;useExerciseLabel?:string}
 
 /** One library, locally filtered, with versioned PT-BR and exact media IDs. */
-export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
+export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise,useExerciseLabel='Adicionar à minha ficha'})=>{
  const [catalog,setCatalog]=useState<RepDBExercise[]>([]);
  const [status,setStatus]=useState<'loading'|'ready'|'error'>('loading');
  const [term,setTerm]=useState('');
@@ -56,13 +56,6 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
  const changeSearch=(value:string)=>{setTerm(value);setPage(1)};
  const changeGroup=(value:string)=>{setGroup(value);setPage(1)};
  return <section className="foco-atlas-external foco-atlas-single foco-repdb-library" aria-label="Biblioteca RepDB">
-  <div className="foco-atlas-external-top foco-repdb-library-head">
-    <div><span className="foco-atlas-kicker">FOCO ATLAS / MOVIMENTOS</span>
-      <h2>Movimento.<br/><span>Com precisão.</span></h2>
-      <p>Movimentos em português, com posições para conferir. Explore as ilustrações humanas do FOCO e a coleção RepDB.</p>
-    </div>
-    <span className="foco-atlas-beta-pill">FOCO / MOVIMENTOS</span>
-  </div>
   <div className="foco-repdb-search-row">
     <label className="foco-atlas-search">
       <Search size={19} aria-hidden="true"/>
@@ -151,7 +144,7 @@ export const RepDBCatalogBrowser:React.FC<Props>=({onUseExercise})=>{
       </>}
       {copyStatus==='ready'&&!copy&&<p role="status">As orientações desta variação estão em revisão de idioma.</p>}
       <button type="button" className="foco-atlas-open-foco" onClick={()=>{onUseExercise(detail);setDetail(null);}}>
-        <Plus size={17}/> Adicionar à minha ficha
+        {useExerciseLabel==='Adicionar à minha ficha'?<Plus size={17}/>:<ArrowRight size={17}/>} {useExerciseLabel}
       </button>
       <p className="foco-atlas-credit">{detail.source==='foco'?'Exercício e ilustração de autoria FOCO.':<a href={REPDB_CREDIT_URL} target="_blank" rel="noopener noreferrer">{REPDB_CREDIT_TEXT}</a>} Posições estáticas.</p>
     </div>

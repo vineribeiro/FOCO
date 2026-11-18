@@ -3,11 +3,13 @@ import {REPDB_PTBR_NAMES} from './repdbPtBR';
 import {FOCO_HUMAN_MEDIA_EXPANSION} from './focoHumanMediaExpansion';
 import {FOCO_LOCAL_EXERCISES} from './focoLocalExercises';
 import {FOCO_HUMAN_MEDIA_CORRECTIONS} from './focoHumanMediaCorrections';
+import {FOCO_HUMAN_MEDIA_WRISTS} from './focoHumanMediaWrists';
 
 export interface HumanPoseFrame {x:number;y:number;width:number;height:number;phase:'start'|'peak'|'reference'}
 export interface FocoHumanMedia {asset:string;width:number;height:number;poses:HumanPoseFrame[]}
 /** Own AI illustrations, visually screened per variant. Full provenance and scope:
- * docs/media/FOCO_HUMAN_{PILOT,EXPANSION}_2026_11_17.json. No RepDB images used as inputs.
+ * docs/media/FOCO_HUMAN_{PILOT,EXPANSION,CORRECTIONS}_2026_11_17.json
+ * and FOCO_HUMAN_WRISTS_2026_11_18.json. No RepDB images used as inputs.
  * Static frames preserve the original drawing; no interpolation or inferred variants. */
 export const FOCO_HUMAN_MEDIA:Record<string,FocoHumanMedia> = {
   "db-bench-press": {
@@ -214,7 +216,8 @@ export const FOCO_HUMAN_MEDIA:Record<string,FocoHumanMedia> = {
     ]
   },
   ...FOCO_HUMAN_MEDIA_EXPANSION,
-  ...FOCO_HUMAN_MEDIA_CORRECTIONS
+  ...FOCO_HUMAN_MEDIA_CORRECTIONS,
+  ...FOCO_HUMAN_MEDIA_WRISTS
 };
 const normalizeHumanName=(name:string)=>name.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
 const originalNames=new Map<string,string>(Object.keys(FOCO_HUMAN_MEDIA).flatMap(id=>{

@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { WorkoutExercise, GeneratedWorkoutProposal } from '../types';
 import { aiWorkoutFingerprint, readAiWorkoutDraft, readAiWorkoutFormDraft, saveAiWorkoutDraft, clearAiWorkoutDraft, AUTOMATIC_PLANNER_VERSION, defaultAvailableDays, AVAILABLE_WEEKDAYS, isCurrentAutomaticProposal } from '../utils/aiWorkoutDraft';
 import { TRAINING_DAYS } from '../data/exerciseLibrary';
+import { actionErrorMessage } from '../utils/actionErrorMessage';
 import {
   Sparkles,
   Dumbbell,
@@ -213,15 +214,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       }
     } catch (err: any) {
       if (version !== requestVersion.current || context !== currentContext.current) return;
-      const message = err instanceof Error ? err.message : String(err || 'Erro desconhecido');
-      if (/usuário não encontrado no armazenamento|usuário não encontrado|sessão não autorizada|token de autenticação/i.test(message)) {
-        setErrorMsg(
-          'Falha de sessão do FOCO: o servidor não encontrou a conta associada a esta sessão. ' +
-          'Entre novamente para confirmar a sessão e tente gerar a ficha.'
-        );
-      } else {
-        setErrorMsg('Falha ao gerar treino: ' + message);
-      }
+      setErrorMsg(actionErrorMessage(err, 'Não foi possível montar sua ficha agora. Confira a conexão e tente novamente.'));
     } finally {
       setIsGenerating(false);
     }
@@ -246,7 +239,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       if (profile?.id) clearAiWorkoutDraft(profile.id);
       setActiveTab('treinos');
     } catch (err: any) {
-      setErrorMsg('Erro ao salvar ficha no banco: ' + err.message);
+      setErrorMsg(actionErrorMessage(err, 'Não foi possível confirmar o salvamento da ficha. Confira Meus treinos antes de tentar novamente.'));
     } finally {
       setIsSaving(false);
     }
@@ -276,7 +269,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
       });
       setActiveTab('treinos');
     } catch (err: any) {
-      setErrorMsg('Erro ao salvar ficha: ' + err.message);
+      setErrorMsg(actionErrorMessage(err, 'Não foi possível confirmar o salvamento da ficha. Confira Meus treinos antes de tentar novamente.'));
     } finally {
       setIsSaving(false);
     }
@@ -317,7 +310,7 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
         <h1 className="foco-v4-heading"><span className="font-normal text-neutral-400">Nova</span> ficha</h1>
         <p className="foco-v4-muted max-w-2xl">
           {tab === 'automatic'
-            ? 'Monte sua ficha por regras, sem consumir créditos de IA. Revise a proposta antes de ativar.'
+            ? 'Monte sua ficha conforme sua rotina. Revise a proposta antes de ativar.'
             : 'Defina o nome, a frequência e os exercícios da sua ficha. Você mantém o controle de cada ajuste.'}
         </p>
       </header>
@@ -355,16 +348,11 @@ export const NewWorkoutPage: React.FC<NewWorkoutProps> = ({ setActiveTab }) => {
 
       {tab === 'automatic' && (
         <>
-      <section className="foco-v4-panel foco-v4-surface-photo relative overflow-hidden p-6 sm:p-8" aria-labelledby="foco-ai-intro">
-        <div className="relative z-10 max-w-[460px] space-y-3">
-          <div className="flex items-center gap-2 text-[10px] font-bold tracking-[.2em] text-neutral-300"><Sparkles className="h-4 w-4" /> MÉTODO FOCO</div>
-          <h2 id="foco-ai-intro" className="text-[25px] font-semibold leading-tight tracking-[-.04em] sm:text-[32px]">
-            Treino recomendado para <strong className="font-bold">{aiGoal.toLowerCase()}</strong>
-            .
-          </h2>
-          <p className="max-w-sm text-[12px] leading-relaxed text-neutral-300">Modelos e regras do seu estudo montam a semana com dias, duração, equipamentos e prioridades. Você revisa antes de salvar.</p>
-        </div>
-      </section>
+      <details className="foco-v4-panel p-4 text-sm">
+        <summary className="cursor-pointer font-semibold">Como funciona a montagem</summary>
+        <p className="mt-3 leading-relaxed text-neutral-300">O Método FOCO distribui exercícios e séries conforme seu objetivo, nível, dias, tempo e equipamentos. A montagem usa regras, sem chamadas à IA ou consumo de créditos.</p>
+        <p className="mt-2 leading-relaxed text-neutral-300">Você revisa antes de ativar. Para dúvidas sobre execução, descanso e progressão, converse com o Personal FOCO, que usa IA.</p>
+      </details>
 
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
         {[
