@@ -14,12 +14,14 @@
 .foco-v6-shell .foco-atlas-beta-pill{flex:0 0 auto;border:1px solid var(--foco-pro-border);padding:6px 8px;border-radius:9px;color:var(--foco-pro-accent);font-size:9px;font-weight:700;white-space:nowrap;}
 .foco-v6-shell .foco-atlas-search{
   min-height:57px;display:flex;align-items:center;gap:10px;border-radius:18px;
-  border:1px solid var(--foco-pro-border);background:var(--foco-pro-panel);padding:6px 7px 6px 13px;
+  border:1px solid var(--foco-pro-control-border);background:var(--foco-pro-panel);padding:6px 7px 6px 13px;
 }
 .foco-v6-shell .foco-atlas-search>svg{color:var(--foco-pro-lilac);flex:0 0 auto;}
 .foco-v6-shell .foco-atlas-search>input{
-  flex:1;min-width:0;height:43px;background:transparent;color:var(--foco-pro-ink);border:0;outline:0;font-size:13px;
+  flex:1;min-width:0;height:43px;background:transparent;color:var(--foco-pro-ink);border:0;font-size:16px;
 }
+.foco-v6-shell .foco-atlas-search>input:focus-visible{outline:2px solid var(--foco-pro-lilac);outline-offset:2px;border-radius:10px}
+@media(forced-colors:active){.foco-v6-shell .foco-atlas-search>input:focus-visible{outline-color:Highlight}}
 .foco-v6-shell .foco-atlas-search>input::placeholder{color:var(--foco-pro-muted);}
 .foco-v6-shell .foco-atlas-search>button:not(.foco-atlas-search-submit){min-width:34px;min-height:44px;display:grid;place-items:center;color:var(--foco-pro-muted);}
 .foco-v6-shell .foco-atlas-search-submit{

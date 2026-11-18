@@ -181,6 +181,8 @@ export function repdbBindingBlocked(name:string,id?:string|null):boolean {
   [normalize('Abdução de quadril com mini band')]:'banded-lateral-walk',
   [normalize('Panturrilha unilateral com halter')]:'single-leg-calf-raise',
   [normalize('Elevação de ponta dos pés')]:'bodyweight-calf-raise',
+  [normalize('Extensão de punho com barra')]:'barbell-wrist-curl',
+  [normalize('Extensão de punho na polia')]:'cable-wrist-curl',
  };
  return Boolean(blocked[normalize(name)]&&(!id||blocked[normalize(name)]===id));
 }

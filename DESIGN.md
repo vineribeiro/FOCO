@@ -30,3 +30,11 @@ Calorias, passos, notificações e percentuais dos mockups não são inventados.
 ## Validação
 
 Conferir 320/390/768/1440px, teclado, contraste, reduced motion, carregamento/vazio/erro, escolha de dia, registro e recuperação de sessão, upload e anamnese. Preservar autenticação, histórico, fichas, IA e armazenamento. O usuário autorizou a mudança visual e sua publicação nesta conversa.
+
+## Refinamento 3.9 — clareza e movimento
+
+- Bordas de controles usam `--foco-pro-control-border` com contraste mínimo 3:1 nas superfícies adjacentes; foco de teclado visível e mantido em forced-colors. Bordas decorativas continuam com papel separado.
+- Metadados importantes usam o papel de legenda 12px; instruções e controles mantêm 14–16px conforme função. A fonte de display não deve forçar palavras partidas: o detalhe usa título curto do dia e grupos legíveis separados.
+- O destaque da Home usa o movimento real do dia quando disponível. Cartões de exercícios reservam altura útil para pessoa e aparelho inteiros; abertura da biblioteca prioriza busca e catálogo.
+- Método FOCO identifica a montagem por regras; Personal FOCO identifica a conversa com IA. Detalhes do método ficam em ajuda contextual. Mensagens de erro nomeiam a ação e indicam recuperação, com prévia conservada quando comprovável.
+- Coleção humana 3.9: 169 IDs, 334 posições, 60 WebPs. As duas novas variações de extensão de punho são próprias FOCO; não reutilizar flexão como referência. Catálogo 712 (708 RepDB + 4 FOCO). As contagens da revisão 3.6 acima descrevem aquela entrega.

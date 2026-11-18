@@ -367,7 +367,7 @@ try {
       'The full note must not be clipped or replaced by ellipsis: ' + JSON.stringify(readability));
     assert.ok(!readability.clamp || readability.clamp === 'none' || readability.clamp === '0', 'Notes must not be line clamped');
     assert.ok(readability.left >= 0 && readability.right <= readability.viewport + 1, 'The full note must fit the responsive review');
-    const approve = page.getByRole('button', { name: 'Aprovar e Salvar Ficha', exact: true });
+    const approve = page.getByRole('button', { name: 'Aprovar e ativar ficha', exact: true });
     await precedes(note, approve, 'Approval must follow the exercise review and complete notes');
     await approve.focus(); // Prove keyboard reachability; never execute approval.
     assert.equal(await approve.evaluate(node => document.activeElement === node), true);

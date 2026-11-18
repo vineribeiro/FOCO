@@ -1,0 +1,92 @@
+{
+  "version": "foco-human-wrists-2026.1",
+  "date": "2026-11-18",
+  "origin": "ai",
+  "tool": "image_gen.imagegen",
+  "modelVersion": "not-exposed-by-tool",
+  "repdbImagesUsedAsInput": false,
+  "professionalBiomechanicalReview": false,
+  "visualReviewer": "Codex (assistant visual screening)",
+  "newExercises": 2,
+  "publishedTotal": 169,
+  "poseCount": 334,
+  "notes": "Two distinct missing FOCO variants, generated independently from a written description without image references. Pronated grip, supported forearms, visible wrist-extension range and exact barbell/cable equipment were visually screened. Static start/final frames; no inferred animation or professional biomechanical certification. Original generated PNG preserved outside the public app; only a WebP encoding and exact frame selection are published. Historical media files and bindings are unchanged, except known flexion-ID mismatches remain blocked.",
+  "assets": {
+    "wrists": {
+      "asset": "media/foco-human/2026-11-18-wrists/wrist-extension-pairs.webp",
+      "width": 1330,
+      "height": 1182,
+      "bytes": 65078,
+      "assetSha256": "1be3504c03eb36d705cd2bad5ae09476f76bfd7cbc7f2a8b742e72abdfcef90e",
+      "generatedFileSha256": "9165375092c4a0828523a856bc5cfa73984c93e1e7eb38ea2cdfc857e2845012",
+      "prompt": "Create ONE original high-resolution fitness exercise illustration sprite sheet, 2 columns x 2 rows, exactly FOUR independent equal-size panels with generous clear charcoal gutters. Semirealistic clean human illustration on flat dark charcoal #222222 background, NO letters, NO text, NO numbers, NO labels, NO arrows, NO watermark. Same adult athletic woman with natural proportions, tied dark hair, fitted graphite training shirt with a tiny pastel-lime seam and graphite leggings with subtle lavender seam. Natural, nonsexual fitness demonstration. Controlled three-quarter side view with the HANDS AND WRISTS prominent and large enough to understand; show seated body from head through feet plus equipment, never crop fingers or weights. All four panels feature BOTH FOREARMS SUPPORTED flat on thighs just above knees, elbows staying bent and stationary, hands hanging just beyond knees, palms always facing FLOOR, back of hands facing UP, fingers closed around bar in an OVERHAND PRONATED grip, thumbs wrapped. Wrist EXTENSION exercise only, NOT palm-up wrist curl, NOT elbow curl. TOP ROW: seated reverse BARBELL wrist curl / wrist extension with a straight small barbell and light compact plates. TOP LEFT starting position: identical seated pose, wrists gently FLEXED down so knuckles and bar lower than the forearm axis, with palms still downward; TOP RIGHT finishing position: forearms in exactly same horizontal supported position, BOTH wrists now EXTENDED so knuckles and bar lift moderately ABOVE the forearm line toward the ceiling, palms still downward, no elbow movement, no arm raise. BOTTOM ROW: seated CABLE wrist extension with a straight cable bar, a visible single cable from the center of the handle running downward-forward to a LOW pulley machine situated in front/right of the athlete. No barbell plates on the cable handle. BOTTOM LEFT starting position wrists gently dropped down; BOTTOM RIGHT finishing position wrists extended UP toward ceiling with the back of hands raised, forearms unchanged on thighs and elbows stationary. Keep an anatomically clear wrist angle DIFFERENCE within each row, but comfortable moderate range, not exaggerated. Draw realistic hands with five fingers and exact contact on the handles. Bench and low pulley must be physically coherent and consistent across bottom frames, show the cable attachment. Maintain uniform camera, athlete, scale, illumination and clothing across all four panels. This is an original illustration from written movement description, not based on any third-party exercise image.",
+      "references": []
+    }
+  },
+  "exercises": [
+    {
+      "id": "foco-barbell-wrist-extension",
+      "name": "Extensão de punho com barra",
+      "sourceName": "Seated Barbell Wrist Extension",
+      "bodyPart": "lower_arms",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "forearm_extensors"
+      ],
+      "frames": [
+        {
+          "x": 14,
+          "y": 12,
+          "width": 640,
+          "height": 570,
+          "phase": "start"
+        },
+        {
+          "x": 678,
+          "y": 12,
+          "width": 640,
+          "height": 570,
+          "phase": "peak"
+        }
+      ],
+      "asset": "media/foco-human/2026-11-18-wrists/wrist-extension-pairs.webp",
+      "width": 1330,
+      "height": 1182,
+      "review": "assistant-visual-screening-complete",
+      "source": "foco",
+      "isBodyweight": false
+    },
+    {
+      "id": "foco-cable-wrist-extension",
+      "name": "Extensão de punho na polia",
+      "sourceName": "Seated Cable Wrist Extension",
+      "bodyPart": "lower_arms",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "forearm_extensors"
+      ],
+      "frames": [
+        {
+          "x": 14,
+          "y": 606,
+          "width": 640,
+          "height": 564,
+          "phase": "start"
+        },
+        {
+          "x": 678,
+          "y": 606,
+          "width": 640,
+          "height": 564,
+          "phase": "peak"
+        }
+      ],
+      "asset": "media/foco-human/2026-11-18-wrists/wrist-extension-pairs.webp",
+      "width": 1330,
+      "height": 1182,
+      "review": "assistant-visual-screening-complete",
+      "source": "foco",
+      "isBodyweight": false
+    }
+  ]
+}

@@ -11,7 +11,8 @@
   --foco-pro-font-display:'Michroma','Space Grotesk',sans-serif;
   --foco-pro-font-metric:'Michroma','Space Grotesk',sans-serif;
   --foco-pro-danger:#FFB4BA; --foco-pro-danger-surface:#48272D; --foco-pro-danger-ink:#341318;
-  --foco-pro-control-border:#62625D;
+  --foco-pro-control-border:#85857D;
+  --foco-pro-text-caption:0.857142857rem; --foco-pro-text-body:1rem;
   --foco-pro-card-padding:20px; --foco-pro-section-gap:24px;
 }
 html[data-foco-density="compact"] {

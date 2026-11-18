@@ -61,6 +61,10 @@ async function axe(page,label){
  assert.deepEqual(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})),[],label);
 }
 async function screenshot(page,label){await page.screenshot({path:out+'/'+label+'.png',fullPage:true});}
+function contrast(a,b){
+ const light=value=>{const channels=value.match(/[\d.]+/g).slice(0,3).map(Number).map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});return channels[0]*.2126+channels[1]*.7152+channels[2]*.0722;};
+ const x=light(a),y=light(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);
+}
 async function run(label,options,task){const env=await setup(options);try{await task(env);results.push({label,passed:true});console.log('PASS '+label);}catch(e){results.push({label,passed:false,error:String(e)});console.log('FAIL '+label+': '+e.message);await screenshot(env.page,'failed-'+label).catch(()=>{});}finally{await env.context.close();}}
 try{
  for(const width of [320,390,768,1440])await run('brand-and-controls-'+width,{width},async({page})=>{
@@ -72,6 +76,21 @@ try{
    if(view==='cardio')assert.match(await page.getByRole('timer').evaluate(e=>getComputedStyle(e).fontFamily),/Michroma/);
    if(width===390)await axe(page,view);
   }
+  await open(page,'biblioteca');
+  await page.keyboard.press('Tab');const search=page.getByRole('textbox',{name:'Pesquisar exercícios',exact:true});await search.focus();
+  const focus=await search.evaluate(e=>{const s=getComputedStyle(e);return {visible:e.matches(':focus-visible'),style:s.outlineStyle,width:parseFloat(s.outlineWidth),color:s.outlineColor,background:getComputedStyle(e.parentElement).backgroundColor};});
+  assert.ok(focus.visible&&focus.style!=='none'&&focus.width>=2,'Search must expose keyboard focus');assert.ok(contrast(focus.color,focus.background)>=3);
+  await open(page,'novo-treino');
+  const field=await page.locator('#foco-automatic-minutes').evaluate(e=>{const s=getComputedStyle(e);let p=e.parentElement;while(p&&getComputedStyle(p).backgroundColor==='rgba(0, 0, 0, 0)')p=p.parentElement;return {border:s.borderColor,inside:s.backgroundColor,outside:getComputedStyle(p).backgroundColor};});
+  assert.ok(contrast(field.border,field.inside)>=3&&contrast(field.border,field.outside)>=3,'Field boundaries must remain visible on both adjacent surfaces');
+  await open(page,'detalhes');await page.getByRole('heading',{name:/^Treino de /}).waitFor();
+  const thumb=await page.locator('.foco-v8-exercise-thumb').first().boundingBox();assert.ok(thumb.height>=150&&thumb.width>=100,'Movement must have useful visual space');
+  await screenshot(page,'detail-refined-'+width);
+  await open(page,'dashboard');
+  await page.locator('.foco-home-hero-art [data-foco-media-status="image"]').waitFor();
+  assert.equal(await page.locator('.foco-home-hero-art>img').count(),0,'An existing workout uses its own movement in the hero');
+  assert.ok(await page.locator('.foco-goal-ring small').evaluate(e=>parseFloat(getComputedStyle(e).fontSize)>=12));
+  await screenshot(page,'home-refined-'+width);
   await open(page,'sessao');await page.getByRole('button',{name:'Execução',exact:true}).click();await axe(page,'session-guide-'+width);await screenshot(page,'session-guide-'+width);
  });
  await run('profile-destinations',{},async({page})=>{
@@ -116,7 +135,7 @@ try{
  });
  await run('update-notice',{notice:true},async({page})=>{await page.goto(base);const notice=page.locator('[data-foco-update-notice]');await notice.waitFor();assert.equal(await notice.evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(45, 45, 45)');assert.match(await notice.evaluate(e=>getComputedStyle(e).fontFamily),/Space Grotesk/);await axe(page,'update-notice');});
  await run('boot-and-metadata',{auth:false,boot:true},async({page})=>{await page.goto(base);await page.evaluate(()=>document.fonts.ready);assert.equal(await page.title(),'FOCO — Treino e evolução');assert.equal(await page.locator('.boot-logo').getAttribute('alt'),'FOCO');assert.doesNotMatch(await page.locator('meta[name=description]').getAttribute('content'),/por inteligência artificial/);await screenshot(page,'boot');});
- await run('updater-current-brand',{auth:false},async({page})=>{await page.goto(new URL('atualizar.html',base).href);await page.evaluate(()=>document.fonts.ready);assert.equal(await page.locator('[data-foco-release]').innerText(),'3.8');assert.match(await page.locator('main').evaluate(e=>getComputedStyle(e).fontFamily),/Space Grotesk/);await axe(page,'updater');await screenshot(page,'updater');});
+ await run('updater-current-brand',{auth:false},async({page})=>{await page.goto(new URL('atualizar.html',base).href);await page.evaluate(()=>document.fonts.ready);assert.equal(await page.locator('[data-foco-release]').innerText(),'3.9');assert.match(await page.locator('main').evaluate(e=>getComputedStyle(e).fontFamily),/Space Grotesk/);await axe(page,'updater');await screenshot(page,'updater');});
  await run('ptbr-complementary-and-share',{},async({page})=>{
   await open(page,'complementares');assert.equal(await page.getByRole('heading',{name:'Dead Bug',exact:true}).count(),0);assert.equal(await page.getByRole('heading',{name:'Bird Dog',exact:true}).count(),0);
   await open(page,'em-casa');await page.getByRole('button',{name:'Iniciar',exact:true}).click();await page.waitForTimeout(1100);await page.getByRole('button',{name:'Pausar',exact:true}).click();

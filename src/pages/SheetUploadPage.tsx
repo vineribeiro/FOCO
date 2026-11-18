@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../services/api';
 import { UploadedFile, WorkoutExercise } from '../types';
+import { actionErrorMessage } from '../utils/actionErrorMessage';
 import {
   FileUp,
   Image,
@@ -190,10 +191,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       setSuccessMsg(`Encontramos ${result.extracted_exercises.length} exercícios. Revise os dados antes de salvar sua ficha.`);
       void loadFiles();
     } catch (err: any) {
-      const message = String(err?.message || 'Erro desconhecido');
-      setErrorMsg(message.includes('Sessão') || message.includes('token')
-        ? 'Sua sessão expirou. Entre novamente no FOCO e tente enviar a ficha mais uma vez.'
-        : 'Não foi possível ler essa ficha: ' + message);
+      setErrorMsg(actionErrorMessage(err, 'Não foi possível confirmar a leitura da ficha. Confira os arquivos enviados antes de tentar novamente.'));
     } finally {
       setIsProcessing(false);
     }
@@ -213,12 +211,9 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       setFilePreviewUrl(null);
       setShowNewUpload(false);
       void loadFiles();
-      setSuccessMsg('Relatório analisado e armazenado. Na geração de treino, você poderá escolher se quer usar essas métricas.');
+      setSuccessMsg('Relatório analisado. Confira as medições e as limitações na sua avaliação corporal.');
     } catch (err: any) {
-      const message = String(err?.message || 'Erro desconhecido');
-      setErrorMsg(message.includes('Sessão') || message.includes('token')
-        ? 'Sua sessão expirou. Entre novamente no FOCO e tente enviar o relatório mais uma vez.'
-        : 'Não foi possível analisar o relatório: ' + message);
+      setErrorMsg(actionErrorMessage(err, 'Não foi possível confirmar a análise do relatório. Confira os arquivos enviados antes de tentar novamente.'));
     } finally {
       setIsProcessing(false);
     }
@@ -237,12 +232,12 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
         exercises: extractedResult.extracted_exercises,
       });
 
-      setSuccessMsg('Ficha de treino salva e ativada no seu banco com sucesso!');
+      setSuccessMsg('Ficha salva e ativada.');
       setTimeout(() => {
         setActiveTab('treinos');
       }, 1200);
     } catch (err: any) {
-      setErrorMsg('Erro ao salvar ficha importada: ' + err.message);
+      setErrorMsg(actionErrorMessage(err, 'Não foi possível confirmar o salvamento da ficha. Confira Meus treinos antes de tentar novamente.'));
     } finally {
       setIsProcessing(false);
     }
@@ -257,7 +252,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       else window.location.assign(result.url);
     } catch (e: any) {
       tab?.close();
-      setErrorMsg('Falha ao abrir o original do arquivo: ' + (e?.message || 'tente novamente.'));
+      setErrorMsg(actionErrorMessage(e, 'Não foi possível abrir o arquivo. Confira a conexão e tente novamente.'));
     }
   };
 
@@ -267,7 +262,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
       await api.deleteFile(id);
       await loadFiles();
     } catch (e: any) {
-      setErrorMsg('Falha ao excluir arquivo: ' + e.message);
+      setErrorMsg(actionErrorMessage(e, 'Não foi possível confirmar a exclusão. Atualize a lista de arquivos antes de tentar novamente.'));
     }
   };
 
@@ -451,11 +446,11 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
               <p className="mt-1 text-xs text-neutral-400">{lastBodyDate ? lastBodyDate.toLocaleDateString('pt-BR') : 'Analisada agora'}{daysSinceBody !== null ? ' · há ' + daysSinceBody + ' dias' : ''}. Recomendamos atualizar a cada 15 dias.</p>
             </div>
           </div>
-          <button type="button" onClick={() => setActiveTab('novo-treino')}
+          <button type="button" onClick={() => setActiveTab('anamnese')}
             className="foco-v4-action w-full">
-            Usar na criação da ficha <ChevronRight className="h-4 w-4" />
+            Revisar preferências de treino <ChevronRight className="h-4 w-4" />
           </button>
-          <p className="text-center text-[11px] text-neutral-400">O uso dos indicadores na criação da ficha exige sua autorização na próxima etapa.</p>
+          <p className="text-center text-[11px] text-neutral-400">Confira o relatório com orientação profissional e revise seus objetivos e disponibilidade na anamnese.</p>
         </>
       )}
       {/* Extracted Data Confirmation Box */}
@@ -555,7 +550,7 @@ export const SheetUploadPage: React.FC<SheetUploadProps> = ({ setActiveTab }) =>
               className="foco-v6-primary w-full sm:w-auto min-h-11 px-5 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
             >
               <CheckCircle2 className="w-4 h-4 shrink-0" />
-              <span>Aprovar e Salvar Ficha</span>
+              <span>Aprovar e ativar ficha</span>
             </button>
           </div>
         </section>

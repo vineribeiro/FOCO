@@ -152,19 +152,18 @@ try{
       text:document.querySelector('.foco-v4-page')?.textContent?.slice(0,200)||'',
     }));
     const overflow=Math.max(check.body,check.doc)-check.viewport;
-    // Critical visual gate: a CSS shell with a broken photo is not an acceptable
-    // implementation of the reference's cinematic hero.
+    // A workout hero must show the exact movement and decode its actual asset,
+    // including the SVG frames used by owned human illustrations.
     if(view==='dashboard'){
-      await page.locator('.foco-v6-hero img').first().waitFor({timeout:6000});
-      await page.waitForFunction(()=>{
-        const img=document.querySelector('.foco-v6-hero img');
-        return img && (img.complete || img.naturalWidth>0);
-      },{timeout:7000});
-      const hero=await page.locator('.foco-v6-hero img').first().evaluate(img=>({
-        loaded:img.complete&&img.naturalWidth>100&&img.naturalHeight>100,
-        width:img.naturalWidth,height:img.naturalHeight,
-      }));
-      assert.ok(hero.loaded,'FOCO hero athlete media must decode, not show a broken-image icon');
+      const movement=page.locator('.foco-home-hero-art [data-foco-media-status="image"]');
+      await movement.waitFor({timeout:7000});
+      const hero=await movement.evaluate(async el=>{
+        const url=el.querySelector('svg image')?.getAttribute('href')||el.querySelector('img')?.getAttribute('src');
+        if(!url)return {loaded:false,width:0,height:0};
+        const img=new Image();img.src=url;await img.decode();
+        return {loaded:img.naturalWidth>100&&img.naturalHeight>100,width:img.naturalWidth,height:img.naturalHeight};
+      });
+      assert.ok(hero.loaded,'Workout hero must decode its exact movement illustration');
       await page.evaluate(()=>document.fonts.ready);
       const homeStyle=await page.locator('.foco-v6-hero').evaluate(el=>({
         radius:getComputedStyle(el).borderRadius,

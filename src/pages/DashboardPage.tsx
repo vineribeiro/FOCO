@@ -89,11 +89,13 @@ export const DashboardPage: React.FC<{setActiveTab:(tab:string)=>void}> = ({setA
           <div className="foco-home-hero-copy">
             <span className="foco-home-hero-caption">{plan?'Seu treino de hoje':'Seu próximo passo'}</span>
             <h2 id="foco-v6-workout-title">{loading?'Preparando seu treino':plan?(selectedExercises.length?title:'Recuperação ativa'):'Vamos começar?'}</h2>
-            <p>{plan?selectedExercises.length+' exercícios · '+target+' dias por semana':'Monte seu plano com suas preferências.'}</p>
+            <p>{plan?selectedExercises.length+(selectedExercises.length===1?' exercício · ':' exercícios · ')+target+' dias por semana':'Monte seu plano com suas preferências.'}</p>
+          {target>0&&!loading&&!loadError&&<div className="foco-goal-ring" style={{'--goal-progress':weekProgress+'%'} as React.CSSProperties} aria-label={weekProgress+'% da meta semanal de treinos concluída'}><span>{weekProgress}%<small>da meta semanal</small></span></div>}
             <button type="button" className="foco-v6-primary" disabled={loading||loadError} onClick={handleStart}>{!plan?'Personalizar treino':selectedExercises.length?'Iniciar treino':'Fazer cardio'}<ArrowUpRight size={18}/></button>
           </div>
-          <div className="foco-home-hero-art" aria-hidden="true"><img src={V6_IMAGES.athlete} alt="" loading="eager" decoding="async"/></div>
-          {target>0&&!loading&&!loadError&&<div className="foco-goal-ring" style={{'--goal-progress':weekProgress+'%'} as React.CSSProperties} aria-label={weekProgress+'% da meta semanal de treinos concluída'}><span>{weekProgress}%<small>da semana</small></span></div>}
+          <div className="foco-home-hero-art" aria-hidden="true">{selectedExercises[0]
+            ? <ExerciseIllustration exerciseName={selectedExercises[0].exercise_name} exerciseId={selectedExercises[0].repdb_id} muscleGroup={selectedExercises[0].muscle_group} className="foco-home-hero-illustration" compact/>
+            : <img src={V6_IMAGES.athlete} alt="" loading="eager" decoding="async"/>}</div>
         </section>
         <button type="button" className="foco-home-personal" onClick={()=>setActiveTab('personal')}><MessageCircle size={23}/><span><strong>Personal FOCO</strong><small>Tire suas dúvidas sobre treino</small></span><ArrowUpRight size={20}/></button>
         <section className="foco-home-plans" aria-labelledby="foco-home-plan-title">

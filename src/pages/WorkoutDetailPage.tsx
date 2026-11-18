@@ -1,4 +1,3 @@
-import { conciseWorkoutName } from '../utils/workoutTitles';
 import React, {useEffect,useRef,useState} from 'react';
 import {ArrowLeft,ArrowRight,CalendarDays,ChevronRight,Dumbbell,Play,RotateCcw,X} from 'lucide-react';
 import {api} from '../services/api';
@@ -7,14 +6,18 @@ import {ExerciseIllustration} from '../components/ExerciseIllustration';
 import {ExerciseExecutionGuide} from '../components/ExerciseExecutionGuide';
 import {FocoV6Segment} from '../components/FocoV6UI';
 import type {WorkoutPlan,WorkoutExercise} from '../types';
+import {useAuth} from '../context/AuthContext';
+import {beginWorkoutReplacement} from '../utils/workoutReplacement';
 
 export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({setActiveTab})=>{
+  const {user}=useAuth();
   const [plan,setPlan]=useState<WorkoutPlan|null>(null);
   const [loading,setLoading]=useState(true);
   const [error,setError]=useState(false);
   const [tab,setTab]=useState('exercises');
   const [chosen,setChosen]=useState<WorkoutExercise|null>(null);
   const [preview,setPreview]=useState<WorkoutExercise|null>(null);
+  const [replacementError,setReplacementError]=useState('');
   const previewDialogRef=useRef<HTMLDialogElement|null>(null);
   useEffect(()=>{if(preview&&!previewDialogRef.current?.open)previewDialogRef.current?.showModal();},[preview]);
   const closePreview=()=>{previewDialogRef.current?.close();setPreview(null);};
@@ -24,8 +27,15 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
   const isSplit=exercises.some(ex=>!!ex.training_day);
   const today=isSplit?exercises.filter(ex=>!ex.training_day||ex.training_day===day):exercises;
   const muscles=[...new Set(today.map(ex=>ex.muscle_group).filter(Boolean))];
-  const title=conciseWorkoutName(muscles,plan?.name||'Seu treino');
+  const title='Treino de '+getTrainingDayLabel(day).toLocaleLowerCase('pt-BR');
   const start=()=>{savePreferredTrainingDay(day);setActiveTab('sessao');};
+  const chooseReplacement=(exercise:WorkoutExercise)=>{
+    try{
+      if(!plan||!user?.id||!exercise.id)throw new Error('Carregue sua ficha ativa antes de escolher uma substituição.');
+      beginWorkoutReplacement(user.id,plan,exercise.id);
+      setActiveTab('biblioteca');
+    }catch(err){setReplacementError(err instanceof Error?err.message:'Não foi possível abrir a substituição. Tente novamente.');}
+  };
   return <div className="foco-v6-detail foco-reference-detail foco-v4-page">
     <header className="foco-v6-mobile-title foco-detail-toolbar">
         <button type="button" className="foco-v6-icon-button" onClick={()=>setActiveTab('dashboard')} aria-label="Voltar"><ArrowLeft size={18}/></button>
@@ -38,6 +48,7 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
       </div>}
       <div className="foco-v6-muscle-hero-content">
         <h1 id="foco-detail-title">{loading?'Carregando...':title}</h1>
+        {muscles.length>0&&<p className="foco-detail-muscles">{muscles.map(muscle=><span key={muscle}>{muscle}</span>)}</p>}
         <p className="foco-detail-day-badge"><Dumbbell size={13} aria-hidden="true"/> {getTrainingDayLabel(day)} · {today.length} exercícios</p>
         {today[0]&&<p className="sr-only">Ilustração do primeiro exercício: {today[0].exercise_name}.</p>}
       </div>
@@ -81,8 +92,16 @@ export const WorkoutDetailPage:React.FC<{setActiveTab:(tab:string)=>void}>=({set
     {tab==='substitutions'&&<div className="foco-v6-glass rounded-2xl p-4">
       <RotateCcw size={23} className="text-[#E5F88A]"/>
       <h2 className="mt-2 font-bold">Substituir um exercício</h2>
-      <p className="mt-2 text-xs leading-5 text-[#C2C8BE]">Consulte equipamentos alternativos e personalize sua ficha sem perder seu histórico.</p>
-      <button type="button" onClick={()=>setActiveTab('biblioteca')} className="foco-v6-glass-button mt-4 w-full">Abrir biblioteca <ChevronRight size={15}/></button>
+      <p className="mt-2 text-sm leading-6">Escolha o exercício que deseja trocar. Você vai conferir o novo movimento antes de ativar outra versão da ficha.</p>
+      {replacementError&&<p role="alert" className="mt-3 text-sm">{replacementError}</p>}
+      <div className="mt-4 grid gap-3">
+        {today.map((ex,i)=><button key={ex.id||ex.exercise_name+i} type="button"
+          disabled={loading||error||!ex.id} onClick={()=>chooseReplacement(ex)}
+          className="foco-v6-glass-button w-full text-left" aria-label={'Substituir '+ex.exercise_name}>
+          <span>{ex.exercise_name}<small className="block text-xs">{ex.sets} séries · {ex.reps_min}–{ex.reps_max} repetições</small></span><ChevronRight size={17}/>
+        </button>)}
+      </div>
+      {!loading&&!today.length&&<p className="mt-3 text-sm">Escolha um dia com exercícios para fazer uma substituição.</p>}
     </div>}
     {preview&&<dialog ref={previewDialogRef} onClose={()=>setPreview(null)}
       aria-label={'Demonstração do exercício '+preview.exercise_name}

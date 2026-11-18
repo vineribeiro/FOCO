@@ -36,6 +36,8 @@ jobs:
           npm run test:personal-cache
       - name: Bounded AI routing, Personal and proposal drafts
         run: npm run test:ai-routing
+      - name: Brand refinement and safe workout replacement
+        run: npm run test:brand-refinement
       - name: OKOK assessment trends and data-integrity regression
         run: npm run test:okok
       - name: Premium UI navigation and accessibility regression

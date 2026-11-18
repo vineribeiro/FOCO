@@ -41,7 +41,8 @@
     "test:human-media": "tsx scripts/test-human-media.ts",
     "test:human-media-browser": "node scripts/test-human-media-browser.mjs",
     "test:brand-assets": "node scripts/test-brand-assets.mjs",
-    "test:branding-browser": "node scripts/test-branding-browser.mjs"
+    "test:branding-browser": "node scripts/test-branding-browser.mjs && node scripts/test-brand-copy-browser.mjs && node scripts/test-workout-replacement-browser.mjs",
+    "test:brand-refinement": "tsx scripts/test-action-error-message.ts && tsx scripts/test-workout-replacement.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
